@@ -221,9 +221,12 @@ const Game = {
         shareBtn.addEventListener('click', () => this.handleShare());
         helpBtn.addEventListener('click', () => {
             rulesModal.style.display = 'block';
-            // Load and render rules.md
-            fetch('rules.md')
-                .then(response => response.text())
+            // Load and render rules.md using relative path
+            fetch('./rules.md')
+                .then(response => {
+                    if (!response.ok) throw new Error("File not found");
+                    return response.text();
+                })
                 .then(text => {
                     const contentEl = document.getElementById('markdown-rules-content');
                     if (contentEl && typeof marked !== 'undefined') {
@@ -232,6 +235,7 @@ const Game = {
                 })
                 .catch(err => {
                     console.error("Failed to load rules.md:", err);
+                    document.getElementById('markdown-rules-content').innerHTML = "<p style='color:red;'>加载规则文档失败，请检查文件是否存在。</p>";
                 });
         });
         createBtn.addEventListener('click', () => {
