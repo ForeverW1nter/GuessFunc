@@ -4,82 +4,110 @@
 
 const Utils = {
     /**
-     * Generate a random level
-     * @returns {Object} {targetFuncStr, xMin, xMax}
+     * Generate a random level with a rich set of functions
      */
     generateRandomLevel: function() {
-        // 1. Basic building blocks
-        const functions = ['x', 'x^2', 'x^3', 'sin(x)', 'cos(x)', 'tan(x)', 'exp(x)', 'log(x)'];
-        const operators = ['+', '-', '*', '/'];
+        const basics = ['x', 'x^2', 'x^3', 'abs(x)', 'sin(x)', 'cos(x)', 'tan(x)'];
+        const advanced = ['sqrt(abs(x))', 'exp(x)', 'ln(abs(x)+0.1)', 'asin(sin(x))', 'atan(x)'];
+        
+        const allFuncs = [...basics, ...advanced];
+        const operators = ['+', '-', '*'];
 
-        // 2. Build a random expression (simple for now)
-        // Let's combine 2-3 functions
-        const numParts = 2 + Math.floor(Math.random() * 2);
         let expr = '';
+        let isValid = false;
+        let attempts = 0;
 
-        for (let i = 0; i < numParts; i++) {
-            let part = functions[Math.floor(Math.random() * functions.length)];
-            
-            // Add some coefficients (small integers)
-            const coeff = 1 + Math.floor(Math.random() * 5);
-            if (coeff > 1) part = `${coeff}*${part}`;
-            
-            // Randomly shift sin/cos
-            if (part.includes('sin') || part.includes('cos')) {
-                const shift = Math.floor(Math.random() * 3);
-                if (shift > 0) part = part.replace('(x)', `(x + ${shift})`);
+        while (!isValid && attempts < 15) {
+            attempts++;
+            const numTerms = 2;
+            let terms = [];
+
+            for (let i = 0; i < numTerms; i++) {
+                let term = allFuncs[Math.floor(Math.random() * allFuncs.length)];
+                const coeff = (Math.random() > 0.5 ? 1 : -1) * (1 + Math.floor(Math.random() * 3));
+                
+                if (coeff !== 1) {
+                    term = coeff === -1 ? `-${term}` : `${coeff}*(${term})`;
+                }
+
+                if (Math.random() > 0.8) {
+                    const inner = ['x+1', 'x-1', '2*x'][Math.floor(Math.random() * 3)];
+                    term = term.replace('(x)', `(${inner})`);
+                }
+                terms.push(term);
             }
 
-            if (i > 0) {
-                expr += ` ${operators[Math.floor(Math.random() * operators.length)]} `;
-            }
-            expr += part;
+            expr = terms[0];
+            const op = operators[Math.floor(Math.random() * operators.length)];
+            expr = `(${expr})${op}(${terms[1]})`;
+
+            try {
+                // Verify with mathjs first
+                const node = math.parse(expr);
+                const code = node.compile();
+                
+                // CRITICAL: Verify the function has real values in our range
+                let realValueCount = 0;
+                const samplePoints = [-5, -2, 0, 2, 5];
+                for (let p of samplePoints) {
+                    const v = code.evaluate({x: p});
+                    if (typeof v === 'number' && isFinite(v) && !isNaN(v)) {
+                        realValueCount++;
+                    }
+                }
+                
+                // Only accept if at least 3 points have real values
+                if (realValueCount >= 3) {
+                    isValid = true;
+                }
+            } catch (e) {}
         }
 
-        // 3. Determine a good display range
-        // For elementary functions, we can look for roots or extrema
-        // but a simpler heuristic is to ensure the range covers where the function changes most
-        let xMin = -5;
-        let xMax = 5;
-
-        try {
-            const node = math.parse(expr);
-            const code = node.compile();
-            
-            // Sample points to find where the function is "interesting"
-            // We'll keep it simple: [-5, 5] is a good default for these basic combinations.
-            // If the function grows too fast (like exp), we might want to shrink the range.
-            const y0 = code.evaluate({x: 0});
-            if (Math.abs(y0) > 100) {
-                // Shift range if it's way off at x=0
-            }
-        } catch (e) {}
-
-        return {
-            targetFuncStr: expr,
-            xMin: xMin,
-            xMax: xMax
-        };
+        return { targetFuncStr: expr };
     },
 
     /**
-     * Encode a level into a URL parameter
-     * @param {Object} level - {targetFuncStr, xMin, xMax}
-     * @returns {string} - Base64 encoded JSON string
+     * Fixed Key for encryption
+     */
+    _SECRET_KEY: "GUESS_FUNC_PRO_2024",
+
+    /**
+     * Encode a level object using XOR encryption + Base64
      */
     encodeLevel: function(level) {
-        const json = JSON.stringify(level);
-        return btoa(unescape(encodeURIComponent(json)));
+        try {
+            const json = JSON.stringify(level);
+            const utf8Json = unescape(encodeURIComponent(json));
+            
+            // XOR Encryption
+            let encrypted = "";
+            for (let i = 0; i < utf8Json.length; i++) {
+                const charCode = utf8Json.charCodeAt(i) ^ this._SECRET_KEY.charCodeAt(i % this._SECRET_KEY.length);
+                encrypted += String.fromCharCode(charCode);
+            }
+            
+            return btoa(encrypted);
+        } catch (e) {
+            console.error("Encoding Error:", e);
+            return null;
+        }
     },
 
     /**
-     * Decode a level from a URL parameter
-     * @param {string} encoded - Base64 encoded JSON string
-     * @returns {Object} - {targetFuncStr, xMin, xMax}
+     * Decode a level string using Base64 + XOR decryption
      */
     decodeLevel: function(encoded) {
         try {
-            const json = decodeURIComponent(escape(atob(encoded)));
+            const encrypted = atob(encoded);
+            
+            // XOR Decryption (same as encryption)
+            let decrypted = "";
+            for (let i = 0; i < encrypted.length; i++) {
+                const charCode = encrypted.charCodeAt(i) ^ this._SECRET_KEY.charCodeAt(i % this._SECRET_KEY.length);
+                decrypted += String.fromCharCode(charCode);
+            }
+            
+            const json = decodeURIComponent(escape(decrypted));
             return JSON.parse(json);
         } catch (e) {
             console.error("Decoding Error:", e);

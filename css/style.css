@@ -1,255 +1,267 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
 }
 
-.container {
-    width: 90%;
-    max-width: 800px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    box-sizing: border-box;
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #ffffff;
+    color: #333;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
 }
 
 header {
-    text-align: center;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-}
-
-h1 {
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.game-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #666;
-    font-size: 0.9rem;
+    padding: 0 30px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    z-index: 100;
 }
 
-#help-btn {
-    background: none;
-    border: 1px solid #007bff;
-    color: #007bff;
-    padding: 5px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #1a1a1a;
+    text-transform: uppercase;
 }
 
-#help-btn:hover {
-    background: #007bff;
-    color: #fff;
+.game-controls {
+    display: flex;
+    gap: 12px;
 }
 
-#plot-container {
-    width: 100%;
-    height: 400px;
-    background-color: #fafafa;
+button {
+    padding: 10px 20px;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    border: 1px solid #ddd;
-    margin-bottom: 25px;
-    overflow: hidden;
+    background: #ffffff;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+button:hover {
+    background: #fdfdfd;
+    border-color: #ccc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button.primary {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+button.primary:hover {
+    background: #0069d9;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+button.success {
+    background: #28a745;
+    color: white;
+    border: none;
+}
+
+button.success:hover {
+    background: #218838;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+main {
+    flex: 1;
+    position: relative;
+    width: 100%;
 }
 
 #plot {
     width: 100%;
     height: 100%;
-    min-height: 400px;
 }
 
-.input-section {
-    margin-bottom: 25px;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.input-group label {
-    font-weight: bold;
-    color: #444;
-}
-
-.input-wrapper {
-    display: flex;
-    gap: 10px;
-}
-
-#user-input {
-    flex-grow: 1;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    transition: border-color 0.3s;
-}
-
-#user-input:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-#guess-btn {
-    padding: 12px 24px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-#guess-btn:hover {
-    background-color: #0056b3;
+#message-overlay {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
 }
 
 .message {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 4px;
-    text-align: center;
-    font-weight: bold;
-    min-height: 20px;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(-30px) scale(0.9);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.message.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 .message.success {
-    background-color: #d4edda;
-    color: #155724;
+    background: #28a745;
+    color: white;
 }
 
 .message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.controls {
-    display: flex;
-    justify-content: space-around;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.controls button {
-    padding: 10px 20px;
-    background-color: #6c757d;
+    background: #dc3545;
     color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    flex-grow: 1;
-    transition: background-color 0.3s;
 }
 
-.controls button:hover {
-    background-color: #5a6268;
-}
-
-#share-btn {
-    background-color: #28a745;
-}
-
-#share-btn:hover {
-    background-color: #218838;
-}
-
-/* Modal styles */
+/* Modal Styling */
 .modal {
     display: none;
     position: fixed;
-    z-index: 100;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+    backdrop-filter: blur(5px);
 }
 
 .modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 25px;
-    border-radius: 12px;
-    width: 80%;
-    max-width: 500px;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid #ddd;
+    color: #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Fullscreen Modal for Creation */
+.modal.fullscreen {
+    background: #ffffff;
+    backdrop-filter: none;
+}
+
+.modal.fullscreen .modal-content {
+    position: static;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    max-width: none;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#target-calculator-input {
+    width: 100%;
+    height: 100%;
+}
+
+.modal-footer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
 }
 
 .close {
-    position: absolute;
-    right: 20px;
-    top: 15px;
     font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
     cursor: pointer;
-}
-
-.close:hover {
-    color: #000;
+    color: #333;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+    margin-bottom: 10px;
+    color: #444; /* Darker gray for better visibility */
+    font-weight: 600;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 10px;
+#target-math-field {
     border: 1px solid #ddd;
+    padding: 10px;
     border-radius: 4px;
-    box-sizing: border-box;
+    min-height: 40px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    background: #fdfdfd;
 }
 
-.range-inputs {
-    display: flex;
-    gap: 10px;
-}
-
-#save-level-btn {
+input[type="text"] {
     width: 100%;
     padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
     border-radius: 6px;
-    cursor: pointer;
+    color: #333;
     font-size: 1rem;
-    font-weight: bold;
 }
 
 .rules-body ul {
-    padding-left: 20px;
-    line-height: 1.6;
+    list-style: none;
+    margin-top: 15px;
 }
 
-.rules-body code {
-    background: #f0f0f0;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-family: monospace;
+.rules-body li {
+    margin-bottom: 12px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.rules-body strong {
+    color: #007bff;
 }

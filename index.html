@@ -7,92 +7,57 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- MathJS for expression parsing and evaluation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <!-- MathLive for math input -->
+    <script defer src="https://unpkg.com/mathlive"></script>
+    <!-- Marked for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <header>
-            <h1>猜函数 Guess the Function</h1>
-            <div class="game-info">
-                <span id="level-display">当前关卡: 加载中...</span>
-                <button id="help-btn">游玩规则</button>
+            <h1>GUESS THE FUNCTION</h1>
+            <div class="game-controls">
+                <button id="confirm-guess-btn" class="success">确认猜测</button>
+                <button id="next-level-btn" class="primary">随机关卡</button>
+                <button id="create-level-btn">创建关卡</button>
+                <button id="share-btn">分享</button>
+                <button id="help-btn">规则</button>
             </div>
         </header>
 
         <main>
-            <div id="plot-container">
-                <div id="plot"></div>
-            </div>
-
-            <div class="input-section">
-                <div class="input-group">
-                    <label for="user-input">输入函数:</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="user-input" placeholder="例如: f'(x+1) 或 x^2 + 2x" autocomplete="off">
-                        <button id="guess-btn">提交猜想</button>
-                    </div>
-                </div>
+            <div id="plot"></div>
+            <div id="message-overlay">
                 <div id="message" class="message"></div>
-            </div>
-
-            <div class="controls">
-                <button id="next-level-btn">随机关卡</button>
-                <button id="create-level-btn">创建关卡</button>
-                <button id="share-btn">分享关卡</button>
             </div>
         </main>
 
         <!-- Rules Modal -->
         <div id="rules-modal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>游玩规则</h2>
-                <div class="rules-body">
-                    <p>欢迎来到“猜函数”！你的目标是找出隐藏的<strong>目标函数 f(x)</strong>。</p>
-                    <ul>
-                        <li><strong>观察图象：</strong> 页面上方显示了目标函数的一部分图象。</li>
-                        <li><strong>输入函数：</strong> 支持所有初等函数。
-                            <ul>
-                                <li><strong>幂/对数：</strong> <code>x^2, sqrt(x), exp(x), ln(x), log(x, base)</code></li>
-                                <li><strong>三角函数：</strong> <code>sin(x), cos(x), tan(x), cot(x), sec(x), csc(x)</code></li>
-                                <li><strong>反三角函数：</strong> <code>asin(x), acos(x), atan(x)</code> (也支持 <code>arcsin, arccos, arctan</code>)</li>
-                                <li><strong>组合：</strong> 支持 <code>+ - * /</code> 及括号嵌套。</li>
-                            </ul>
-                        </li>
-                        <li><strong>引用目标函数：</strong>
-                            <ul>
-                                <li>使用 <code>f(x)</code> 引用目标函数。</li>
-                                <li>使用 <code>f'(x)</code>, <code>f''(x)</code>, <code>f'''(x)</code> 等表示导数。</li>
-                                <li>支持复合，如 <code>f(sin(x))</code> 或 <code>arctan(f(x))</code>。</li>
-                            </ul>
-                        </li>
-                        <li><strong>判定标准：</strong> 
-                            <ul>
-                                <li>你的输入在代数上必须与 <code>f(x)</code> 等价。</li>
-                                <li><strong>注意：</strong> 最终答案中不能包含 <code>f</code> 字符，必须完全展开为 <code>x</code> 的函数。</li>
-                            </ul>
-                        </li>
-                    </ul>
+                <div class="modal-header">
+                    <h2>游玩规则</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div id="markdown-rules-content" class="rules-body" style="padding: 20px; max-height: 70vh; overflow-y: auto;">
+                    <p>正在加载规则...</p>
                 </div>
             </div>
         </div>
 
         <!-- Create Level Modal -->
-        <div id="create-modal" class="modal">
+        <div id="create-modal" class="modal fullscreen">
             <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>创建新关卡</h2>
-                <div class="form-group">
-                    <label>目标函数 f(x):</label>
-                    <input type="text" id="target-func-input" placeholder="例如: x^2 + 2x">
+                <div class="modal-header">
+                    <h2>创建新关卡</h2>
+                    <span class="close">&times;</span>
                 </div>
-                <div class="form-group">
-                    <label>显示范围 (x min, x max):</label>
-                    <div class="range-inputs">
-                        <input type="number" id="x-min" value="-5">
-                        <input type="number" id="x-max" value="5">
+                <div class="modal-body">
+                    <div id="target-calculator-input"></div>
+                    <div class="modal-footer">
+                        <button id="save-level-btn" class="primary" style="padding: 12px 30px; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">生成关卡并开始</button>
                     </div>
                 </div>
-                <button id="save-level-btn">生成关卡并开始</button>
             </div>
         </div>
     </div>
