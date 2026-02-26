@@ -173,14 +173,13 @@ const Game = {
             .replace(/\\frac\{(.+?)\}\{(.+?)\}/g, '($1)/($2)')
             
             // 3. Absolute Value: |x| -> abs(x)
-            // We need to handle this carefully because | can be a separator
             .replace(/\|(.+?)\|/g, 'abs($1)')
             
-            // 4. Square Roots: \sqrt{x} -> sqrt(x), \sqrt[n]{x} -> nthRoot(x, n)
+            // 4. Square Roots: \sqrt{x} -> sqrt(x)
             .replace(/\\sqrt\[(.+?)\]\{(.+?)\}/g, 'nthRoot($2, $1)')
             .replace(/\\sqrt\{(.+?)\}/g, 'sqrt($1)')
             
-            // 5. Functions
+            // 5. Functions - Core Names
             .replace(/\\sin/g, 'sin')
             .replace(/\\cos/g, 'cos')
             .replace(/\\tan/g, 'tan')
@@ -190,11 +189,23 @@ const Game = {
             .replace(/\\ln/g, 'log')
             .replace(/\\log/g, 'log10')
             .replace(/\\exp/g, 'exp')
-            
-            // 6. Symbols and implicit multiplication
+            .replace(/\\abs/g, 'abs')
             .replace(/\{/g, '(')
             .replace(/\}/g, ')')
-            .replace(/\\/g, '')
+            .replace(/\\/g, '');
+
+        // NEW: Fix implicit function arguments like "atan x" -> "atan(x)"
+        // This is crucial for mathjs to recognize functions instead of symbols
+        const funcs = ['sin', 'cos', 'tan', 'atan', 'asin', 'acos', 'log', 'log10', 'exp', 'abs', 'sqrt'];
+        funcs.forEach(f => {
+            // Match function name followed by a variable/number without parentheses
+            // e.g., "atan x" -> "atan(x)", "sin 2x" -> "sin(2x)"
+            const reg = new RegExp('(' + f + ')\\s*([x0-9]+)(?!\\()', 'g');
+            converted = converted.replace(reg, '$1($2)');
+        });
+
+        // 6. Implicit multiplication
+        converted = converted
             .replace(/(\d)([a-zA-Z\(])/g, '$1*$2') // 2x -> 2*x, 2( -> 2*(
             .replace(/([a-zA-Z\)])(\d)/g, '$1*$2') // x2 -> x*2
             .replace(/\)\(/g, ')*('); // (x)(y) -> (x)*(y)
@@ -267,7 +278,11 @@ const Game = {
                 const expressions = this.previewCalculator.getExpressions();
                 const firstExp = expressions.find(e => e.latex);
                 if (firstExp && firstExp.latex) {
-                    const latex = firstExp.latex;
+                    let latex = firstExp.latex;
+                    
+                    // NEW: Strip common prefixes that might break the f(x) = ... definition
+                    // e.g., "y=2x" -> "2x", "f(x)=sin(x)" -> "sin(x)"
+                    latex = latex.replace(/^(y|f\s*\([x]\))\s*=/, '');
                     
                     // 1. Hide modal first
                     createModal.style.display = 'none';
