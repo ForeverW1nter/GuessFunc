@@ -83,44 +83,58 @@ const Game = {
                     continue;
                 }
 
-                // 1. SYMBOLIC COMPARISON (Simulating Mathematica API via mathjs)
-                try {
-                    const userExpr = this._latexToMathJS(latex);
-                    const targetExpr = this._latexToMathJS(this.targetFunc);
-                    
-                    const userSimplified = math.simplify(userExpr).toString();
-                    const targetSimplified = math.simplify(targetExpr).toString();
-                    
-                    console.log(`Symbolic Check: User[${userSimplified}] vs Target[${targetSimplified}]`);
-                    
-                    if (userSimplified === targetSimplified) {
-                        this._onWin();
-                        hasWonInThisCheck = true;
-                        break;
-                    }
-                } catch (e) {
-                    console.log("Symbolic check failed, falling back to high-precision numerical check.");
-                }
-
-                // 2. ROBUST NUMERICAL CHECK (Backup)
-                const testPoints = [-8.42, -3.14, 0.56, 4.21, 9.13];
+                // --- ROBUST NUMERICAL SAMPLING CHECK ---
+                // We completely rely on numerical sampling now for maximum flexibility.
+                // If the user's function produces the same values as the target at multiple points, 
+                // they are considered equivalent for the purpose of this game.
+                
+                const testPoints = [];
+                // Use a mix of integers, decimals, and edge cases
+                const fixedPoints = [-Math.PI, -1, 0, 1, Math.PI, 10];
+                const randomPoints = [];
+                for(let i=0; i<10; i++) randomPoints.push(Math.random() * 20 - 10);
+                
+                const allPoints = [...fixedPoints, ...randomPoints];
+                
                 let matchCount = 0;
+                let errorCount = 0;
+                let totalValidPoints = 0;
 
-                for (let x of testPoints) {
+                const userExprStr = this._latexToMathJS(latex);
+                // targetFunc is already a MathJS-compatible string from our generator
+                const targetExprStr = this.targetFunc; 
+
+                for (let x of allPoints) {
                     try {
-                        const userVal = math.evaluate(this._latexToMathJS(latex), { x: x });
-                        const targetVal = math.evaluate(this._latexToMathJS(this.targetFunc), { x: x });
+                        const userVal = math.evaluate(userExprStr, { x: x });
+                        const targetVal = math.evaluate(targetExprStr, { x: x });
                         
-                        const diff = Math.abs(userVal - targetVal);
-                        console.log(`x=${x}: User=${userVal}, Target=${targetVal}, Diff=${diff}`);
+                        // Handle complex numbers if they arise
+                        const u = (typeof userVal === 'object' && userVal.isComplex) ? userVal.re : userVal;
+                        const t = (typeof targetVal === 'object' && targetVal.isComplex) ? targetVal.re : targetVal;
 
-                        if (!isNaN(diff) && diff < 1e-8) {
+                        if (typeof u !== 'number' || typeof t !== 'number' || isNaN(u) || isNaN(t)) {
+                            continue; // Skip undefined points (like log of negative)
+                        }
+
+                        totalValidPoints++;
+                        const diff = Math.abs(u - t);
+                        
+                        // Use relative error for very large numbers, absolute for small
+                        const threshold = Math.max(1e-7, Math.abs(t) * 1e-7);
+                        
+                        if (diff < threshold) {
                             matchCount++;
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                        errorCount++;
+                    }
                 }
 
-                if (matchCount === testPoints.length) {
+                console.log(`Sampling Check: ${matchCount}/${totalValidPoints} valid points matched. (${errorCount} eval errors)`);
+
+                // Win condition: at least 80% of valid points must match, and we must have at least 5 valid points
+                if (totalValidPoints >= 5 && matchCount / totalValidPoints >= 0.8) {
                     this._onWin();
                     hasWonInThisCheck = true;
                     break; 
@@ -208,7 +222,18 @@ const Game = {
         converted = converted
             .replace(/(\d)([a-zA-Z\(])/g, '$1*$2') // 2x -> 2*x, 2( -> 2*(
             .replace(/([a-zA-Z\)])(\d)/g, '$1*$2') // x2 -> x*2
-            .replace(/\)\(/g, ')*('); // (x)(y) -> (x)*(y)
+            .replace(/\)\(/g, ')*(') // (x)(y) -> (x)*(y)
+            .replace(/([x])([a-zA-Z\(])/g, '$1*$2') // x( -> x*(, xy -> x*y
+            .replace(/([a-zA-Z\)])x/g, '$1*x'); // )x -> )*x, yx -> y*x
+
+        // 7. Special protection for function names (don't let the above rules break them)
+        // If we broke 'sin' into 's*i*n', we need to fix it. 
+        // But the rules above only trigger for 'x'. So 'sin' is safe unless it's 'sixn'.
+        // Let's just make sure 'exp' is safe.
+        converted = converted.replace(/e\*x\*p/g, 'exp');
+        converted = converted.replace(/a\*s\*i\*n/g, 'asin');
+        converted = converted.replace(/a\*c\*o\*s/g, 'acos');
+        converted = converted.replace(/a\*t\*a\*n/g, 'atan');
 
         console.log(`LaTeX Converted: [${latex}] -> [${converted}]`);
         return converted;
