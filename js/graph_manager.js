@@ -42,12 +42,15 @@ const GraphManager = {
         // 清除旧的目标函数
         this.calculator.removeExpression({ id: this.targetExprId });
 
+        // 在解析前预处理表达式，确保语法统一
+        const processedExpr = MathEngine.preprocessLatex(expression);
+
         // 将 Math.js 格式转换为标准的 LaTeX
         // 这解决了 Math.js 的 `log` (ln) 与 Desmos 的 `log` (log10) 冲突问题
         // 以及 `*` 和 `/` 等符号的兼容性问题
         let latex = "";
         try {
-            const node = math.parse(expression);
+            const node = math.parse(processedExpr); // 使用处理过的表达式
             latex = node.toTex({
                 handler: (node, options) => {
                     if (node.type === 'FunctionNode' && node.name === 'log') {
@@ -73,7 +76,7 @@ const GraphManager = {
             latex: `f(x) = ${latex}`,
             color: Desmos.Colors.BLACK,
             lineWidth: 5,
-            secret: true // 尝试使用 secret 属性
+            secret: true // 恢复游戏核心玩法：隐藏目标函数
         });
     },
 
@@ -95,7 +98,8 @@ const GraphManager = {
             latex = latex.split('=')[1];
         }
         
-        return Utils.latexToMathJs(latex);
+        // 直接返回原始 LaTeX，让调用者 (UIManager) 去处理
+        return latex;
     },
 
     /**
@@ -134,8 +138,8 @@ const GraphManager = {
             }
         }
 
-        // 转换为 Math.js 格式
-        return Utils.latexToMathJs(latex);
+        // 直接返回原始的 LaTeX，交由 MathEngine 处理
+        return latex;
     },
 
     /**

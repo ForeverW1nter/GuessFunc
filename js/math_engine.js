@@ -21,7 +21,7 @@ const MathEngine = {
         switch(level) {
             case 'easy':
                 this.config.maxDepth = 2;
-                this.config.functions = ['sin', 'cos', 'exp', 'log', 'sqrt', 'abs']; // 减少复杂函数
+                this.config.functions = ['sin', 'cos', 'exp', 'log', 'sqrt', 'abs'];
                 break;
             case 'medium':
                 this.config.maxDepth = 4;
@@ -59,8 +59,11 @@ const MathEngine = {
             return this._getRandomTerminal();
         } else if (rand < terminalProb + (1 - terminalProb) / 3) {
             // 生成一元函数 (1/3 probability of non-terminal)
-            const func = Utils.randomChoice(this.config.functions);
+            let func = Utils.randomChoice(this.config.functions);
+            // 修复：确保 func 只是一个纯函数名，没有多余的字符
+            func = func.replace(/\{.+/, ''); // 移除可能存在的 {...} 模板
             const inner = this.generateRandomExpression(depth + 1);
+            // 始终使用圆括号
             return `${func}(${inner})`;
         } else {
             // 生成二元运算 (2/3 probability of non-terminal)
@@ -93,6 +96,57 @@ const MathEngine = {
     },
 
     /**
+     * 预处理用户输入的 LaTeX 风格的表达式
+     * @param {string} expr 
+     * @returns {string}
+     */
+    preprocessLatex: function(expr) {
+        if (!expr) return "";
+        let processed = expr.trim();
+
+        // --- 全新重构，严格按顺序执行 ---
+
+        // 1. 预处理：移除 \left 和 \right
+        processed = processed.replace(/\\left/g, '').replace(/\\right/g, '');
+
+        // 2. 标准化函数名 (统一为 math.js 使用的名称)
+        processed = processed.replace(/\\arcsin/g, 'asin');
+        processed = processed.replace(/\\arccos/g, 'acos');
+        processed = processed.replace(/\\arctan/g, 'atan');
+        processed = processed.replace(/\\sin/g, 'sin');
+        processed = processed.replace(/\\cos/g, 'cos');
+        processed = processed.replace(/\\tan/g, 'tan');
+        processed = processed.replace(/\\ln/g, 'log');      // \ln -> log (自然对数)
+        processed = processed.replace(/\\log/g, 'log10');   // \log -> log10
+        processed = processed.replace(/\\sqrt/g, 'sqrt');
+        processed = processed.replace(/\\exp/g, 'exp');
+        processed = processed.replace(/\\pi/g, 'pi');
+        processed = processed.replace(/\\cdot/g, '*');
+
+        // 3. 为无括号的函数添加括号 (例如: acos x -> acos(x))
+        const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10', 'sqrt', 'exp', 'abs'];
+        funcs.forEach(fn => {
+            // 匹配一个函数名，后面跟一个或多个空格，然后是一个不带括号的简单参数
+            const regex = new RegExp(`\\b${fn}\\s+([a-zA-Z0-9\\.]+)`, 'g');
+            processed = processed.replace(regex, `${fn}($1)`);
+        });
+
+        // 4. 将所有 TeX 分组括号 {} 转换为标准括号 ()
+        processed = processed.replace(/\{/g, '(').replace(/\}/g, ')');
+
+        // 5. 处理特殊格式（分数、绝对值）
+        processed = processed.replace(/\\frac\(([^)]+)\)\(([^)]+)\)/g, '(($1)/($2))');
+        processed = processed.replace(/\|([^|]+)\|/g, 'abs($1)');
+
+        // 6. 插入隐式乘法（安全模式）
+        processed = processed.replace(/([0-9\.]+)([a-zA-Z\(])/g, '$1*$2'); // 3x, 3(x+1)
+        processed = processed.replace(/\)([a-zA-Z0-9\(])/g, ')*$1');   // (x+1)x, (x+1)2
+        processed = processed.replace(/([xy])\(/g, '$1*('); // x(x+1)
+
+        return processed;
+    },
+
+    /**
      * 验证两个表达式是否等价
      * 采用“符号化简 + 数值验证”的综合方式
      * @param {string} targetExpr 目标表达式
@@ -100,15 +154,17 @@ const MathEngine = {
      * @returns {boolean} 是否等价
      */
     verifyEquivalence: function(targetExpr, userExpr) {
-        // 1. 预处理：解析表达式
+        // 预处理双方，确保格式统一
+        const processedTargetExpr = this.preprocessLatex(targetExpr);
+        const processedUserExpr = this.preprocessLatex(userExpr);
+
         let node1, node2;
         try {
-            node1 = math.parse(targetExpr);
-            node2 = math.parse(userExpr);
+            node1 = math.parse(processedTargetExpr);
+            node2 = math.parse(processedUserExpr);
         } catch (e) {
-            console.error("Parsing error:", e);
-            // 尝试在解析失败时进行更积极的预处理? 
-            // 已经在 Utils.latexToMathJs 做了一部分，这里暂不处理
+            console.error("Parsing error after preprocessing:", e, 
+                {target: processedTargetExpr, user: processedUserExpr});
             return false;
         }
 
@@ -244,7 +300,9 @@ const MathEngine = {
      */
     isValid: function(expr) {
         try {
-            math.parse(expr);
+            // 在验证前先进行预处理
+            const processedExpr = this.preprocessLatex(expr);
+            math.parse(processedExpr);
             return true;
         } catch (e) {
             return false;
