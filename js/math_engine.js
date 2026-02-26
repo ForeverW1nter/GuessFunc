@@ -6,7 +6,8 @@
 const MathEngine = {
     // 配置
     config: {
-        maxDepth: 4, // 默认表达式最大深度 (中等难度)
+        minDepth: 2, // 默认表达式最小深度
+        maxDepth: 3, // 默认表达式最大深度 (中等难度)
         functions: ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp', 'log', 'sqrt', 'abs'], 
         operators: ['+', '-', '*', '/'], 
         constants: [1, 2, 3, 4, 5], 
@@ -20,19 +21,23 @@ const MathEngine = {
     setDifficulty: function(level) {
         switch(level) {
             case 'easy':
+                this.config.minDepth = 1;
                 this.config.maxDepth = 2;
                 this.config.functions = ['sin', 'cos', 'exp', 'log', 'sqrt', 'abs'];
                 break;
             case 'medium':
-                this.config.maxDepth = 4;
+                this.config.minDepth = 2;
+                this.config.maxDepth = 3;
                 this.config.functions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp', 'log', 'sqrt', 'abs'];
                 break;
             case 'hard':
-                this.config.maxDepth = 6;
+                this.config.minDepth = 3;
+                this.config.maxDepth = 5;
                 this.config.functions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp', 'log', 'sqrt', 'abs'];
                 break;
             default:
-                this.config.maxDepth = 4;
+                this.config.minDepth = 2;
+                this.config.maxDepth = 3;
         }
     },
 
@@ -42,35 +47,34 @@ const MathEngine = {
      * @returns {string} 表达式字符串
      */
     generateRandomExpression: function(depth = 0) {
-        // 如果达到最大深度，必须返回终结符（变量或常数）
+        // 如果达到最大深度，必须返回终结符
         if (depth >= this.config.maxDepth) {
             return this._getRandomTerminal();
         }
 
         // 随机决定生成什么：终结符、一元函数、二元运算
-        // 随着深度增加，终结符概率增加
         const rand = Math.random();
+        
         // 深度越深，终结概率越大
-        // depth=0: prob=0.1
-        // depth=max: prob=0.9
-        const terminalProb = 0.1 + (depth / this.config.maxDepth) * 0.8; 
+        const terminalProb = 0.1 + (depth / this.config.maxDepth) * 0.8;
 
-        if (rand < terminalProb) {
-            return this._getRandomTerminal();
-        } else if (rand < terminalProb + (1 - terminalProb) / 3) {
-            // 生成一元函数 (1/3 probability of non-terminal)
-            let func = Utils.randomChoice(this.config.functions);
-            // 修复：确保 func 只是一个纯函数名，没有多余的字符
-            func = func.replace(/\{.+/, ''); // 移除可能存在的 {...} 模板
-            const inner = this.generateRandomExpression(depth + 1);
-            // 始终使用圆括号
-            return `${func}(${inner})`;
+        // 强制执行 minDepth
+        if (depth < this.config.minDepth || rand > terminalProb) {
+            // 生成非终结符 (函数或操作符)
+            if (Math.random() < 0.4) { // 40% 概率生成一元函数
+                let func = Utils.randomChoice(this.config.functions);
+                func = func.replace(/\{.+/, ''); // 清洗
+                const inner = this.generateRandomExpression(depth + 1);
+                return `${func}(${inner})`;
+            } else { // 60% 概率生成二元运算
+                const op = Utils.randomChoice(this.config.operators);
+                const left = this.generateRandomExpression(depth + 1);
+                const right = this.generateRandomExpression(depth + 1);
+                return `(${left} ${op} ${right})`;
+            }
         } else {
-            // 生成二元运算 (2/3 probability of non-terminal)
-            const op = Utils.randomChoice(this.config.operators);
-            const left = this.generateRandomExpression(depth + 1);
-            const right = this.generateRandomExpression(depth + 1);
-            return `(${left} ${op} ${right})`;
+            // 达到 minDepth 后，有概率生成终结符
+            return this._getRandomTerminal();
         }
     },
 
@@ -147,6 +151,64 @@ const MathEngine = {
     },
 
     /**
+     * 检查表达式是否在指定区间内有定义
+     * @param {string} expr 表达式
+     * @returns {boolean} 是否有定义
+     */
+    isDefinedInRange: function(expr) {
+        try {
+            const node = math.parse(expr);
+            const code = node.compile();
+            // 在 (-10, 10) 区间内测试 10 个点
+            for (let i = 0; i < 10; i++) {
+                const x = Math.random() * 20 - 10;
+                const result = code.evaluate({ x: x });
+                // 如果结果是有效的实数，则认为有定义
+                if (isFinite(result) && typeof result === 'number') {
+                    return true;
+                }
+            }
+        } catch (e) {
+            // 解析或计算失败，视为无定义
+            return false;
+        }
+        // 所有测试点都无定义
+        return false;
+    },
+
+    /**
+     * 递归计算表达式节点的深度
+     * @param {math.Node} node 
+     * @returns {number}
+     */
+    getExpressionDepth: function(node) {
+        if (!node) return 0;
+        if (node.isSymbolNode || node.isConstantNode) {
+            return 1;
+        }
+        if (node.isOperatorNode || node.isFunctionNode) {
+            if (!node.args || node.args.length === 0) return 1;
+            // 深度 = 1 + 所有子节点中的最大深度
+            return 1 + Math.max(...node.args.map(arg => this.getExpressionDepth(arg)));
+        }
+        return 1; // 对未知节点返回基础深度
+    },
+
+    /**
+     * 获取表达式化简后的深度
+     * @param {string} expr 
+     * @returns {number}
+     */
+    getSimplifiedDepth: function(expr) {
+        try {
+            const simplifiedNode = math.simplify(expr);
+            return this.getExpressionDepth(simplifiedNode);
+        } catch (e) {
+            return 0; // 如果化简或解析失败，返回0
+        }
+    },
+
+    /**
      * 验证两个表达式是否等价
      * 采用“符号化简 + 数值验证”的综合方式
      * @param {string} targetExpr 目标表达式
@@ -163,7 +225,7 @@ const MathEngine = {
             node1 = math.parse(processedTargetExpr);
             node2 = math.parse(processedUserExpr);
         } catch (e) {
-            console.error("Parsing error after preprocessing:", e, 
+            Logger.error("Parsing error after preprocessing:", e, 
                 {target: processedTargetExpr, user: processedUserExpr});
             return false;
         }
@@ -178,7 +240,7 @@ const MathEngine = {
             // 检查是否化简为 0
             const sString = simplified.toString();
             if (sString === '0' || sString === ' -0') {
-                console.log("Symbolic verification passed (simplify)!");
+                Logger.log("Symbolic verification passed (simplify)!");
                 return true;
             }
             
@@ -186,14 +248,14 @@ const MathEngine = {
             try {
                 const rationalized = math.rationalize(diffNode);
                 if (rationalized.toString() === '0') {
-                    console.log("Symbolic verification passed (rationalize)!");
+                    Logger.log("Symbolic verification passed (rationalize)!");
                     return true;
                 }
             } catch (ratError) {
                 // rationalize 可能失败，忽略
             }
         } catch (e) {
-            console.warn("Symbolic simplification failed, falling back to numerical.", e);
+            Logger.warn("Symbolic simplification failed, falling back to numerical.", e);
         }
 
         // 3. 数值验证 (作为补充，防止符号化简失败)
@@ -238,14 +300,13 @@ const MathEngine = {
                 }
 
                 if (isDefined1 !== isDefined2) {
-                    // 一个有定义，一个无定义 -> 不等价
-                    console.log(`Domain mismatch at x=${x}: ${val1} vs ${val2}`);
+                    Logger.log(`Domain mismatch at x=${x}: ${val1} vs ${val2}`);
                     return false;
                 }
 
                 // 两者都有定义，比较数值
                 if (Math.abs(val1 - val2) > epsilon) {
-                    console.log(`Numerical mismatch at x=${x}: ${val1} vs ${val2}`);
+                    Logger.log(`Numerical mismatch at x=${x}: ${val1} vs ${val2}`);
                     return false;
                 }
                 
@@ -258,9 +319,8 @@ const MathEngine = {
 
         // 如果没有有效比较点，我们无法确定。
         if (validComparisons === 0) {
-            console.warn("No valid comparison points found in initial range. Extending search...");
-            // 尝试在更广泛的范围内找点，或者针对特定区间找点
-            // 尝试找一个有定义的点
+            Logger.warn("No valid comparison points found in initial range. Extending search...");
+            // 尝试在更广泛的范围内找点
             for(let i=0; i<50; i++) {
                 // 混合不同尺度的随机数
                 const scale = (i % 3 === 0) ? 1 : ((i % 3 === 1) ? 10 : 100);
@@ -285,11 +345,11 @@ const MathEngine = {
         }
 
         if (validComparisons === 0) {
-            console.log("Verification inconclusive (no valid points). Assuming false.");
+            Logger.log("Verification inconclusive (no valid points). Assuming false.");
             return false;
         }
 
-        console.log(`Numerical verification passed with ${validComparisons} points.`);
+        Logger.log(`Numerical verification passed with ${validComparisons} points.`);
         return true;
     },
 

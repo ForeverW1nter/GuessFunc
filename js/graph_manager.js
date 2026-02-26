@@ -63,11 +63,10 @@ const GraphManager = {
                 }
             });
         } catch (e) {
-            console.error("Failed to convert to LaTeX:", e);
+            Logger.error("Failed to convert to LaTeX:", e);
             // Fallback to simple replacement
             latex = this._toDesmosFormat(expression);
-        }
-        
+        }        
         // 目标函数设置为 f(x) = ...
         // 颜色设为黑色 (Desmos.Colors.BLACK)
         // 使用 CSS 隐藏侧边栏项 (expr-id="target")

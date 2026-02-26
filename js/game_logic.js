@@ -36,7 +36,7 @@ const GameLogic = {
      * @param {string} expr 目标表达式
      */
     startLevel: function(expr) {
-        console.log("Starting level:", expr);
+        Logger.log("Starting level:", expr);
         this.state.currentLevelExpr = expr;
         this.state.isWon = false;
 
@@ -55,28 +55,33 @@ const GameLogic = {
      * 开始随机关卡
      */
     startRandomLevel: function() {
-        // 尝试生成有效关卡
-        let expr;
-        let isValid = false;
+        let expr = null;
         let attempts = 0;
+        const maxAttempts = 50; // 增加尝试次数以找到有效函数
 
-        while (!isValid && attempts < 10) {
-            expr = MathEngine.generateRandomExpression();
-            // 简单验证一下是否至少有定义
-            // 生成的表达式只要符合语法，MathEngine 就能处理。
-            // "若随机结果‘完全无定义’，则重新随机" -> 这需要 MathEngine 提供 checkDefined?
-            // 目前 MathEngine.verifyEquivalence 会处理定义域问题。
-            // 这里我们暂时假设生成的都是合法的。
-            // 我们可以尝试 verify(expr, expr) 来看看是否有定义？
-            if (MathEngine.verifyEquivalence(expr, expr)) {
-                isValid = true;
-            }
+        while (attempts < maxAttempts) {
             attempts++;
+            const candidateExpr = MathEngine.generateRandomExpression();
+
+            // 验证1：检查化简后的深度是否达标
+            const simplifiedDepth = MathEngine.getSimplifiedDepth(candidateExpr);
+            if (simplifiedDepth < MathEngine.config.minDepth) {
+                continue; // 深度不够，重新生成
+            }
+
+            // 验证2：检查函数在 (-10, 10) 区间内是否有定义
+            if (!MathEngine.isDefinedInRange(candidateExpr)) {
+                continue; // 区间内无定义，重新生成
+            }
+
+            // 表达式有效，采纳
+            expr = candidateExpr;
+            break;
         }
 
-        if (!isValid) {
-            console.error("Failed to generate valid level after 10 attempts");
-            expr = "sin(x)"; // Fallback
+        if (!expr) {
+            Logger.error(`Failed to generate a valid level after ${maxAttempts} attempts. Using fallback.`);
+            expr = "sin(x) + x"; // 一个更可靠的备用函数
         }
 
         this.startLevel(expr);
@@ -98,8 +103,8 @@ const GameLogic = {
             return;
         }
 
-        console.log("User guess:", userGuess);
-        console.log("Target:", this.state.currentLevelExpr);
+        Logger.log("User guess:", userGuess);
+        Logger.log("Target:", this.state.currentLevelExpr);
 
         // 调用 MathEngine 验证
         const isCorrect = MathEngine.verifyEquivalence(this.state.currentLevelExpr, userGuess);

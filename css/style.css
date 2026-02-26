@@ -257,22 +257,37 @@ button:active {
     .toolbar {
         width: 100%;
         display: flex;
-        justify-content: space-around;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        justify-content: space-evenly; /* 均匀分布按钮 */
+        flex-wrap: nowrap; /* 强制单行 */
+        overflow-x: auto; /* 如果内容溢出，允许滚动 */
         padding-bottom: 5px;
-        gap: 8px;
+        gap: 5px; /* 减小按钮间距 */
     }
     
     button, select {
-        padding: 6px 10px;
-        font-size: 0.85rem;
+        padding: 8px 6px; /* 调整内边距 */
+        font-size: 0.8rem; /* 减小字体大小 */
         white-space: nowrap;
         flex-shrink: 0;
     }
 
     .main-header h1 {
         font-size: 1.4rem;
+    }
+
+    /* 减小 Desmos 容器的高度，为输入法留出空间 */
+    .calculator-container {
+        height: 75vh; /* 或者一个你认为合适的高度 */
+    }
+
+    .message-area {
+        width: 100%;
+        top: 0;
+        left: 0;
+        transform: translateX(0);
+        border-radius: 0;
+        box-sizing: border-box; /* 确保 padding 不会撑破宽度 */
+        text-align: center; /* 文字居中 */
     }
 }
 

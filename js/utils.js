@@ -129,3 +129,28 @@ const Utils = {
 
 // 暴露给全局
 window.Utils = Utils;
+
+/**
+ * 全局日志记录器
+ * 根据 window.APP_DEBUG 的值决定是否输出日志
+ */
+const Logger = {
+    log: function(...args) {
+        if (window.APP_DEBUG) {
+            console.log(...args);
+        }
+    },
+    warn: function(...args) {
+        if (window.APP_DEBUG) {
+            console.warn(...args);
+        }
+    },
+    error: function(...args) {
+        if (window.APP_DEBUG) {
+            console.error(...args);
+        }
+    }
+};
+
+// 暴露给全局
+window.Logger = Logger;
