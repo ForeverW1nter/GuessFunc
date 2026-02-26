@@ -12,12 +12,24 @@ const GameLogic = {
     /**
      * 初始化游戏
      */
-    init: function() {
-        // 检查 URL 是否有关卡参数
+    init: async function() {
+        // 1. 等待 MathEngine 就绪
+        try {
+            UIManager.showMessage("正在加载数学引擎...", "info");
+            await MathEngine.init();
+            UIManager.hideMessage();
+        } catch (e) {
+            UIManager.showMessage("数学引擎加载失败，请刷新重试。", "error");
+            console.error(e);
+            return;
+        }
+
+        // 2. 检查 URL 是否有关卡参数
         const levelCode = Utils.getQueryParam('level');
         if (levelCode) {
             const expr = Utils.decodeLevel(levelCode);
-            if (expr && MathEngine.isValid(expr)) {
+            // 简单验证：只要不是空的就行，MathEngine.verifyEquivalence 会处理非法输入
+            if (expr) {
                 this.startLevel(expr);
                 return;
             } else {
@@ -25,15 +37,13 @@ const GameLogic = {
             }
         }
         
-        // 默认随机关卡
-        if (!levelCode) {
-            this.startRandomLevel();
-        }
+        // 3. 默认随机关卡
+        this.startRandomLevel();
     },
 
     /**
      * 开始一个新关卡
-     * @param {string} expr 目标表达式
+     * @param {string} expr 目标表达式 (LaTeX)
      */
     startLevel: function(expr) {
         Logger.log("Starting level:", expr);
@@ -57,26 +67,19 @@ const GameLogic = {
     startRandomLevel: function() {
         let expr = null;
         let attempts = 0;
-        const maxAttempts = 50; // 增加尝试次数以找到有效函数
+        const maxAttempts = 20; 
 
+        // 尝试生成一个合格的随机函数
         while (attempts < maxAttempts) {
             attempts++;
             const candidateExpr = MathEngine.generateRandomExpression();
 
-            // 验证1：检查化简后的深度是否达标
-            const simplifiedDepth = MathEngine.getSimplifiedDepth(candidateExpr);
-            if (simplifiedDepth < MathEngine.config.minDepth) {
-                continue; // 深度不够，重新生成
+            // 验证：检查函数在 (-10, 10) 区间内是否有定义
+            // 避免生成像 sqrt(-x^2-10) 这种空函数
+            if (MathEngine.isDefinedInRange(candidateExpr)) {
+                expr = candidateExpr;
+                break;
             }
-
-            // 验证2：检查函数在 (-10, 10) 区间内是否有定义
-            if (!MathEngine.isDefinedInRange(candidateExpr)) {
-                continue; // 区间内无定义，重新生成
-            }
-
-            // 表达式有效，采纳
-            expr = candidateExpr;
-            break;
         }
 
         if (!expr) {
@@ -107,6 +110,7 @@ const GameLogic = {
         Logger.log("Target:", this.state.currentLevelExpr);
 
         // 调用 MathEngine 验证
+        // MathEngine.verifyEquivalence(target, user)
         const isCorrect = MathEngine.verifyEquivalence(this.state.currentLevelExpr, userGuess);
 
         if (isCorrect) {

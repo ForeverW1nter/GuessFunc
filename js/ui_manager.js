@@ -160,6 +160,17 @@ const UIManager = {
         this.timer = setTimeout(() => {
             msgArea.classList.add('hidden');
         }, 3000);
+    },
+
+    /**
+     * 隐藏当前消息提示
+     */
+    hideMessage: function() {
+        const msgArea = document.getElementById('message-area');
+        if (msgArea) {
+            msgArea.classList.add('hidden');
+        }
+        if (this.timer) clearTimeout(this.timer);
     }
 };
 

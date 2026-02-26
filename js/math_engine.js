@@ -1,39 +1,265 @@
 /**
- * 数学引擎模块
- * 负责生成随机表达式、解析表达式、验证等价性
+ * 数学引擎模块 (MathEngine)
+ * 负责与 CortexJS Compute Engine 交互，提供表达式生成、解析、验证等核心功能。
+ * 包含 LatexProcessor 用于处理 LaTeX 格式标准化。
  */
 
 const MathEngine = {
-    // 配置
-    config: {
-        minDepth: 2, // 默认表达式最小深度
-        maxDepth: 3, // 默认表达式最大深度 (中等难度)
-        functions: ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp', 'log', 'sqrt', 'abs'], 
-        operators: ['+', '-', '*', '/'], 
-        constants: [1, 2, 3, 4, 5], 
-        variables: ['x'], 
+    // 内部 Compute Engine 实例引用
+    _ce: null,
+    
+    // 初始化状态 Promise
+    _readyPromise: null,
+    
+    /**
+     * 获取 Compute Engine 实例
+     */
+    get ce() {
+        return this._ce || window.ce;
     },
 
     /**
-     * 设置难度
-     * @param {string} level 'easy' | 'medium' | 'hard'
+     * 异步初始化
+     * @returns {Promise<void>}
      */
+    init: function() {
+        if (this._readyPromise) return this._readyPromise;
+
+        this._readyPromise = new Promise((resolve, reject) => {
+            // 1. 尝试直接获取已初始化的实例
+            if (window.ce) {
+                this._ce = window.ce;
+                this._configureCE();
+                resolve();
+                return;
+            }
+
+            // 2. 尝试从全局类进行初始化
+            if (typeof ComputeEngine !== 'undefined') {
+                try {
+                    if (typeof ComputeEngine.ComputeEngine === 'function') {
+                        window.ce = new ComputeEngine.ComputeEngine();
+                    } else {
+                        window.ce = new ComputeEngine();
+                    }
+                    this._ce = window.ce;
+                    this._configureCE();
+                    resolve();
+                    return;
+                } catch (e) {
+                    console.warn("Failed to auto-init ComputeEngine:", e);
+                }
+            }
+
+            // 3. 轮询等待
+            const startTime = Date.now();
+            const checkInterval = setInterval(() => {
+                if (window.ce) {
+                    clearInterval(checkInterval);
+                    this._ce = window.ce;
+                    this._configureCE();
+                    resolve();
+                    return;
+                }
+
+                if (typeof ComputeEngine !== 'undefined') {
+                    try {
+                        if (typeof ComputeEngine.ComputeEngine === 'function') {
+                            window.ce = new ComputeEngine.ComputeEngine();
+                        } else {
+                            window.ce = new ComputeEngine();
+                        }
+                        clearInterval(checkInterval);
+                        this._ce = window.ce;
+                        this._configureCE();
+                        resolve();
+                        return;
+                    } catch (e) { /* ignore */ }
+                }
+
+                if (Date.now() - startTime > 10000) {
+                    clearInterval(checkInterval);
+                    reject(new Error("Compute Engine failed to load."));
+                }
+            }, 100);
+        });
+
+        return this._readyPromise;
+    },
+
+    /**
+     * 配置 Compute Engine
+     * @private
+     */
+    _configureCE: function() {
+        if (!this.ce) return;
+        try {
+            this.ce.assume(["Element", "x", "RealNumbers"]);
+        } catch(e) {
+            console.warn("Failed to assume x is RealNumber:", e);
+        }
+    },
+
+    /**
+     * LaTeX 处理工具集
+     */
+    LatexProcessor: {
+        /**
+         * 将 MathJSON 转换为标准 LaTeX，并进行 Desmos 兼容性处理
+         */
+        jsonToDesmosLatex: function(mathJson) {
+            if (!MathEngine.ce) return "";
+            try {
+                // 优先使用自定义转换器以保证格式控制
+                const latex = this._customJsonToLatex(mathJson);
+                if (latex) return latex;
+
+                // Fallback to CE
+                const box = MathEngine.ce.box(mathJson);
+                return this.cleanForDesmos(box.latex);
+            } catch (e) {
+                console.error("jsonToDesmosLatex failed:", e);
+                return "";
+            }
+        },
+
+        _customJsonToLatex: function(json) {
+            if (typeof json === 'string') {
+                if (json === 'x') return 'x';
+                if (json === 'Pi') return '\\pi';
+                if (json === 'E') return 'e';
+                return json;
+            }
+            if (typeof json === 'number') {
+                return json.toString();
+            }
+            if (Array.isArray(json)) {
+                const op = json[0];
+                const args = json.slice(1);
+                
+                // Functions
+                if (op === 'Sin') return `\\sin(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Cos') return `\\cos(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Tan') return `\\tan(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Arcsin') return `\\arcsin(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Arccos') return `\\arccos(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Arctan') return `\\arctan(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Sinh') return `\\sinh(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Cosh') return `\\cosh(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Tanh') return `\\tanh(${this._customJsonToLatex(args[0])})`;
+                
+                if (op === 'Exp') return `e^{${this._customJsonToLatex(args[0])}}`;
+                if (op === 'Ln') return `\\ln(${this._customJsonToLatex(args[0])})`;
+                if (op === 'Sqrt') return `\\sqrt{${this._customJsonToLatex(args[0])}}`;
+                if (op === 'Abs') return `\\left|${this._customJsonToLatex(args[0])}\\right|`;
+                
+                // Operators
+                if (op === 'Add') {
+                    return args.map(arg => this._customJsonToLatex(arg)).join(' + ');
+                }
+                if (op === 'Subtract') {
+                    return `${this._customJsonToLatex(args[0])} - ${this._wrapIfNeeded(args[1])}`;
+                }
+                if (op === 'Multiply') {
+                    const left = this._wrapIfNeeded(args[0]);
+                    const right = this._wrapIfNeeded(args[1]);
+                    return `${left} \\cdot ${right}`;
+                }
+                if (op === 'Divide') {
+                    return `\\frac{${this._customJsonToLatex(args[0])}}{${this._customJsonToLatex(args[1])}}`;
+                }
+                if (op === 'Power') {
+                    const base = this._wrapIfNeeded(args[0], true);
+                    const exp = this._customJsonToLatex(args[1]);
+                    return `${base}^{${exp}}`;
+                }
+            }
+            return null;
+        },
+
+        _wrapIfNeeded: function(json, isPowerBase = false) {
+            if (Array.isArray(json)) {
+                const op = json[0];
+                if (op === 'Add' || op === 'Subtract') return `(${this._customJsonToLatex(json)})`;
+                if (isPowerBase) {
+                    // Base of power should almost always be wrapped if it's not a simple symbol
+                    // e.g. sin(x)^2 -> (sin(x))^2 or \sin^2(x)
+                    // simpler to just wrap
+                    return `(${this._customJsonToLatex(json)})`;
+                }
+                if (typeof json === 'number' && json < 0) return `(${json})`;
+            }
+            return this._customJsonToLatex(json);
+        },
+
+        cleanForDesmos: function(latex) {
+            if (!latex) return "";
+            let s = latex;
+
+            s = s.replace(/\s+/g, ' ').trim();
+            s = s.replace(/\\exponentialE/g, 'e');
+            s = s.replace(/\\imaginaryI/g, 'i');
+            s = s.replace(/\\differentialD/g, 'd');
+            s = s.replace(/\\mathrm{([^{}]+)}/g, '$1');
+            s = s.replace(/\\operatorname{([^{}]+)}/g, '$1');
+
+            const funcs = ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'ln', 'log', 'min', 'max', 'exp'];
+            funcs.forEach(f => {
+                const re = new RegExp(`(?<!\\\\)\\b${f}\\b`, 'gi');
+                s = s.replace(re, `\\${f}`);
+            });
+
+            s = s.replace(/\\asin\b/g, "\\arcsin");
+            s = s.replace(/\\acos\b/g, "\\arccos");
+            s = s.replace(/\\atan\b/g, "\\arctan");
+            s = s.replace(/\\abs{([^{}]+)}/g, "\\left|$1\\right|");
+            
+            return s;
+        },
+
+        normalizeForCE: function(latex) {
+            if (!latex) return "";
+            let s = latex;
+            s = s.replace(/\\operatorname{([^{}]+)}/g, '$1');
+            s = s.replace(/\\cdot/g, '*');
+            return s.trim();
+        }
+    },
+
+    // 游戏配置
+    config: {
+        minDepth: 2,
+        maxDepth: 3,
+        // 函数列表 (根据用户规则)
+        baseFunctions: [
+            'Exp', 'Ln', 'Power', 
+            'Sin', 'Cos', 'Tan', 
+            'Arcsin', 'Arccos', 'Arctan', 
+            'Sinh', 'Cosh', 'Tanh'
+        ], 
+        // 运算列表
+        operators: ['Add', 'Subtract', 'Multiply', 'Divide'], 
+        // 基础数字
+        constants: [1, 2, 3, 4, 5], 
+        variables: ['x'],
+        currentDifficulty: 'medium'
+    },
+
     setDifficulty: function(level) {
+        this.config.currentDifficulty = level;
+        // 难度和套的层数有关
         switch(level) {
             case 'easy':
                 this.config.minDepth = 1;
-                this.config.maxDepth = 2;
-                this.config.functions = ['sin', 'cos', 'exp', 'log', 'sqrt', 'abs'];
+                this.config.maxDepth = 2; 
                 break;
             case 'medium':
                 this.config.minDepth = 2;
-                this.config.maxDepth = 3;
-                this.config.functions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp', 'log', 'sqrt', 'abs'];
+                this.config.maxDepth = 3; 
                 break;
             case 'hard':
                 this.config.minDepth = 3;
-                this.config.maxDepth = 5;
-                this.config.functions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp', 'log', 'sqrt', 'abs'];
+                this.config.maxDepth = 4; // 深度套娃
                 break;
             default:
                 this.config.minDepth = 2;
@@ -42,335 +268,344 @@ const MathEngine = {
     },
 
     /**
-     * 生成随机表达式字符串
-     * @param {number} depth 当前深度
-     * @returns {string} 表达式字符串
+     * 生成随机表达式
+     * 规则：
+     * 1. 基础数字：1-5 (30%), x (70%)
+     * 2. 函数：Exp, Ln, Power, Trig, Inverse Trig, Hyperbolic Trig
+     * 3. 运算：+, -, *, / (两边不相同)
+     * 4. 本质是函数和运算的套娃
      */
-    generateRandomExpression: function(depth = 0) {
-        // 如果达到最大深度，必须返回终结符
-        if (depth >= this.config.maxDepth) {
-            return this._getRandomTerminal();
-        }
+    generateRandomExpression: function() {
+        const maxAttempts = 50; // 减少尝试次数，防止卡死
+        const startTime = Date.now();
+        let failedReasons = {};
 
-        // 随机决定生成什么：终结符、一元函数、二元运算
-        const rand = Math.random();
-        
-        // 深度越深，终结概率越大
-        const terminalProb = 0.1 + (depth / this.config.maxDepth) * 0.8;
-
-        // 强制执行 minDepth
-        if (depth < this.config.minDepth || rand > terminalProb) {
-            // 生成非终结符 (函数或操作符)
-            if (Math.random() < 0.4) { // 40% 概率生成一元函数
-                let func = Utils.randomChoice(this.config.functions);
-                func = func.replace(/\{.+/, ''); // 清洗
-                const inner = this.generateRandomExpression(depth + 1);
-                return `${func}(${inner})`;
-            } else { // 60% 概率生成二元运算
-                const op = Utils.randomChoice(this.config.operators);
-                const left = this.generateRandomExpression(depth + 1);
-                const right = this.generateRandomExpression(depth + 1);
-                return `(${left} ${op} ${right})`;
+        for (let i = 0; i < maxAttempts; i++) {
+            // 超时保护：超过 500ms 还没生成出来就停止
+            if (Date.now() - startTime > 500) {
+                console.warn("Generation timeout (500ms). Returning fallback.");
+                break;
             }
-        } else {
-            // 达到 minDepth 后，有概率生成终结符
-            return this._getRandomTerminal();
+
+            const depth = Utils.randomInt(this.config.minDepth, this.config.maxDepth);
+            const json = this._generateRecursiveMathJSON(depth);
+            
+            // 1. 结构检查：必须包含 x
+            if (!this._hasVariable(json, 'x')) {
+                failedReasons.noX = (failedReasons.noX || 0) + 1;
+                continue;
+            }
+
+            // 2. 数值检查：必须不是常数
+            if (this._isNumericallyConstant(json)) {
+                failedReasons.constant = (failedReasons.constant || 0) + 1;
+                continue;
+            }
+
+            // 3. 转换为 LaTeX
+            const latex = this.LatexProcessor.jsonToDesmosLatex(json);
+            
+            // 4. 视窗可见性检查 ([-10, 10] x [-10, 10])
+            if (this.isVisibleInViewport(latex)) {
+                return latex;
+            } else {
+                failedReasons.notVisible = (failedReasons.notVisible || 0) + 1;
+                // Log first few failures for debugging
+                if (i < 5) console.log("Failed expression (not visible):", latex);
+            }
         }
-    },
-
-    /**
-     * 获取随机终结符
-     * @private
-     */
-    _getRandomTerminal: function() {
-        if (Math.random() < 0.7) {
-            return Utils.randomChoice(this.config.variables);
-        } else {
-            return Utils.randomChoice(this.config.constants);
+        
+        console.warn("Failed to generate valid expression. Reasons:", failedReasons);
+        
+        // 生成失败后的保底函数，根据难度不同提供不同保底
+        if (this.config.currentDifficulty === 'hard') {
+            return "\\sin(x) \\cdot e^{\\cos(x)}";
+        } else if (this.config.currentDifficulty === 'medium') {
+            return "x^2 + \\sin(x)";
         }
+        return "x + \\sin(x)"; 
     },
 
     /**
-     * 辅助函数：将结果转为实数，如果是复数则返回 NaN
+     * 递归生成 MathJSON
      */
-    _toReal: function(val) {
-        if (typeof val === 'number') return val;
-        // 如果是 math.js 的 Complex 对象或其他非数值
-        return NaN;
-    },
+    _generateRecursiveMathJSON: function(remainingDepth) {
+        // 终止条件：到达最大深度或随机停止 (但这里我们尽量达到 depth 以保证难度)
+        // 用户说难度和套的层数有关，所以我们尽量填满层数
+        if (remainingDepth <= 0) {
+            // 基础数字规则：x 出现概率 70%，其他 30%
+            if (Math.random() < 0.7) {
+                return 'x';
+            } else {
+                return Utils.randomChoice(this.config.constants);
+            }
+        }
 
-    /**
-     * 预处理用户输入的 LaTeX 风格的表达式
-     * @param {string} expr 
-     * @returns {string}
-     */
-    preprocessLatex: function(expr) {
-        if (!expr) return "";
-        let processed = expr.trim();
+        // 随机选择：函数 (Unary) 还是 运算 (Binary)
+        // 50% 概率，或者可以微调
+        const isFunction = Math.random() < 0.5;
 
-        // --- 全新重构，严格按顺序执行 ---
+        if (isFunction) {
+            const func = Utils.randomChoice(this.config.baseFunctions);
+            
+            if (func === 'Power') {
+                // Power 需要两个参数：底数和指数
+                // 递归生成两个参数
+                // Power(f(x), g(x))
+                const base = this._generateRecursiveMathJSON(remainingDepth - 1);
+                const exp = this._generateRecursiveMathJSON(remainingDepth - 1);
+                
+                // 简单保护：避免 0 的负数次方等明显错误，虽然 isVisible 会过滤
+                return ["Power", base, exp];
+            }
 
-        // 1. 预处理：移除 \left 和 \right
-        processed = processed.replace(/\\left/g, '').replace(/\\right/g, '');
+            // 一元函数
+            const inner = this._generateRecursiveMathJSON(remainingDepth - 1);
+            return [func, inner];
 
-        // 2. 最优先处理“容器”类命令，解放其内容
-        processed = processed.replace(/\\frac{([^{}]+)}{([^{}]+)}/g, '(($1)/($2))');
-        processed = processed.replace(/\\sqrt{([^{}]+)}/g, 'sqrt($1)');
-
-        // 3. 标准化函数名 (统一为 math.js 使用的名称)
-        processed = processed.replace(/\\arcsin/g, 'asin');
-        processed = processed.replace(/\\arccos/g, 'acos');
-        processed = processed.replace(/\\arctan/g, 'atan');
-        processed = processed.replace(/\\sin/g, 'sin');
-        processed = processed.replace(/\\cos/g, 'cos');
-        processed = processed.replace(/\\tan/g, 'tan');
-        processed = processed.replace(/\\ln/g, 'log');      // \ln -> log (自然对数)
-        processed = processed.replace(/\\log/g, 'log10');   // \log -> log10
-        processed = processed.replace(/\\sqrt/g, 'sqrt');
-        processed = processed.replace(/\\exp/g, 'exp');
-        processed = processed.replace(/\\pi/g, 'pi');
-        processed = processed.replace(/\\cdot/g, '*');
-
-        // 4. 为无括号的函数添加括号 (例如: acos x -> acos(x), atan2 -> atan(2))
-        const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10', 'sqrt', 'exp', 'abs'];
-        funcs.forEach(fn => {
-            const regex = new RegExp(`\\b${fn}\\s*([a-zA-Z0-9\\.]+)`, 'g');
-            processed = processed.replace(regex, `${fn}($1)`);
-        });
-
-        // 5. 将所有剩余的 TeX 分组括号 {} 转换为标准括号 ()
-        processed = processed.replace(/\{/g, '(').replace(/\}/g, ')');
-
-        // 6. 处理特殊格式（绝对值）
-        processed = processed.replace(/\|([^|]+)\|/g, 'abs($1)');
-
-        // 7. 插入隐式乘法（安全模式）
-        processed = processed.replace(/([0-9\.]+)([a-zA-Z\(])/g, '$1*$2'); // 3x, 3(x+1)
-        processed = processed.replace(/\)([a-zA-Z0-9\(])/g, ')*$1');   // (x+1)x, (x+1)2
-        processed = processed.replace(/([xy])\(/g, '$1*('); // x(x+1)
-
-        return processed;
-    },
-
-    /**
-     * 检查表达式是否在指定区间内有定义
-     * @param {string} expr 表达式
-     * @returns {boolean} 是否有定义
-     */
-    isDefinedInRange: function(expr) {
-        try {
-            const node = math.parse(expr);
-            const code = node.compile();
-            // 在 (-10, 10) 区间内测试 10 个点
-            for (let i = 0; i < 10; i++) {
-                const x = Math.random() * 20 - 10;
-                const result = code.evaluate({ x: x });
-                // 如果结果是有效的实数，则认为有定义
-                if (isFinite(result) && typeof result === 'number') {
-                    return true;
+        } else {
+            // 二元运算
+            const op = Utils.randomChoice(this.config.operators);
+            
+            const left = this._generateRecursiveMathJSON(remainingDepth - 1);
+            let right = this._generateRecursiveMathJSON(remainingDepth - 1);
+            
+            // 规则：二元运算的两边不要是相同的东西
+            let attempts = 0;
+            while (this._isStructurallyEqual(left, right) && attempts < 10) {
+                right = this._generateRecursiveMathJSON(remainingDepth - 1);
+                attempts++;
+            }
+            
+            // 如果尝试多次还是相同，强制改变 right
+            if (this._isStructurallyEqual(left, right)) {
+                if (typeof right === 'number') {
+                    right = (right % 5) + 1; // 变成另一个数字
+                } else if (right === 'x') {
+                    right = 1;
+                } else {
+                    // 也就是包裹一层，或者换成常数
+                    right = 1; 
                 }
             }
+
+            return [op, left, right];
+        }
+    },
+
+    _isStructurallyEqual: function(json1, json2) {
+        return JSON.stringify(json1) === JSON.stringify(json2);
+    },
+
+    isVisibleInViewport: function(latex) {
+        if (!this.ce) {
+            console.warn("isVisibleInViewport: ce not ready");
+            return true;
+        }
+        try {
+            // 使用 LatexProcessor.normalizeForCE 进行预处理
+            const normalized = this.LatexProcessor.normalizeForCE(latex);
+            
+            // 确保 x 被定义为变量
+            // 如果 x 已经被定义过，就不要再定义了，否则会报错
+            // 可以通过 declare 放在 try-catch 中来忽略错误
+            try {
+                if (!this.ce.lookup("x")) {
+                    this.ce.declare("x", {domain: "RealNumbers"});
+                }
+            } catch(e) {
+                // Ignore
+            }
+
+            const box = this.ce.parse(normalized);
+            
+            if (box.head === 'Error') {
+                console.warn("isVisibleInViewport: Parse Error for latex:", latex, "normalized:", normalized);
+                return false;
+            }
+
+            // 采样点
+            let validPoints = 0;
+            // 记录最后一次无效的 y 值以供调试
+            let lastInvalidY = null;
+            let lastInvalidX = null;
+            let failureReason = "All points out of range";
+
+            // 优化：步长从 0.5 增加到 1，减少计算量
+            for (let x = -10; x <= 10; x += 1) {
+                // 关键修正：使用 .evaluate() 后再 .N() 获取数值近似值，防止返回符号结果 (如 sqrt(2))
+                // 注意：Compute Engine 的 .value 可能返回 null 如果结果不是数字
+                // 使用 .numericValue 尝试获取机器数
+                // 或者 .N().value
+                
+                // 显式替换 x
+                const valBox = box.subs({x: x}).evaluate();
+                let y = valBox.value;
+                
+                // 如果直接 .value 是 null (非数字)，尝试 .N().value (数值近似)
+                if (y === null || typeof y !== 'number') {
+                    const numericBox = valBox.N();
+                    y = numericBox.value;
+                    
+                    // 如果还是不行，尝试 .numericValue 属性 (有些版本支持)
+                    if (y === null || typeof y !== 'number') {
+                        if (typeof numericBox.numericValue === 'number') {
+                            y = numericBox.numericValue;
+                        } else if (typeof numericBox.valueOf() === 'number') {
+                            y = numericBox.valueOf();
+                        }
+                    }
+                }
+
+                if (typeof y === 'number' && isFinite(y)) {
+                    // 只要有一个点在视窗垂直范围内，就认为是有效关卡
+                    if (y >= -10 && y <= 10) {
+                        return true;
+                    }
+                    validPoints++;
+                } else {
+                    lastInvalidX = x;
+                    lastInvalidY = valBox.toString(); // 记录一下原始 box 看看是什么
+                    if (validPoints === 0) failureReason = `Undefined or Complex at x=${x}`;
+                }
+            }
+            
+            // 调试日志：如果一个可见点都没有，打印一下发生了什么
+            console.log(`isVisibleInViewport failed for: ${latex} (norm: ${normalized}). Reason: ${failureReason}. Last invalid (x=${lastInvalidX}): ${lastInvalidY}`);
+            
+            return false;
         } catch (e) {
-            // 解析或计算失败，视为无定义
+            console.error("isVisibleInViewport exception:", e);
             return false;
         }
-        // 所有测试点都无定义
+    },
+
+    /**
+     * 检查表达式是否在常用区间内有定义
+     * (Alias for isVisibleInViewport for backward compatibility)
+     */
+    isDefinedInRange: function(latex) {
+        return this.isVisibleInViewport(latex);
+    },
+
+    _isNumericallyConstant: function(json) {
+        try {
+            if (!this.ce) return false;
+            const box = this.ce.box(json);
+            const x1 = 0.123456;
+            const x2 = 1.654321;
+            const v1 = box.evaluate({x: x1}).value;
+            const v2 = box.evaluate({x: x2}).value;
+            
+            if (typeof v1 === 'number' && typeof v2 === 'number' && isFinite(v1) && isFinite(v2)) {
+                if (Math.abs(v1 - v2) < 1e-9) return true;
+            }
+            return false;
+        } catch(e) { return false; }
+    },
+
+    _hasVariable: function(json, varName) {
+        if (typeof json === 'string') return json === varName;
+        if (Array.isArray(json)) {
+            return json.some(item => this._hasVariable(item, varName));
+        }
         return false;
     },
 
-    /**
-     * 递归计算表达式节点的深度
-     * @param {math.Node} node 
-     * @returns {number}
-     */
-    getExpressionDepth: function(node) {
-        if (!node) return 0;
-        if (node.isSymbolNode || node.isConstantNode) {
-            return 1;
-        }
-        if (node.isOperatorNode || node.isFunctionNode) {
-            if (!node.args || node.args.length === 0) return 1;
-            // 深度 = 1 + 所有子节点中的最大深度
-            return 1 + Math.max(...node.args.map(arg => this.getExpressionDepth(arg)));
-        }
-        return 1; // 对未知节点返回基础深度
-    },
-
-    /**
-     * 获取表达式化简后的深度
-     * @param {string} expr 
-     * @returns {number}
-     */
-    getSimplifiedDepth: function(expr) {
+    verifyEquivalence: function(targetLatex, userLatex) {
+        if (!this.ce) return false;
         try {
-            const simplifiedNode = math.simplify(expr);
-            return this.getExpressionDepth(simplifiedNode);
+            const targetBox = this.ce.parse(this.LatexProcessor.normalizeForCE(targetLatex));
+            const userBox = this.ce.parse(this.LatexProcessor.normalizeForCE(userLatex));
+
+            if (targetBox.isSame(userBox)) return true;
+            try { if (targetBox.simplify().isSame(userBox.simplify())) return true; } catch (e) {}
+
+            return this._checkNumericalEquivalence(targetBox, userBox);
         } catch (e) {
-            return 0; // 如果化简或解析失败，返回0
+            console.error("Verification error:", e);
+            return false;
         }
     },
 
-    /**
-     * 验证两个表达式是否等价
-     * 采用“符号化简 + 数值验证”的综合方式
-     * @param {string} targetExpr 目标表达式
-     * @param {string} userExpr 用户表达式
-     * @returns {boolean} 是否等价
-     */
-    verifyEquivalence: function(targetExpr, userExpr) {
-        // 预处理双方，确保格式统一
-        const processedTargetExpr = this.preprocessLatex(targetExpr);
-        const processedUserExpr = this.preprocessLatex(userExpr);
+    _checkNumericalEquivalence: function(box1, box2) {
+        const testPoints = this._generateTestPoints();
+        let validPoints = 0;
+        let mismatchCount = 0;
 
-        let node1, node2;
-        try {
-            node1 = math.parse(processedTargetExpr);
-            node2 = math.parse(processedUserExpr);
-        } catch (e) {
-            Logger.error("Parsing error after preprocessing:", e, 
-                {target: processedTargetExpr, user: processedUserExpr});
-            return false;
-        }
+        for (const x of testPoints) {
+            const val1 = box1.evaluate({x}).value;
+            const val2 = box2.evaluate({x}).value;
+            const def1 = (typeof val1 === 'number' && isFinite(val1));
+            const def2 = (typeof val2 === 'number' && isFinite(val2));
 
-        // 2. 符号验证尝试：相减并化简
-        try {
-            // 构造差异表达式: (target) - (user)
-            const diffNode = new math.OperatorNode('-', 'subtract', [node1, node2]);
-            
-            // 使用 math.simplify 尝试化简
-            const simplified = math.simplify(diffNode);
-            // 检查是否化简为 0
-            const sString = simplified.toString();
-            if (sString === '0' || sString === ' -0') {
-                Logger.log("Symbolic verification passed (simplify)!");
-                return true;
-            }
-            
-            // 尝试 rationalize (有理化)，对于多项式很有效
-            try {
-                const rationalized = math.rationalize(diffNode);
-                if (rationalized.toString() === '0') {
-                    Logger.log("Symbolic verification passed (rationalize)!");
-                    return true;
-                }
-            } catch (ratError) {
-                // rationalize 可能失败，忽略
-            }
-        } catch (e) {
-            Logger.warn("Symbolic simplification failed, falling back to numerical.", e);
-        }
-
-        // 3. 数值验证 (作为补充，防止符号化简失败)
-        // 关键改进：增加在定义域内的采样密度
-        // 默认点
-        const testPoints = [-5, -Math.PI, -2, -1, -0.5, 0, 0.5, 1, 2, Math.PI, 5];
-        
-        // 增加 [-1, 1] 区间的密集采样 (针对 asin, acos 等)
-        for(let i=0; i<10; i++) testPoints.push((Math.random() - 0.5) * 2);
-        
-        // 增加宽范围采样
-        for(let i=0; i<10; i++) testPoints.push((Math.random() - 0.5) * 20);
-
-        let validComparisons = 0;
-        const epsilon = 1e-4; // 稍微放宽精度要求，应对浮点误差
-
-        let code1, code2;
-        try {
-            code1 = node1.compile();
-            code2 = node2.compile();
-        } catch (e) {
-            return false;
-        }
-
-        for (let x of testPoints) {
-            try {
-                const scope = { x: x };
-                let val1 = code1.evaluate(scope);
-                let val2 = code2.evaluate(scope);
-
-                // 转换为实数 (处理复数结果)
-                val1 = this._toReal(val1);
-                val2 = this._toReal(val2);
-
-                // 检查定义域
-                const isDefined1 = isFinite(val1) && !isNaN(val1);
-                const isDefined2 = isFinite(val2) && !isNaN(val2);
-
-                if (!isDefined1 && !isDefined2) {
-                    // 两者都无定义，视为一致，但不计入有效比较
-                    continue; 
-                }
-
-                if (isDefined1 !== isDefined2) {
-                    Logger.log(`Domain mismatch at x=${x}: ${val1} vs ${val2}`);
-                    return false;
-                }
-
-                // 两者都有定义，比较数值
-                if (Math.abs(val1 - val2) > epsilon) {
-                    Logger.log(`Numerical mismatch at x=${x}: ${val1} vs ${val2}`);
-                    return false;
-                }
-                
-                validComparisons++;
-            } catch (e) {
-                // 计算出错，跳过
+            if (!def1 && !def2) continue;
+            if (def1 !== def2) {
+                mismatchCount++;
+                if (mismatchCount > 2) return false;
                 continue;
             }
+            if (!this._areValuesEqual(val1, val2)) return false;
+            validPoints++;
         }
-
-        // 如果没有有效比较点，我们无法确定。
-        if (validComparisons === 0) {
-            Logger.warn("No valid comparison points found in initial range. Extending search...");
-            // 尝试在更广泛的范围内找点
-            for(let i=0; i<50; i++) {
-                // 混合不同尺度的随机数
-                const scale = (i % 3 === 0) ? 1 : ((i % 3 === 1) ? 10 : 100);
-                const x = (Math.random() - 0.5) * 2 * scale; 
-                try {
-                    let val1 = code1.evaluate({x});
-                    let val2 = code2.evaluate({x});
-                    val1 = this._toReal(val1);
-                    val2 = this._toReal(val2);
-                    
-                    const d1 = isFinite(val1) && !isNaN(val1);
-                    const d2 = isFinite(val2) && !isNaN(val2);
-
-                    if (d1 && d2) {
-                        if (Math.abs(val1 - val2) > epsilon) return false;
-                        validComparisons++;
-                    } else if (d1 !== d2) {
-                         return false;
-                    }
-                } catch(e) {}
-            }
-        }
-
-        if (validComparisons === 0) {
-            Logger.log("Verification inconclusive (no valid points). Assuming false.");
-            return false;
-        }
-
-        Logger.log(`Numerical verification passed with ${validComparisons} points.`);
+        
+        if (validPoints < 5) return this._monteCarloCheck(box1, box2);
         return true;
     },
 
-    /**
-     * 检查表达式是否有效（基本语法检查）
-     * @param {string} expr 
-     * @returns {boolean}
-     */
-    isValid: function(expr) {
-        try {
-            // 在验证前先进行预处理
-            const processedExpr = this.preprocessLatex(expr);
-            math.parse(processedExpr);
-            return true;
-        } catch (e) {
-            return false;
+    _monteCarloCheck: function(box1, box2) {
+        for (let i = 0; i < 50; i++) {
+            const x = (Math.random() - 0.5) * 100;
+            const val1 = box1.evaluate({x}).value;
+            const val2 = box2.evaluate({x}).value;
+            const def1 = (typeof val1 === 'number' && isFinite(val1));
+            const def2 = (typeof val2 === 'number' && isFinite(val2));
+
+            if (def1 && def2) {
+                if (!this._areValuesEqual(val1, val2)) return false;
+                return true; 
+            }
         }
+        return true; 
+    },
+
+    _areValuesEqual: function(v1, v2) {
+        if (Math.abs(v1 - v2) < 1e-9) return true;
+        if (Math.abs(v1 - v2) / Math.max(Math.abs(v1), Math.abs(v2)) < 1e-9) return true;
+        return false;
+    },
+
+    _generateTestPoints: function() {
+        return [
+            0, 1, -1, 0.5, -0.5, 2, -2, 10, -10,
+            Math.PI, -Math.PI, Math.PI/2, Math.E,
+            ...Array.from({length: 10}, () => (Math.random() - 0.5) * 20)
+        ];
+    },
+
+    isValid: function(latex) {
+        if (!this.ce) return false;
+        try {
+            const box = this.ce.parse(latex);
+            if (box.head === 'Error') return false;
+            return box.isValid;
+        } catch (e) { return false; }
+    },
+    
+    getSimplifiedDepth: function(latex) {
+        if (!this.ce) return 0;
+        try {
+            const box = this.ce.parse(latex);
+            return this._calcJsonDepth(box.json);
+        } catch (e) { return 0; }
+    },
+
+    _calcJsonDepth: function(json) {
+        if (!json || !Array.isArray(json)) return 0;
+        if (json.length <= 1) return 1;
+        const args = json.slice(1);
+        return 1 + Math.max(0, ...args.map(arg => this._calcJsonDepth(arg)));
     }
 };
 
-// 暴露给全局
 window.MathEngine = MathEngine;
