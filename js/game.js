@@ -198,9 +198,9 @@ const Game = {
         // This is crucial for mathjs to recognize functions instead of symbols
         const funcs = ['sin', 'cos', 'tan', 'atan', 'asin', 'acos', 'log', 'log10', 'exp', 'abs', 'sqrt'];
         funcs.forEach(f => {
-            // Match function name followed by a variable/number without parentheses
-            // e.g., "atan x" -> "atan(x)", "sin 2x" -> "sin(2x)"
-            const reg = new RegExp('(' + f + ')\\s*([x0-9]+)(?!\\()', 'g');
+            // Match function name followed by a variable/number/decimal (optionally negative) without parentheses
+            // e.g., "atan x" -> "atan(x)", "sin -2x" -> "sin(-2x)"
+            const reg = new RegExp('(' + f + ')\\s*(-?[x0-9\\.]+)(?!\\()', 'g');
             converted = converted.replace(reg, '$1($2)');
         });
 
