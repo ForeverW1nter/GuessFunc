@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- MathJS for expression parsing and evaluation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
-    <!-- D3 and Function Plot for graphing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-    <script src="https://unpkg.com/function-plot/dist/function-plot.js"></script>
 </head>
 <body>
     <div class="container">
@@ -52,16 +49,28 @@
                 <div class="rules-body">
                     <p>欢迎来到“猜函数”！你的目标是找出隐藏的<strong>目标函数 f(x)</strong>。</p>
                     <ul>
-                        <li><strong>观察图象：</strong> 页面上方显示了目标函数在特定范围内的一部分图象。</li>
-                        <li><strong>输入函数：</strong> 你可以输入任何初等函数（指数、对数、幂、三角、反三角及其组合）。</li>
-                        <li><strong>引用目标函数：</strong> 你的输入可以包含 <code>f(x)</code> 及其导数。
+                        <li><strong>观察图象：</strong> 页面上方显示了目标函数的一部分图象。</li>
+                        <li><strong>输入函数：</strong> 支持所有初等函数。
                             <ul>
-                                <li><code>f'(x)</code> 表示一阶导数，<code>f''(x)</code> 表示二阶导数，依此类推。</li>
-                                <li>支持复合，如 <code>f'(x+1)</code> 或 <code>ln(f(x))</code>。</li>
+                                <li><strong>幂/对数：</strong> <code>x^2, sqrt(x), exp(x), ln(x), log(x, base)</code></li>
+                                <li><strong>三角函数：</strong> <code>sin(x), cos(x), tan(x), cot(x), sec(x), csc(x)</code></li>
+                                <li><strong>反三角函数：</strong> <code>asin(x), acos(x), atan(x)</code> (也支持 <code>arcsin, arccos, arctan</code>)</li>
+                                <li><strong>组合：</strong> 支持 <code>+ - * /</code> 及括号嵌套。</li>
                             </ul>
                         </li>
-                        <li><strong>判定标准：</strong> 如果你输入的函数（在展开/求导后）在代数上与目标函数等价，你就赢了！</li>
-                        <li><strong>对比图象：</strong> 你提交的每一个合法函数都会在图象上以不同颜色显示，方便你对比和调整。</li>
+                        <li><strong>引用目标函数：</strong>
+                            <ul>
+                                <li>使用 <code>f(x)</code> 引用目标函数。</li>
+                                <li>使用 <code>f'(x)</code>, <code>f''(x)</code>, <code>f'''(x)</code> 等表示导数。</li>
+                                <li>支持复合，如 <code>f(sin(x))</code> 或 <code>arctan(f(x))</code>。</li>
+                            </ul>
+                        </li>
+                        <li><strong>判定标准：</strong> 
+                            <ul>
+                                <li>你的输入在代数上必须与 <code>f(x)</code> 等价。</li>
+                                <li><strong>注意：</strong> 最终答案中不能包含 <code>f</code> 字符，必须完全展开为 <code>x</code> 的函数。</li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

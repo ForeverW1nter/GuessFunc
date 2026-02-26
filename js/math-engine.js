@@ -15,20 +15,38 @@ const MathEngine = {
      */
     evaluateSymbolically: function(userInput, targetFuncStr) {
         try {
+            // 1. Basic validation of user input
+            let userNode;
+            try {
+                userNode = math.parse(userInput);
+            } catch (e) {
+                throw new Error("表达式语法错误，请检查括号或运算符。");
+            }
+
             // Update cache if target function changed
             if (this.derivativeCache.targetFuncStr !== targetFuncStr) {
-                const targetNode = math.parse(targetFuncStr);
-                const derivatives = [targetNode];
-                for (let i = 1; i <= 5; i++) {
-                    derivatives[i] = math.derivative(derivatives[i-1], 'x');
+                try {
+                    const targetNode = math.parse(targetFuncStr);
+                    const derivatives = [targetNode];
+                    for (let i = 1; i <= 5; i++) {
+                        derivatives[i] = math.derivative(derivatives[i-1], 'x');
+                    }
+                    this.derivativeCache = { targetFuncStr, derivatives };
+                } catch (e) {
+                    console.error("Target function parse error:", e);
+                    throw new Error("目标函数定义不合法。");
                 }
-                this.derivativeCache = { targetFuncStr, derivatives };
             }
 
             const derivatives = this.derivativeCache.derivatives;
 
+            // Normalize input aliases
+            let processedInput = userInput
+                .replace(/arcsin/g, 'asin')
+                .replace(/arccos/g, 'acos')
+                .replace(/arctan/g, 'atan');
+
             // Normalize input to handle f'(x), f''(x) etc.
-            let processedInput = userInput;
             processedInput = processedInput.replace(/f('+)\((.*?)\)/g, (match, primes, args) => {
                 return `__f${primes.length}__(${args})`;
             });
@@ -39,13 +57,17 @@ const MathEngine = {
             // Transform the node to substitute __fN__ functions
             const finalTransformed = node.transform(function (n, path, parent) {
                 if (n.type === 'FunctionNode' && n.name.startsWith('__f') && n.name.endsWith('__')) {
-                    const order = parseInt(n.name.match(/\d+/)[0]);
+                    const match = n.name.match(/\d+/);
+                    if (!match) return n;
+                    const order = parseInt(match[0]);
                     const arg = n.args[0]; 
                     
+                    if (order >= derivatives.length) return n;
                     const derivNode = derivatives[order];
                     
                     // Replace 'x' in derivNode with 'arg'
-                    return derivNode.transform(function (sn) {
+                    // We use clone() to avoid modifying the cached node
+                    return derivNode.cloneDeep().transform(function (sn) {
                         if (sn.type === 'SymbolNode' && sn.name === 'x') {
                             return arg;
                         }
@@ -55,7 +77,13 @@ const MathEngine = {
                 return n;
             });
 
-            return finalTransformed;
+            // IMPORTANT: Simplify the result to prevent exponential growth of the string representation
+            // but use a timeout or basic simplification if it's too complex.
+            try {
+                return math.simplify(finalTransformed);
+            } catch (e) {
+                return finalTransformed;
+            }
         } catch (e) {
             console.error("Symbolic Evaluation Error:", e);
             throw e;
@@ -72,15 +100,23 @@ const MathEngine = {
     isEquivalent: function(expr1, expr2) {
         try {
             // 1. Cheap string comparison
-            if (expr1.replace(/\s/g, '') === expr2.replace(/\s/g, '')) return true;
+            const s1 = expr1.replace(/\s/g, '');
+            const s2 = expr2.replace(/\s/g, '');
+            if (s1 === s2) return true;
 
-            // 2. Numeric check (sampling) - usually faster and more robust than symbolic simplify
-            const node1 = math.parse(expr1);
-            const node2 = math.parse(expr2);
+            // 2. Numeric check (sampling) - usually faster and more robust
+            let node1, node2;
+            try {
+                node1 = math.parse(expr1);
+                node2 = math.parse(expr2);
+            } catch (e) {
+                return false;
+            }
+
             const code1 = node1.compile();
             const code2 = node2.compile();
 
-            const testPoints = [-5, -2, -1, -0.5, 0.1, 0.5, 1, 2, 5]; // Fewer points for speed
+            const testPoints = [-5, -2, -1, -0.5, 0.1, 0.5, 1, 2, 5]; 
             const epsilon = 1e-8;
 
             let validPoints = 0;
@@ -89,8 +125,8 @@ const MathEngine = {
                     const v1 = code1.evaluate({x: x});
                     const v2 = code2.evaluate({x: x});
                     
-                    const val1 = typeof v1 === 'number' ? v1 : (v1.re !== undefined ? v1.re : NaN);
-                    const val2 = typeof v2 === 'number' ? v2 : (v2.re !== undefined ? v2.re : NaN);
+                    const val1 = typeof v1 === 'number' ? v1 : (v1 && v1.re !== undefined ? v1.re : NaN);
+                    const val2 = typeof v2 === 'number' ? v2 : (v2 && v2.re !== undefined ? v2.re : NaN);
 
                     if (isNaN(val1) || isNaN(val2) || !isFinite(val1) || !isFinite(val2)) continue; 
                     
@@ -103,15 +139,17 @@ const MathEngine = {
                 }
             }
             
-            // If we found some valid points and they all matched, it's likely equivalent.
             if (validPoints > 0) return true;
 
             // 3. Symbolic check as a fallback (limited)
-            try {
-                const simplified1 = math.simplify(expr1).toString();
-                const simplified2 = math.simplify(expr2).toString();
-                if (simplified1 === simplified2) return true;
-            } catch (e) {}
+            // Only try simplify if the strings are not too long to avoid hangs
+            if (expr1.length < 500 && expr2.length < 500) {
+                try {
+                    const simplified1 = math.simplify(node1).toString();
+                    const simplified2 = math.simplify(node2).toString();
+                    if (simplified1 === simplified2) return true;
+                } catch (e) {}
+            }
 
             return false;
         } catch (e) {

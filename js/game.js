@@ -123,17 +123,15 @@ const Game = {
         if (!input) return;
 
         try {
-            // 1. Check if input is valid
-            math.parse(input);
-
-            // 2. Substitute f and derivatives in input for plotting
+            // 1. Pre-validation and cleaning
+            // Substitute f and derivatives in input for plotting
             const substitutedNode = MathEngine.evaluateSymbolically(input, this.targetFunc);
             const substitutedStr = substitutedNode.toString();
 
-            // 3. Add to plot
+            // 2. Add to plot
             Graph.addUserFunction(input, substitutedStr);
 
-            // 4. Check for algebraic equivalence
+            // 3. Check for algebraic equivalence
             // New rule: if input contains 'f', it doesn't count as a win
             const hasF = /\bf\b|\bf\(/.test(input);
             
@@ -153,7 +151,8 @@ const Game = {
             }
         } catch (e) {
             console.error("Guess Handling Error:", e);
-            messageEl.textContent = '输入格式有误，请检查数学表达式。';
+            // Display the specific error message from MathEngine or a generic one
+            messageEl.textContent = e.message || '输入格式有误，请检查数学表达式。';
             messageEl.className = 'message error';
         }
     },
