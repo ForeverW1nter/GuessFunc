@@ -70,74 +70,71 @@ const Game = {
 
         try {
             for (const exp of expressions) {
-                if (exp.id === 'target-def' || exp.id === 'target-plot' || exp.id.startsWith('win-check')) continue;
-                
-                let latex = exp.latex;
-                if (!latex) continue;
+                try {
+                    if (exp.id === 'target-def' || exp.id === 'target-plot' || exp.id.startsWith('win-check')) continue;
+                    
+                    let latex = exp.latex;
+                    if (!latex) continue;
 
-                console.log("Checking Expression:", latex);
+                    console.log("Checking Expression:", latex);
 
-                // Rule: Must not contain 'f' or 'target'
-                if (/f\(|f'|target/.test(latex.toLowerCase())) {
-                    console.log("Skipping forbidden reference.");
-                    continue;
-                }
-
-                // --- ROBUST NUMERICAL SAMPLING CHECK ---
-                // We completely rely on numerical sampling now for maximum flexibility.
-                // If the user's function produces the same values as the target at multiple points, 
-                // they are considered equivalent for the purpose of this game.
-                
-                const testPoints = [];
-                // Use a mix of integers, decimals, and edge cases
-                const fixedPoints = [-Math.PI, -1, 0, 1, Math.PI, 10];
-                const randomPoints = [];
-                for(let i=0; i<10; i++) randomPoints.push(Math.random() * 20 - 10);
-                
-                const allPoints = [...fixedPoints, ...randomPoints];
-                
-                let matchCount = 0;
-                let errorCount = 0;
-                let totalValidPoints = 0;
-
-                const userExprStr = this._latexToMathJS(latex);
-                // targetFunc is already a MathJS-compatible string from our generator
-                const targetExprStr = this.targetFunc; 
-
-                for (let x of allPoints) {
-                    try {
-                        const userVal = math.evaluate(userExprStr, { x: x });
-                        const targetVal = math.evaluate(targetExprStr, { x: x });
-                        
-                        // Handle complex numbers if they arise
-                        const u = (typeof userVal === 'object' && userVal.isComplex) ? userVal.re : userVal;
-                        const t = (typeof targetVal === 'object' && targetVal.isComplex) ? targetVal.re : targetVal;
-
-                        if (typeof u !== 'number' || typeof t !== 'number' || isNaN(u) || isNaN(t)) {
-                            continue; // Skip undefined points (like log of negative)
-                        }
-
-                        totalValidPoints++;
-                        const diff = Math.abs(u - t);
-                        
-                        // Use relative error for very large numbers, absolute for small
-                        const threshold = Math.max(1e-7, Math.abs(t) * 1e-7);
-                        
-                        if (diff < threshold) {
-                            matchCount++;
-                        }
-                    } catch (e) {
-                        errorCount++;
+                    // Rule: Must not contain 'f' or 'target'
+                    if (/f\(|f'|target/.test(latex.toLowerCase())) {
+                        console.log("Skipping forbidden reference.");
+                        continue;
                     }
-                }
 
-                console.log(`Sampling Check: ${matchCount}/${totalValidPoints} valid points matched. (${errorCount} eval errors)`);
+                    // --- ROBUST NUMERICAL SAMPLING CHECK ---
+                    const testPoints = [];
+                    const fixedPoints = [-Math.PI, -1, 0, 1, Math.PI, 10];
+                    const randomPoints = [];
+                    for(let i=0; i<10; i++) randomPoints.push(Math.random() * 20 - 10);
+                    
+                    const allPoints = [...fixedPoints, ...randomPoints];
+                    
+                    let matchCount = 0;
+                    let errorCount = 0;
+                    let totalValidPoints = 0;
 
-                // Win condition: at least 80% of valid points must match, and we must have at least 5 valid points
-                if (totalValidPoints >= 5 && matchCount / totalValidPoints >= 0.8) {
-                    this._onWin();
-                    hasWonInThisCheck = true;
-                    break; 
+                    const userExprStr = this._latexToMathJS(latex);
+                    const targetExprStr = this.targetFunc; 
+
+                    for (let x of allPoints) {
+                        try {
+                            const userVal = math.evaluate(userExprStr, { x: x });
+                            const targetVal = math.evaluate(targetExprStr, { x: x });
+                            
+                            const u = (typeof userVal === 'object' && userVal.isComplex) ? userVal.re : userVal;
+                            const t = (typeof targetVal === 'object' && targetVal.isComplex) ? targetVal.re : targetVal;
+
+                            if (typeof u !== 'number' || typeof t !== 'number' || isNaN(u) || isNaN(t)) {
+                                continue; 
+                            }
+
+                            totalValidPoints++;
+                            const diff = Math.abs(u - t);
+                            
+                            // RELAXED EPSILON: Using 1e-3 to handle complex equivalence (like asin(sin(x)) vs x)
+                            const threshold = Math.max(1e-3, Math.abs(t) * 1e-3);
+                            
+                            if (diff < threshold) {
+                                matchCount++;
+                            }
+                        } catch (e) {
+                            errorCount++;
+                        }
+                    }
+
+                    console.log(`Sampling Check: ${matchCount}/${totalValidPoints} valid points matched. (${errorCount} eval errors)`);
+
+                    if (totalValidPoints >= 5 && matchCount / totalValidPoints >= 0.8) {
+                        this._onWin();
+                        hasWonInThisCheck = true;
+                        break; 
+                    }
+                } catch (expError) {
+                    console.error("Expression Check Error (Skipping this line):", expError);
+                    continue; // Ensure one bad expression doesn't block others
                 }
             }
 
