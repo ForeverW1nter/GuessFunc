@@ -74,22 +74,27 @@ button {
     header {
         justify-content: center;
         text-align: center;
+        padding: 10px 10px;
     }
     
     h1 {
         width: 100%;
-        margin-bottom: 5px;
-        font-size: 1rem;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
     }
 
     .game-controls {
-        justify-content: center;
+        justify-content: space-between;
         width: 100%;
+        flex-wrap: nowrap; /* Force one row */
+        gap: 4px;
     }
 
     button {
-        padding: 6px 10px;
-        font-size: 0.8rem;
+        padding: 6px 4px; /* Extreme compression */
+        font-size: 0.72rem;
+        flex: 1; /* Equal width */
+        text-align: center;
     }
 }
 
@@ -240,6 +245,8 @@ main {
     display: flex;
     flex-direction: column;
     position: relative;
+    padding-top: 40px; /* Lower the input box */
+    background: #ffffff;
 }
 
 #target-calculator-input {
