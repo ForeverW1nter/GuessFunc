@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜函数 - Guess the Function</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- MathJS for expression parsing and evaluation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <!-- D3 and Function Plot for graphing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <script src="https://unpkg.com/function-plot/dist/function-plot.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>猜函数 Guess the Function</h1>
+            <div class="game-info">
+                <span id="level-display">当前关卡: 加载中...</span>
+                <button id="help-btn">游玩规则</button>
+            </div>
+        </header>
+
+        <main>
+            <div id="plot-container">
+                <div id="plot"></div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="user-input">输入函数:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="user-input" placeholder="例如: f'(x+1) 或 x^2 + 2x" autocomplete="off">
+                        <button id="guess-btn">提交猜想</button>
+                    </div>
+                </div>
+                <div id="message" class="message"></div>
+            </div>
+
+            <div class="controls">
+                <button id="next-level-btn">随机关卡</button>
+                <button id="create-level-btn">创建关卡</button>
+                <button id="share-btn">分享关卡</button>
+            </div>
+        </main>
+
+        <!-- Rules Modal -->
+        <div id="rules-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>游玩规则</h2>
+                <div class="rules-body">
+                    <p>欢迎来到“猜函数”！你的目标是找出隐藏的<strong>目标函数 f(x)</strong>。</p>
+                    <ul>
+                        <li><strong>观察图象：</strong> 页面上方显示了目标函数在特定范围内的一部分图象。</li>
+                        <li><strong>输入函数：</strong> 你可以输入任何初等函数（指数、对数、幂、三角、反三角及其组合）。</li>
+                        <li><strong>引用目标函数：</strong> 你的输入可以包含 <code>f(x)</code> 及其导数。
+                            <ul>
+                                <li><code>f'(x)</code> 表示一阶导数，<code>f''(x)</code> 表示二阶导数，依此类推。</li>
+                                <li>支持复合，如 <code>f'(x+1)</code> 或 <code>ln(f(x))</code>。</li>
+                            </ul>
+                        </li>
+                        <li><strong>判定标准：</strong> 如果你输入的函数（在展开/求导后）在代数上与目标函数等价，你就赢了！</li>
+                        <li><strong>对比图象：</strong> 你提交的每一个合法函数都会在图象上以不同颜色显示，方便你对比和调整。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Level Modal -->
+        <div id="create-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>创建新关卡</h2>
+                <div class="form-group">
+                    <label>目标函数 f(x):</label>
+                    <input type="text" id="target-func-input" placeholder="例如: x^2 + 2x">
+                </div>
+                <div class="form-group">
+                    <label>显示范围 (x min, x max):</label>
+                    <div class="range-inputs">
+                        <input type="number" id="x-min" value="-5">
+                        <input type="number" id="x-max" value="5">
+                    </div>
+                </div>
+                <button id="save-level-btn">生成关卡并开始</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/math-engine.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
