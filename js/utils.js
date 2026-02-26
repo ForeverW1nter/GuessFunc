@@ -71,7 +71,11 @@ const Utils = {
         const params = new URLSearchParams(window.location.search);
         const encoded = params.get('level');
         if (encoded) {
-            return this.decodeLevel(encoded);
+            const level = this.decodeLevel(encoded);
+            if (level && typeof level.targetFuncStr === 'string' && level.targetFuncStr.trim().length > 0) {
+                return level;
+            }
+            console.warn('Invalid level data from URL, falling back to random level.');
         }
         return null;
     },

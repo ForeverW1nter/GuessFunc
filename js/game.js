@@ -34,7 +34,9 @@ const Game = {
         messageEl.classList.remove('show', 'success');
 
         // Initialize Plot with update listener and LaTeX flag
-        Graph.init(this.targetFunc, () => this.handleDesmosUpdate(), isRawLatex);
+        // Auto-detect LaTeX if not explicitly specified
+        const detectLatex = isRawLatex === true || (typeof this.targetFunc === 'string' && (this.targetFunc.includes('\\') || this.targetFunc.includes('{'))); 
+        Graph.init(this.targetFunc, () => this.handleDesmosUpdate(), detectLatex);
     },
 
     /**
@@ -66,6 +68,7 @@ const Game = {
 
         this._isChecking = true;
         let hasWonInThisCheck = false;
+        let candidateCount = 0;
 
         try {
             for (const exp of expressions) {
@@ -93,6 +96,7 @@ const Game = {
                     continue;
                 }
 
+                candidateCount++;
                 console.log('[DesmosCheck] checking expression', latex);
                 const detail = await Graph.checkEquality(latex);
                 console.log('[DesmosCheck] check finished', detail);
@@ -101,6 +105,11 @@ const Game = {
                     hasWonInThisCheck = true;
                     break;
                 }
+            }
+
+            // If no valid candidates, ensure we do not show success
+            if (!hasWonInThisCheck && candidateCount === 0) {
+                console.log('[DesmosCheck] no valid user expressions to check');
             }
 
             if (!hasWonInThisCheck) {
