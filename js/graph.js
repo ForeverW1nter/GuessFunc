@@ -82,7 +82,7 @@ const Graph = {
         this._isLoading = true;
         const script = document.createElement('script');
         // Try v1.10 (latest stable) instead of v1.9
-        script.src = 'https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc2697482213a42';
+        script.src = 'https://www.desmos.com/api/v1.10/calculator.js?apiKey=edcf0066d2ce4f71b4d898c660f42067';
         script.async = true;
 
         script.onload = () => {
