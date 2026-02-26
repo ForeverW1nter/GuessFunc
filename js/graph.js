@@ -151,20 +151,132 @@ const Graph = {
     },
 
     _toLatex: function(str) {
-        // If it's already a LaTeX string (from MathLive), return it as is
+        if (!str) return '';
+        // If it's already a LaTeX string, return it as is
         if (str.includes('\\') || str.includes('{')) {
             return str;
         }
-        try {
-            const node = math.parse(str);
-            let latex = node.toTex({ parenthesis: 'keep', implicit: 'hide' });
-            latex = latex.replace(/\\operatorname\{arcsin\}/g, '\\arcsin')
-                         .replace(/\\operatorname\{arccos\}/g, '\\arccos')
-                         .replace(/\\operatorname\{arctan\}/g, '\\arctan')
-                         .replace(/\\ln/g, '\\ln');
-            return latex;
-        } catch (e) {
-            return str.replace(/\*/g, '').replace(/x\^(\d+)/g, 'x^{$1}');
+        // Basic conversion for simple strings from random level generator
+        return str
+            .replace(/log10/g, '\\log ')
+            .replace(/sin/g, '\\sin ')
+            .replace(/cos/g, '\\cos ')
+            .replace(/tan/g, '\\tan ')
+            .replace(/sqrt/g, '\\sqrt ')
+            .replace(/asin/g, '\\arcsin ')
+            .replace(/acos/g, '\\arccos ')
+            .replace(/atan/g, '\\arctan ')
+            .replace(/ln/g, '\\ln ')
+            .replace(/abs\((.*?)\)/g, '\\left|$1\\right|')
+            .replace(/\*/g, '') 
+            .replace(/x\^(\d+)/g, 'x^{$1}');
+    },
+
+    /**
+     * Check if a given LaTeX expression is equivalent to the target function.
+     * Uses Desmos HelperExpression and deterministic sampling over x to compute MSE.
+     */
+    checkEquality: function(userLatex) {
+        // Fast reject: equations are not functions to compare
+        if (/=/.test(userLatex)) {
+            return Promise.resolve({ isMatch: false, mse: NaN, count: 0, threshold: 1e-3, elapsedMs: 0 });
         }
+        // Also reject expressions that contain f(...) or derivative of f
+        const lower = (userLatex || '').toLowerCase();
+        const containsFToken = /(?:^|[^\\a-z])f(?:\s*\(|\s*\\left\s*\(|'+|\^|\b)/.test(lower);
+        if (containsFToken || lower.includes('target')) {
+            return Promise.resolve({ isMatch: false, mse: NaN, count: 0, threshold: 1e-3, elapsedMs: 0 });
+        }
+        if (!this.calculator) return Promise.resolve({ isMatch: false, mse: NaN, count: 0, threshold: 1e-3, elapsedMs: 0 });
+
+        const start = performance.now();
+        console.log('[DesmosCheck] start', { userLatex });
+
+        // Define user function g(x) = userLatex
+        try {
+            this.calculator.setExpression({
+                id: '__user_func',
+                latex: `g(x) = ${userLatex}`,
+                secret: true,
+                hidden: true
+            });
+        } catch (e) {
+            console.warn('[DesmosCheck] setExpression g(x) failed', e);
+            return Promise.resolve({ isMatch: false, mse: NaN, count: 0, threshold: 1e-3, elapsedMs: performance.now() - start });
+        }
+
+        // Create a slider t independent of user expressions
+        this.calculator.setExpression({
+            id: '__t_slider',
+            latex: `t=-10`,
+            secret: true,
+            hidden: true
+        });
+
+        // HelperExpression to evaluate squared difference at current t
+        const helperLatex = `(g(t) - f(t))^2`;
+        let helper;
+        try {
+            helper = this.calculator.HelperExpression({ latex: helperLatex });
+        } catch (e) {
+            console.warn('[DesmosCheck] HelperExpression creation failed', e);
+            return Promise.resolve({ isMatch: false, mse: NaN, count: 0, threshold: 1e-3, elapsedMs: performance.now() - start });
+        }
+
+        const threshold = 1e-3;
+        const points = [];
+        for (let x = -10; x <= 10; x += 2) points.push(Number(x.toFixed(2))); // 11 points
+
+        let sumSquared = 0;
+        let validCount = 0;
+
+        const pollNumericValue = () => new Promise((resolve) => {
+            let tries = 0;
+            const tick = () => {
+                tries++;
+                const v = helper.numericValue;
+                if (typeof v === 'number' && isFinite(v)) {
+                    resolve({ v, tries });
+                } else if (tries > 10) {
+                    resolve({ v: NaN, tries });
+                } else {
+                    setTimeout(tick, 10);
+                }
+            };
+            tick();
+        });
+
+        const run = async () => {
+            console.log('[DesmosCheck] helperLatex', helperLatex);
+            for (const t of points) {
+                this.calculator.setExpression({
+                    id: '__t_slider',
+                    latex: `t=${t}`,
+                    secret: true,
+                    hidden: true
+                });
+                const { v, tries } = await pollNumericValue();
+                if (typeof v === 'number' && isFinite(v)) {
+                    sumSquared += v;
+                    validCount++;
+                } else {
+                    console.log('[DesmosCheck] slow poll', { t, tries });
+                }
+            }
+
+            const mse = validCount > 0 ? sumSquared / validCount : NaN;
+            const elapsedMs = performance.now() - start;
+            console.log('[DesmosCheck] result', {
+                userLatex,
+                pointsTested: points.length,
+                validCount,
+                mse,
+                threshold,
+                elapsedMs
+            });
+            return { isMatch: typeof mse === 'number' && isFinite(mse) && mse < threshold, mse, count: validCount, threshold, elapsedMs };
+        };
+
+        return run();
     }
 };

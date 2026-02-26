@@ -278,16 +278,6 @@ main {
     font-weight: 600;
 }
 
-#target-math-field {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 4px;
-    min-height: 40px;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    background: #fdfdfd;
-}
-
 input[type="text"] {
     width: 100%;
     padding: 12px;
