@@ -113,7 +113,11 @@ const MathEngine = {
         // 1. 预处理：移除 \left 和 \right
         processed = processed.replace(/\\left/g, '').replace(/\\right/g, '');
 
-        // 2. 标准化函数名 (统一为 math.js 使用的名称)
+        // 2. 最优先处理“容器”类命令，解放其内容
+        processed = processed.replace(/\\frac{([^{}]+)}{([^{}]+)}/g, '(($1)/($2))');
+        processed = processed.replace(/\\sqrt{([^{}]+)}/g, 'sqrt($1)');
+
+        // 3. 标准化函数名 (统一为 math.js 使用的名称)
         processed = processed.replace(/\\arcsin/g, 'asin');
         processed = processed.replace(/\\arccos/g, 'acos');
         processed = processed.replace(/\\arctan/g, 'atan');
@@ -127,22 +131,20 @@ const MathEngine = {
         processed = processed.replace(/\\pi/g, 'pi');
         processed = processed.replace(/\\cdot/g, '*');
 
-        // 3. 为无括号的函数添加括号 (例如: acos x -> acos(x))
+        // 4. 为无括号的函数添加括号 (例如: acos x -> acos(x), atan2 -> atan(2))
         const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10', 'sqrt', 'exp', 'abs'];
         funcs.forEach(fn => {
-            // 匹配一个函数名，后面跟一个或多个空格，然后是一个不带括号的简单参数
-            const regex = new RegExp(`\\b${fn}\\s+([a-zA-Z0-9\\.]+)`, 'g');
+            const regex = new RegExp(`\\b${fn}\\s*([a-zA-Z0-9\\.]+)`, 'g');
             processed = processed.replace(regex, `${fn}($1)`);
         });
 
-        // 4. 将所有 TeX 分组括号 {} 转换为标准括号 ()
+        // 5. 将所有剩余的 TeX 分组括号 {} 转换为标准括号 ()
         processed = processed.replace(/\{/g, '(').replace(/\}/g, ')');
 
-        // 5. 处理特殊格式（分数、绝对值）
-        processed = processed.replace(/\\frac\(([^)]+)\)\(([^)]+)\)/g, '(($1)/($2))');
+        // 6. 处理特殊格式（绝对值）
         processed = processed.replace(/\|([^|]+)\|/g, 'abs($1)');
 
-        // 6. 插入隐式乘法（安全模式）
+        // 7. 插入隐式乘法（安全模式）
         processed = processed.replace(/([0-9\.]+)([a-zA-Z\(])/g, '$1*$2'); // 3x, 3(x+1)
         processed = processed.replace(/\)([a-zA-Z0-9\(])/g, ')*$1');   // (x+1)x, (x+1)2
         processed = processed.replace(/([xy])\(/g, '$1*('); // x(x+1)
