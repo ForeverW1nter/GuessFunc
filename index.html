@@ -3,64 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>猜函数 - Guess the Function</title>
+    <title>GuessFunc - 猜函数挑战</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- Marked for Markdown parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 引入 Math.js 用于数学表达式处理 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <!-- 引入 Desmos API -->
+    <script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=edcf0066d2ce4f71b4d898c660f42067"></script>
+    <!-- 引入 Markdown 渲染 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <!-- 引入 KaTeX 用于数学公式渲染 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"></script>
+    <!-- 引入 Crypto-JS 加密 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <header>
-            <h1>GUESS THE FUNCTION</h1>
-            <div class="game-controls">
-                <button id="confirm-guess-btn" class="success">确认猜测</button>
-                <button id="next-level-btn" class="primary">随机关卡</button>
-                <button id="create-level-btn">创建关卡</button>
-                <button id="share-btn">分享</button>
-                <button id="help-btn">规则</button>
+        <header class="main-header">
+            <h1>GuessFunc</h1>
+            <div class="toolbar">
+                <button id="btn-check" class="primary-btn">确认猜测</button>
+                <button id="btn-random">随机关卡</button>
+                <button id="btn-create">创建关卡</button>
+                <button id="btn-share">分享关卡</button>
+                <button id="btn-rules">规则说明</button>
             </div>
         </header>
 
-        <main>
-            <div id="plot"></div>
-            <div id="message-overlay">
-                <div id="message" class="message"></div>
-            </div>
-        </main>
-
-        <!-- Rules Modal -->
-        <div id="rules-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>游玩规则</h2>
-                    <span class="close">&times;</span>
-                </div>
-                <div id="markdown-rules-content" class="rules-body" style="padding: 20px; max-height: 70vh; overflow-y: auto;">
-                    <p>正在加载规则...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Create Level Modal -->
-        <div id="create-modal" class="modal fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>创建新关卡</h2>
-                    <span class="close">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div id="target-calculator-input"></div>
-                    <div class="modal-footer">
-                        <button id="save-level-btn" class="primary" style="padding: 12px 30px; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">生成关卡并开始</button>
-                    </div>
-                </div>
+        <div class="main-content">
+            <div id="calculator" class="calculator-container"></div>
+            <div id="message-area" class="message-area hidden">
+                <span id="message-text"></span>
+                <button id="btn-close-msg" class="close-btn">&times;</button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- 规则弹窗 -->
+    <div id="modal-rules" class="modal hidden">
+        <div class="modal-content wide">
+            <span class="close-modal">&times;</span>
+            <div id="rules-content" class="markdown-body">
+                <!-- Content will be loaded here -->
+                加载中...
+            </div>
+        </div>
+    </div>
+
+    <!-- 难度选择弹窗 -->
+    <div id="modal-difficulty" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>选择难度</h2>
+            <div class="difficulty-options">
+                <button class="diff-btn" data-level="easy">简单 (基础函数)</button>
+                <button class="diff-btn" data-level="medium">中等 (进阶函数)</button>
+                <button class="diff-btn" data-level="hard">困难 (复杂嵌套)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本引入 (顺序很重要) -->
     <script src="js/utils.js"></script>
-    <script src="js/graph.js"></script>
-    <script src="js/game.js"></script>
+    <script src="js/math_engine.js"></script>
+    <script src="js/graph_manager.js"></script>
+    <script src="js/ui_manager.js"></script>
+    <script src="js/game_logic.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
