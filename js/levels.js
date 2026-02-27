@@ -2,7 +2,7 @@
 const LEVELS = [
     {
         id: 1,
-        title: "第一关：线性启蒙",
+        title: "1. Lost Memory",
         target: "x",
         unlock: null, // 无条件
         description: `
@@ -126,7 +126,7 @@ const LEVELS = [
 const REGIONS = [
     {
         id: "basics",
-        title: "第一章：基础入门",
+        title: "第 0 章",
         description: `
 ### 初入函数世界
 
@@ -145,7 +145,7 @@ const REGIONS = [
     },
     {
         id: "advanced",
-        title: "第二章：进阶挑战",
+        title: "第 1 章",
         description: `
 ### 探索未知
 
@@ -163,7 +163,7 @@ const REGIONS = [
     },
     {
         id: "parameter",
-        title: "第三章：参数大师",
+        title: "第 2 章",
         description: `
 ### 掌控变量
 

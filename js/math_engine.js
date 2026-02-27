@@ -288,6 +288,7 @@ const MathEngine = {
         normalizeForCE: function(latex) {
             if (!latex) return "";
             let s = latex;
+            s = s.replace(/\\operatorname{abs}\\left\(([^)]*)\\right\)/g, "\\left|$1\\right|");
             s = s.replace(/\\operatorname{([^{}]+)}/g, '$1');
             s = s.replace(/\\cdot/g, '*');
             return s.trim();
