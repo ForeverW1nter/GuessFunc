@@ -50,6 +50,11 @@ button {
     font-weight: 500;
     transition: all 0.2s ease;
     backdrop-filter: blur(5px);
+    height: 38px; /* 统一高度 */
+    box-sizing: border-box; /* 包含 padding */
+    display: inline-flex; /* 使用 flex 居中内容 */
+    align-items: center;
+    justify-content: center;
 }
 
 button:hover {
@@ -245,6 +250,32 @@ button:active {
     margin-bottom: 16px;
 }
 
+/* Options Menu */
+.options-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.option-item {
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    justify-content: flex-start; /* 覆盖默认 center */
+}
+
+.option-item:hover {
+    background-color: #e3f2fd;
+    border-color: #2196F3;
+    color: #1976D2;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .main-header {
@@ -257,22 +288,32 @@ button:active {
     .toolbar {
         width: 100%;
         display: flex;
-        justify-content: space-evenly; /* 均匀分布按钮 */
+        justify-content: center; /* 居中对齐 */
         flex-wrap: nowrap; /* 强制单行 */
-        overflow-x: auto; /* 如果内容溢出，允许滚动 */
-        padding-bottom: 5px;
         gap: 5px; /* 减小按钮间距 */
+        overflow-x: auto; /* 允许微小的横向滚动以防万一 */
+        padding: 0 5px;
     }
     
     button, select {
         padding: 8px 6px; /* 调整内边距 */
         font-size: 0.8rem; /* 减小字体大小 */
         white-space: nowrap;
-        flex-shrink: 0;
+        flex: 1; /* 按钮均分空间 */
+        min-width: 0; /* 允许 flex item 缩小 */
+        height: 36px; /* 稍微减小高度 */
+        margin: 0;
     }
 
     .main-header h1 {
         font-size: 1.4rem;
+        display: none; /* 在极小屏幕上可以考虑隐藏标题，或者减小 */
+    }
+    
+    /* 恢复标题显示但调小 */
+    .main-header h1 {
+        display: block;
+        font-size: 1.2rem;
     }
 
     /* 减小 Desmos 容器的高度，为输入法留出空间 */
@@ -289,9 +330,67 @@ button:active {
         box-sizing: border-box; /* 确保 padding 不会撑破宽度 */
         text-align: center; /* 文字居中 */
     }
+
+    .modal-content {
+        width: 85%; /* 留出左右边距 */
+        padding: 20px;
+    }
 }
 
 /* Hide target expression in Desmos sidebar */
 .dcg-expression-item[expr-id="target"] {
     display: none !important;
+}
+
+/* Level Selection */
+.levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.level-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: left;
+    transition: all 0.2s;
+    cursor: pointer;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 120px;
+    align-items: flex-start; /* 覆盖 button 的默认 center */
+}
+
+.level-card.completed {
+    border-color: #4CAF50;
+    background-color: #e8f5e9;
+}
+
+.level-card:hover {
+    background-color: #f0f7ff;
+    border-color: #2196F3;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.level-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #1976D2;
+}
+
+.level-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

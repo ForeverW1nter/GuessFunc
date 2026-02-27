@@ -1,3 +1,4 @@
+
 /**
  * 游戏逻辑模块
  * 管理游戏状态、关卡生成与加载、判定流程
@@ -6,7 +7,9 @@
 const GameLogic = {
     state: {
         currentLevelExpr: null,
-        isWon: false
+        isWon: false,
+        mode: 'random', // 'random' | 'preset'
+        currentLevelIndex: -1
     },
 
     /**
@@ -42,7 +45,7 @@ const GameLogic = {
     },
 
     /**
-     * 开始一个新关卡
+     * 开始一个新关卡 (底层方法)
      * @param {string} expr 目标表达式 (LaTeX)
      */
     startLevel: function(expr) {
@@ -54,17 +57,31 @@ const GameLogic = {
         GraphManager.setTargetFunction(expr);
         GraphManager.clearAllExceptTarget(); // 清空用户输入
         
-        UIManager.showMessage("新的挑战开始了！请输入你的猜测。", "info");
-        
         // 更新 URL
         const code = Utils.encodeLevel(expr);
         Utils.setQueryParam('level', code);
+        
+        // 更新 UI 状态
+        if (this.state.mode === 'preset') {
+             // 预设模式下，如果有下一关按钮，先隐藏，等赢了再显示
+             if (window.UIManager && window.UIManager.toggleNextButton) {
+                 window.UIManager.toggleNextButton(false);
+             }
+        } else {
+             // 随机模式下，隐藏下一关按钮
+             if (window.UIManager && window.UIManager.toggleNextButton) {
+                 window.UIManager.toggleNextButton(false);
+             }
+        }
     },
 
     /**
      * 开始随机关卡
      */
     startRandomLevel: function() {
+        this.state.mode = 'random';
+        this.state.currentLevelIndex = -1;
+        
         let expr = null;
         let attempts = 0;
         const maxAttempts = 20; 
@@ -88,6 +105,49 @@ const GameLogic = {
         }
 
         this.startLevel(expr);
+        UIManager.showMessage("随机挑战开始了！请输入你的猜测。", "info");
+    },
+
+    /**
+     * 开始预设关卡
+     * @param {number} index 关卡索引
+     */
+    startPresetLevel: function(index) {
+        if (index < 0 || index >= window.LEVELS.length) {
+            console.error("Invalid level index:", index);
+            return;
+        }
+
+        this.state.mode = 'preset';
+        this.state.currentLevelIndex = index;
+        
+        const levelData = window.LEVELS[index];
+        this.startLevel(levelData.target);
+        
+        // 显示关卡说明
+        if (window.UIManager && window.UIManager.showLevelInstruction) {
+            window.UIManager.showLevelInstruction(levelData);
+        } else {
+             UIManager.showMessage(`第 ${index + 1} 关：${levelData.title}`, "info");
+        }
+    },
+
+    /**
+     * 进入下一关
+     */
+    nextLevel: function() {
+        if (this.state.mode === 'preset') {
+            const nextIndex = this.state.currentLevelIndex + 1;
+            if (nextIndex < window.LEVELS.length) {
+                this.startPresetLevel(nextIndex);
+            } else {
+                UIManager.showMessage("恭喜！你已经完成了所有预设关卡！", "success");
+                // 可以回到随机模式或显示通关画面
+            }
+        } else {
+            // 随机模式下，下一关就是重新随机
+            this.startRandomLevel();
+        }
     },
 
     /**
@@ -95,7 +155,12 @@ const GameLogic = {
      */
     checkGuess: function() {
         if (this.state.isWon) {
-            UIManager.showMessage("你已经赢了！请尝试新关卡。", "success");
+            // 如果已经赢了，点击确认猜测可能是想进入下一关
+            if (this.state.mode === 'preset') {
+                this.nextLevel();
+            } else {
+                this.startRandomLevel();
+            }
             return;
         }
 
@@ -125,7 +190,28 @@ const GameLogic = {
      */
     handleWin: function() {
         this.state.isWon = true;
-        UIManager.showMessage("恭喜你！猜对了！", "success");
+        
+        let msg = "恭喜你！猜对了！";
+        if (this.state.mode === 'preset') {
+            const levelData = window.LEVELS[this.state.currentLevelIndex];
+            if (levelData) {
+                StorageManager.markLevelCompleted(levelData.id);
+            }
+            
+            if (this.state.currentLevelIndex < window.LEVELS.length - 1) {
+                msg += " 点击“下一关”继续。";
+                // 显示下一关按钮
+                if (window.UIManager && window.UIManager.toggleNextButton) {
+                    window.UIManager.toggleNextButton(true);
+                }
+            } else {
+                msg += " 你已通关所有预设关卡！";
+            }
+        } else {
+            msg += " 请尝试新关卡。";
+        }
+        
+        UIManager.showMessage(msg, "success");
         // 可以在这里播放音效或撒花效果
     },
 

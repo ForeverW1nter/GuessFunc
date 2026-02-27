@@ -8,7 +8,7 @@
     <!-- 引入 Math.js 用于数学表达式处理 -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
     <!-- 引入 Desmos API -->
-    <script defer src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=edcf0066d2ce4f71b4d898c660f42067"></script>
+    <script defer src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=edcf0066d2ce4f71b4d898c660f42067&lang=zh-CN"></script>
     <!-- 引入 Compute Engine -->
     <script defer src="https://cdn.jsdelivr.net/npm/@cortex-js/compute-engine@0.26.2/dist/compute-engine.min.js"></script>
     
@@ -26,11 +26,14 @@
         <header class="main-header">
             <h1>GuessFunc</h1>
             <div class="toolbar">
-                <button id="btn-check" class="primary-btn">确认猜测</button>
-                <button id="btn-random">随机关卡</button>
-                <button id="btn-create">创建关卡</button>
-                <button id="btn-share">分享关卡</button>
-                <button id="btn-rules">规则说明</button>
+                <button id="btn-check" class="primary-btn">确认</button>
+                <button id="btn-next" class="primary-btn hidden" style="display: none; background-color: #ff9800;">下一关</button>
+                <button id="btn-return" class="hidden" style="display: none;">退出</button>
+                <button id="btn-preset">预设</button>
+                <button id="btn-random">随机</button>
+                <button id="btn-create">创建</button>
+                <button id="btn-share">分享</button>
+                <button id="btn-options">选项</button>
             </div>
         </header>
 
@@ -54,6 +57,20 @@
         </div>
     </div>
 
+    <!-- 选项弹窗 -->
+    <div id="modal-options" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>游戏选项</h2>
+            <div class="options-menu">
+                <button id="btn-rules" class="option-item">📜 规则说明</button>
+                <button id="btn-export-save" class="option-item">💾 导出存档</button>
+                <button id="btn-import-save" class="option-item">📂 导入存档</button>
+                <button id="btn-clear-save" class="option-item" style="color: #f44336; border-color: #f44336;">🗑️ 清空存档</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 难度选择弹窗 -->
     <div id="modal-difficulty" class="modal hidden">
         <div class="modal-content">
@@ -67,8 +84,32 @@
         </div>
     </div>
 
+    <!-- 关卡选择弹窗 -->
+    <div id="modal-levels" class="modal hidden">
+        <div class="modal-content wide">
+            <span class="close-modal">&times;</span>
+            <h2>选择关卡</h2>
+            <div id="levels-list" class="levels-grid">
+                <!-- Levels will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 关卡指引弹窗 -->
+    <div id="modal-level-instruction" class="modal hidden">
+        <div class="modal-content wide">
+            <span class="close-modal">&times;</span>
+            <div id="level-instruction-content" class="markdown-body"></div>
+            <div style="margin-top: 20px; text-align: right;">
+                <button id="btn-start-level" class="primary-btn">开始挑战</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 脚本引入 (顺序很重要) -->
     <script src="js/debug_config.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/storage_manager.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/math_engine.js"></script>
     <script src="js/graph_manager.js"></script>
