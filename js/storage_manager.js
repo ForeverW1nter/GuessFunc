@@ -53,6 +53,40 @@ const StorageManager = {
     },
 
     /**
+     * 检查关卡是否已解锁
+     * @param {Object} unlockCriteria 解锁条件 { levels: [1, 2], count: 5 }
+     * @returns {Object} { unlocked: boolean, reason: string }
+     */
+    checkLevelUnlock: function(unlockCriteria) {
+        if (!unlockCriteria) return { unlocked: true };
+        
+        const completed = this.getCompletedLevels();
+        
+        // 1. 检查特定关卡依赖
+        if (unlockCriteria.levels && Array.isArray(unlockCriteria.levels)) {
+            const missing = unlockCriteria.levels.filter(id => !completed.includes(id));
+            if (missing.length > 0) {
+                return { 
+                    unlocked: false, 
+                    reason: `需要先通关第 ${missing.join(', ')} 关` 
+                };
+            }
+        }
+        
+        // 2. 检查通关数量依赖
+        if (unlockCriteria.count && typeof unlockCriteria.count === 'number') {
+            if (completed.length < unlockCriteria.count) {
+                return { 
+                    unlocked: false, 
+                    reason: `需要累计通关 ${unlockCriteria.count} 个关卡 (当前: ${completed.length})` 
+                };
+            }
+        }
+        
+        return { unlocked: true };
+    },
+
+    /**
      * 导出存档 (加密字符串)
      */
     exportSave: function() {

@@ -4,6 +4,7 @@ const LEVELS = [
         id: 1,
         title: "第一关：线性启蒙",
         target: "x",
+        unlock: null, // 无条件
         description: `
 ### 欢迎来到猜函数游戏！
 
@@ -20,6 +21,7 @@ const LEVELS = [
         id: 2,
         title: "第二关：抛物线",
         target: "x^2",
+        unlock: { levels: [1] }, // 需要通关第1关
         description: `
 ### 弯曲的世界
 
@@ -36,6 +38,7 @@ const LEVELS = [
         id: 3,
         title: "第三关：波浪",
         target: "\\sin(x)",
+        unlock: { levels: [2] }, // 需要通关第2关
         description: `
 ### 周期性波动
 
@@ -53,6 +56,7 @@ const LEVELS = [
         id: 4,
         title: "第四关：绝对值",
         target: "\\left|x\\right|",
+        unlock: { count: 2 }, // 需要总共通过2关
         description: `
 ### V 字仇杀队
 
@@ -68,6 +72,7 @@ const LEVELS = [
         id: 5,
         title: "第五关：指数爆炸",
         target: "2^x",
+        unlock: { levels: [3, 4] }, // 需要通关3和4
         description: `
 ### 增长迅速
 
@@ -77,7 +82,104 @@ const LEVELS = [
 
 **提示：** 指数函数 $a^x$。
         `
+    },
+    {
+        id: 6,
+        title: "第六关：线性参数",
+        target: "a x + b",
+        params: { a: 1, b: 0 },
+        unlock: { count: 3 }, // 需要总共通过3关
+        description: `
+### 动起来！
+
+这是一个**参数关卡**。
+图像是一条直线。
+你可以拖动左侧的滑块 **a** 和 **b** 来改变图像。
+
+*   **a** 控制直线的**斜率**。
+*   **b** 控制直线的**截距**。
+
+请根据这种性质，猜出它的通用表达式。
+
+**提示：** 线性函数通常写成什么形式？
+        `
+    },
+    {
+        id: 7,
+        title: "第七关：正弦波参数",
+        target: "a \\sin(b x) + c",
+        params: { a: 1, b: 1, c: 0 },
+        unlock: { levels: [6] }, // 需要通关第6关
+        description: `
+### 复杂的波浪
+
+拖动滑块观察变化：
+*   **a** 改变振幅（波的高低）。
+*   **b** 改变频率（波的疏密）。
+*   **c** 改变垂直位置。
+
+你能写出包含 a, b, c 的表达式吗？
+        `
+    }
+];
+
+const REGIONS = [
+    {
+        id: "basics",
+        title: "第一章：基础入门",
+        description: `
+### 初入函数世界
+
+欢迎来到函数世界！这里是你的起点。
+我们将从最简单的**线性函数**开始，带你认识常见的数学曲线。
+
+你将学习到：
+*   直线的斜率和截距
+*   简单的多项式
+*   三角函数的基础形态
+
+准备好了吗？让我们开始吧！
+        `,
+        unlock: null,
+        levels: [1, 2, 3]
+    },
+    {
+        id: "advanced",
+        title: "第二章：进阶挑战",
+        description: `
+### 探索未知
+
+做得好！你已经掌握了基础。
+接下来我们将探索更复杂的形状。
+
+本章挑战包括：
+*   **绝对值函数**：尖锐的转折
+*   **指数函数**：爆发式的增长
+
+这些函数在现实世界中无处不在，掌握它们将让你事半功倍。
+        `,
+        unlock: { count: 3 }, // 需要累计通过3关
+        levels: [4, 5]
+    },
+    {
+        id: "parameter",
+        title: "第三章：参数大师",
+        description: `
+### 掌控变量
+
+真正的挑战开始了。
+在这一章，你不仅要认出函数，还要通过调整**参数**来寻找通用的规律。
+
+你将面对：
+*   $y = ax + b$ 中的 $a$ 和 $b$ 是如何影响图像的？
+*   正弦波的振幅和频率是如何被参数控制的？
+
+成为参数大师，你将能驾驭任何函数！
+        `,
+        unlock: { levels: [5] }, // 需要通过第5关
+        levels: [6, 7]
     }
 ];
 
 window.LEVELS = LEVELS;
+window.REGIONS = REGIONS;

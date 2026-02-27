@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GuessFunc - 猜函数挑战</title>
+    <title>猜函数 GuessFunc</title>
     <link rel="stylesheet" href="css/style.css">
     <!-- 引入 Math.js 用于数学表达式处理 -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
     <!-- 引入 Desmos API -->
-    <script defer src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=edcf0066d2ce4f71b4d898c660f42067&lang=zh-CN"></script>
+    <script defer src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6&lang=zh-CN"></script>
     <!-- 引入 Compute Engine -->
     <script defer src="https://cdn.jsdelivr.net/npm/@cortex-js/compute-engine@0.26.2/dist/compute-engine.min.js"></script>
     
@@ -103,6 +103,14 @@
             <div style="margin-top: 20px; text-align: right;">
                 <button id="btn-start-level" class="primary-btn">开始挑战</button>
             </div>
+        </div>
+    </div>
+
+    <!-- 剧情弹窗 -->
+    <div id="modal-story" class="modal hidden">
+        <div class="modal-content wide">
+            <span class="close-modal">&times;</span>
+            <div id="story-content" class="markdown-body"></div>
         </div>
     </div>
 

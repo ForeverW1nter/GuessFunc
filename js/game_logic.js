@@ -30,10 +30,12 @@ const GameLogic = {
         // 2. 检查 URL 是否有关卡参数
         const levelCode = Utils.getQueryParam('level');
         if (levelCode) {
-            const expr = Utils.decodeLevel(levelCode);
-            // 简单验证：只要不是空的就行，MathEngine.verifyEquivalence 会处理非法输入
-            if (expr) {
-                this.startLevel(expr);
+            const levelData = Utils.decodeLevel(levelCode);
+            // 简单验证
+            if (levelData) {
+                // 统一转为对象格式
+                const data = (typeof levelData === 'string') ? {t: levelData} : levelData;
+                this.startLevel(data);
                 return;
             } else {
                 alert("无效的关卡代码，将随机生成关卡。");
@@ -46,29 +48,35 @@ const GameLogic = {
 
     /**
      * 开始一个新关卡 (底层方法)
-     * @param {string} expr 目标表达式 (LaTeX)
+     * @param {Object|string} levelData 关卡数据 {t: "target", p: {params}} 或 "target"
      */
-    startLevel: function(expr) {
-        Logger.log("Starting level:", expr);
-        this.state.currentLevelExpr = expr;
+    startLevel: function(levelData) {
+        // 归一化
+        const data = (typeof levelData === 'string') ? {t: levelData} : levelData;
+        
+        Logger.log("Starting level:", data);
+        this.state.currentLevelData = data; // 保存原始数据用于分享
         this.state.isWon = false;
 
-        // 设置目标函数
-        GraphManager.setTargetFunction(expr);
-        GraphManager.clearAllExceptTarget(); // 清空用户输入
+        // 不再代入参数，保留原始形式，让 Desmos 处理参数
+        // const concreteTarget = MathEngine.substituteParams(data.t, data.p);
+        this.state.currentTarget = data.t; // 保存原始目标用于判定（带参数形式）
+        this.state.currentParams = data.p; // 保存参数列表
+
+        // 设置目标函数和环境
+        // 传递原始表达式，GraphManager 会处理参数滑块
+        GraphManager.setupLevel(data.t, data.p);
         
         // 更新 URL
-        const code = Utils.encodeLevel(expr);
+        const code = Utils.encodeLevel(data);
         Utils.setQueryParam('level', code);
         
         // 更新 UI 状态
         if (this.state.mode === 'preset') {
-             // 预设模式下，如果有下一关按钮，先隐藏，等赢了再显示
              if (window.UIManager && window.UIManager.toggleNextButton) {
                  window.UIManager.toggleNextButton(false);
              }
         } else {
-             // 随机模式下，隐藏下一关按钮
              if (window.UIManager && window.UIManager.toggleNextButton) {
                  window.UIManager.toggleNextButton(false);
              }
@@ -86,13 +94,9 @@ const GameLogic = {
         let attempts = 0;
         const maxAttempts = 20; 
 
-        // 尝试生成一个合格的随机函数
         while (attempts < maxAttempts) {
             attempts++;
             const candidateExpr = MathEngine.generateRandomExpression();
-
-            // 验证：检查函数在 (-10, 10) 区间内是否有定义
-            // 避免生成像 sqrt(-x^2-10) 这种空函数
             if (MathEngine.isDefinedInRange(candidateExpr)) {
                 expr = candidateExpr;
                 break;
@@ -101,10 +105,10 @@ const GameLogic = {
 
         if (!expr) {
             Logger.error(`Failed to generate a valid level after ${maxAttempts} attempts. Using fallback.`);
-            expr = "sin(x) + x"; // 一个更可靠的备用函数
+            expr = "sin(x) + x"; 
         }
 
-        this.startLevel(expr);
+        this.startLevel({t: expr});
         UIManager.showMessage("随机挑战开始了！请输入你的猜测。", "info");
     },
 
@@ -122,7 +126,11 @@ const GameLogic = {
         this.state.currentLevelIndex = index;
         
         const levelData = window.LEVELS[index];
-        this.startLevel(levelData.target);
+        // 预设关卡可能包含 params
+        this.startLevel({
+            t: levelData.target,
+            p: levelData.params
+        });
         
         // 显示关卡说明
         if (window.UIManager && window.UIManager.showLevelInstruction) {
@@ -142,10 +150,8 @@ const GameLogic = {
                 this.startPresetLevel(nextIndex);
             } else {
                 UIManager.showMessage("恭喜！你已经完成了所有预设关卡！", "success");
-                // 可以回到随机模式或显示通关画面
             }
         } else {
-            // 随机模式下，下一关就是重新随机
             this.startRandomLevel();
         }
     },
@@ -155,7 +161,6 @@ const GameLogic = {
      */
     checkGuess: function() {
         if (this.state.isWon) {
-            // 如果已经赢了，点击确认猜测可能是想进入下一关
             if (this.state.mode === 'preset') {
                 this.nextLevel();
             } else {
@@ -164,19 +169,24 @@ const GameLogic = {
             return;
         }
 
-        const userGuess = GraphManager.getUserGuess();
+        const userGuessData = GraphManager.getUserGuessData();
         
-        if (!userGuess) {
+        if (!userGuessData || !userGuessData.latex) {
             UIManager.showMessage("请输入有效的表达式！", "error");
             return;
         }
 
-        Logger.log("User guess:", userGuess);
-        Logger.log("Target:", this.state.currentLevelExpr);
+        Logger.log("User guess:", userGuessData.latex);
+        Logger.log("Params:", userGuessData.params);
+        Logger.log("Target (Concrete):", this.state.currentTarget);
 
         // 调用 MathEngine 验证
-        // MathEngine.verifyEquivalence(target, user)
-        const isCorrect = MathEngine.verifyEquivalence(this.state.currentLevelExpr, userGuess);
+        // 使用带参数的验证逻辑
+        const isCorrect = MathEngine.verifyEquivalence(
+            this.state.currentTarget, 
+            userGuessData.latex,
+            this.state.currentParams // 传入关卡定义的参数列表（用于识别哪些符号是参数）
+        );
 
         if (isCorrect) {
             this.handleWin();
@@ -200,7 +210,6 @@ const GameLogic = {
             
             if (this.state.currentLevelIndex < window.LEVELS.length - 1) {
                 msg += " 点击“下一关”继续。";
-                // 显示下一关按钮
                 if (window.UIManager && window.UIManager.toggleNextButton) {
                     window.UIManager.toggleNextButton(true);
                 }
@@ -212,15 +221,14 @@ const GameLogic = {
         }
         
         UIManager.showMessage(msg, "success");
-        // 可以在这里播放音效或撒花效果
     },
 
     /**
      * 获取分享链接
      */
     getShareLink: function() {
-        if (!this.state.currentLevelExpr) return window.location.href;
-        const code = Utils.encodeLevel(this.state.currentLevelExpr);
+        if (!this.state.currentLevelData) return window.location.href;
+        const code = Utils.encodeLevel(this.state.currentLevelData);
         const url = new URL(window.location);
         url.searchParams.set('level', code);
         return url.toString();

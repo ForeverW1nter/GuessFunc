@@ -1,3 +1,4 @@
+
 /**
  * 数学引擎模块 (MathEngine)
  * 负责与 CortexJS Compute Engine 交互，提供表达式生成、解析、验证等核心功能。
@@ -98,6 +99,73 @@ const MathEngine = {
         } catch(e) {
             console.warn("Failed to assume x is RealNumber:", e);
         }
+    },
+
+    /**
+     * 获取 LaTeX 中的所有符号
+     * @param {string} latex
+     * @returns {string[]} 符号列表
+     */
+    getSymbols: function(latex) {
+        if (!this.ce || !latex) return [];
+        try {
+            const normalized = this.LatexProcessor.normalizeForCE(latex);
+            const box = this.ce.parse(normalized);
+            // unknowns 属性返回表达式中的未知符号
+            // 需要注意的是，x 已经被声明为 RealNumber，可能不被视为 unknown
+            // 但在这里我们需要所有符号
+            // .symbols 属性可能包含所有符号
+            
+            // 如果 ce 版本支持 .symbols
+            // 否则递归查找
+            const symbols = new Set();
+            
+            const extractSymbols = (expr) => {
+                if (!expr) return;
+                if (typeof expr === 'string') {
+                    // 过滤掉常用函数名和数字
+                    if (!this._isKnownFunction(expr) && isNaN(parseFloat(expr))) {
+                        symbols.add(expr);
+                    }
+                } else if (Array.isArray(expr)) {
+                    // [Head, ...args]
+                    // Head 也可能是 symbol，但如果是 "Add", "Sin" 等则不是
+                    // 这里我们只关心 args 中的 symbol，或者是单个 symbol
+                    expr.forEach(arg => extractSymbols(arg));
+                } else if (typeof expr === 'object' && expr !== null) {
+                    // Box object
+                    if (expr.symbol) {
+                        if (!this._isKnownFunction(expr.symbol)) {
+                            symbols.add(expr.symbol);
+                        }
+                    } else if (expr.ops) {
+                        expr.ops.forEach(op => extractSymbols(op));
+                    }
+                }
+            };
+            
+            // 使用 json 形式更安全
+            extractSymbols(box.json);
+            
+            return Array.from(symbols);
+        } catch (e) {
+            console.warn("getSymbols failed:", e);
+            // Fallback: simple regex
+            return (latex.match(/[a-zA-Z]+/g) || []).filter(s => !this._isKnownFunction(s));
+        }
+    },
+    
+    _isKnownFunction: function(name) {
+        const known = [
+            'Add', 'Subtract', 'Multiply', 'Divide', 'Power', 'Negate',
+            'Sin', 'Cos', 'Tan', 'Arcsin', 'Arccos', 'Arctan', 
+            'Sinh', 'Cosh', 'Tanh', 'Exp', 'Ln', 'Log', 'Sqrt', 'Abs',
+            'Pi', 'E', 'x', 'y', 'f', 'g', 'h',
+            'List', 'Sequence', 'Tuple', 'Set', 'Latex',
+            'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan',
+            'sinh', 'cosh', 'tanh', 'exp', 'ln', 'log', 'sqrt', 'abs'
+        ];
+        return known.includes(name);
     },
 
     /**
@@ -512,16 +580,89 @@ const MathEngine = {
         return false;
     },
 
-    verifyEquivalence: function(targetLatex, userLatex) {
+    verifyEquivalence: function(targetLatex, userLatex, params = {}) {
         if (!this.ce) return false;
+        
         try {
-            const targetBox = this.ce.parse(this.LatexProcessor.normalizeForCE(targetLatex));
-            const userBox = this.ce.parse(this.LatexProcessor.normalizeForCE(userLatex));
-
+            // 标准化输入
+            const targetNorm = this.LatexProcessor.normalizeForCE(targetLatex);
+            const userNorm = this.LatexProcessor.normalizeForCE(userLatex);
+            
+            // 解析为 Box
+            let targetBox = this.ce.parse(targetNorm);
+            let userBox = this.ce.parse(userNorm);
+            
+            // 检查是否有参数需要处理
+            const hasParams = params && Object.keys(params).length > 0;
+            
+            // 策略 1: 符号等价性 (最强，但可能过于严格或无法化简)
+            // 如果两个表达式本身就相同 (比如 ax+b vs ax+b)
             if (targetBox.isSame(userBox)) return true;
-            try { if (targetBox.simplify().isSame(userBox.simplify())) return true; } catch (e) {}
+            
+            // 尝试化简后比较
+            try { 
+                if (targetBox.simplify().isSame(userBox.simplify())) return true; 
+            } catch (e) {}
 
-            return this._checkNumericalEquivalence(targetBox, userBox);
+            // 策略 2: 多维数值验证 (Multivariate Numerical Verification)
+            // 即使是 "ax+b" 和 "xa+b"，在代入随机 x, a, b 后数值应该相等
+            
+            // 收集所有变量名：x + params keys
+            const variables = ['x'];
+            if (hasParams) {
+                variables.push(...Object.keys(params));
+            }
+
+            // 声明所有变量为实数，避免复数域问题
+            variables.forEach(v => {
+                 try { 
+                     if (!this.ce.lookup(v)) this.ce.declare(v, {domain: "RealNumbers"}); 
+                 } catch(e){}
+            });
+
+            // 进行多次随机采样测试
+            // 测试点数量
+            const numTests = 10;
+            let validPoints = 0;
+            
+            for (let i = 0; i < numTests; i++) {
+                // 生成测试用例：每个变量赋予一个随机值
+                const testCase = {};
+                variables.forEach(v => {
+                    // 随机范围 [-5, 5]，避免过大数值溢出，避开 0 以防除零
+                    let val = (Math.random() * 10) - 5;
+                    if (Math.abs(val) < 0.1) val = 0.5; // 避免接近 0
+                    testCase[v] = val;
+                });
+
+                // 计算数值
+                // 注意：这里我们使用 .subs(testCase).evaluate().value
+                // 这样可以同时替换 x 和所有参数
+                
+                const val1 = this._evaluateBoxWithSubs(targetBox, testCase);
+                const val2 = this._evaluateBoxWithSubs(userBox, testCase);
+                
+                // 检查有效性 (非 NaN, 非 Infinity)
+                const def1 = (typeof val1 === 'number' && isFinite(val1));
+                const def2 = (typeof val2 === 'number' && isFinite(val2));
+                
+                // 如果两者都在该点无定义 (例如 x=0 时的 1/x)，视为通过此点测试（或者跳过）
+                if (!def1 && !def2) continue;
+                
+                // 如果定义域不一致 (一个有定义，一个没有)，则不等价
+                if (def1 !== def2) return false;
+                
+                // 数值比较
+                if (!this._areValuesEqual(val1, val2)) return false;
+                
+                validPoints++;
+            }
+            
+            // 如果至少有一个有效测试点通过，且没有失败，则认为等价
+            // 如果所有点都无定义（validPoints == 0），可能是个无效表达式，或者运气不好
+            // 这里我们要求至少通过 1 个点
+            return validPoints > 0;
+
         } catch (e) {
             console.error("Verification error:", e);
             return false;
@@ -529,16 +670,13 @@ const MathEngine = {
     },
 
     /**
-     * 获取 Box 在 x 点的数值
-     * @private
+     * 代入变量并计算数值
      */
-    _evaluateAsNumber: function(box, x) {
+    _evaluateBoxWithSubs: function(box, subs) {
         try {
-            // 显式替换 x
-            const valBox = box.subs({x: x}).evaluate();
+            const valBox = box.subs(subs).evaluate();
             let y = valBox.value;
             
-            // 如果直接 .value 是 null (非数字)，尝试 .N().value (数值近似)
             if (y === null || typeof y !== 'number') {
                 const numericBox = valBox.N();
                 y = numericBox.value;
@@ -588,52 +726,67 @@ const MathEngine = {
             validPoints++;
         }
         
-        // 2. 蒙特卡洛补充测试 (如果有效点太少，或者为了更确信)
-        // 只有当预设点测试没有发现不匹配时才进行
-        const monteCarloPoints = 20;
-        for (let i = 0; i < monteCarloPoints; i++) {
-            const x = (Math.random() - 0.5) * 20; // [-10, 10]
-            const val1 = this._evaluateAsNumber(box1, x);
-            const val2 = this._evaluateAsNumber(box2, x);
-
-            const def1 = (typeof val1 === 'number' && isFinite(val1));
-            const def2 = (typeof val2 === 'number' && isFinite(val2));
-
-            if (!def1 && !def2) continue;
-            
-            if (def1 !== def2) {
-                // 蒙特卡洛阶段发现定义域不同，直接判定不等价
-                return false;
+        // 如果有效点太少，尝试随机采样
+        if (validPoints < 3) {
+            for (let i = 0; i < 10; i++) {
+                const x = (Math.random() * 20) - 10;
+                const val1 = this._evaluateAsNumber(box1, x);
+                const val2 = this._evaluateAsNumber(box2, x);
+                const def1 = (typeof val1 === 'number' && isFinite(val1));
+                const def2 = (typeof val2 === 'number' && isFinite(val2));
+                
+                if (def1 && def2) {
+                    if (!this._areValuesEqual(val1, val2)) return false;
+                    validPoints++;
+                }
             }
-
-            if (!this._areValuesEqual(val1, val2)) {
-                return false;
-            }
-            validPoints++;
         }
 
-        // 只有比较了足够多的点，才认为等价
-        // 防止因为全是无定义点而返回 true
-        return validPoints >= 5;
+        return validPoints > 0;
     },
-
-    _monteCarloCheck: function(box1, box2) {
-        // Deprecated, logic merged into _checkNumericalEquivalence
-        return false; 
-    },
-
+    
     _areValuesEqual: function(v1, v2) {
-        if (Math.abs(v1 - v2) < 1e-9) return true;
-        if (Math.abs(v1 - v2) / Math.max(Math.abs(v1), Math.abs(v2)) < 1e-9) return true;
+        if (Math.abs(v1 - v2) < 1e-5) return true;
+        // 相对误差
+        if (Math.abs((v1 - v2) / v1) < 1e-5) return true;
         return false;
     },
 
     _generateTestPoints: function() {
-        return [
-            0, 1, -1, 0.5, -0.5, 2, -2, 10, -10,
-            Math.PI, -Math.PI, Math.PI/2, Math.E,
-            ...Array.from({length: 10}, () => (Math.random() - 0.5) * 20)
-        ];
+        return [-5, -2, -1, -0.5, 0, 0.5, 1, 2, 5, Math.PI, Math.E];
+    },
+
+    /**
+     * 将参数代入表达式并返回新的 LaTeX
+     * 用于生成固定的目标函数
+     * @param {string} latex 原始表达式
+     * @param {Object} params 参数对象
+     * @returns {string} 替换后的表达式
+     */
+    substituteParams: function(latex, params) {
+        if (!this.ce || !params || Object.keys(params).length === 0) return latex;
+        try {
+            const box = this.ce.parse(this.LatexProcessor.normalizeForCE(latex));
+            // 声明参数
+            Object.keys(params).forEach(key => {
+                 try { if (!this.ce.lookup(key)) this.ce.declare(key, {domain: "RealNumbers"}); } catch(e){}
+            });
+            
+            const subBox = box.subs(params);
+            // 尝试简化以获得更干净的表达式，但保留结构
+            // .evaluate() 会计算出具体数值，这正是我们想要的（固定目标）
+            // 但是如果是 x 的函数，我们不能 evaluate x。
+            // 应该只 evaluate 参数。
+            
+            // 这里的 subs 已经替换了参数。
+            // 我们可以调用 .simplify() 来合并常数
+            const simpleBox = subBox.simplify();
+            
+            return this.LatexProcessor.jsonToDesmosLatex(simpleBox.json);
+        } catch (e) {
+            console.error("substituteParams error:", e);
+            return latex;
+        }
     },
 
     isValid: function(latex) {

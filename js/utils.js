@@ -30,13 +30,19 @@ const Utils = {
      * @param {string} expression 目标表达式
      * @returns {string} 编码后的字符串
      */
-    encodeLevel: function(expression) {
-        if (!expression) return "";
+    encodeLevel: function(data) {
+        if (!data) return "";
         try {
+            // 支持对象 {t: target, p: params} 或纯字符串
+            let content = data;
+            if (typeof data === 'object') {
+                content = JSON.stringify(data);
+            }
+
             // 使用 CryptoJS 进行 AES 加密
             const key = CryptoJS.enc.Utf8.parse("GuessFuncSecretK"); // 16 bytes key
             const iv = CryptoJS.enc.Utf8.parse("GuessFuncSecretI");  // 16 bytes IV
-            const encrypted = CryptoJS.AES.encrypt(expression, key, {
+            const encrypted = CryptoJS.AES.encrypt(content, key, {
                 iv: iv,
                 mode: CryptoJS.mode.CBC,
                 padding: CryptoJS.pad.Pkcs7
@@ -54,7 +60,7 @@ const Utils = {
     /**
      * 解密关卡字符串 (AES)
      * @param {string} encoded 编码后的字符串
-     * @returns {string} 解码后的表达式
+     * @returns {Object|string} 解码后的数据 {t, p} 或 字符串
      */
     decodeLevel: function(encoded) {
         if (!encoded) return null;
@@ -70,7 +76,24 @@ const Utils = {
                 mode: CryptoJS.mode.CBC,
                 padding: CryptoJS.pad.Pkcs7
             });
-            return decrypted.toString(CryptoJS.enc.Utf8);
+            
+            const resultString = decrypted.toString(CryptoJS.enc.Utf8);
+            if (!resultString) return null;
+
+            // 尝试 JSON 解析
+            try {
+                const obj = JSON.parse(resultString);
+                if (obj && (obj.t || obj.target)) {
+                    // 归一化为 {t, p}
+                    return {
+                        t: obj.t || obj.target,
+                        p: obj.p || obj.params || {}
+                    };
+                }
+                return resultString; // 可能是普通字符串但符合 JSON 格式（如 "x^2"）
+            } catch (jsonErr) {
+                return resultString; // 普通字符串
+            }
         } catch (e) {
             console.error("Decoding error:", e);
             return null;

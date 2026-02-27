@@ -69,13 +69,22 @@ const UIManager = {
         const btnCreate = document.getElementById('btn-create');
         if (btnCreate) {
             btnCreate.addEventListener('click', () => {
-                // 新的创建逻辑：读取侧边栏第一行
-                const expr = GraphManager.getFirstExpression();
-                if (expr && MathEngine.isValid(expr)) {
-                    if (confirm(`是否使用表达式 "${expr}" 创建新关卡？`)) {
-                        GameLogic.startLevel(expr);
+                // 新的创建逻辑：读取侧边栏第一行及相关参数
+                const userGuessData = GraphManager.getUserGuessData();
+                
+                if (userGuessData && MathEngine.isValid(userGuessData.latex)) {
+                    const msg = userGuessData.params && Object.keys(userGuessData.params).length > 0
+                        ? `是否使用表达式 "${userGuessData.latex}" 及参数 (${Object.keys(userGuessData.params).join(', ')}) 创建新关卡？`
+                        : `是否使用表达式 "${userGuessData.latex}" 创建新关卡？`;
+
+                    if (confirm(msg)) {
+                        GameLogic.startLevel({
+                            t: userGuessData.latex,
+                            p: userGuessData.params
+                        });
                         // 自定义关卡视为随机模式的一种（非预设）
                         this.setMode('random');
+                        this.showMessage("关卡创建成功！点击“分享”获取链接。", "success");
                     }
                 } else {
                     alert("请先在 Desmos 面板的第一行输入一个有效的函数表达式，然后点击此按钮。");
@@ -226,23 +235,123 @@ const UIManager = {
             container.innerHTML = '<p>暂无预设关卡。</p>';
             return;
         }
-        
-        window.LEVELS.forEach((level, index) => {
-            const btn = document.createElement('button');
-            const isCompleted = StorageManager.isLevelCompleted(level.id);
-            btn.className = `level-card ${isCompleted ? 'completed' : ''}`;
+
+        // 支持区域划分
+        const regions = window.REGIONS || [{
+            id: 'default',
+            title: '所有关卡',
+            unlock: null,
+            levels: window.LEVELS.map(l => l.id)
+        }];
+
+        // 清除原有的 grid class，因为我们现在包含多个 grid
+        container.className = 'levels-container';
+
+        regions.forEach(region => {
+            // 检查区域解锁状态
+            const regionUnlockStatus = StorageManager.checkLevelUnlock ? StorageManager.checkLevelUnlock(region.unlock) : { unlocked: true };
+            const isRegionLocked = !regionUnlockStatus.unlocked;
+
+            // 创建区域标题
+            const regionHeader = document.createElement('div');
+            regionHeader.className = 'level-region-header';
+            regionHeader.style.marginTop = '20px';
+            regionHeader.style.marginBottom = '10px';
+            regionHeader.style.paddingBottom = '5px';
+            regionHeader.style.borderBottom = '2px solid #eee';
+            regionHeader.style.display = 'flex';
+            regionHeader.style.justifyContent = 'space-between';
+            regionHeader.style.alignItems = 'center';
             
-            // 不再显示 target
-            btn.innerHTML = `
-                <h3>${level.title} ${isCompleted ? '✅' : ''}</h3>
-                <p>点击开始挑战</p>
-            `;
-            btn.addEventListener('click', () => {
-                GameLogic.startPresetLevel(index);
-                this.setMode('preset');
-                this.hideModal('modal-levels');
+            // 渲染标题
+            const titleDiv = document.createElement('div');
+            titleDiv.innerHTML = `<h3>${region.title} ${isRegionLocked ? '🔒' : ''}</h3>`;
+            regionHeader.appendChild(titleDiv);
+            
+            // 渲染剧情按钮（如果有描述且解锁）
+            if (region.description && !isRegionLocked) {
+                const storyBtn = document.createElement('button');
+                storyBtn.innerHTML = '剧情'; // 简化文字
+                storyBtn.className = 'story-btn primary-btn'; 
+                storyBtn.style.padding = '4px 10px'; // 调整内边距
+                storyBtn.style.fontSize = '0.85rem'; // 稍微缩小字体
+                storyBtn.style.marginLeft = 'auto'; 
+                
+                // 移动端特殊处理将在 CSS 中通过类名控制，这里只设置内联基础样式
+                // 或者我们可以添加一个特定的类名用于移动端样式覆盖
+                storyBtn.classList.add('mobile-compact-btn');
+
+                storyBtn.onclick = (e) => {
+                    e.stopPropagation(); // 防止触发标题点击
+                    this.showStory(region);
+                };
+                regionHeader.appendChild(storyBtn);
+            }
+            
+            if (isRegionLocked) {
+                regionHeader.title = `区域未解锁：${regionUnlockStatus.reason}`;
+                regionHeader.style.cursor = 'not-allowed';
+                regionHeader.onclick = () => alert(`区域未解锁！\n条件：${regionUnlockStatus.reason}`);
+            }
+            container.appendChild(regionHeader);
+
+            // 创建关卡容器
+            const levelsContainer = document.createElement('div');
+            levelsContainer.className = 'levels-grid';
+            if (isRegionLocked) {
+                levelsContainer.style.display = 'none'; // 隐藏未解锁区域的关卡
+                const lockedMsg = document.createElement('p');
+                lockedMsg.textContent = `该区域尚未解锁 (${regionUnlockStatus.reason})`;
+                lockedMsg.style.color = '#999';
+                container.appendChild(lockedMsg);
+            } else {
+                container.appendChild(levelsContainer);
+            }
+
+            if (isRegionLocked) return;
+
+            // 渲染该区域内的关卡
+            region.levels.forEach(levelId => {
+                // Find level data
+                const levelData = window.LEVELS.find(l => l.id === levelId);
+                const levelIndex = window.LEVELS.findIndex(l => l.id === levelId);
+                
+                if (!levelData) return;
+
+                const btn = document.createElement('button');
+                const isCompleted = StorageManager.isLevelCompleted(levelId);
+                
+                // 检查解锁状态
+                const unlockStatus = StorageManager.checkLevelUnlock ? StorageManager.checkLevelUnlock(levelData.unlock) : { unlocked: true };
+                const isLocked = !unlockStatus.unlocked;
+
+                let className = 'level-card';
+                if (isCompleted) className += ' completed';
+                if (isLocked) className += ' locked';
+                
+                btn.className = className;
+                
+                let statusIcon = '';
+                if (isLocked) statusIcon = '🔒';
+                else if (isCompleted) statusIcon = '✅';
+
+                btn.innerHTML = `
+                    <h3>${levelData.title} ${statusIcon}</h3>
+                    <p>${isLocked ? '点击查看解锁条件' : '点击开始挑战'}</p>
+                `;
+                
+                btn.addEventListener('click', () => {
+                    if (isLocked) {
+                        alert(`关卡未解锁！\n条件：${unlockStatus.reason || '未知条件'}`);
+                        return;
+                    }
+                    
+                    GameLogic.startPresetLevel(levelIndex);
+                    this.setMode('preset');
+                    this.hideModal('modal-levels');
+                });
+                levelsContainer.appendChild(btn);
             });
-            container.appendChild(btn);
         });
     },
     
@@ -256,6 +365,19 @@ const UIManager = {
         if (container) {
             this.renderMarkdown(container, levelData.description);
             this.showModal('modal-level-instruction');
+        }
+    },
+
+    /**
+     * 显示剧情
+     */
+    showStory: function(regionData) {
+        if (!regionData.description) return;
+        
+        const container = document.getElementById('story-content');
+        if (container) {
+            this.renderMarkdown(container, regionData.description);
+            this.showModal('modal-story');
         }
     },
     
