@@ -528,45 +528,98 @@ const MathEngine = {
         }
     },
 
+    /**
+     * 获取 Box 在 x 点的数值
+     * @private
+     */
+    _evaluateAsNumber: function(box, x) {
+        try {
+            // 显式替换 x
+            const valBox = box.subs({x: x}).evaluate();
+            let y = valBox.value;
+            
+            // 如果直接 .value 是 null (非数字)，尝试 .N().value (数值近似)
+            if (y === null || typeof y !== 'number') {
+                const numericBox = valBox.N();
+                y = numericBox.value;
+                
+                if (y === null || typeof y !== 'number') {
+                    if (typeof numericBox.numericValue === 'number') {
+                        y = numericBox.numericValue;
+                    } else if (typeof numericBox.valueOf() === 'number') {
+                        y = numericBox.valueOf();
+                    }
+                }
+            }
+            return y;
+        } catch (e) {
+            return null;
+        }
+    },
+
     _checkNumericalEquivalence: function(box1, box2) {
         const testPoints = this._generateTestPoints();
         let validPoints = 0;
         let mismatchCount = 0;
 
+        // 1. 预设点测试
         for (const x of testPoints) {
-            const val1 = box1.evaluate({x}).value;
-            const val2 = box2.evaluate({x}).value;
+            const val1 = this._evaluateAsNumber(box1, x);
+            const val2 = this._evaluateAsNumber(box2, x);
+            
             const def1 = (typeof val1 === 'number' && isFinite(val1));
             const def2 = (typeof val2 === 'number' && isFinite(val2));
 
+            // 如果两者都在该点无定义，跳过
             if (!def1 && !def2) continue;
+
+            // 如果定义域不一致 (一个有定义，一个没有)
             if (def1 !== def2) {
                 mismatchCount++;
                 if (mismatchCount > 2) return false;
                 continue;
             }
-            if (!this._areValuesEqual(val1, val2)) return false;
+
+            // 两者都有定义，比较数值
+            if (!this._areValuesEqual(val1, val2)) {
+                return false;
+            }
+
             validPoints++;
         }
         
-        if (validPoints < 5) return this._monteCarloCheck(box1, box2);
-        return true;
-    },
+        // 2. 蒙特卡洛补充测试 (如果有效点太少，或者为了更确信)
+        // 只有当预设点测试没有发现不匹配时才进行
+        const monteCarloPoints = 20;
+        for (let i = 0; i < monteCarloPoints; i++) {
+            const x = (Math.random() - 0.5) * 20; // [-10, 10]
+            const val1 = this._evaluateAsNumber(box1, x);
+            const val2 = this._evaluateAsNumber(box2, x);
 
-    _monteCarloCheck: function(box1, box2) {
-        for (let i = 0; i < 50; i++) {
-            const x = (Math.random() - 0.5) * 100;
-            const val1 = box1.evaluate({x}).value;
-            const val2 = box2.evaluate({x}).value;
             const def1 = (typeof val1 === 'number' && isFinite(val1));
             const def2 = (typeof val2 === 'number' && isFinite(val2));
 
-            if (def1 && def2) {
-                if (!this._areValuesEqual(val1, val2)) return false;
-                return true; 
+            if (!def1 && !def2) continue;
+            
+            if (def1 !== def2) {
+                // 蒙特卡洛阶段发现定义域不同，直接判定不等价
+                return false;
             }
+
+            if (!this._areValuesEqual(val1, val2)) {
+                return false;
+            }
+            validPoints++;
         }
-        return true; 
+
+        // 只有比较了足够多的点，才认为等价
+        // 防止因为全是无定义点而返回 true
+        return validPoints >= 5;
+    },
+
+    _monteCarloCheck: function(box1, box2) {
+        // Deprecated, logic merged into _checkNumericalEquivalence
+        return false; 
     },
 
     _areValuesEqual: function(v1, v2) {
