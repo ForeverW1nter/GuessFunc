@@ -25,7 +25,7 @@ const StorageManager = {
             const parsed = JSON.parse(decrypted);
             return Array.isArray(parsed) ? parsed : [];
         } catch (e) {
-            console.error("Failed to load progress:", e);
+            Logger.error("Failed to load progress:", e);
             return [];
         }
     },
@@ -45,7 +45,7 @@ const StorageManager = {
             const parsed = JSON.parse(decrypted);
             return Array.isArray(parsed) ? parsed : [];
         } catch (e) {
-            console.error("Failed to load chapters:", e);
+            Logger.error("Failed to load chapters:", e);
             return [];
         }
     },
@@ -151,7 +151,7 @@ const StorageManager = {
                 return true;
             }
         } catch (e) {
-            console.error("Import failed:", e);
+            Logger.error("Import failed:", e);
         }
         return false;
     },
@@ -175,17 +175,17 @@ const StorageManager = {
     },
 
     _encrypt: function(text) {
-        if (!window.CryptoJS) return text; // Fallback
+        if (!window.CryptoJS) return text; // 保底方案
         return CryptoJS.AES.encrypt(text, this.SECRET_KEY).toString();
     },
 
     _decrypt: function(ciphertext) {
-        if (!window.CryptoJS) return ciphertext; // Fallback
+        if (!window.CryptoJS) return ciphertext; // 保底方案
         try {
             const bytes = CryptoJS.AES.decrypt(ciphertext, this.SECRET_KEY);
             return bytes.toString(CryptoJS.enc.Utf8);
         } catch (e) {
-            console.error("Decrypt error:", e);
+            Logger.error("解密错误:", e);
             return null;
         }
     }

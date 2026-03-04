@@ -17,7 +17,7 @@ const GraphManager = {
         return new Promise((resolve, reject) => {
             const elt = document.getElementById(containerId);
             if (!elt) {
-                console.error("Calculator container not found:", containerId);
+                Logger.error("Calculator container not found:", containerId);
                 reject(new Error("Container not found"));
                 return;
             }
@@ -35,7 +35,7 @@ const GraphManager = {
             setTimeout(() => {
                 if (!window.Desmos) {
                     clearInterval(checkInterval);
-                    console.error("Desmos failed to load.");
+                    Logger.error("Desmos failed to load.");
                     // 尝试提示用户
                     if (window.UIManager && window.UIManager.showMessage) {
                         window.UIManager.showMessage("Desmos 加载失败，请检查网络。", "error");
@@ -49,7 +49,7 @@ const GraphManager = {
     _initCalculator: function(elt) {
         if (!window.Desmos) return;
         this.calculator = Desmos.GraphingCalculator(elt, {
-            language: 'zh-CN', // Force language
+            language: 'zh-CN', // 强制语言
             expressions: true, // 显示侧边栏
             settingsMenu: false, // 禁用设置菜单
             zoomButtons: true, // 显示缩放按钮
@@ -369,7 +369,7 @@ const GraphManager = {
                  }
              });
         } else {
-            // Fallback
+            // 保底方案
              Object.keys(params).forEach(key => {
                  const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                  if (latex.includes(key)) {

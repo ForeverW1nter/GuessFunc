@@ -47,21 +47,20 @@ const UIManager = {
                 this.renderLevelList();
                 this.showModal('modal-levels');
 
-                // Check if the first chapter (first region) story has been seen
-                // Assuming the first region is the starting point
+                // 检查是否已看过第一章的剧情
                 if (window.REGIONS && window.REGIONS.length > 0) {
                     const firstRegion = window.REGIONS[0];
                     if ((firstRegion.description || firstRegion.descriptionPath) && !StorageManager.isChapterSeen(firstRegion.id)) {
                         StorageManager.markChapterSeen(firstRegion.id);
                         
-                        // Close levels modal temporarily or overlay?
-                        // Better to show story on top or switch to it.
-                        // Let's close levels modal and show story.
+                        // 暂时关闭关卡模态框还是覆盖？
+                        // 最好是显示在最上层或切换到剧情。
+                        // 让我们关闭关卡模态框并显示剧情。
                         this.hideModal('modal-levels');
                         
                         setTimeout(() => {
                             this.showStory(firstRegion);
-                            // After story closes, re-open levels modal
+                            // 剧情结束后，重新打开关卡模态框
                             this.modalCallbacks['modal-story'] = () => {
                                 this.showModal('modal-levels');
                             };
@@ -141,7 +140,7 @@ const UIManager = {
             btnAbout.addEventListener('click', () => {
                 const title = document.getElementById('rules-title');
                 if (title) title.textContent = "关于游戏";
-                this.showModal('modal-rules'); // Reuse rules modal
+                this.showModal('modal-rules'); // 复用规则模态框
                 this.loadAbout();
                 this.hideModal('modal-options');
             });
@@ -152,7 +151,7 @@ const UIManager = {
             btnChangelog.addEventListener('click', () => {
                 const title = document.getElementById('rules-title');
                 if (title) title.textContent = "更新日志";
-                this.showModal('modal-rules'); // Reuse rules modal for simplicity
+                this.showModal('modal-rules'); // 为了简单起见复用规则模态框
                 this.loadChangelog();
                 this.hideModal('modal-options');
             });
@@ -240,7 +239,7 @@ const UIManager = {
     },
 
     initTheme: function() {
-        // Check local storage or system preference
+        // 检查本地存储或系统偏好
         const savedTheme = localStorage.getItem('guessfunc_theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -256,8 +255,7 @@ const UIManager = {
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('guessfunc_theme', newTheme);
         
-        // Update Desmos if possible (Desmos usually handles its own theme, but we can try to invert or adjust)
-        // For now, we just handle our UI.
+        // 如果可能，更新 Desmos（Desmos 通常处理自己的主题，但我们可以尝试反转或调整）。目前我们只处理我们的 UI。
     },
 
     loadRules: function() {
@@ -270,7 +268,7 @@ const UIManager = {
                 this.renderMarkdown(container, text);
             })
             .catch(err => {
-                console.error("Failed to load rules:", err);
+                Logger.error("Failed to load rules:", err);
                 container.textContent = "加载规则失败，请检查网络或文件。";
             });
     },
@@ -285,7 +283,7 @@ const UIManager = {
                 this.renderMarkdown(container, text);
             })
             .catch(err => {
-                console.error("Failed to load about info:", err);
+                Logger.error("Failed to load about info:", err);
                 container.textContent = "加载关于信息失败。";
             });
     },
@@ -300,7 +298,7 @@ const UIManager = {
                 this.renderMarkdown(container, text);
             })
             .catch(err => {
-                console.error("Failed to load changelog:", err);
+                Logger.error("Failed to load changelog:", err);
                 container.textContent = "加载更新日志失败。";
             });
     },
@@ -310,25 +308,25 @@ const UIManager = {
      */
     renderMarkdown: function(container, text) {
         if (window.marked) {
-            // Protect math blocks from markdown parsing
-            // We replace $...$ and $$...$$ with placeholders
+            // 保护数学块免受 Markdown 解析
+            // 我们用占位符替换 $...$ 和 $$...$$
             const mathBlocks = [];
             const protectedText = text.replace(/(\$\$[\s\S]*?\$\$)|(\$[^$\n]*?\$)/g, (match) => {
                 mathBlocks.push(match);
                 return `MATHBLOCK${mathBlocks.length - 1}BLOCKMATH`;
             });
             
-            // Parse markdown
+            // 解析 Markdown
             let html = marked.parse(protectedText);
             
-            // Restore math blocks
+            // 恢复数学块
             html = html.replace(/MATHBLOCK(\d+)BLOCKMATH/g, (match, index) => {
                 return mathBlocks[parseInt(index)];
             });
             
             container.innerHTML = html;
             
-            // Render Math using KaTeX
+            // 使用 KaTeX 渲染数学公式
             if (window.renderMathInElement) {
                 renderMathInElement(container, {
                     delimiters: [
@@ -432,7 +430,7 @@ const UIManager = {
 
             // 渲染该区域内的关卡
             region.levels.forEach(levelId => {
-                // Find level data
+                // 查找关卡数据
                 const levelData = window.LEVELS.find(l => l.id === levelId);
                 const levelIndex = window.LEVELS.findIndex(l => l.id === levelId);
                 
@@ -469,24 +467,24 @@ const UIManager = {
                     const startAction = () => {
                         GameLogic.startPresetLevel(levelIndex);
                         this.setMode('preset');
-                        // Ensure levels modal is closed
+                        // 确保关卡模态框已关闭
                         const levelsModal = document.getElementById('modal-levels');
                         if (levelsModal && levelsModal.classList.contains('visible')) {
                             this.hideModal('modal-levels');
                         }
                     };
 
-                    // Check if chapter story has been seen
+                    // 检查章节剧情是否已读
                     if ((region.description || region.descriptionPath) && !StorageManager.isChapterSeen(region.id)) {
                         StorageManager.markChapterSeen(region.id);
                         
-                        // Close levels modal first
+                        // 先关闭关卡模态框
                         this.hideModal('modal-levels');
                         
-                        // Show story after a short delay to allow transition
+                        // 短暂延迟后显示剧情，以便过渡
                         setTimeout(() => {
                             this.showStory(region);
-                            // Register callback to start level after story is closed
+                            // 注册回调，在剧情关闭后开始关卡
                             this.modalCallbacks['modal-story'] = startAction;
                         }, 300);
                     } else {
@@ -517,7 +515,7 @@ const UIManager = {
                         this.renderMarkdown(container, text);
                     })
                     .catch(err => {
-                        console.error("Failed to load level description:", err);
+                        Logger.error("Failed to load level description:", err);
                         container.innerHTML = "<p>加载描述失败。</p>";
                     });
             } else {
@@ -544,7 +542,7 @@ const UIManager = {
                         this.renderMarkdown(container, text);
                     })
                     .catch(err => {
-                         console.error("Failed to load story:", err);
+                         Logger.error("Failed to load story:", err);
                          container.innerHTML = "<p>加载剧情失败。</p>";
                     });
             } else {
@@ -554,7 +552,7 @@ const UIManager = {
     },
     
     updateUI: function() {
-        // Toggle buttons based on mode
+        // 根据模式切换按钮显示
         const mode = window.GameLogic.state.mode;
         
         const btnNext = document.getElementById('btn-next');
@@ -615,7 +613,7 @@ const UIManager = {
         const modal = document.getElementById(modalId);
         if (modal) {
             modal.classList.remove('hidden');
-            // Trigger reflow to enable transition
+            // 触发重排以启用过渡
             void modal.offsetWidth; 
             modal.classList.add('visible');
         }
@@ -627,13 +625,13 @@ const UIManager = {
             modal.classList.remove('visible');
             setTimeout(() => {
                 modal.classList.add('hidden');
-                // Execute callback if any
+                // 如果有回调则执行
                 if (this.modalCallbacks[modalId]) {
                     const callback = this.modalCallbacks[modalId];
                     delete this.modalCallbacks[modalId];
                     callback();
                 }
-            }, 300); // 300ms transition time
+            }, 300); // 300ms 过渡时间
         }
     },
 

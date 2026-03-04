@@ -27,22 +27,19 @@ const Utils = {
 
     /**
      * 加密关卡字符串 (AES)
-     * @param {string} expression 目标表达式
+     * @param {Object|string} data 关卡数据对象或目标表达式
      * @returns {string} 编码后的字符串
      */
     encodeLevel: function(data) {
         if (!data) return "";
         try {
-            // 支持对象 {t: target, p: params} 或纯字符串
-            let content = data;
-            if (typeof data === 'object') {
-                content = JSON.stringify(data);
-            }
+            // 如果是对象，先序列化为 JSON 字符串
+            const expression = (typeof data === 'object') ? JSON.stringify(data) : String(data);
 
             // 使用 CryptoJS 进行 AES 加密
-            const key = CryptoJS.enc.Utf8.parse("GuessFuncSecretK"); // 16 bytes key
-            const iv = CryptoJS.enc.Utf8.parse("GuessFuncSecretI");  // 16 bytes IV
-            const encrypted = CryptoJS.AES.encrypt(content, key, {
+            const key = CryptoJS.enc.Utf8.parse("GuessFuncSecretK"); // 16 字节密钥
+            const iv = CryptoJS.enc.Utf8.parse("GuessFuncSecretI");  // 16 字节 IV
+            const encrypted = CryptoJS.AES.encrypt(expression, key, {
                 iv: iv,
                 mode: CryptoJS.mode.CBC,
                 padding: CryptoJS.pad.Pkcs7
@@ -60,7 +57,7 @@ const Utils = {
     /**
      * 解密关卡字符串 (AES)
      * @param {string} encoded 编码后的字符串
-     * @returns {Object|string} 解码后的数据 {t, p} 或 字符串
+     * @returns {Object|string|null} 解码后的数据对象或表达式
      */
     decodeLevel: function(encoded) {
         if (!encoded) return null;
@@ -76,23 +73,15 @@ const Utils = {
                 mode: CryptoJS.mode.CBC,
                 padding: CryptoJS.pad.Pkcs7
             });
-            
-            const resultString = decrypted.toString(CryptoJS.enc.Utf8);
-            if (!resultString) return null;
+            const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8);
+            if (!decryptedStr) return null;
 
-            // 尝试 JSON 解析
+            // 尝试解析为 JSON 对象
             try {
-                const obj = JSON.parse(resultString);
-                if (obj && (obj.t || obj.target)) {
-                    // 归一化为 {t, p}
-                    return {
-                        t: obj.t || obj.target,
-                        p: obj.p || obj.params || {}
-                    };
-                }
-                return resultString; // 可能是普通字符串但符合 JSON 格式（如 "x^2"）
-            } catch (jsonErr) {
-                return resultString; // 普通字符串
+                return JSON.parse(decryptedStr);
+            } catch (e) {
+                // 如果不是 JSON，直接返回原始字符串
+                return decryptedStr;
             }
         } catch (e) {
             console.error("Decoding error:", e);
@@ -113,7 +102,7 @@ const Utils = {
                 prompt("请手动复制链接：", text);
             });
         } else {
-            // Fallback
+            // 保底方案
             const textArea = document.createElement("textarea");
             textArea.value = text;
             document.body.appendChild(textArea);

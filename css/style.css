@@ -1,4 +1,4 @@
-/* Global Styles */
+/* 全局样式 */
 :root {
     --bg-color: #f0f2f5;
     --text-color: #333;
@@ -20,7 +20,7 @@
     --danger-color: #f44336;
 }
 
-/* Dark Mode Specifics */
+/* 深色模式特定样式 */
 [data-theme="dark"] {
     --bg-color: #121212;
     --text-color: #e0e0e0;
@@ -40,7 +40,7 @@
     --primary-color: #64b5f6;
 }
 
-/* Dark Mode Overrides for Level Cards */
+/* 关卡卡片深色模式覆盖 */
 [data-theme="dark"] .level-card {
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
@@ -53,11 +53,11 @@
 
 [data-theme="dark"] .level-card.completed {
     background-color: rgba(76, 175, 80, 0.15);
-    border-color: #4CAF50; /* Keep green border for success */
+    border-color: #4CAF50;
 }
 
 [data-theme="dark"] .level-card.completed h3 {
-    color: #81c784; /* Softer green for text */
+    color: #81c784;
 }
 
 [data-theme="dark"] .level-card.locked {
@@ -67,18 +67,18 @@
 }
 
 [data-theme="dark"] .level-card.locked h3 {
-    color: #90caf9; /* Softer blue */
+    color: #90caf9;
 }
 
 [data-theme="dark"] .level-card h3 {
-    color: #90caf9; /* Softer blue */
+    color: #90caf9;
 }
 
 [data-theme="dark"] .level-card p {
     color: #bdbdbd;
 }
 
-/* Reset & Base */
+/* 重置与基础样式 */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -91,10 +91,10 @@ body, html {
     font-family: 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
-    overflow: hidden; /* Prevent body scroll */
+    overflow: hidden;
 }
 
-/* App Container */
+/* 应用容器 */
 .app-container {
     display: flex;
     flex-direction: column;
@@ -102,7 +102,7 @@ body, html {
     width: 100vw;
 }
 
-/* Header */
+/* 头部 */
 .main-header {
     background: var(--header-bg);
     color: var(--header-text);
@@ -131,7 +131,7 @@ body, html {
     align-items: center;
 }
 
-/* Buttons */
+/* 按钮 */
 button {
     padding: 6px 12px;
     border: none;
@@ -169,7 +169,7 @@ button:active {
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-/* Main Content */
+/* 主要内容 */
 .main-content {
     flex: 1;
     position: relative;
@@ -182,12 +182,11 @@ button:active {
     flex: 1;
     width: 100%;
     height: 100%;
-    /* Desmos interaction fix */
     user-select: none;
     touch-action: none;
 }
 
-/* Message Area (Overlay) */
+/* 消息区域（覆盖层） */
 .message-area {
     position: absolute;
     top: 20px;
@@ -239,14 +238,14 @@ button:active {
     transform: none;
 }
 
-/* Modals (Full Screen) */
+/* 模态框（全屏） */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5); /* Overlay if needed, but container is full screen */
+    background-color: rgba(0,0,0,0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -282,7 +281,7 @@ button:active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--bg-color); /* Slightly distinct header */
+    background-color: var(--bg-color);
     border-bottom: 1px solid var(--card-border);
 }
 
@@ -313,13 +312,13 @@ button:active {
     overflow-x: hidden;
 }
 
-/* Markdown Content */
+/* Markdown 内容 */
 .markdown-body {
     font-size: 1rem;
     line-height: 1.6;
     color: var(--text-color);
     max-width: 800px;
-    margin: 0 auto; /* Center content */
+    margin: 0 auto; /* 内容居中 */
     width: 100%;
 }
 
@@ -348,17 +347,17 @@ button:active {
     overflow-x: auto;
 }
 
-/* Level Selection Grid */
+/* 关卡选择网格 */
 .levels-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    justify-content: flex-start; /* Left align items */
+    justify-content: flex-start; /* 左对齐项目 */
     width: 100%;
-    /* Removed margin: 0 auto and max-width constraint to align left fully */
-    /* Or keep max-width but remove auto margin to align container left */
-    max-width: 1400px; /* Increase max width slightly */
-    margin: 0; /* Align container to left */
+    /* 移除 margin: 0 auto 和最大宽度限制以完全左对齐 */
+    /* 或者保留 max-width 但移除 auto margin 以使容器左对齐 */
+    max-width: 1400px; /* 稍微增加最大宽度 */
+    margin: 0; /* 容器左对齐 */
 }
 
 .level-card {
@@ -374,9 +373,8 @@ button:active {
     min-height: 100px;
     transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     position: relative;
-    /* Flex item properties */
-    flex: 0 0 calc(25% - 15px); /* Default to 4 columns */
-    min-width: 220px; /* Minimum width constraint */
+    flex: 0 0 calc(25% - 15px); /* 默认 4 列 */
+    min-width: 220px; /* 最小宽度限制 */
 }
 
 .level-card::before {
@@ -393,22 +391,22 @@ button:active {
 
 /* 深色模式默认也不显示左侧条，悬停时着色 */
 
-/* Responsive adjustments for level card width */
+/* 关卡卡片宽度响应式调整 */
 @media (max-width: 1024px) {
     .level-card {
-        flex: 0 0 calc(33.333% - 15px); /* 3 columns */
+        flex: 0 0 calc(33.333% - 15px); /* 3 列 */
     }
 }
 
 @media (min-width: 1025px) {
     .level-card h3 {
-        font-size: 1.35rem; /* Increase font size on PC */
+        font-size: 1.35rem; /* PC 端增大字体 */
     }
 }
 
 @media (max-width: 768px) {
     .level-card {
-        flex: 0 0 calc(50% - 15px); /* 2 columns */
+        flex: 0 0 calc(50% - 15px); /* 2 列 */
     }
 }
 
@@ -433,7 +431,7 @@ button:active {
     box-shadow: 0 8px 18px rgba(100, 181, 246, 0.25);
 }
 
-/* Completed Level Card Hover - Green Glow Override */
+/* 已完成关卡卡片悬停 - 绿色发光覆盖 */
 [data-theme="light"] .level-card.completed:hover {
     background-color: rgba(76, 175, 80, 0.15);
     border-color: var(--success-color);
@@ -465,7 +463,7 @@ button:active {
 .level-card h3 {
     margin: 0 0 8px 0;
     font-size: 1.1rem;
-    font-weight: 600 !important; /* Prevent font weight change on hover */
+    font-weight: 600 !important; /* 防止悬停时字体粗细变化 */
     color: var(--primary-color);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -501,7 +499,7 @@ button:active {
     color: inherit;
 }
 
-/* Options & Difficulty Buttons */
+/* 选项和难度按钮 */
 .options-menu, .difficulty-options {
     display: flex;
     flex-direction: column;
@@ -599,21 +597,21 @@ button:active {
     box-shadow: 0 0 0 3px rgba(100,181,246,0.35);
 }
 
-/* Dark theme: restore original button hover behavior broadly */
+/* 深色主题：广泛恢复原始按钮悬停行为 */
 [data-theme="dark"] button:hover {
     background-color: rgba(255, 255, 255, 0.25);
     transform: translateY(-1px);
 }
 
-/* Dark theme: restore option/diff hover subtle lightening - FIXED: Use colored background */
+/* 深色主题：恢复选项/难度悬停微亮 */
 [data-theme="dark"] .option-item:hover {
-    background-color: rgba(100, 181, 246, 0.15); /* Primary color transparent */
+    background-color: rgba(100, 181, 246, 0.15); /* 主色透明 */
     border-color: rgba(100, 181, 246, 0.60);
     color: var(--option-text);
 }
 
 [data-theme="dark"] .option-item#btn-clear-save:hover {
-    background-color: rgba(239, 83, 80, 0.15); /* Red transparent */
+    background-color: rgba(239, 83, 80, 0.15); /* 红色透明 */
     border-color: #ef5350;
     color: #ef5350;
 }
@@ -623,21 +621,21 @@ button:active {
     filter: brightness(1.03);
 }
 
-/* Light theme: make option hover more distinguishable without turning near white */
+/* 浅色主题：使选项悬停更明显，而不变成近乎白色 */
 [data-theme="light"] .option-item:hover {
     background-color: rgba(33, 150, 243, 0.12);
     border-color: var(--primary-color);
     color: var(--text-color);
 }
 
-/* Light theme: keep diff buttons readable on hover */
+/* 浅色主题：保持难度按钮悬停时可读 */
 [data-theme="light"] .diff-btn:hover {
     filter: brightness(0.95);
     box-shadow: 0 2px 6px rgba(33, 150, 243, 0.25);
     opacity: 1;
 }
 
-/* Mobile Adjustments */
+/* 移动端适配 */
 @media (max-width: 600px) {
     .main-header {
         flex-direction: column;
@@ -651,12 +649,12 @@ button:active {
     }
 
     .toolbar {
-        justify-content: space-between; /* Distribute space */
-        overflow-x: hidden; /* No scroll */
+        justify-content: space-between; /* 分配空间 */
+        overflow-x: hidden; /* 无滚动 */
         padding-bottom: 2px;
-        -ms-overflow-style: none; /* Hide scrollbar */
+        -ms-overflow-style: none; /* 隐藏滚动条 */
         scrollbar-width: none;
-        flex-wrap: nowrap; /* Force single line */
+        flex-wrap: nowrap; /* 强制单行 */
         white-space: nowrap;
         width: 100%;
         display: flex;
@@ -667,11 +665,11 @@ button:active {
     }
 
     .toolbar button {
-        flex: 1; /* Grow to fill space evenly */
-        min-width: 0; /* Allow shrinking below content size if needed */
+        flex: 1; /* 均匀填充空间 */
+        min-width: 0; /* 如果需要，允许缩小到内容尺寸以下 */
         font-size: 0.8rem;
         padding: 6px 4px;
-        margin-right: 2px; /* Small space between buttons */
+        margin-right: 2px; /* 按钮间小间距 */
         text-overflow: ellipsis;
         overflow: hidden;
     }
@@ -687,7 +685,7 @@ button:active {
         padding: 10px 15px;
     }
 
-    /* Mobile Level Grid */
+    /* 移动端关卡网格 */
     .levels-grid {
         display: flex;
         flex-direction: column;
@@ -709,12 +707,12 @@ button:active {
         font-size: 1rem;
     }
     
-    /* Hide description on mobile to save space */
+    /* 移动端隐藏描述以节省空间 */
     .level-card p {
         display: none;
     }
 
-    /* Modal Header Compact */
+    /* 模态框头部紧凑模式 */
     .modal-header {
         height: 50px;
         padding: 0 15px;
@@ -725,12 +723,12 @@ button:active {
     }
 }
 
-/* Utilities */
+/* 工具类 */
 .hidden {
     display: none !important;
 }
 
-/* Hide Desmos Target Expression Item */
+/* 隐藏 Desmos 目标表达式项 */
 .dcg-expression-item[expr-id="target"] {
     display: none !important;
 }

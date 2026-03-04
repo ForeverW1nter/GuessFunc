@@ -1,6 +1,5 @@
 /**
- * 主入口文件
- * 负责初始化整个应用
+ * 主入口文件，负责初始化整个应用
  */
 
 window.addEventListener('DOMContentLoaded', async function() {
