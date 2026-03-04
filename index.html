@@ -48,69 +48,98 @@
 
     <!-- 规则弹窗 -->
     <div id="modal-rules" class="modal hidden">
-        <div class="modal-content wide">
-            <span class="close-modal">&times;</span>
-            <div id="rules-content" class="markdown-body">
-                <!-- Content will be loaded here -->
-                加载中...
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="rules-title">规则说明</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="rules-content" class="markdown-body">
+                    加载中...
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 选项弹窗 -->
     <div id="modal-options" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>游戏选项</h2>
-            <div class="options-menu">
-                <button id="btn-rules" class="option-item">📜 规则说明</button>
-                <button id="btn-export-save" class="option-item">💾 导出存档</button>
-                <button id="btn-import-save" class="option-item">📂 导入存档</button>
-                <button id="btn-clear-save" class="option-item" style="color: #f44336; border-color: #f44336;">🗑️ 清空存档</button>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>游戏选项</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="options-menu">
+                    <button id="btn-rules" class="option-item">📜 规则说明</button>
+                    <button id="btn-changelog" class="option-item">📅 更新日志</button>
+                    <button id="btn-export-save" class="option-item">💾 导出存档</button>
+                    <button id="btn-import-save" class="option-item">📂 导入存档</button>
+                    <button id="btn-theme-toggle" class="option-item">🌓 切换深浅</button>
+                    <button id="btn-clear-save" class="option-item" style="color: #f44336; border-color: #f44336;">🗑️ 清空存档</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 难度选择弹窗 -->
     <div id="modal-difficulty" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>选择难度</h2>
-            <div class="difficulty-options">
-                <button class="diff-btn" data-level="easy">简单 (基础函数)</button>
-                <button class="diff-btn" data-level="medium">中等 (进阶函数)</button>
-                <button class="diff-btn" data-level="hard">困难 (复杂嵌套)</button>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>选择难度</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="difficulty-options">
+                    <button class="diff-btn" data-level="easy">简单 (基础函数)</button>
+                    <button class="diff-btn" data-level="medium">中等 (进阶函数)</button>
+                    <button class="diff-btn" data-level="hard">困难 (复杂嵌套)</button>
+                    <button class="diff-btn" data-level="hell" style="background-color: #D32F2F;">地狱 (专家挑战)</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 关卡选择弹窗 -->
     <div id="modal-levels" class="modal hidden">
-        <div class="modal-content wide">
-            <span class="close-modal">&times;</span>
-            <h2>选择关卡</h2>
-            <div id="levels-list" class="levels-grid">
-                <!-- Levels will be injected here -->
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>选择关卡</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="levels-list" class="levels-grid">
+                    <!-- Levels will be injected here -->
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 关卡指引弹窗 -->
     <div id="modal-level-instruction" class="modal hidden">
-        <div class="modal-content wide">
-            <span class="close-modal">&times;</span>
-            <div id="level-instruction-content" class="markdown-body"></div>
-            <div style="margin-top: 20px; text-align: right;">
-                <button id="btn-start-level" class="primary-btn">开始挑战</button>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>关卡指引</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="level-instruction-content" class="markdown-body"></div>
+                <div style="margin: 20px auto 0; text-align: right; max-width: 800px; width: 100%;">
+                    <button id="btn-start-level" class="primary-btn">开始挑战</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 剧情弹窗 -->
     <div id="modal-story" class="modal hidden">
-        <div class="modal-content wide">
-            <span class="close-modal">&times;</span>
-            <div id="story-content" class="markdown-body"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>章节剧情</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="story-content" class="markdown-body"></div>
+            </div>
         </div>
     </div>
 

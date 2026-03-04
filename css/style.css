@@ -1,63 +1,153 @@
 /* Global Styles */
+:root {
+    --bg-color: #f0f2f5;
+    --text-color: #333;
+    --header-bg: #1a1a1a;
+    --header-text: #fff;
+    --btn-bg: rgba(255, 255, 255, 0.1);
+    --btn-text: white;
+    --modal-bg: #fff;
+    --modal-text: #333;
+    --card-bg: #fff;
+    --card-border: #ddd;
+    --card-hover: #f0f7ff;
+    --option-bg: #fff;
+    --option-text: #333;
+    --msg-bg: rgba(33, 33, 33, 0.9);
+    --msg-text: white;
+    --primary-color: #2196F3;
+    --success-color: #4CAF50;
+    --danger-color: #f44336;
+}
+
+/* Dark Mode Specifics */
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --header-bg: #000;
+    --header-text: #e0e0e0;
+    --btn-bg: rgba(255, 255, 255, 0.1);
+    --btn-text: #e0e0e0;
+    --modal-bg: #1e1e1e;
+    --modal-text: #e0e0e0;
+    --card-bg: #2d2d2d;
+    --card-border: #404040;
+    --card-hover: #383838;
+    --option-bg: #2d2d2d;
+    --option-text: #e0e0e0;
+    --msg-bg: rgba(50, 50, 50, 0.95);
+    --msg-text: #fff;
+    --primary-color: #64b5f6;
+}
+
+/* Dark Mode Overrides for Level Cards */
+[data-theme="dark"] .level-card {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .level-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(100, 181, 246, 0.2);
+    background-color: #383838;
+}
+
+[data-theme="dark"] .level-card.completed {
+    background-color: rgba(76, 175, 80, 0.15);
+    border-color: #4CAF50; /* Keep green border for success */
+}
+
+[data-theme="dark"] .level-card.completed h3 {
+    color: #81c784; /* Softer green for text */
+}
+
+[data-theme="dark"] .level-card.locked {
+    background-color: #1a1a1a;
+    border-color: #333;
+    opacity: 0.5;
+}
+
+[data-theme="dark"] .level-card.locked h3 {
+    color: #90caf9; /* Softer blue */
+}
+
+[data-theme="dark"] .level-card h3 {
+    color: #90caf9; /* Softer blue */
+}
+
+[data-theme="dark"] .level-card p {
+    color: #bdbdbd;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     font-family: 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-    background-color: #f0f2f5;
-    overflow: hidden; /* Prevent body scroll, use flex layout */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden; /* Prevent body scroll */
 }
 
+/* App Container */
 .app-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    width: 100vw;
 }
 
 /* Header */
 .main-header {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 12px 24px;
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 8px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     z-index: 10;
-    flex-wrap: wrap; /* 允许换行 */
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .main-header h1 {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    white-space: nowrap; /* 标题不换行 */
+    white-space: nowrap;
 }
 
 .toolbar {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap; /* 允许工具栏换行 */
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
+/* Buttons */
 button {
-    padding: 8px 16px;
+    padding: 6px 12px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 0.95rem;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.2s ease;
     backdrop-filter: blur(5px);
-    height: 38px; /* 统一高度 */
-    box-sizing: border-box; /* 包含 padding */
-    display: inline-flex; /* 使用 flex 居中内容 */
+    height: 36px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
 }
 
 button:hover {
@@ -70,7 +160,7 @@ button:active {
 }
 
 .primary-btn {
-    background-color: #4CAF50; /* Green */
+    background-color: var(--success-color);
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
@@ -79,29 +169,33 @@ button:active {
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-/* Main Content Area */
+/* Main Content */
 .main-content {
     flex: 1;
-    position: relative; /* For message overlay */
+    position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .calculator-container {
-    flex: 1; /* Take remaining space */
+    flex: 1;
     width: 100%;
     height: 100%;
+    /* Desmos interaction fix */
+    user-select: none;
+    touch-action: none;
 }
 
-/* Message Area */
+/* Message Area (Overlay) */
 .message-area {
     position: absolute;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(33, 33, 33, 0.9);
-    color: white;
-    padding: 12px 24px;
+    background-color: var(--msg-bg);
+    color: var(--msg-text);
+    padding: 12px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     z-index: 100;
@@ -109,7 +203,9 @@ button:active {
     align-items: center;
     gap: 12px;
     transition: opacity 0.3s ease, transform 0.3s ease;
-    max-width: 80%;
+    width: auto;
+    max-width: 90%;
+    user-select: text;
 }
 
 .message-area.hidden {
@@ -118,33 +214,39 @@ button:active {
     transform: translate(-50%, -20px);
 }
 
+.message-area span {
+    flex: 1;
+    font-size: 0.95rem;
+}
+
 .close-btn {
     background: transparent;
     border: none;
-    color: #fff;
+    color: inherit;
     font-size: 1.2rem;
-    padding: 0;
+    padding: 4px;
     margin: 0;
-    width: 24px;
-    height: 24px;
-    opacity: 0.7;
+    width: 28px;
+    height: 28px;
+    opacity: 0.8;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 .close-btn:hover {
     opacity: 1;
-    background: transparent;
+    background: rgba(255,255,255,0.1);
     transform: none;
 }
 
-/* Modals */
+/* Modals (Full Screen) */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.5); /* Overlay if needed, but container is full screen */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -160,349 +262,310 @@ button:active {
 }
 
 .modal.hidden {
-    /* For JS toggle class compatibility */
-    display: none; 
+    display: none;
 }
 
-.modal-content {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    width: 400px;
-    max-width: 90%;
-    position: relative;
-    max-height: 85vh;
-    overflow-y: auto;
-    color: #333;
+.modal-container {
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-bg);
+    color: var(--modal-text);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-.modal-content.wide {
-    width: 800px;
+.modal-header {
+    flex-shrink: 0;
+    height: 60px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-color); /* Slightly distinct header */
+    border-bottom: 1px solid var(--card-border);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
 }
 
 .close-modal {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #aaa;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-color);
     cursor: pointer;
-    transition: color 0.2s;
+    opacity: 0.7;
+    padding: 0 10px;
 }
 
 .close-modal:hover {
-    color: #333;
+    opacity: 1;
 }
 
-/* Difficulty Options */
-.difficulty-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.diff-btn {
-    padding: 15px;
-    font-size: 1.1rem;
-    background-color: #2196F3;
-    color: white;
-    text-align: center;
-}
-
-.diff-btn:hover {
-    background-color: #1976D2;
-}
-
-/* Options Menu */
-.options-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.option-item {
-    padding: 12px;
-    font-size: 1rem;
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #ddd;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.option-item:hover {
-    background-color: #f5f5f5;
-    transform: none;
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    overflow-x: hidden;
 }
 
 /* Markdown Content */
 .markdown-body {
     font-size: 1rem;
     line-height: 1.6;
-    color: #333;
+    color: var(--text-color);
+    max-width: 800px;
+    margin: 0 auto; /* Center content */
+    width: 100%;
 }
 
 .markdown-body h1, .markdown-body h2, .markdown-body h3 {
-    margin-top: 24px;
-    margin-bottom: 16px;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
     font-weight: 600;
-    line-height: 1.25;
+    color: var(--text-color);
 }
 
 .markdown-body p {
-    margin-top: 0;
-    margin-bottom: 16px;
+    margin-bottom: 1em;
 }
 
-.markdown-body code {
-    padding: 0.2em 0.4em;
-    margin: 0;
-    font-size: 85%;
-    background-color: rgba(27,31,35,0.05);
+.markdown-body pre, .markdown-body code {
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-family: monospace;
+    background-color: rgba(127,127,127,0.1);
+    padding: 2px 4px;
     border-radius: 3px;
-    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
 }
 
-/* Helper Classes */
-.hidden {
-    display: none !important;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    .main-header {
-        padding: 8px 12px;
-        flex-direction: column;
-        align-items: center; /* 居中 */
-        gap: 8px;
-    }
-    
-    .main-header h1 {
-        display: block;
-        font-size: 1.4rem;
-        width: 100%;
-        text-align: center; /* 标题居中 */
-        order: 1; /* 标题在上 */
-    }
-
-    .toolbar {
-        width: 100%;
-        display: flex; /* 改回 flex */
-        flex-wrap: nowrap; /* 强制不换行 */
-        gap: 4px; /* 减小间距 */
-        justify-content: space-between; /* 两端对齐或平分 */
-        overflow-x: auto; /* 极端情况允许滚动，但尽量避免 */
-        order: 2; /* 按钮在下 */
-    }
-
-    button {
-        padding: 0 4px; /* 极小的内边距 */
-        font-size: 0.8rem; /* 初始小字体 */
-        flex: 1; /* 平分空间 */
-        min-width: 0; /* 允许压缩 */
-        height: 36px;
-        margin: 0;
-        white-space: nowrap; /* 不换行 */
-        text-overflow: clip; /* 裁剪 */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* 减小 Desmos 容器的高度 */
-    .calculator-container {
-        height: calc(100vh - 110px); /* 动态计算 */
-    }
-
-    /* 消息提示：全宽贴边，统一布局 */
-    .message-area {
-        width: 100%;
-        max-width: 100%;
-        top: 0;
-        left: 0;
-        transform: none;
-        border-radius: 0;
-        padding: 12px 16px; /* 增加左右内边距 */
-        margin: 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        display: flex;
-        align-items: center;
-        justify-content: space-between; /* 确保内容和关闭按钮分开 */
-    }
-    
-    .message-area span {
-        flex: 1; /* 占据剩余空间 */
-        text-align: left; /* 文字左对齐 */
-        font-size: 0.9rem;
-    }
-
-    /* 统一关闭按钮位置 */
-    .close-btn {
-        margin-left: 10px;
-        padding: 8px; /* 增加点击区域 */
-        width: 32px; /* 显式设置尺寸 */
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .message-area.hidden {
-        transform: translateY(-100%);
-    }
-
-    /* 剧情按钮移动端适配 */
-    .mobile-compact-btn {
-        padding: 2px 8px !important; /* 强制覆盖 */
-        font-size: 0.75rem !important;
-        height: 28px !important;
-        width: auto !important; /* 不自动撑满 */
-        flex: none !important; /* 不参与 flex 平分 */
-    }
-
-    /* 模态弹窗：左右留白 */
-    .modal-content {
-        width: 90%;
-        max-width: 90%;
-        margin: 0 auto;
-        padding: 20px;
-        box-sizing: border-box;
-        border-radius: 12px; /* 保持圆角 */
-    }
-    
-    /* 确保弹窗容器有 padding */
-    .modal {
-        padding: 20px;
-        box-sizing: border-box;
-    }
-}
-/* Hide target expression in Desmos sidebar */
-.dcg-expression-item[expr-id="target"] {
-    display: none !important;
-}
-
-/* Level Selection */
-.levels-container {
-    max-height: 60vh;
-    overflow-y: auto;
+.markdown-body pre {
     padding: 10px;
+    overflow-x: auto;
 }
 
+/* Level Selection Grid */
 .levels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 15px;
-    margin-bottom: 30px;
-}
-/* Ensure levels grid has items */
-.levels-grid:empty {
-    display: none;
+    justify-content: flex-start; /* Left align items */
+    width: 100%;
+    /* Removed margin: 0 auto and max-width constraint to align left fully */
+    /* Or keep max-width but remove auto margin to align container left */
+    max-width: 1400px; /* Increase max width slightly */
+    margin: 0; /* Align container to left */
 }
 
 .level-card {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 8px;
     padding: 15px;
     text-align: left;
-    transition: all 0.2s;
     cursor: pointer;
-    color: #333;
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 120px;
-    align-items: flex-start; /* 覆盖 button 的默认 center */
+    min-height: 100px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    /* Flex item properties */
+    flex: 0 0 calc(25% - 15px); /* Default to 4 columns */
+    min-width: 220px; /* Minimum width constraint */
 }
 
-/* Fix for mobile grid */
-@media (max-width: 600px) {
-    .levels-grid {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
+/* Responsive adjustments for level card width */
+@media (max-width: 1024px) {
     .level-card {
-        height: auto;
-        min-height: 60px; 
-        padding: 8px 10px; 
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
+        flex: 0 0 calc(33.333% - 15px); /* 3 columns */
     }
+}
 
+@media (min-width: 1025px) {
     .level-card h3 {
-        margin: 0;
-        flex: 1;
-        white-space: normal;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        line-height: 1.2;
-    }
-
-    .level-card p {
-        margin: 0 0 0 4px;
-        color: #888;
-        white-space: nowrap;
-        min-width: 80px;
-        text-align: right;
-        flex-shrink: 0;
+        font-size: 1.35rem; /* Increase font size on PC */
     }
 }
 
-.level-card.completed {
-    border-color: #4CAF50;
-    background-color: #e8f5e9;
-}
-
-.level-card.locked {
-    background-color: #f5f5f5;
-    border-color: #eee;
-    color: #999;
-    cursor: not-allowed;
-}
-
-.level-card.locked h3 {
-    color: #999;
+@media (max-width: 768px) {
+    .level-card {
+        flex: 0 0 calc(50% - 15px); /* 2 columns */
+    }
 }
 
 .level-card:hover {
-    background-color: #f0f7ff;
-    border-color: #2196F3;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
-}
-
-.level-card.locked:hover {
-    background-color: #f5f5f5;
-    border-color: #eee;
-    transform: none;
-    box-shadow: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: var(--primary-color);
 }
 
 .level-card h3 {
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
     font-size: 1.1rem;
-    color: #1976D2;
+    font-weight: 600 !important; /* Prevent font weight change on hover */
+    color: var(--primary-color);
 }
 
 .level-card p {
     margin: 0;
     font-size: 0.9rem;
-    color: #666;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    opacity: 0.8;
 }
 
-.level-region-header {
-    color: #333;
+.level-card.completed {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-color: var(--success-color);
+}
+
+[data-theme="dark"] .level-card.completed {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.level-card.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--bg-color);
+}
+
+.level-card.locked h3 {
+    color: inherit;
+}
+
+/* Options & Difficulty Buttons */
+.options-menu, .difficulty-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.option-item, .diff-btn {
+    padding: 15px;
+    font-size: 1rem;
+    background-color: var(--option-bg);
+    color: var(--option-text);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.option-item:hover, .diff-btn:hover {
+    background-color: var(--card-hover);
+}
+
+.diff-btn {
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.diff-btn:hover {
+    opacity: 0.9;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .main-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 8px 12px;
+    }
+    
+    .main-header h1 {
+        text-align: center;
+        margin-bottom: 8px;
+    }
+
+    .toolbar {
+        justify-content: space-between; /* Distribute space */
+        overflow-x: hidden; /* No scroll */
+        padding-bottom: 2px;
+        -ms-overflow-style: none; /* Hide scrollbar */
+        scrollbar-width: none;
+        flex-wrap: nowrap; /* Force single line */
+        white-space: nowrap;
+        width: 100%;
+        display: flex;
+    }
+    
+    .toolbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .toolbar button {
+        flex: 1; /* Grow to fill space evenly */
+        min-width: 0; /* Allow shrinking below content size if needed */
+        font-size: 0.8rem;
+        padding: 6px 4px;
+        margin-right: 2px; /* Small space between buttons */
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    
+    .toolbar button:last-child {
+        margin-right: 0;
+    }
+
+    .message-area {
+        width: 95%;
+        max-width: 95%;
+        top: 10px;
+        padding: 10px 15px;
+    }
+
+    /* Mobile Level Grid */
+    .levels-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .level-card {
+        flex: 1 1 auto;
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        min-height: 60px;
+        padding: 12px;
+    }
+
+    .level-card h3 {
+        margin: 0;
+        flex: 1;
+        font-size: 1rem;
+    }
+    
+    /* Hide description on mobile to save space */
+    .level-card p {
+        display: none;
+    }
+
+    /* Modal Header Compact */
+    .modal-header {
+        height: 50px;
+        padding: 0 15px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Utilities */
+.hidden {
+    display: none !important;
+}
+
+/* Hide Desmos Target Expression Item */
+.dcg-expression-item[expr-id="target"] {
+    display: none !important;
 }

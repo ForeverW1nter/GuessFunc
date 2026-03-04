@@ -6,6 +6,7 @@
 
 const StorageManager = {
     STORAGE_KEY: 'guessfunc_progress_v1',
+    CHAPTER_KEY: 'guessfunc_chapters_v1',
     SECRET_KEY: 'GuessFuncSecretKey_2024', // 简单的密钥
 
     /**
@@ -18,8 +19,6 @@ const StorageManager = {
             if (!data) return [];
             
             // 尝试解密
-            // 为了简单起见，我们本地存储也存加密后的，防止直接修改 localStorage 作弊
-            // 但其实前端防作弊意义不大，主要是为了导入导出格式统一
             const decrypted = this._decrypt(data);
             if (!decrypted) return [];
             
@@ -29,6 +28,47 @@ const StorageManager = {
             console.error("Failed to load progress:", e);
             return [];
         }
+    },
+
+    /**
+     * 获取所有已观看剧情的章节ID列表
+     * @returns {Array<string>}
+     */
+    getSeenChapters: function() {
+        try {
+            const data = localStorage.getItem(this.CHAPTER_KEY);
+            if (!data) return [];
+            
+            const decrypted = this._decrypt(data);
+            if (!decrypted) return [];
+            
+            const parsed = JSON.parse(decrypted);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            console.error("Failed to load chapters:", e);
+            return [];
+        }
+    },
+
+    /**
+     * 标记章节剧情为已观看
+     * @param {string} chapterId 
+     */
+    markChapterSeen: function(chapterId) {
+        const seen = this.getSeenChapters();
+        if (!seen.includes(chapterId)) {
+            seen.push(chapterId);
+            this._saveChapters(seen);
+        }
+    },
+
+    /**
+     * 检查章节剧情是否已观看
+     * @param {string} chapterId 
+     */
+    isChapterSeen: function(chapterId) {
+        const seen = this.getSeenChapters();
+        return seen.includes(chapterId);
     },
 
     /**
@@ -121,11 +161,17 @@ const StorageManager = {
      */
     clearSave: function() {
         localStorage.removeItem(this.STORAGE_KEY);
+        localStorage.removeItem(this.CHAPTER_KEY);
     },
 
     _save: function(data) {
         const encrypted = this._encrypt(JSON.stringify(data));
         localStorage.setItem(this.STORAGE_KEY, encrypted);
+    },
+
+    _saveChapters: function(data) {
+        const encrypted = this._encrypt(JSON.stringify(data));
+        localStorage.setItem(this.CHAPTER_KEY, encrypted);
     },
 
     _encrypt: function(text) {

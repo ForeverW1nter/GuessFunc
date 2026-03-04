@@ -6,9 +6,11 @@
 
 const UIManager = {
     timer: null,
+    modalCallbacks: {},
 
     init: function() {
         this.bindEvents();
+        this.initTheme();
     },
 
     bindEvents: function() {
@@ -44,6 +46,28 @@ const UIManager = {
             btnPreset.addEventListener('click', () => {
                 this.renderLevelList();
                 this.showModal('modal-levels');
+
+                // Check if the first chapter (first region) story has been seen
+                // Assuming the first region is the starting point
+                if (window.REGIONS && window.REGIONS.length > 0) {
+                    const firstRegion = window.REGIONS[0];
+                    if ((firstRegion.description || firstRegion.descriptionPath) && !StorageManager.isChapterSeen(firstRegion.id)) {
+                        StorageManager.markChapterSeen(firstRegion.id);
+                        
+                        // Close levels modal temporarily or overlay?
+                        // Better to show story on top or switch to it.
+                        // Let's close levels modal and show story.
+                        this.hideModal('modal-levels');
+                        
+                        setTimeout(() => {
+                            this.showStory(firstRegion);
+                            // After story closes, re-open levels modal
+                            this.modalCallbacks['modal-story'] = () => {
+                                this.showModal('modal-levels');
+                            };
+                        }, 300);
+                    }
+                }
             });
         }
         
@@ -60,7 +84,7 @@ const UIManager = {
             btn.addEventListener('click', (e) => {
                 const level = e.target.getAttribute('data-level');
                 MathEngine.setDifficulty(level);
-                GameLogic.startRandomLevel();
+                GameLogic.startRandomLevel(level);
                 this.setMode('random');
                 this.hideModal('modal-difficulty');
             });
@@ -104,9 +128,22 @@ const UIManager = {
         const btnRules = document.getElementById('btn-rules');
         if (btnRules) {
             btnRules.addEventListener('click', () => {
+                const title = document.getElementById('rules-title');
+                if (title) title.textContent = "规则说明";
                 this.showModal('modal-rules');
                 this.loadRules();
                 this.hideModal('modal-options'); // 关闭选项菜单
+            });
+        }
+
+        const btnChangelog = document.getElementById('btn-changelog');
+        if (btnChangelog) {
+            btnChangelog.addEventListener('click', () => {
+                const title = document.getElementById('rules-title');
+                if (title) title.textContent = "更新日志";
+                this.showModal('modal-rules'); // Reuse rules modal for simplicity
+                this.loadChangelog();
+                this.hideModal('modal-options');
             });
         }
         
@@ -142,6 +179,14 @@ const UIManager = {
                         alert("存档无效！");
                     }
                 }
+            });
+        }
+
+        // 主题切换
+        const btnThemeToggle = document.getElementById('btn-theme-toggle');
+        if (btnThemeToggle) {
+            btnThemeToggle.addEventListener('click', () => {
+                this.toggleTheme();
             });
         }
         
@@ -183,22 +228,54 @@ const UIManager = {
         }
     },
 
+    initTheme: function() {
+        // Check local storage or system preference
+        const savedTheme = localStorage.getItem('guessfunc_theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    },
+
+    toggleTheme: function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('guessfunc_theme', newTheme);
+        
+        // Update Desmos if possible (Desmos usually handles its own theme, but we can try to invert or adjust)
+        // For now, we just handle our UI.
+    },
+
     loadRules: function() {
         const container = document.getElementById('rules-content');
         if (!container) return;
-
-        // 如果已经加载过，就不再加载
-        if (container.getAttribute('data-loaded') === 'true') return;
 
         fetch('rules.md')
             .then(response => response.text())
             .then(text => {
                 this.renderMarkdown(container, text);
-                container.setAttribute('data-loaded', 'true');
             })
             .catch(err => {
                 console.error("Failed to load rules:", err);
                 container.textContent = "加载规则失败，请检查网络或文件。";
+            });
+    },
+
+    loadChangelog: function() {
+        const container = document.getElementById('rules-content');
+        if (!container) return;
+
+        fetch('changelog.md')
+            .then(response => response.text())
+            .then(text => {
+                this.renderMarkdown(container, text);
+            })
+            .catch(err => {
+                console.error("Failed to load changelog:", err);
+                container.textContent = "加载更新日志失败。";
             });
     },
     
@@ -207,7 +284,24 @@ const UIManager = {
      */
     renderMarkdown: function(container, text) {
         if (window.marked) {
-            container.innerHTML = marked.parse(text);
+            // Protect math blocks from markdown parsing
+            // We replace $...$ and $$...$$ with placeholders
+            const mathBlocks = [];
+            const protectedText = text.replace(/(\$\$[\s\S]*?\$\$)|(\$[^$\n]*?\$)/g, (match) => {
+                mathBlocks.push(match);
+                return `MATHBLOCK${mathBlocks.length - 1}BLOCKMATH`;
+            });
+            
+            // Parse markdown
+            let html = marked.parse(protectedText);
+            
+            // Restore math blocks
+            html = html.replace(/MATHBLOCK(\d+)BLOCKMATH/g, (match, index) => {
+                return mathBlocks[parseInt(index)];
+            });
+            
+            container.innerHTML = html;
+            
             // Render Math using KaTeX
             if (window.renderMathInElement) {
                 renderMathInElement(container, {
@@ -269,7 +363,7 @@ const UIManager = {
             regionHeader.appendChild(titleDiv);
             
             // 渲染剧情按钮（如果有描述且解锁）
-            if (region.description && !isRegionLocked) {
+            if ((region.description || region.descriptionPath) && !isRegionLocked) {
                 const storyBtn = document.createElement('button');
                 storyBtn.innerHTML = '剧情'; // 简化文字
                 storyBtn.className = 'story-btn primary-btn'; 
@@ -346,9 +440,32 @@ const UIManager = {
                         return;
                     }
                     
-                    GameLogic.startPresetLevel(levelIndex);
-                    this.setMode('preset');
-                    this.hideModal('modal-levels');
+                    const startAction = () => {
+                        GameLogic.startPresetLevel(levelIndex);
+                        this.setMode('preset');
+                        // Ensure levels modal is closed
+                        const levelsModal = document.getElementById('modal-levels');
+                        if (levelsModal && levelsModal.classList.contains('visible')) {
+                            this.hideModal('modal-levels');
+                        }
+                    };
+
+                    // Check if chapter story has been seen
+                    if ((region.description || region.descriptionPath) && !StorageManager.isChapterSeen(region.id)) {
+                        StorageManager.markChapterSeen(region.id);
+                        
+                        // Close levels modal first
+                        this.hideModal('modal-levels');
+                        
+                        // Show story after a short delay to allow transition
+                        setTimeout(() => {
+                            this.showStory(region);
+                            // Register callback to start level after story is closed
+                            this.modalCallbacks['modal-story'] = startAction;
+                        }, 300);
+                    } else {
+                        startAction();
+                    }
                 });
                 levelsContainer.appendChild(btn);
             });
@@ -359,12 +476,27 @@ const UIManager = {
      * 显示关卡指引
      */
     showLevelInstruction: function(levelData) {
-        if (!levelData.description) return;
+        if (!levelData.descriptionPath && !levelData.description) return;
         
         const container = document.getElementById('level-instruction-content');
         if (container) {
-            this.renderMarkdown(container, levelData.description);
+            // Show modal immediately with loading state
             this.showModal('modal-level-instruction');
+            container.innerHTML = '<p>加载中...</p>';
+
+            if (levelData.descriptionPath) {
+                fetch(levelData.descriptionPath)
+                    .then(res => res.text())
+                    .then(text => {
+                        this.renderMarkdown(container, text);
+                    })
+                    .catch(err => {
+                        console.error("Failed to load level description:", err);
+                        container.innerHTML = "<p>加载描述失败。</p>";
+                    });
+            } else {
+                this.renderMarkdown(container, levelData.description);
+            }
         }
     },
 
@@ -372,65 +504,81 @@ const UIManager = {
      * 显示剧情
      */
     showStory: function(regionData) {
-        if (!regionData.description) return;
+        if (!regionData.descriptionPath && !regionData.description) return;
         
         const container = document.getElementById('story-content');
         if (container) {
-            this.renderMarkdown(container, regionData.description);
             this.showModal('modal-story');
+            container.innerHTML = '<p>加载中...</p>';
+            
+            if (regionData.descriptionPath) {
+                fetch(regionData.descriptionPath)
+                    .then(res => res.text())
+                    .then(text => {
+                        this.renderMarkdown(container, text);
+                    })
+                    .catch(err => {
+                         console.error("Failed to load story:", err);
+                         container.innerHTML = "<p>加载剧情失败。</p>";
+                    });
+            } else {
+                this.renderMarkdown(container, regionData.description);
+            }
         }
     },
     
-    /**
-     * 设置 UI 模式
-     * @param {string} mode 'random' | 'preset'
-     */
-    setMode: function(mode) {
-        const btnRandom = document.getElementById('btn-random');
+    updateUI: function() {
+        // Toggle buttons based on mode
+        const mode = window.GameLogic.state.mode;
+        
         const btnNext = document.getElementById('btn-next');
         const btnReturn = document.getElementById('btn-return');
+        const btnCheck = document.getElementById('btn-check');
+        const btnPreset = document.getElementById('btn-preset');
+        const btnRandom = document.getElementById('btn-random');
         const btnCreate = document.getElementById('btn-create');
-        const btnShare = document.getElementById('btn-share');
-        const btnOptions = document.getElementById('btn-options');
         
         if (mode === 'preset') {
-            if (btnRandom) btnRandom.style.display = 'none';
-            if (btnCreate) btnCreate.style.display = 'none';
-            if (btnShare) btnShare.style.display = 'none';
-            // 保持选项按钮可见
-            if (btnOptions) btnOptions.style.display = 'inline-block';
-            
             if (btnReturn) {
                 btnReturn.style.display = 'inline-block';
                 btnReturn.classList.remove('hidden');
             }
+            if (btnPreset) btnPreset.style.display = 'none';
+            if (btnRandom) btnRandom.style.display = 'none';
+            if (btnCreate) btnCreate.style.display = 'none';
         } else {
-            if (btnRandom) btnRandom.style.display = 'inline-block';
-            if (btnCreate) btnCreate.style.display = 'inline-block';
-            if (btnShare) btnShare.style.display = 'inline-block';
-            if (btnOptions) btnOptions.style.display = 'inline-block';
-            
-            if (btnNext) {
-                btnNext.style.display = 'none';
-                btnNext.classList.add('hidden');
-            }
             if (btnReturn) {
                 btnReturn.style.display = 'none';
                 btnReturn.classList.add('hidden');
             }
+            if (btnPreset) btnPreset.style.display = 'inline-block';
+            if (btnRandom) btnRandom.style.display = 'inline-block';
+            if (btnCreate) btnCreate.style.display = 'inline-block';
+            if (btnNext) {
+                btnNext.style.display = 'none';
+                btnNext.classList.add('hidden');
+            }
         }
+    },
+
+    setMode: function(mode) {
+        if (window.GameLogic) {
+            window.GameLogic.state.mode = mode;
+        }
+        this.updateUI();
     },
     
     /**
      * 切换下一关按钮显示状态
      */
-    toggleNextButton: function(show) {
+    toggleNextButton: function(show, text = "下一关") {
         const btnNext = document.getElementById('btn-next');
         if (!btnNext) return;
         
         if (show) {
             btnNext.style.display = 'inline-block';
             btnNext.classList.remove('hidden');
+            btnNext.textContent = text;
         } else {
             btnNext.style.display = 'none';
             btnNext.classList.add('hidden');
@@ -453,6 +601,12 @@ const UIManager = {
             modal.classList.remove('visible');
             setTimeout(() => {
                 modal.classList.add('hidden');
+                // Execute callback if any
+                if (this.modalCallbacks[modalId]) {
+                    const callback = this.modalCallbacks[modalId];
+                    delete this.modalCallbacks[modalId];
+                    callback();
+                }
             }, 300); // 300ms transition time
         }
     },

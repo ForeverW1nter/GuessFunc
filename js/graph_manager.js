@@ -49,6 +49,7 @@ const GraphManager = {
     _initCalculator: function(elt) {
         if (!window.Desmos) return;
         this.calculator = Desmos.GraphingCalculator(elt, {
+            language: 'zh-CN', // Force language
             expressions: true, // 显示侧边栏
             settingsMenu: false, // 禁用设置菜单
             zoomButtons: true, // 显示缩放按钮

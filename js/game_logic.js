@@ -84,32 +84,61 @@ const GameLogic = {
     },
 
     /**
-     * 开始随机关卡
+     * 重置游戏状态
      */
-    startRandomLevel: function() {
-        this.state.mode = 'random';
-        this.state.currentLevelIndex = -1;
-        
-        let expr = null;
-        let attempts = 0;
-        const maxAttempts = 20; 
+    resetState: function() {
+        this.state.isWon = false;
+        this.state.currentLevelData = null;
+        this.state.currentTarget = null;
+        this.state.currentParams = null;
+        // Determine if we need to reset level index based on mode? 
+        // startRandomLevel sets mode to random, but maybe we should reset index there.
+        // For now, just reset common flags.
+    },
 
-        while (attempts < maxAttempts) {
-            attempts++;
-            const candidateExpr = MathEngine.generateRandomExpression();
-            if (MathEngine.isDefinedInRange(candidateExpr)) {
-                expr = candidateExpr;
-                break;
+    /**
+     * 开始随机关卡
+     * @param {string} [difficultyOverride] 可选的难度设置
+     */
+    startRandomLevel: function(difficultyOverride) {
+        this.state.mode = 'random';
+        this.resetState();
+        
+        // Use MathEngine to generate function based on difficulty
+        const difficulty = difficultyOverride || document.querySelector('.diff-btn.active')?.dataset.level || 'easy';
+        const funcData = MathEngine.generateRandomFunction(difficulty);
+        
+        this.state.targetExpression = funcData.latex;
+        // In random mode, we don't have a separate target string, just use latex
+        this.state.targetFunction = funcData.expression; 
+        
+        console.log(`Starting Random Level (${difficulty}):`, this.state.targetExpression);
+        
+        // Hide target expression in Desmos by using GraphManager
+        // This ensures consistent ID usage ('target-function') which is NOT hidden by CSS
+        // The previous implementation used 'target' which was hidden by CSS
+        if (window.GraphManager) {
+            window.GraphManager.setupLevel(this.state.targetExpression, {});
+        }
+
+        // 更新 URL (分享链接) 为当前随机关卡
+        const randomLevelData = { t: this.state.targetExpression, p: {} };
+        const code = Utils.encodeLevel(randomLevelData);
+        Utils.setQueryParam('level', code);
+        this.state.currentLevelData = randomLevelData; // 更新 currentLevelData 确保一致性
+        
+        // Show message
+        let diffName = "简单";
+        if (difficulty === 'medium') diffName = "中等";
+        if (difficulty === 'hard') diffName = "困难";
+        if (difficulty === 'hell') diffName = "地狱";
+        
+        if (window.UIManager && window.UIManager.showMessage) {
+            window.UIManager.showMessage(`随机挑战 (${diffName}) 开始了！请输入你的猜测。`);
+            if (window.UIManager.updateUI) {
+                window.UIManager.updateUI();
             }
         }
-
-        if (!expr) {
-            Logger.error(`Failed to generate a valid level after ${maxAttempts} attempts. Using fallback.`);
-            expr = "sin(x) + x"; 
-        }
-
-        this.startLevel({t: expr});
-        UIManager.showMessage("随机挑战开始了！请输入你的猜测。", "info");
     },
 
     /**
@@ -147,6 +176,33 @@ const GameLogic = {
         if (this.state.mode === 'preset') {
             const nextIndex = this.state.currentLevelIndex + 1;
             if (nextIndex < window.LEVELS.length) {
+                const nextLevelData = window.LEVELS[nextIndex];
+                const currentRegion = this.getRegionForLevel(window.LEVELS[this.state.currentLevelIndex].id);
+                const nextRegion = this.getRegionForLevel(nextLevelData.id);
+
+                // Check if entering a new chapter (region)
+                if (nextRegion && (!currentRegion || currentRegion.id !== nextRegion.id)) {
+                    // It's a new chapter
+                    if (nextRegion.descriptionPath || nextRegion.description) {
+                         // Show story first
+                         if (window.UIManager && window.UIManager.showStory) {
+                             // Mark as seen so it doesn't show again when clicking a level
+                             if (window.StorageManager && window.StorageManager.markChapterSeen) {
+                                 window.StorageManager.markChapterSeen(nextRegion.id);
+                             }
+
+                             window.UIManager.showStory(nextRegion);
+                             
+                             // After story, return to level selection instead of starting level
+                             window.UIManager.modalCallbacks['modal-story'] = () => {
+                                 window.UIManager.renderLevelList();
+                                 window.UIManager.showModal('modal-levels');
+                             };
+                             return;
+                         }
+                    }
+                }
+                
                 this.startPresetLevel(nextIndex);
             } else {
                 UIManager.showMessage("恭喜！你已经完成了所有预设关卡！", "success");
@@ -154,6 +210,14 @@ const GameLogic = {
         } else {
             this.startRandomLevel();
         }
+    },
+
+    /**
+     * Helper to find region for a level ID
+     */
+    getRegionForLevel: function(levelId) {
+        if (!window.REGIONS) return null;
+        return window.REGIONS.find(r => r.levels.includes(levelId));
     },
 
     /**
@@ -209,9 +273,24 @@ const GameLogic = {
             }
             
             if (this.state.currentLevelIndex < window.LEVELS.length - 1) {
-                msg += " 点击“下一关”继续。";
+                // Check if next level is in a new chapter
+                const nextIndex = this.state.currentLevelIndex + 1;
+                const nextLevelData = window.LEVELS[nextIndex];
+                const currentRegion = this.getRegionForLevel(levelData.id);
+                const nextRegion = this.getRegionForLevel(nextLevelData.id);
+                
+                const isNewChapter = nextRegion && (!currentRegion || currentRegion.id !== nextRegion.id);
+                const nextBtnText = isNewChapter ? "下一章" : "下一关";
+                
+                // If it is next chapter, we need to show story BEFORE next level starts
+                // BUT current logic is: click next -> show story -> go to level selection
+                // So the button should probably just say "下一章" and lead to the story.
+                // The current implementation of nextLevel handles this.
+                
+                msg += ` 点击“${nextBtnText}”继续。`;
+                
                 if (window.UIManager && window.UIManager.toggleNextButton) {
-                    window.UIManager.toggleNextButton(true);
+                    window.UIManager.toggleNextButton(true, nextBtnText);
                 }
             } else {
                 msg += " 你已通关所有预设关卡！";
@@ -227,6 +306,17 @@ const GameLogic = {
      * 获取分享链接
      */
     getShareLink: function() {
+        // 优先使用当前实际运行的目标函数（随机模式下生成的新函数）
+        if (this.state.targetExpression && this.state.mode === 'random') {
+             // 随机模式下，this.state.currentLevelData 可能还是旧的或者初始的
+             // 我们需要用当前的 targetExpression 构造一个新的 data
+             const data = { t: this.state.targetExpression, p: {} };
+             const code = Utils.encodeLevel(data);
+             const url = new URL(window.location);
+             url.searchParams.set('level', code);
+             return url.toString();
+        }
+
         if (!this.state.currentLevelData) return window.location.href;
         const code = Utils.encodeLevel(this.state.currentLevelData);
         const url = new URL(window.location);
