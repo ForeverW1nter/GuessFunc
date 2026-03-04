@@ -421,16 +421,29 @@ button:active {
     transform: translateY(-2px);
 }
 
-[data-theme="light"] .level-card:not(.completed):not(.locked):hover {
+[data-theme="light"] .level-card:hover {
     background-color: rgba(33, 150, 243, 0.08);
     border-color: rgba(33, 150, 243, 0.60);
-    box-shadow: 0 8px 18px rgba(33, 150, 243, 0.25);
+    box-shadow: 0 8px 18px rgba(33, 150, 243, 0.15);
 }
 
-[data-theme="dark"] .level-card:not(.completed):not(.locked):hover {
+[data-theme="dark"] .level-card:hover {
     background-color: #30363d;
-    border-color: rgba(100, 181, 246, 0.85);
-    box-shadow: 0 10px 22px rgba(100, 181, 246, 0.40);
+    border-color: rgba(100, 181, 246, 0.80);
+    box-shadow: 0 8px 18px rgba(100, 181, 246, 0.25);
+}
+
+/* Completed Level Card Hover - Green Glow Override */
+[data-theme="light"] .level-card.completed:hover {
+    background-color: rgba(76, 175, 80, 0.15);
+    border-color: var(--success-color);
+    box-shadow: 0 8px 18px rgba(76, 175, 80, 0.3);
+}
+
+[data-theme="dark"] .level-card.completed:hover {
+    background-color: rgba(76, 175, 80, 0.25);
+    border-color: var(--success-color);
+    box-shadow: 0 8px 18px rgba(76, 175, 80, 0.4);
 }
 
 [data-theme="light"] .level-card:not(.completed):not(.locked):hover::before {
@@ -447,28 +460,6 @@ button:active {
 
 .level-card.locked:hover::before {
     background-color: rgba(128, 128, 128, 0.5);
-}
-
-.level-card.completed:hover {
-    border-color: var(--success-color);
-    box-shadow: 0 8px 18px rgba(76, 175, 80, 0.30);
-}
-
-[data-theme="dark"] .level-card.completed:hover {
-    border-color: var(--success-color);
-    background-color: #2f3a2f;
-    box-shadow: 0 10px 22px rgba(76, 175, 80, 0.45);
-}
-
-.level-card.locked:hover {
-    border-color: rgba(128,128,128,0.6);
-    box-shadow: 0 6px 16px rgba(128, 128, 128, 0.25);
-}
-
-[data-theme="dark"] .level-card.locked:hover {
-    border-color: rgba(128,128,128,0.7);
-    background-color: #1a1a1a;
-    box-shadow: 0 8px 18px rgba(128, 128, 128, 0.35);
 }
 
 .level-card h3 {
@@ -552,6 +543,12 @@ button:active {
     box-shadow: 0 4px 12px rgba(33,150,243,0.15);
 }
 
+[data-theme="light"] .option-item#btn-clear-save:hover {
+    background-color: rgba(244, 67, 54, 0.10);
+    border-color: rgba(244, 67, 54, 0.60);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.15);
+}
+
 [data-theme="dark"] .option-item:hover {
     background-color: rgba(255, 255, 255, 0.07);
     border-color: var(--card-border);
@@ -559,12 +556,25 @@ button:active {
     box-shadow: 0 4px 12px rgba(100,181,246,0.20);
 }
 
+[data-theme="dark"] .option-item#btn-clear-save:hover {
+    box-shadow: 0 4px 12px rgba(229, 115, 115, 0.20);
+    border-color: #ef5350;
+}
+
 [data-theme="light"] .option-item:hover::before {
     background-color: var(--primary-color);
 }
 
+[data-theme="light"] .option-item#btn-clear-save:hover::before {
+    background-color: var(--danger-color);
+}
+
 [data-theme="dark"] .option-item:hover::before {
     background-color: #64b5f6;
+}
+
+[data-theme="dark"] .option-item#btn-clear-save:hover::before {
+    background-color: #ef5350;
 }
 
 .diff-btn {
@@ -595,9 +605,17 @@ button:active {
     transform: translateY(-1px);
 }
 
-/* Dark theme: restore option/diff hover subtle lightening */
+/* Dark theme: restore option/diff hover subtle lightening - FIXED: Use colored background */
 [data-theme="dark"] .option-item:hover {
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: rgba(100, 181, 246, 0.15); /* Primary color transparent */
+    border-color: rgba(100, 181, 246, 0.60);
+    color: var(--option-text);
+}
+
+[data-theme="dark"] .option-item#btn-clear-save:hover {
+    background-color: rgba(239, 83, 80, 0.15); /* Red transparent */
+    border-color: #ef5350;
+    color: #ef5350;
 }
 
 [data-theme="dark"] .diff-btn:hover {

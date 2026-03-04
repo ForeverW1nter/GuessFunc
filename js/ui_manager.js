@@ -136,6 +136,17 @@ const UIManager = {
             });
         }
 
+        const btnAbout = document.getElementById('btn-about');
+        if (btnAbout) {
+            btnAbout.addEventListener('click', () => {
+                const title = document.getElementById('rules-title');
+                if (title) title.textContent = "关于游戏";
+                this.showModal('modal-rules'); // Reuse rules modal
+                this.loadAbout();
+                this.hideModal('modal-options');
+            });
+        }
+
         const btnChangelog = document.getElementById('btn-changelog');
         if (btnChangelog) {
             btnChangelog.addEventListener('click', () => {
@@ -261,6 +272,21 @@ const UIManager = {
             .catch(err => {
                 console.error("Failed to load rules:", err);
                 container.textContent = "加载规则失败，请检查网络或文件。";
+            });
+    },
+
+    loadAbout: function() {
+        const container = document.getElementById('rules-content');
+        if (!container) return;
+
+        fetch('about.md')
+            .then(response => response.text())
+            .then(text => {
+                this.renderMarkdown(container, text);
+            })
+            .catch(err => {
+                console.error("Failed to load about info:", err);
+                container.textContent = "加载关于信息失败。";
             });
     },
 
