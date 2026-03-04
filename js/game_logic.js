@@ -134,7 +134,7 @@ const GameLogic = {
         if (difficulty === 'hell') diffName = "地狱";
         
         if (window.UIManager && window.UIManager.showMessage) {
-            window.UIManager.showMessage(`随机挑战 (${diffName}) 开始了！请输入你的猜测。`);
+            window.UIManager.showMessage(`随机挑战（${diffName}）开始了！请输入你的猜测。`);
             if (window.UIManager.updateUI) {
                 window.UIManager.updateUI();
             }

@@ -118,7 +118,7 @@ const StorageManager = {
             if (completed.length < unlockCriteria.count) {
                 return { 
                     unlocked: false, 
-                    reason: `需要累计通关 ${unlockCriteria.count} 个关卡 (当前: ${completed.length})` 
+                    reason: `需要累计通关 ${unlockCriteria.count} 个关卡（当前：${completed.length}）` 
                 };
             }
         }

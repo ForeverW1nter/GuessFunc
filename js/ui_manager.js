@@ -395,7 +395,7 @@ const UIManager = {
             if (isRegionLocked) {
                 levelsContainer.style.display = 'none'; // 隐藏未解锁区域的关卡
                 const lockedMsg = document.createElement('p');
-                lockedMsg.textContent = `该区域尚未解锁 (${regionUnlockStatus.reason})`;
+                lockedMsg.textContent = `该区域尚未解锁，${regionUnlockStatus.reason}`;
                 lockedMsg.style.color = '#999';
                 container.appendChild(lockedMsg);
             } else {

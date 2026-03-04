@@ -150,7 +150,7 @@ button {
     white-space: nowrap;
 }
 
-button:hover {
+.toolbar button:hover {
     background-color: rgba(255, 255, 255, 0.25);
     transform: translateY(-1px);
 }
@@ -372,11 +372,26 @@ button:active {
     display: flex;
     flex-direction: column;
     min-height: 100px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
     /* Flex item properties */
     flex: 0 0 calc(25% - 15px); /* Default to 4 columns */
     min-width: 220px; /* Minimum width constraint */
 }
+
+.level-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 8px 0 0 8px;
+    background: transparent; /* 默认无色条，仅在悬停时出现 */
+    transition: background-color 0.2s ease;
+}
+
+/* 深色模式默认也不显示左侧条，悬停时着色 */
 
 /* Responsive adjustments for level card width */
 @media (max-width: 1024px) {
@@ -398,9 +413,62 @@ button:active {
 }
 
 .level-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .level-card:hover {
+    transform: translateY(-2px);
+}
+
+[data-theme="light"] .level-card:not(.completed):not(.locked):hover {
+    background-color: rgba(33, 150, 243, 0.08);
+    border-color: rgba(33, 150, 243, 0.60);
+    box-shadow: 0 8px 18px rgba(33, 150, 243, 0.25);
+}
+
+[data-theme="dark"] .level-card:not(.completed):not(.locked):hover {
+    background-color: #30363d;
+    border-color: rgba(100, 181, 246, 0.85);
+    box-shadow: 0 10px 22px rgba(100, 181, 246, 0.40);
+}
+
+[data-theme="light"] .level-card:not(.completed):not(.locked):hover::before {
+    background-color: var(--primary-color);
+}
+
+[data-theme="dark"] .level-card:not(.completed):not(.locked):hover::before {
+    background-color: #64b5f6;
+}
+
+.level-card.completed:hover::before {
+    background-color: var(--success-color);
+}
+
+.level-card.locked:hover::before {
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+.level-card.completed:hover {
+    border-color: var(--success-color);
+    box-shadow: 0 8px 18px rgba(76, 175, 80, 0.30);
+}
+
+[data-theme="dark"] .level-card.completed:hover {
+    border-color: var(--success-color);
+    background-color: #2f3a2f;
+    box-shadow: 0 10px 22px rgba(76, 175, 80, 0.45);
+}
+
+.level-card.locked:hover {
+    border-color: rgba(128,128,128,0.6);
+    box-shadow: 0 6px 16px rgba(128, 128, 128, 0.25);
+}
+
+[data-theme="dark"] .level-card.locked:hover {
+    border-color: rgba(128,128,128,0.7);
+    background-color: #1a1a1a;
+    box-shadow: 0 8px 18px rgba(128, 128, 128, 0.35);
 }
 
 .level-card h3 {
@@ -408,12 +476,19 @@ button:active {
     font-size: 1.1rem;
     font-weight: 600 !important; /* Prevent font weight change on hover */
     color: var(--primary-color);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: color 0.2s ease;
 }
 
 .level-card p {
     margin: 0;
     font-size: 0.9rem;
     opacity: 0.8;
+}
+
+.level-card:hover h3 {
+    font-weight: 600 !important;
 }
 
 .level-card.completed {
@@ -455,21 +530,93 @@ button:active {
     text-align: left;
     cursor: pointer;
     transition: background-color 0.2s;
+    position: relative;
 }
 
-.option-item:hover, .diff-btn:hover {
-    background-color: var(--card-hover);
+.option-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 8px 0 0 8px;
+    background: transparent;
+    transition: background-color 0.2s ease;
+}
+
+[data-theme="light"] .option-item:hover {
+    background-color: rgba(33, 150, 243, 0.10);
+    border-color: rgba(33, 150, 243, 0.60);
+    color: var(--text-color);
+    box-shadow: 0 4px 12px rgba(33,150,243,0.15);
+}
+
+[data-theme="dark"] .option-item:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    border-color: var(--card-border);
+    color: var(--option-text);
+    box-shadow: 0 4px 12px rgba(100,181,246,0.20);
+}
+
+[data-theme="light"] .option-item:hover::before {
+    background-color: var(--primary-color);
+}
+
+[data-theme="dark"] .option-item:hover::before {
+    background-color: #64b5f6;
 }
 
 .diff-btn {
     text-align: center;
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), #42a5f5);
     color: white;
     border: none;
 }
 
 .diff-btn:hover {
-    opacity: 0.9;
+    opacity: 1;
+    filter: brightness(1.03);
+}
+
+.diff-btn:focus-visible, .option-item:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(33,150,243,0.35);
+}
+
+[data-theme="dark"] .diff-btn:focus-visible, 
+[data-theme="dark"] .option-item:focus-visible {
+    box-shadow: 0 0 0 3px rgba(100,181,246,0.35);
+}
+
+/* Dark theme: restore original button hover behavior broadly */
+[data-theme="dark"] button:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Dark theme: restore option/diff hover subtle lightening */
+[data-theme="dark"] .option-item:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="dark"] .diff-btn:hover {
+    opacity: 1;
+    filter: brightness(1.03);
+}
+
+/* Light theme: make option hover more distinguishable without turning near white */
+[data-theme="light"] .option-item:hover {
+    background-color: rgba(33, 150, 243, 0.12);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+/* Light theme: keep diff buttons readable on hover */
+[data-theme="light"] .diff-btn:hover {
+    filter: brightness(0.95);
+    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.25);
+    opacity: 1;
 }
 
 /* Mobile Adjustments */
