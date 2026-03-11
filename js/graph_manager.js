@@ -81,15 +81,22 @@ const GraphManager = {
         const toRemove = expressions.filter(exp => exp.id !== this.targetExprId).map(exp => exp.id);
         toRemove.forEach(id => this.calculator.removeExpression({ id: id }));
 
-        // 3. 添加用户输入框（放在第二位）
-        // 默认函数机制：始终提供一个默认猜测，方便用户开始
-        // 所有关卡的默认输入都改成x，颜色为红色
-        let defaultGuess = 'x'; 
+        // 3. 添加用户输入框
+        // 先添加一个预猜测函数x，红色，放在最前面
+        this.calculator.setExpression({
+            id: 'pre-guess-x',
+            latex: 'x',
+            color: Desmos.Colors.RED
+        });
+
+        // 默认输入f(x)，颜色为黑色
+        let defaultGuess = 'f\\left(x\\right)'; 
         
         this.calculator.setExpression({ 
             id: 'user-guess-1',
             latex: defaultGuess,
-            color: Desmos.Colors.RED
+            color: Desmos.Colors.BLACK,
+            lineWidth: 5
         });
 
         // 4. 如果有参数，直接添加滑块（不使用文件夹，避免兼容性问题）
@@ -132,7 +139,8 @@ const GraphManager = {
             latex: `f(x) = ${latex}`,
             color: Desmos.Colors.BLACK,
             lineWidth: 5,
-            secret: true
+            secret: true,
+            hidden: true
         });
     },
 
@@ -407,8 +415,20 @@ const GraphManager = {
         const toRemove = expressions.filter(exp => exp.id !== this.targetExprId).map(exp => exp.id);
         toRemove.forEach(id => this.calculator.removeExpression({ id: id }));
         
+        // 添加预猜测函数x
+        this.calculator.setExpression({
+            id: 'pre-guess-x',
+            latex: 'x',
+            color: Desmos.Colors.RED
+        });
+
         // 添加一个空的输入行
-        this.calculator.setExpression({ id: 'user-guess-1' });
+        this.calculator.setExpression({ 
+            id: 'user-guess-1',
+            latex: 'f\\left(x\\right)',
+            color: Desmos.Colors.BLACK,
+            lineWidth: 5
+        });
         
         // 添加参数文件夹
         this.calculator.setExpression({
