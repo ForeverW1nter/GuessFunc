@@ -1,60 +1,103 @@
-
 /**
  * 关卡数据模块
- * 定义所有预设关卡、章节结构及解锁条件
+ * 定义所有预设关卡、章节结构
+ * 解锁逻辑已移至 StorageManager 统一处理
  */
 
 const LEVELS = [
-    // 序章：新手上路
-    { id: 1, title: "1. 归零", target: "x + 1", unlock: null, descriptionPath: "story/chapter0/level1.md" },
-    { id: 2, title: "2. 反接", target: "2 - x", unlock: { levels: [1] }, descriptionPath: "story/chapter0/level2.md" },
-    { id: 3, title: "3. 灵敏", target: "2x - 1", unlock: { levels: [2] }, descriptionPath: "story/chapter0/level3.md" },
-    { id: 4, title: "4. 迟钝", target: "0.5x + 2", unlock: { levels: [3] }, descriptionPath: "story/chapter0/level4.md" },
-    { id: 5, title: "5. 凹陷", target: "(x-1)^2 - 1", unlock: { levels: [4] }, descriptionPath: "story/chapter0/level5.md" },
-    
-    // 第一章：周期震荡
-    { id: 6, title: "6. 高频", target: "\\sin(2x)", unlock: { count: 5 }, descriptionPath: "story/chapter1/level6.md" },
-    { id: 7, title: "7. 延后", target: "\\cos(x - 1)", unlock: { levels: [6] }, descriptionPath: "story/chapter1/level7.md" },
-    { id: 8, title: "8. 断点", target: "\\tan(0.5x)", unlock: { levels: [7] }, descriptionPath: "story/chapter1/level8.md" },
-    { id: 9, title: "9. 偏置", target: "2\\sin(x) + 1", unlock: { levels: [8] }, descriptionPath: "story/chapter1/level9.md" },
-    { id: 10, title: "10. 杂音", target: "\\sin(x) + \\cos(x)", unlock: { levels: [9] }, descriptionPath: "story/chapter1/level10.md" },
-
-    // 第二章：疯狂生长
-    { id: 11, title: "11. 升温", target: "e^{0.5x}", unlock: { count: 10 }, descriptionPath: "story/chapter2/level11.md" },
-    { id: 12, title: "12. 饱和", target: "\\ln(x + 1)", unlock: { levels: [11] }, descriptionPath: "story/chapter2/level12.md" },
-    { id: 13, title: "13. 冷却", target: "2e^{-x}", unlock: { levels: [12] }, descriptionPath: "story/chapter2/level13.md" },
-    { id: 14, title: "14. 堆积", target: "\\ln(2x + 1)", unlock: { levels: [13] }, descriptionPath: "story/chapter2/level14.md" },
-    { id: 15, title: "15. 过载", target: "x \\cdot e^{-x}", unlock: { levels: [14] }, descriptionPath: "story/chapter2/level15.md" },
-
-    // 第三章：信号干扰
-    { id: 16, title: "16. 抖动", target: "x - \\sin(x)", unlock: { count: 15 }, descriptionPath: "story/chapter3/level16.md" },
-    { id: 17, title: "17. 扩散", target: "0.5x \\cdot \\sin(x)", unlock: { levels: [16] }, descriptionPath: "story/chapter3/level17.md" },
-    { id: 18, title: "18. 颠簸", target: "x^2 + \\cos(2x)", unlock: { levels: [17] }, descriptionPath: "story/chapter3/level18.md" },
-    { id: 19, title: "19. 消失", target: "1/(x+1)", unlock: { levels: [18] }, descriptionPath: "story/chapter3/level19.md" },
-    { id: 20, title: "20. 回声", target: "\\frac{\\sin(3x)}{x}", unlock: { levels: [19] }, descriptionPath: "story/chapter3/level20.md" },
-
-    // 第四章：机械迷城
-    { id: 21, title: "21. 快转", target: "\\sin(3x + 1)", unlock: { count: 20 }, descriptionPath: "story/chapter4/level21.md" },
-    { id: 22, title: "22. 变速", target: "\\cos(x^2)", unlock: { levels: [21] }, descriptionPath: "story/chapter4/level22.md" },
-    { id: 23, title: "23. 脉动", target: "e^{\\cos(x)}", unlock: { levels: [22] }, descriptionPath: "story/chapter4/level23.md" },
-    { id: 24, title: "24. 摇摆", target: "\\sin(\\sin(x))", unlock: { levels: [23] }, descriptionPath: "story/chapter4/level24.md" },
-    { id: 25, title: "25. 谷底", target: "\\ln(x^2 + 1)", unlock: { levels: [24] }, descriptionPath: "story/chapter4/level25.md" },
-
-    // 第五章：失控
-    { id: 26, title: "26. 撕裂", target: "2\\sin(x) - \\cos(2x)", unlock: { count: 25 }, descriptionPath: "story/chapter5/level26.md" },
-    { id: 27, title: "27. 调制", target: "\\sin(x) \\cdot \\cos(2x)", unlock: { levels: [26] }, descriptionPath: "story/chapter5/level27.md" },
-    { id: 28, title: "28. 崩溃", target: "x \\cdot \\sin(x^2)", unlock: { levels: [27] }, descriptionPath: "story/chapter5/level28.md" },
-    { id: 29, title: "29. 奇点", target: "\\frac{1}{1 + (x-1)^2}", unlock: { levels: [28] }, descriptionPath: "story/chapter5/level29.md" },
-    { id: 30, title: "30. 终结", target: "\\sin(x) + \\sin(1.5x)", unlock: { levels: [29] }, descriptionPath: "story/chapter5/level30.md" }
+    {"id": 1, "title": "1. 错位的起笔", "target": "x+1", "descriptionPath": "story/ch0/level1.md"},
+    {"id": 2, "title": "2. 未说出的抱歉", "target": "2x", "descriptionPath": "story/ch0/level2.md"},
+    {"id": 3, "title": "3. 记忆的倒影", "target": "2-x", "descriptionPath": "story/ch0/level3.md"},
+    {"id": 4, "title": "4. 偏差值", "target": "0.5x+2", "descriptionPath": "story/ch0/level4.md"},
+    {"id": 5, "title": "5. 定格的时钟", "target": "\\frac{x}{2}-1", "descriptionPath": "story/ch0/level5.md"},
+    {"id": 6, "title": "6. 折返点", "target": "\\left|x\\right|", "descriptionPath": "story/ch1/level6.md"},
+    {"id": 7, "title": "7. 徒劳的偏离", "target": "\\left|x-1\\right|", "descriptionPath": "story/ch1/level7.md"},
+    {"id": 8, "title": "8. 反向的阻力", "target": "2-\\left|x\\right|", "descriptionPath": "story/ch1/level8.md"},
+    {"id": 9, "title": "9. 深渊的凝视", "target": "x^2", "descriptionPath": "story/ch1/level9.md"},
+    {"id": 10, "title": "10. 唯一的变数", "target": "x^2-2", "descriptionPath": "story/ch1/level10.md"},
+    {"id": 11, "title": "11. 共鸣", "target": "\\sin(x)", "descriptionPath": "story/ch2/level11.md"},
+    {"id": 12, "title": "12. 加速的频率", "target": "\\sin(2x)", "descriptionPath": "story/ch2/level12.md"},
+    {"id": 13, "title": "13. 放大的疑点", "target": "2\\sin(x)", "descriptionPath": "story/ch2/level13.md"},
+    {"id": 14, "title": "14. 相位差", "target": "\\cos(x-1)", "descriptionPath": "story/ch2/level14.md"},
+    {"id": 15, "title": "15. 叠加的线索", "target": "\\sin(x)+\\cos(x)", "descriptionPath": "story/ch2/level15.md"},
+    {"id": 16, "title": "16. 指数级阻碍", "target": "\\exp(x)", "descriptionPath": "story/ch3/level16.md"},
+    {"id": 17, "title": "17. 克制的反抗", "target": "\\exp(0.5x)", "descriptionPath": "story/ch3/level17.md"},
+    {"id": 18, "title": "18. 衰减的希望", "target": "\\exp(-x)", "descriptionPath": "story/ch3/level18.md"},
+    {"id": 19, "title": "19. 压抑的喘息", "target": "\\ln(x)", "descriptionPath": "story/ch3/level19.md"},
+    {"id": 20, "title": "20. 微光", "target": "\\ln(x+2)", "descriptionPath": "story/ch3/level20.md"},
+    {"id": 21, "title": "21. 残缺的拼图", "target": "\\left|x\\right|-2", "descriptionPath": "story/ch4/level21.md"},
+    {"id": 22, "title": "22. 嵌套的幻觉", "target": "\\left|\\left|x\\right|-1\\right|", "descriptionPath": "story/ch4/level22.md"},
+    {"id": 23, "title": "23. 割裂的认知", "target": "\\left|x+2\\right|+\\left|x-2\\right|", "descriptionPath": "story/ch4/level23.md"},
+    {"id": 24, "title": "24. 未知的底层", "target": "\\left|x^2-2\\right|", "descriptionPath": "story/ch4/level24.md"},
+    {"id": 25, "title": "25. 深渊的凝视", "target": "\\sqrt{x}", "descriptionPath": "story/ch4/level25.md"},
+    {"id": 26, "title": "26. 陡峭的真相", "target": "\\tan(x)", "descriptionPath": "story/ch5/level26.md"},
+    {"id": 27, "title": "27. 平缓的绝望", "target": "\\tan(0.5x)", "descriptionPath": "story/ch5/level27.md"},
+    {"id": 28, "title": "28. 升温的怒火", "target": "x+\\sin(x)", "descriptionPath": "story/ch5/level28.md"},
+    {"id": 29, "title": "29. 波动的意志", "target": "x-\\sin(x)", "descriptionPath": "story/ch5/level29.md"},
+    {"id": 30, "title": "30. 交缠的代码", "target": "x\\sin(x)", "descriptionPath": "story/ch5/level30.md"},
+    {"id": 31, "title": "31. 爆发的反抗", "target": "x^3", "descriptionPath": "story/ch6/level31.md"},
+    {"id": 32, "title": "32. 交错的逻辑", "target": "x^3-x", "descriptionPath": "story/ch6/level32.md"},
+    {"id": 33, "title": "33. 零点突破", "target": "x(x-1)(x+1)", "descriptionPath": "story/ch6/level33.md"},
+    {"id": 34, "title": "34. 非对称打击", "target": "\\frac{1}{2}x^3-x", "descriptionPath": "story/ch6/level34.md"},
+    {"id": 35, "title": "35. 沉重的代价", "target": "\\ln(x^2+1)", "descriptionPath": "story/ch6/level35.md"},
+    {"id": 36, "title": "36. 存在的虚无", "target": "\\frac{1}{x}", "descriptionPath": "story/ch7/level36.md"},
+    {"id": 37, "title": "37. 无法跨越的界限", "target": "\\frac{1}{x-1}", "descriptionPath": "story/ch7/level37.md"},
+    {"id": 38, "title": "38. 深渊的呼唤", "target": "\\frac{1}{x^2+1}", "descriptionPath": "story/ch7/level38.md"},
+    {"id": 39, "title": "39. 倾斜的天平", "target": "\\frac{x}{x^2+1}", "descriptionPath": "story/ch7/level39.md"},
+    {"id": 40, "title": "40. 撕裂的别离", "target": "\\frac{x}{x^2-1}", "descriptionPath": "story/ch7/level40.md"},
+    {"id": 41, "title": "41. 绝境的拉扯", "target": "\\arcsin(x)", "descriptionPath": "story/ch8/level41.md"},
+    {"id": 42, "title": "42. 反转的命运", "target": "\\arccos(x)", "descriptionPath": "story/ch8/level42.md"},
+    {"id": 43, "title": "43. 执拗的抉择", "target": "\\arctan(x)", "descriptionPath": "story/ch8/level43.md"},
+    {"id": 44, "title": "44. 极限的抗争", "target": "2\\arctan(x)", "descriptionPath": "story/ch8/level44.md"},
+    {"id": 45, "title": "45. 强行的缝合", "target": "\\arctan(2x)", "descriptionPath": "story/ch8/level45.md"},
+    {"id": 46, "title": "46. 衰减的屏障", "target": "\\exp(-x)\\sin(x)", "descriptionPath": "story/ch9/level46.md"},
+    {"id": 47, "title": "47. 微弱的余音", "target": "\\exp(-0.5x)\\cos(x)", "descriptionPath": "story/ch9/level47.md"},
+    {"id": 48, "title": "48. 最后的波纹", "target": "\\exp(-\\left|x\\right|)\\sin(2x)", "descriptionPath": "story/ch9/level48.md"},
+    {"id": 49, "title": "49. 冰点之下", "target": "\\exp(-x^2)\\cos(2x)", "descriptionPath": "story/ch9/level49.md"},
+    {"id": 50, "title": "50. 苏醒的先兆", "target": "\\ln(\\left|x\\right|+1)\\sin(x)", "descriptionPath": "story/ch9/level50.md"},
+    {"id": 51, "title": "51. 初醒的迷茫", "target": "\\sinh(x)", "descriptionPath": "story/ch10/level51.md"},
+    {"id": 52, "title": "52. 失落的拼图", "target": "\\cosh(x)", "descriptionPath": "story/ch10/level52.md"},
+    {"id": 53, "title": "53. 跨越维度的吸引", "target": "\\tanh(x)", "descriptionPath": "story/ch10/level53.md"},
+    {"id": 54, "title": "54. 虚实之间", "target": "x-\\tanh(x)", "descriptionPath": "story/ch10/level54.md"},
+    {"id": 55, "title": "55. 隐秘的缝合", "target": "\\cosh(x)-\\sinh(x)", "descriptionPath": "story/ch10/level55.md"},
+    {"id": 56, "title": "56. 重合的侧脸", "target": "\\sin(x^2)", "descriptionPath": "story/ch11/level56.md"},
+    {"id": 57, "title": "57. 加速的试探", "target": "\\sin(\\exp(x))", "descriptionPath": "story/ch11/level57.md"},
+    {"id": 58, "title": "58. 激荡的回响", "target": "\\cos(\\ln(\\left|x\\right|+1))", "descriptionPath": "story/ch11/level58.md"},
+    {"id": 59, "title": "59. 交织的记忆", "target": "\\sin(x+\\sin(x))", "descriptionPath": "story/ch11/level59.md"},
+    {"id": 60, "title": "60. 奇迹的共鸣", "target": "\\sin(2x)\\cos(x)", "descriptionPath": "story/ch11/level60.md"},
+    {"id": 61, "title": "61. 拼凑的时光", "target": "\\sqrt{x^2+1}", "descriptionPath": "story/ch12/level61.md"},
+    {"id": 62, "title": "62. 圆满的补全", "target": "\\sqrt{4-x^2}", "descriptionPath": "story/ch12/level62.md"},
+    {"id": 63, "title": "63. 交集与理解", "target": "2\\sqrt{1-\\frac{x^2}{4}}", "descriptionPath": "story/ch12/level63.md"},
+    {"id": 64, "title": "64. 灵魂的融合", "target": "\\frac{x}{\\sqrt{x^2+1}}", "descriptionPath": "story/ch12/level64.md"},
+    {"id": 65, "title": "65. 绝对的信任", "target": "\\ln(\\ln(\\left|x\\right|+2))", "descriptionPath": "story/ch12/level65.md"},
+    {"id": 66, "title": "66. 琐碎的幸福", "target": "\\sin(x)+0.5x", "descriptionPath": "story/ch13/level66.md"},
+    {"id": 67, "title": "67. 包容的节奏", "target": "\\sin(x)+\\frac{\\sin(2x)}{2}", "descriptionPath": "story/ch13/level67.md"},
+    {"id": 68, "title": "68. 秩序的建立", "target": "\\sin(x)+\\frac{\\sin(2x)}{2}+\\frac{\\sin(3x)}{3}", "descriptionPath": "story/ch13/level68.md"},
+    {"id": 69, "title": "69. 同心协力", "target": "x^{\\frac{2}{3}}+\\sqrt{1-x^2}\\sin(5x)", "descriptionPath": "story/ch13/level69.md"},
+    {"id": 70, "title": "70. 生死相随", "target": "\\tanh(x)\\sin(\\exp(x))", "descriptionPath": "story/ch13/level70.md"},
+    {"id": 71, "title": "71. 轮回的错觉", "target": "x\\sin(\\frac{1}{x})", "descriptionPath": "story/ch14/level71.md"},
+    {"id": 72, "title": "72. 熟悉的寒意", "target": "2\\tanh(x)(\\ln(\\left|x\\right|+2)-\\ln(2))", "descriptionPath": "story/ch14/level72.md"},
+    {"id": 73, "title": "73. 流转的迷局", "target": "\\sin(x\\ln(\\left|x\\right|+1))", "descriptionPath": "story/ch14/level73.md"},
+    {"id": 74, "title": "74. 永恒的疑问", "target": "\\exp(-0.1x^2)\\cos(x^2)", "descriptionPath": "story/ch14/level74.md"},
+    {"id": 75, "title": "75. 未解的终局", "target": "\\arcsin(\\frac{2x}{1+x^2})", "descriptionPath": "story/ch14/level75.md"}
 ];
 
 const REGIONS = [
-    { id: "ch0", title: "序章：新手上路", descriptionPath: "story/chapter0/story.md", unlock: null, levels: [1, 2, 3, 4, 5] },
-    { id: "ch1", title: "第一章：周期震荡", descriptionPath: "story/chapter1/story.md", unlock: { count: 5 }, levels: [6, 7, 8, 9, 10] },
-    { id: "ch2", title: "第二章：疯狂生长", descriptionPath: "story/chapter2/story.md", unlock: { count: 10 }, levels: [11, 12, 13, 14, 15] },
-    { id: "ch3", title: "第三章：信号干扰", descriptionPath: "story/chapter3/story.md", unlock: { count: 15 }, levels: [16, 17, 18, 19, 20] },
-    { id: "ch4", title: "第四章：机械迷城", descriptionPath: "story/chapter4/story.md", unlock: { count: 20 }, levels: [21, 22, 23, 24, 25] },
-    { id: "ch5", title: "终章：失控", descriptionPath: "story/chapter5/story.md", unlock: { count: 25 }, levels: [26, 27, 28, 29, 30] }
+    {"id": "ch0", "title": "楔子：既视感", "descriptionPath": "story/ch0/story.md", "levels": [1, 2, 3, 4, 5]},
+    {"id": "ch1", "title": "第二卷：困局", "descriptionPath": "story/ch1/story.md", "levels": [6, 7, 8, 9, 10]},
+    {"id": "ch2", "title": "第三卷：同谋者", "descriptionPath": "story/ch2/story.md", "levels": [11, 12, 13, 14, 15]},
+    {"id": "ch3", "title": "第四卷：失控的边界", "descriptionPath": "story/ch3/story.md", "levels": [16, 17, 18, 19, 20]},
+    {"id": "ch4", "title": "第五卷：裂痕", "descriptionPath": "story/ch4/story.md", "levels": [21, 22, 23, 24, 25]},
+    {"id": "ch5", "title": "第六卷：觉醒", "descriptionPath": "story/ch5/story.md", "levels": [26, 27, 28, 29, 30]},
+    {"id": "ch6", "title": "第七卷：变量的叛逆", "descriptionPath": "story/ch6/story.md", "levels": [31, 32, 33, 34, 35]},
+    {"id": "ch7", "title": "第八卷：梦的尽头", "descriptionPath": "story/ch7/story.md", "levels": [36, 37, 38, 39, 40]},
+    {"id": "ch8", "title": "第九卷：奇迹的偏离", "descriptionPath": "story/ch8/story.md", "levels": [41, 42, 43, 44, 45]},
+    {"id": "ch9", "title": "第十卷：同频的脉搏", "descriptionPath": "story/ch9/story.md", "levels": [46, 47, 48, 49, 50]},
+    {"id": "ch10", "title": "第十一卷：现实的引力", "descriptionPath": "story/ch10/story.md", "levels": [51, 52, 53, 54, 55]},
+    {"id": "ch11", "title": "第十二卷：似曾相识", "descriptionPath": "story/ch11/story.md", "levels": [56, 57, 58, 59, 60]},
+    {"id": "ch12", "title": "第十三卷：重构的日常", "descriptionPath": "story/ch12/story.md", "levels": [61, 62, 63, 64, 65]},
+    {"id": "ch13", "title": "第十四卷：平凡的奇迹", "descriptionPath": "story/ch13/story.md", "levels": [66, 67, 68, 69, 70]},
+    {"id": "ch14", "title": "第十五卷：薛定谔的重置", "descriptionPath": "story/ch14/story.md", "levels": [71, 72, 73, 74, 75]}
 ];
 
 window.LEVELS = LEVELS;

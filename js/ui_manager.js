@@ -33,6 +33,33 @@ const UIManager = {
     },
 
     bindEvents: function() {
+        // 彩蛋：点击标题
+        const headerTitle = document.querySelector('header.main-header h1');
+        if (headerTitle) {
+            let clickCount = 0;
+            let resetTimer = null;
+            headerTitle.style.cursor = 'pointer';
+            headerTitle.style.userSelect = 'none';
+            headerTitle.addEventListener('click', () => {
+                if (headerTitle.textContent === 'GirlFriend') {
+                    headerTitle.textContent = 'GuessFunc';
+                    clickCount = 0;
+                    return;
+                }
+                
+                clickCount++;
+                if (resetTimer) clearTimeout(resetTimer);
+                resetTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 2000); // 2秒内连续点击才算
+                
+                if (clickCount >= 10) {
+                    headerTitle.textContent = 'GirlFriend';
+                    clickCount = 0;
+                }
+            });
+        }
+
         // 按钮点击事件
         const btnCheck = document.getElementById('btn-check');
         if (btnCheck) {
@@ -506,10 +533,20 @@ const UIManager = {
         // 清除原有的 grid class，因为我们现在包含多个 grid
         container.className = 'levels-container';
 
+        let hasShownLockedRegion = false; // 用于标记是否已经显示了第一个未解锁的章节
+
         regions.forEach(region => {
             // 检查区域解锁状态
-            const regionUnlockStatus = StorageManager.checkLevelUnlock ? StorageManager.checkLevelUnlock(region.unlock) : { unlocked: true };
+            const regionUnlockStatus = StorageManager.checkRegionUnlock ? StorageManager.checkRegionUnlock(region) : { unlocked: true };
             const isRegionLocked = !regionUnlockStatus.unlocked;
+
+            // 如果该章节被锁定，且之前已经显示过一个锁定的章节了，则直接跳过渲染（防剧透）
+            if (isRegionLocked) {
+                if (hasShownLockedRegion) {
+                    return; // 跳过后续所有未解锁章节的渲染
+                }
+                hasShownLockedRegion = true; // 标记这是第一个展示出来的未解锁章节
+            }
 
             // 创建区域标题
             const regionHeader = document.createElement('div');
@@ -581,7 +618,7 @@ const UIManager = {
                 const isCompleted = StorageManager.isLevelCompleted(levelId);
                 
                 // 检查解锁状态
-                const unlockStatus = StorageManager.checkLevelUnlock ? StorageManager.checkLevelUnlock(levelData.unlock) : { unlocked: true };
+                const unlockStatus = StorageManager.checkLevelUnlock ? StorageManager.checkLevelUnlock(levelData, region) : { unlocked: true };
                 const isLocked = !unlockStatus.unlocked;
 
                 let className = 'level-card';

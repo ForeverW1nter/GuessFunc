@@ -93,37 +93,76 @@ const StorageManager = {
     },
 
     /**
-     * 检查关卡是否已解锁
-     * @param {Object} unlockCriteria 解锁条件 { levels: [1, 2], count: 5 }
+     * 检查区域（章节）是否已解锁
+     * @param {Object} region 区域数据
      * @returns {Object} { unlocked: boolean, reason: string }
      */
-    checkLevelUnlock: function(unlockCriteria) {
-        if (!unlockCriteria) return { unlocked: true };
+    checkRegionUnlock: function(region) {
+        if (!window.REGIONS || window.REGIONS.length === 0) return { unlocked: true };
         
+        const regionIndex = window.REGIONS.findIndex(r => r.id === region.id);
+        if (regionIndex === 0) return { unlocked: true }; // 第一章默认解锁
+        
+        const prevRegion = window.REGIONS[regionIndex - 1];
+        if (!prevRegion) return { unlocked: true };
+
+        const completed = this.getCompletedLevels();
+        const prevCompletedCount = prevRegion.levels.filter(id => completed.includes(id)).length;
+        const prevTotal = prevRegion.levels.length;
+        const requiredCount = Math.ceil(prevTotal * 0.8); // 80%
+        
+        if (prevCompletedCount >= requiredCount) {
+            return { unlocked: true };
+        } else {
+            return { 
+                unlocked: false, 
+                reason: `需要上一章节（${prevRegion.title}）完成度达到 80% (至少 ${requiredCount} 关，当前 ${prevCompletedCount} 关)` 
+            };
+        }
+    },
+
+    /**
+     * 检查具体关卡是否已解锁
+     * @param {Object} levelData 关卡数据
+     * @param {Object} region 所属区域数据
+     * @returns {Object} { unlocked: boolean, reason: string }
+     */
+    checkLevelUnlock: function(levelData, region) {
+        // 先检查所在章节是否解锁
+        const regionUnlock = this.checkRegionUnlock(region);
+        if (!regionUnlock.unlocked) {
+            return regionUnlock;
+        }
+
+        // 如果关卡自身定义了旧的解锁条件，可以先忽略，采用新的全局统一规则
         const completed = this.getCompletedLevels();
         
-        // 1. 检查特定关卡依赖
-        if (unlockCriteria.levels && Array.isArray(unlockCriteria.levels)) {
-            const missing = unlockCriteria.levels.filter(id => !completed.includes(id));
-            if (missing.length > 0) {
-                return { 
-                    unlocked: false, 
-                    reason: `需要先通关第 ${missing.join(', ')} 关` 
-                };
+        // 如果已经通关，那肯定是解锁的
+        if (completed.includes(levelData.id)) return { unlocked: true };
+        
+        // 找到该关卡在当前章节中的位置
+        const levelIndexInRegion = region.levels.indexOf(levelData.id);
+        if (levelIndexInRegion === -1) return { unlocked: true };
+
+        // 统计排在这个关卡“前面”的所有未通关的关卡数量
+        let uncompletedBefore = 0;
+        for (let i = 0; i <= levelIndexInRegion; i++) {
+            const lId = region.levels[i];
+            if (!completed.includes(lId)) {
+                uncompletedBefore++;
             }
         }
-        
-        // 2. 检查通关数量依赖
-        if (unlockCriteria.count && typeof unlockCriteria.count === 'number') {
-            if (completed.length < unlockCriteria.count) {
-                return { 
-                    unlocked: false, 
-                    reason: `需要累计通关 ${unlockCriteria.count} 个关卡（当前：${completed.length}）` 
-                };
-            }
+
+        // 规则：当前章节最多允许同时存在 3 个未通关的关卡
+        // 也就是说，包括它自己在内，前面的未通关数量不能超过 3
+        if (uncompletedBefore <= 3) {
+            return { unlocked: true };
+        } else {
+            return { 
+                unlocked: false, 
+                reason: `本章未通过关卡过多。请先完成本章前面的关卡，最多允许同时挑战 3 个未通关关卡。` 
+            };
         }
-        
-        return { unlocked: true };
     },
 
     /**

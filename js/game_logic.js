@@ -175,6 +175,20 @@ const GameLogic = {
                 const currentRegion = this.getRegionForLevel(window.LEVELS[this.state.currentLevelIndex].id);
                 const nextRegion = this.getRegionForLevel(nextLevelData.id);
 
+                // 检查下一关是否已解锁
+                if (window.StorageManager && window.StorageManager.checkLevelUnlock) {
+                    const unlockStatus = window.StorageManager.checkLevelUnlock(nextLevelData, nextRegion);
+                    if (!unlockStatus.unlocked) {
+                        UIManager.showMessage(`下一关未解锁：${unlockStatus.reason}`, "error");
+                        // 如果未解锁，打开关卡选择界面
+                        if (window.UIManager) {
+                            window.UIManager.renderLevelList();
+                            window.UIManager.showModal('modal-levels');
+                        }
+                        return;
+                    }
+                }
+
                 // 检查是否进入了新的章节（区域）
                 if (nextRegion && (!currentRegion || currentRegion.id !== nextRegion.id)) {
                     // 如果新章节有剧情，则优先显示剧情
@@ -283,7 +297,16 @@ const GameLogic = {
                     window.UIManager.toggleNextButton(true, nextBtnText);
                 }
             } else {
-                msg += " 你已通关所有预设关卡！";
+                msg += " 恭喜你，通关了所有关卡！";
+                // 最后一关通关后，显示结局剧情
+                if (window.UIManager && window.UIManager.showStory) {
+                    setTimeout(() => {
+                        window.UIManager.showStory({
+                            title: "终局：未完的重置",
+                            descriptionPath: "story/ending.md"
+                        });
+                    }, 1000);
+                }
             }
         } else {
             msg += " 请尝试新关卡。";
