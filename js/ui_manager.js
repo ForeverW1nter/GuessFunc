@@ -13,6 +13,25 @@ const UIManager = {
         this.initTheme();
     },
 
+    updateAiHint: function() {
+        const aiHint = document.getElementById('ai-status-hint');
+        const toggleUseAi = document.getElementById('toggle-use-ai');
+        if (!aiHint || !toggleUseAi) return;
+
+        if (!toggleUseAi.checked) {
+            aiHint.innerHTML = '<span style="color: #FF9800;">⚙️ 当前将使用本地算法快速生成函数（本地模式下难度 0-5 仅供参考）</span>';
+            return;
+        }
+
+        if (typeof AIManager !== 'undefined') {
+            if (AIManager.hasValidKey()) {
+                aiHint.innerHTML = '<span style="color: #4CAF50;">✨ AI 已启用，将为您生成高质量题目</span>';
+            } else {
+                aiHint.innerHTML = '<span style="color: #FF9800;">⚠️ 未配置代理且未填入 API Key，将强制使用本地随机生成</span>';
+            }
+        }
+    },
+
     bindEvents: function() {
         // 按钮点击事件
         const btnCheck = document.getElementById('btn-check');
@@ -27,15 +46,20 @@ const UIManager = {
             btnRandom.addEventListener('click', () => {
                 this.showModal('modal-difficulty');
                 
-                // 更新 AI 状态提示
-                const aiHint = document.getElementById('ai-status-hint');
-                if (aiHint && typeof AIManager !== 'undefined') {
-                    if (AIManager.hasValidKey()) {
-                        aiHint.innerHTML = '<span style="color: #4CAF50;">✨ AI 已启用，将为您生成高质量题目</span>';
-                    } else {
-                        aiHint.innerHTML = '<span style="color: #FF9800;">⚠️ 未配置代理且未填入 API Key，将使用本地随机生成（本地模式下难度 0-5 仅供参考）</span>';
-                    }
+                // 初始化 AI 开关状态
+                const toggleUseAi = document.getElementById('toggle-use-ai');
+                if (toggleUseAi) {
+                    const savedPref = localStorage.getItem('guessfunc_use_ai');
+                    toggleUseAi.checked = savedPref !== 'false'; // 默认开启
+                    
+                    // 监听开关改变以更新提示
+                    toggleUseAi.onchange = () => {
+                        this.updateAiHint();
+                    };
                 }
+
+                // 更新 AI 状态提示
+                this.updateAiHint();
 
                 // 初始化滑块值和显示文本
                 const slider = document.getElementById('difficulty-slider');
@@ -110,8 +134,15 @@ const UIManager = {
         if (btnConfirmDifficulty) {
             btnConfirmDifficulty.addEventListener('click', () => {
                 const level = parseFloat(difficultySlider.value);
+                const toggleUseAi = document.getElementById('toggle-use-ai');
+                const useAi = toggleUseAi ? toggleUseAi.checked : true;
+                
+                // 记录用户偏好
+                localStorage.setItem('guessfunc_use_ai', useAi);
+
                 MathEngine.setDifficulty(level);
-                GameLogic.startRandomLevel(level);
+                // 传递第二个参数：是否强制使用本地生成
+                GameLogic.startRandomLevel(level, !useAi);
                 this.setMode('random');
                 this.hideModal('modal-difficulty');
             });
@@ -240,6 +271,13 @@ const UIManager = {
                 if (inputPrompt && typeof AIManager !== 'undefined') {
                     inputPrompt.value = AIManager.getSystemPrompt();
                 }
+                const toggleProxy = document.getElementById('toggle-use-proxy');
+                if (toggleProxy) {
+                    const savedProxyPref = localStorage.getItem('guessfunc_use_proxy');
+                    // 默认开启代理。如果用户明确选择了关闭，才为 false
+                    toggleProxy.checked = savedProxyPref !== 'false';
+                }
+
                 this.showModal('modal-api-settings');
                 this.hideModal('modal-options');
             });
@@ -250,12 +288,19 @@ const UIManager = {
         if (btnSaveApiKey) {
             btnSaveApiKey.addEventListener('click', () => {
                 const inputKey = document.getElementById('input-api-key');
+                const toggleProxy = document.getElementById('toggle-use-proxy');
+                
                 if (inputKey) {
                     const key = inputKey.value.trim();
                     localStorage.setItem('guessfunc_api_key', key);
-                    this.showMessage("API Key 已保存！", "success");
-                    this.hideModal('modal-api-settings');
                 }
+                
+                if (toggleProxy) {
+                    localStorage.setItem('guessfunc_use_proxy', toggleProxy.checked);
+                }
+                
+                this.showMessage("设置已保存！", "success");
+                this.hideModal('modal-api-settings');
             });
         }
 

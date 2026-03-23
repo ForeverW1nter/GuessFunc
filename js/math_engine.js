@@ -394,7 +394,7 @@ const MathEngine = {
      * @param {number} difficulty - 难度等级 (0-5)
      * @returns {Promise<Object>} { expression: string, latex: string }
      */
-    generateRandomFunction: async function(difficulty) {
+    generateRandomFunction: async function(difficulty, forceLocal = false) {
         if (difficulty !== undefined) {
             this.setDifficulty(difficulty);
         }
@@ -403,26 +403,30 @@ const MathEngine = {
             ? this.config.currentDifficulty 
             : 2.0; 
 
-        try {
-            // 先检查是否有可用的 API Key
-            if (typeof AIManager !== 'undefined' && AIManager.hasValidKey()) {
-                if (typeof UIManager !== 'undefined' && UIManager.showMessage) {
-                    UIManager.showMessage("正在调用 AI 生成题目...", "info");
-                }
-                
-                const aiExpression = await AIManager.fetchFunction(currentDiff);
-                if (aiExpression) {
-                    // 验证表达式是否有效且可见
-                    if (this.isVisibleInViewport(aiExpression)) {
-                        return { expression: aiExpression, latex: aiExpression };
+        if (!forceLocal) {
+            try {
+                // 先检查是否有可用的 API Key
+                if (typeof AIManager !== 'undefined' && AIManager.hasValidKey()) {
+                    if (typeof UIManager !== 'undefined' && UIManager.showMessage) {
+                        UIManager.showMessage("正在调用 AI 生成题目...", "info");
                     }
+                    
+                    const aiExpression = await AIManager.fetchFunction(currentDiff);
+                    if (aiExpression) {
+                        // 验证表达式是否有效且可见
+                        if (this.isVisibleInViewport(aiExpression)) {
+                            return { expression: aiExpression, latex: aiExpression };
+                        }
+                    }
+                } else {
+                    // 如果没有 Key，直接静默跳转到本地生成，或由 AIManager 内部提示
+                    Logger.log("No valid AI key found. Skipping AI call.");
                 }
-            } else {
-                // 如果没有 Key，直接静默跳转到本地生成，或由 AIManager 内部提示
-                Logger.log("No valid AI key found. Skipping AI call.");
+            } catch (e) {
+                Logger.error("AI Generation failed:", e);
             }
-        } catch (e) {
-            Logger.error("AI Generation failed:", e);
+        } else {
+            Logger.log("用户选择强制使用本地算法生成。");
         }
         
         // 兜底方案：如果 AI 生成失败，使用本地随机生成

@@ -126,10 +126,14 @@ const AIManager = {
      */
     _doFetch: async function(difficulty) {
         const apiKey = this.getApiKey();
-        const hasProxy = this.config.proxyApiUrl && !this.config.proxyApiUrl.includes('YOUR_WORKER_DOMAIN_HERE');
         
-        // 如果玩家填了 Key，就走直连接口并带上 Key；否则走代理接口（不带 Key，由代理补全）
-        const targetUrl = apiKey ? this.config.defaultApiUrl : this.config.proxyApiUrl;
+        // 检查用户是否在设置中选择了使用代理
+        const savedProxyPref = localStorage.getItem('guessfunc_use_proxy');
+        // 默认使用代理，除非用户明确关闭了代理且填了 Key
+        const useProxy = savedProxyPref !== 'false';
+        
+        // 如果玩家填了 Key 并且关闭了代理，就走直连接口并带上 Key；否则走代理接口（有 Key 就带，没 Key 由代理补全）
+        const targetUrl = (apiKey && !useProxy) ? this.config.defaultApiUrl : this.config.proxyApiUrl;
         
         // 构造请求头
         const headers = {

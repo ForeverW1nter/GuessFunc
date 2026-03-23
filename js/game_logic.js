@@ -97,13 +97,13 @@ const GameLogic = {
      * 开始一个随机关卡
      * @param {number|string} [difficultyOverride] - 可选的难度覆盖设置
      */
-    startRandomLevel: async function(difficultyOverride) {
+    startRandomLevel: async function(difficultyOverride, forceLocal = false) {
         this.state.mode = 'random'; // 切换到随机模式
         this.resetState();
         
         // 从 UI 获取或使用覆盖的难度设置，并让 MathEngine 生成函数
         const difficulty = difficultyOverride !== undefined ? difficultyOverride : 0;
-        const funcData = await MathEngine.generateRandomFunction(difficulty);
+        const funcData = await MathEngine.generateRandomFunction(difficulty, forceLocal);
         
         // 修复：为 currentTarget 和 currentParams 赋值，用于答案判定
         this.state.currentTarget = funcData.latex;
