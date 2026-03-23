@@ -74,9 +74,45 @@
                     <button id="btn-rules" class="option-item">📜 规则说明</button>
                     <button id="btn-changelog" class="option-item">📅 更新日志</button>
                     <button id="btn-theme-toggle" class="option-item">🌓 切换深浅</button>
+                    <button id="btn-api-settings" class="option-item">🔑 API 设置</button>
                     <button id="btn-export-save" class="option-item">💾 导出存档</button>
                     <button id="btn-import-save" class="option-item">📂 导入存档</button>
                     <button id="btn-clear-save" class="option-item" style="color: #f44336; border-color: #f44336;">🗑️ 清空存档</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API 设置弹窗 -->
+    <div id="modal-api-settings" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>API 设置</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="api-settings-form">
+                    <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">
+                        设置您的 API Key 以启用 AI 关卡生成。Key 将仅保存在您的浏览器本地，不会上传到服务器。API Key 申请：https://vg.v1api.cc/
+                    </p>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="input-api-key" style="display: block; margin-bottom: 5px;">API Key:</label>
+                        <div class="input-with-eye" style="position: relative; margin-bottom: 8px;">
+                            <input type="password" id="input-api-key" placeholder="sk-..." style="width: 100%; padding: 8px 35px 8px 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-color); color: var(--text-color);">
+                            <span id="btn-toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.6;">👁️</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <button id="btn-save-api-key" class="primary-btn">保存设置</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="input-system-prompt" style="display: block; margin-bottom: 5px;">系统提示词（可选）：</label>
+                        <textarea id="input-system-prompt" rows="6" placeholder="在此处自定义 AI 的系统提示词" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-color); color: var(--text-color); resize: vertical; margin-bottom: 8px;"></textarea>
+                        <div style="text-align: right;">
+                            <button id="btn-save-system-prompt" class="primary-btn">保存提示词</button>
+                            <button id="btn-reset-system-prompt" class="primary-btn" style="margin-left: 8px; background-color: #9e9e9e;">恢复默认提示词</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,11 +126,14 @@
                 <span class="close-modal">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="difficulty-options">
-                    <button class="diff-btn" data-level="easy">简单 EZ</button>
-                    <button class="diff-btn" data-level="medium">中等 HD</button>
-                    <button class="diff-btn" data-level="hard">困难 IN</button>
-                    <button class="diff-btn" data-level="hell" style="background-color: #D32F2F;">地狱 AT</button>
+                <div class="difficulty-slider-container">
+                    <label for="difficulty-slider">难度系数 (0-5): <span id="difficulty-value">0.00</span></label>
+                    <input type="range" id="difficulty-slider" min="0" max="5" step="0.01" value="0">
+                    <div class="difficulty-desc" id="difficulty-desc" style="display: none;"></div>
+                    <div id="ai-status-hint" class="ai-status-hint" style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8; text-align: center;"></div>
+                </div>
+                <div class="difficulty-actions" style="margin-top: 20px; text-align: center;">
+                    <button id="btn-confirm-difficulty" class="primary-btn">确定开始</button>
                 </div>
             </div>
         </div>
@@ -149,6 +188,7 @@
     <script src="js/levels.js"></script>
     <script src="js/storage_manager.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/ai_manager.js"></script>
     <script src="js/math_engine.js"></script>
     <script src="js/graph_manager.js"></script>
     <script src="js/ui_manager.js"></script>

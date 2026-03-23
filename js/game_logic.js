@@ -44,7 +44,7 @@ const GameLogic = {
         }
         
         // 3. 如果没有 URL 参数，则默认开始一个随机关卡
-        this.startRandomLevel();
+        await this.startRandomLevel();
     },
 
     /**
@@ -95,15 +95,15 @@ const GameLogic = {
 
     /**
      * 开始一个随机关卡
-     * @param {string} [difficultyOverride] - 可选的难度覆盖设置
+     * @param {number|string} [difficultyOverride] - 可选的难度覆盖设置
      */
-    startRandomLevel: function(difficultyOverride) {
+    startRandomLevel: async function(difficultyOverride) {
         this.state.mode = 'random'; // 切换到随机模式
         this.resetState();
         
         // 从 UI 获取或使用覆盖的难度设置，并让 MathEngine 生成函数
-        const difficulty = difficultyOverride || document.querySelector('.diff-btn.active')?.dataset.level || 'easy';
-        const funcData = MathEngine.generateRandomFunction(difficulty);
+        const difficulty = difficultyOverride !== undefined ? difficultyOverride : 0;
+        const funcData = await MathEngine.generateRandomFunction(difficulty);
         
         // 修复：为 currentTarget 和 currentParams 赋值，用于答案判定
         this.state.currentTarget = funcData.latex;
@@ -126,10 +126,7 @@ const GameLogic = {
         this.state.currentLevelData = randomLevelData; // 更新 currentLevelData 确保分享链接一致性
         
         // 根据难度显示不同的提示信息
-        let diffName = "简单";
-        if (difficulty === 'medium') diffName = "中等";
-        if (difficulty === 'hard') diffName = "困难";
-        if (difficulty === 'hell') diffName = "地狱";
+        let diffName = `难度 ${difficulty}`;
         
         if (window.UIManager && window.UIManager.showMessage) {
             window.UIManager.showMessage(`随机挑战（${diffName}）开始了！请输入你的猜测。`);

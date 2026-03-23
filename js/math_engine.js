@@ -95,8 +95,12 @@ const MathEngine = {
         if (!this.ce) return;
         try {
             this.ce.assume(["Element", "x", "RealNumbers"]);
+            // 定义基础数学常数，确保评估时不会出错
+            this.ce.assign("e", 2.718281828459045);
+            this.ce.assign("pi", 3.141592653589793);
+            this.ce.assign("Pi", 3.141592653589793);
         } catch(e) {
-            Logger.warn("Failed to assume x is RealNumber:", e);
+            Logger.warn("Failed to configure CE constants:", e);
         }
     },
 
@@ -294,14 +298,27 @@ const MathEngine = {
 
         /**
          * 为 Compute Engine 规范化 LaTeX 
-         * 处理绝对值和运算符，使其更容易被解析
+         * 处理绝对值、运算符和常见非标准格式，使其更容易被解析
          */
         normalizeForCE: function(latex) {
             if (!latex) return "";
             let s = latex;
+            
+            // 基础替换
             s = s.replace(/\\operatorname{abs}\\left\(([^)]*)\\right\)/g, "\\left|$1\\right|");
             s = s.replace(/\\operatorname{([^{}]+)}/g, '$1');
             s = s.replace(/\\cdot/g, '*');
+            
+            // AI 常见格式修正：将 sin(x) 替换为 \sin(x)，如果前面没有反斜杠的话
+            const commonFuncs = ['sin', 'cos', 'tan', 'exp', 'ln', 'log', 'asin', 'acos', 'atan', 'sinh', 'cosh', 'tanh'];
+            commonFuncs.forEach(f => {
+                const re = new RegExp(`(?<!\\\\)\\b${f}\\b`, 'g');
+                s = s.replace(re, `\\${f}`);
+            });
+
+            // 处理 e^x 这种格式，Compute Engine 有时需要 \exponentialE 或 e
+            // 已经在 _configureCE 中 assign 了 e，所以这里保持 e 即可
+            
             return s.trim();
         }
     },
@@ -327,31 +344,34 @@ const MathEngine = {
 
     /**
      * 根据难度等级设置生成参数
-     * @param {string} level - 'easy' | 'medium' | 'hard' | 'hell'
+     * @param {number|string} level - 0-5 数字或旧版字符串
      */
     setDifficulty: function(level) {
-        this.config.currentDifficulty = level;
-        // 难度配置：深度越大，生成的表达式越复杂
-        switch(level) {
-            case 'easy':
+        if (typeof level === 'number') {
+            this.config.currentDifficulty = level;
+            
+            // 重新映射难度，使本地生成的复杂度更平滑
+            // 0-1: 深度 1 (简单的一元函数或线性函数)
+            // 2-3: 深度 2 (基本的复合函数或二元运算)
+            // 4: 深度 3 (较复杂的复合)
+            // 5: 深度 4 (极高难度的复合)
+            if (level <= 1.0) {
                 this.config.minDepth = 1;
-                this.config.maxDepth = 1; 
-                break;
-            case 'medium':
-                this.config.minDepth = 2;
-                this.config.maxDepth = 2; 
-                break;
-            case 'hard':
-                this.config.minDepth = 3;
-                this.config.maxDepth = 3;
-                break;
-            case 'hell':
-                this.config.minDepth = 4;
-                this.config.maxDepth = 4;
-                break;
-            default:
-                this.config.minDepth = 2;
+                this.config.maxDepth = 1;
+            } else if (level <= 2.5) {
+                this.config.minDepth = 1;
                 this.config.maxDepth = 2;
+            } else if (level <= 4.0) {
+                this.config.minDepth = 2;
+                this.config.maxDepth = 3;
+            } else {
+                this.config.minDepth = 3;
+                this.config.maxDepth = 4;
+            }
+        } else {
+            // 兼容旧版字符串难度
+            const levels = { 'easy': 1, 'medium': 2, 'hard': 3, 'hell': 4 };
+            this.setDifficulty(levels[level] || 2);
         }
     },
 
@@ -370,65 +390,73 @@ const MathEngine = {
     },
 
     /**
-     * 核心方法：生成一个随机数学函数
-     * @param {string} difficulty - 难度等级
-     * @returns {Object} { expression: string, latex: string }
+     * 核心方法：使用 AI 生成一个数学函数
+     * @param {number} difficulty - 难度等级 (0-5)
+     * @returns {Promise<Object>} { expression: string, latex: string }
      */
-    generateRandomFunction: function(difficulty) {
-        if (difficulty) {
+    generateRandomFunction: async function(difficulty) {
+        if (difficulty !== undefined) {
+            this.setDifficulty(difficulty);
+        }
+        
+        const currentDiff = typeof this.config.currentDifficulty === 'number' 
+            ? this.config.currentDifficulty 
+            : 2.0; 
+
+        try {
+            // 先检查是否有可用的 API Key
+            if (typeof AIManager !== 'undefined' && AIManager.hasValidKey()) {
+                if (typeof UIManager !== 'undefined' && UIManager.showMessage) {
+                    UIManager.showMessage("正在调用 AI 生成题目...", "info");
+                }
+                
+                const aiExpression = await AIManager.fetchFunction(currentDiff);
+                if (aiExpression) {
+                    // 验证表达式是否有效且可见
+                    if (this.isVisibleInViewport(aiExpression)) {
+                        return { expression: aiExpression, latex: aiExpression };
+                    }
+                }
+            } else {
+                // 如果没有 Key，直接静默跳转到本地生成，或由 AIManager 内部提示
+                Logger.log("No valid AI key found. Skipping AI call.");
+            }
+        } catch (e) {
+            Logger.error("AI Generation failed:", e);
+        }
+        
+        // 兜底方案：如果 AI 生成失败，使用本地随机生成
+        Logger.warn("AI generation failed or invalid. Using local generator fallback.");
+        return this._generateLocalRandomFunction(difficulty);
+    },
+
+    /**
+     * 原有的本地随机生成逻辑作为兜底
+     * @private
+     */
+    _generateLocalRandomFunction: function(difficulty) {
+        if (difficulty !== undefined) {
             this.setDifficulty(difficulty);
         }
 
-        const maxAttempts = 50; // 最大尝试次数，防止死循环
-        const startTime = Date.now();
-        let failedReasons = {};
-
+        const maxAttempts = 30;
         for (let i = 0; i < maxAttempts; i++) {
-            // 超时检查
-            if (Date.now() - startTime > 500) {
-                Logger.warn("Generation timeout (500ms). Returning fallback.");
-                break;
-            }
-
             const depth = this.randomInt(this.config.minDepth, this.config.maxDepth);
             const json = this._generateRecursiveMathJSON(depth);
-            
-            // 1. 结构检查：必须包含变量 x，否则不是函数而是常数
-            if (!this._hasVariable(json, 'x')) {
-                failedReasons.noX = (failedReasons.noX || 0) + 1;
-                continue;
-            }
-
-            // 2. 数值检查：验证在不同采样点下数值是否发生变化，防止生成类似 x-x 的伪常数
-            if (this._isNumericallyConstant(json)) {
-                failedReasons.constant = (failedReasons.constant || 0) + 1;
-                continue;
-            }
-
-            // 3. 转换为 LaTeX
+            if (!this._hasVariable(json, 'x')) continue;
+            if (this._isNumericallyConstant(json)) continue;
             const latex = this.LatexProcessor.jsonToDesmosLatex(json);
-            
-            // 4. 视窗可见性检查：确保函数在标准视口 (-8 to 8) 内有可见图像
             if (this.isVisibleInViewport(latex)) {
                 return { expression: latex, latex: latex };
-            } else {
-                failedReasons.notVisible = (failedReasons.notVisible || 0) + 1;
             }
         }
         
-        Logger.warn("Failed to generate valid expression. Reasons:", failedReasons);
-        
-        // 兜底方案：如果多次尝试失败，根据难度返回预设的合法函数
         let fallback = "x";
-        if (this.config.currentDifficulty === 'hell') {
-            fallback = "\\sin(x) \\cdot e^{\\cos(x)}";
-        } else if (this.config.currentDifficulty === 'hard') {
-            fallback = "x \\cdot \\sin(x) + \\cos(x)";
-        } else if (this.config.currentDifficulty === 'medium') {
-            fallback = "x^2 + \\sin(x)";
-        } else {
-            fallback = "x + 1";
-        }
+        const d = this.config.currentDifficulty;
+        if (d >= 4 || d === 'hell') fallback = "\\sin(x) \\cdot e^{\\cos(x)}";
+        else if (d >= 3 || d === 'hard') fallback = "x \\cdot \\sin(x) + \\cos(x)";
+        else if (d >= 2 || d === 'medium') fallback = "x^2 + \\sin(x)";
+        else fallback = "x + 1";
         
         return { expression: fallback, latex: fallback };
     },
@@ -449,17 +477,38 @@ const MathEngine = {
             }
         }
 
+        const level = this.config.currentDifficulty;
+        
+        // 难度调节：控制函数的复杂度
+        // 低难度下限制函数池和运算符
+        let currentFuncs = this.config.baseFunctions;
+        let currentOps = this.config.operators;
+
+        if (level <= 1.0) {
+            // 简单模式：仅限基础三角、Exp、Ln 和简单加减
+            currentFuncs = ['Sin', 'Cos', 'Exp', 'Ln'];
+            currentOps = ['Add', 'Subtract'];
+        } else if (level <= 2.5) {
+            // 中等模式：增加乘除和反三角
+            currentFuncs = ['Sin', 'Cos', 'Tan', 'Arcsin', 'Arccos', 'Arctan', 'Exp', 'Ln'];
+            currentOps = ['Add', 'Subtract', 'Multiply', 'Divide'];
+        } else {
+            // 困难/极难模式：启用所有函数池，包含双曲函数
+            currentFuncs = this.config.baseFunctions;
+            currentOps = this.config.operators;
+        }
+
         const isFunction = Math.random() < 0.5;
 
         if (isFunction) {
             // 生成一元函数 (如 sin, exp)
-            const baseFuncs = this.config.baseFunctions;
-            const func = baseFuncs[Math.floor(Math.random() * baseFuncs.length)];
+            const func = currentFuncs[Math.floor(Math.random() * currentFuncs.length)];
             
             if (func === 'Power') {
-                // 指数函数特殊处理，需要底数和指数
+                // 指数函数仅在高难度下出现更复杂的结构
                 const base = this._generateRecursiveMathJSON(remainingDepth - 1);
-                const exp = this._generateRecursiveMathJSON(remainingDepth - 1);
+                // 指数通常设为简单的，防止图像失控
+                const exp = (level > 4) ? this._generateRecursiveMathJSON(remainingDepth - 1) : 2;
                 return ["Power", base, exp];
             }
 
@@ -468,30 +517,18 @@ const MathEngine = {
 
         } else {
             // 生成二元运算 (如 +, -, *, /)
-            const ops = this.config.operators;
-            const op = ops[Math.floor(Math.random() * ops.length)];
+            const op = currentOps[Math.floor(Math.random() * currentOps.length)];
             
             const left = this._generateRecursiveMathJSON(remainingDepth - 1);
             let right = this._generateRecursiveMathJSON(remainingDepth - 1);
             
-            // 避免生成 x+x, x*x 这种可以简化的结构（可选，增加多样性）
+            // 避免生成过于简化的结构
             let attempts = 0;
             while (this._isStructurallyEqual(left, right) && attempts < 10) {
                 right = this._generateRecursiveMathJSON(remainingDepth - 1);
                 attempts++;
             }
             
-            // 如果仍然相同，则强制改变右侧
-            if (this._isStructurallyEqual(left, right)) {
-                if (typeof right === 'number') {
-                    right = (right % 5) + 1;
-                } else if (right === 'x') {
-                    right = 1;
-                } else {
-                    right = 1; 
-                }
-            }
-
             return [op, left, right];
         }
     },
@@ -505,7 +542,7 @@ const MathEngine = {
     },
 
     /**
-     * 检查函数在视口范围内 (-8, 8) 是否有意义且可见
+     * 检查函数在视口范围内 (-10, 10) 是否有意义且可见
      * @param {string} latex - 要检查的函数表达式
      * @returns {boolean}
      */
@@ -515,14 +552,6 @@ const MathEngine = {
         }
         try {
             const normalized = this.LatexProcessor.normalizeForCE(latex);
-            
-            // 确保变量已定义
-            try {
-                if (!this.ce.lookup("x")) {
-                    this.ce.declare("x", {domain: "RealNumbers"});
-                }
-            } catch(e) {}
-
             const box = this.ce.parse(normalized);
             
             if (box.head === 'Error') {
@@ -530,38 +559,27 @@ const MathEngine = {
             }
 
             let validPoints = 0;
-            
-            // 采样点检查：在 x 轴 [-8, 8] 范围内采样
-            for (let x = -8; x <= 8; x += 1) {
+            // 采样点：-10 到 10，步长 0.5
+            for (let x = -10; x <= 10; x += 0.5) {
                 const valBox = box.subs({x: x}).evaluate();
                 let y = valBox.value;
                 
-                // 处理 Compute Engine 返回的复杂数值类型
                 if (y === null || typeof y !== 'number') {
                     const numericBox = valBox.N();
                     y = numericBox.value;
-                    
-                    if (y === null || typeof y !== 'number') {
-                        if (typeof numericBox.numericValue === 'number') {
-                            y = numericBox.numericValue;
-                        } else if (typeof numericBox.valueOf() === 'number') {
-                            y = numericBox.valueOf();
-                        }
-                    }
                 }
 
-                // 如果在采样点有定义，且 y 值在可见范围内 (-12, 12)
                 if (typeof y === 'number' && isFinite(y)) {
-                    if (y >= -12 && y <= 12) {
-                        return true; // 只要有一个点可见，即认为函数可见
+                    // 放宽可见范围到 [-20, 20]，AI 有时生成的图像比较高
+                    if (y >= -20 && y <= 20) {
+                        return true; 
                     }
                     validPoints++;
                 }
             }
             
-            return false;
+            return validPoints > 3; // 只要有 3 个点有定义且在范围内就通过
         } catch (e) {
-            Logger.error("isVisibleInViewport exception:", e);
             return false;
         }
     },

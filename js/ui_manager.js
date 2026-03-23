@@ -26,6 +26,23 @@ const UIManager = {
         if (btnRandom) {
             btnRandom.addEventListener('click', () => {
                 this.showModal('modal-difficulty');
+                
+                // 更新 AI 状态提示
+                const aiHint = document.getElementById('ai-status-hint');
+                if (aiHint && typeof AIManager !== 'undefined') {
+                    if (AIManager.hasValidKey()) {
+                        aiHint.innerHTML = '<span style="color: #4CAF50;">✨ AI 已启用，将为您生成高质量题目</span>';
+                    } else {
+                        aiHint.innerHTML = '<span style="color: #FF9800;">⚠️ 未配置代理且未填入 API Key，将使用本地随机生成（本地模式下难度 0-5 仅供参考）</span>';
+                    }
+                }
+
+                // 初始化滑块值和显示文本
+                const slider = document.getElementById('difficulty-slider');
+                const val = document.getElementById('difficulty-value');
+                if (slider && val) {
+                    val.textContent = parseFloat(slider.value).toFixed(2);
+                }
             });
         }
 
@@ -78,16 +95,27 @@ const UIManager = {
             });
         }
 
-        // 难度选择按钮
-        document.querySelectorAll('.diff-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const level = e.target.getAttribute('data-level');
+        // 难度滑块事件
+        const difficultySlider = document.getElementById('difficulty-slider');
+        const difficultyValue = document.getElementById('difficulty-value');
+        const btnConfirmDifficulty = document.getElementById('btn-confirm-difficulty');
+
+        if (difficultySlider && difficultyValue) {
+            difficultySlider.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                difficultyValue.textContent = val.toFixed(2);
+            });
+        }
+
+        if (btnConfirmDifficulty) {
+            btnConfirmDifficulty.addEventListener('click', () => {
+                const level = parseFloat(difficultySlider.value);
                 MathEngine.setDifficulty(level);
                 GameLogic.startRandomLevel(level);
                 this.setMode('random');
                 this.hideModal('modal-difficulty');
             });
-        });
+        }
 
         const btnCreate = document.getElementById('btn-create');
         if (btnCreate) {
@@ -197,6 +225,74 @@ const UIManager = {
         if (btnThemeToggle) {
             btnThemeToggle.addEventListener('click', () => {
                 this.toggleTheme();
+            });
+        }
+
+        // API 设置按钮
+        const btnApiSettings = document.getElementById('btn-api-settings');
+        if (btnApiSettings) {
+            btnApiSettings.addEventListener('click', () => {
+                const inputKey = document.getElementById('input-api-key');
+                if (inputKey) {
+                    inputKey.value = localStorage.getItem('guessfunc_api_key') || '';
+                }
+                const inputPrompt = document.getElementById('input-system-prompt');
+                if (inputPrompt && typeof AIManager !== 'undefined') {
+                    inputPrompt.value = AIManager.getSystemPrompt();
+                }
+                this.showModal('modal-api-settings');
+                this.hideModal('modal-options');
+            });
+        }
+
+        // 保存 API Key
+        const btnSaveApiKey = document.getElementById('btn-save-api-key');
+        if (btnSaveApiKey) {
+            btnSaveApiKey.addEventListener('click', () => {
+                const inputKey = document.getElementById('input-api-key');
+                if (inputKey) {
+                    const key = inputKey.value.trim();
+                    localStorage.setItem('guessfunc_api_key', key);
+                    this.showMessage("API Key 已保存！", "success");
+                    this.hideModal('modal-api-settings');
+                }
+            });
+        }
+
+        // 保存系统提示词
+        const btnSaveSystemPrompt = document.getElementById('btn-save-system-prompt');
+        if (btnSaveSystemPrompt) {
+            btnSaveSystemPrompt.addEventListener('click', () => {
+                const inputPrompt = document.getElementById('input-system-prompt');
+                if (inputPrompt && typeof AIManager !== 'undefined') {
+                    AIManager.setSystemPrompt(inputPrompt.value);
+                    this.showMessage("自定义提示词已保存！", "success");
+                }
+            });
+        }
+
+        // 恢复默认系统提示词
+        const btnResetSystemPrompt = document.getElementById('btn-reset-system-prompt');
+        if (btnResetSystemPrompt) {
+            btnResetSystemPrompt.addEventListener('click', () => {
+                const inputPrompt = document.getElementById('input-system-prompt');
+                if (inputPrompt && typeof AIManager !== 'undefined') {
+                    inputPrompt.value = AIManager.DEFAULT_SYSTEM_PROMPT;
+                    AIManager.setSystemPrompt(''); // 清除 localStorage 中的自定义提示词
+                    this.showMessage("已恢复默认提示词！", "success");
+                }
+            });
+        }
+
+        // 眼睛按钮：切换 API Key 显示/隐藏
+        const btnTogglePassword = document.getElementById('btn-toggle-password');
+        const inputApiKey = document.getElementById('input-api-key');
+        if (btnTogglePassword && inputApiKey) {
+            btnTogglePassword.addEventListener('click', () => {
+                const isPassword = inputApiKey.type === 'password';
+                inputApiKey.type = isPassword ? 'text' : 'password';
+                btnTogglePassword.textContent = isPassword ? '🔒' : '👁️';
+                btnTogglePassword.style.opacity = isPassword ? '1' : '0.6';
             });
         }
         
