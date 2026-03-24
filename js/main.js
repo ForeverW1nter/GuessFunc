@@ -22,5 +22,14 @@ window.addEventListener('DOMContentLoaded', async function() {
     // 然后加载关卡或生成随机关卡
     await GameLogic.init();
     
+    // 4. 检查是否发生了旧版存档迁移
+    if (window.guessfunc_legacy_migrated) {
+        // 延迟一点弹出，确保 UI 已经稳定
+        setTimeout(() => {
+            alert("检测到您的旧版游戏进度！\n\n为了适配新的多线路剧情系统，您的旧版存档已自动迁移至【The Day Before Tomorrow】中。\n您可以在“预设”菜单的左上角切换线路来继续您的旧版进度。");
+        }, 500);
+        window.guessfunc_legacy_migrated = false; // 清除标记
+    }
+    
     console.log("GuessFunc initialization complete.");
 });

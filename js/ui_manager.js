@@ -101,8 +101,8 @@ const UIManager = {
         const btnReturn = document.getElementById('btn-return');
         if (btnReturn) {
             btnReturn.addEventListener('click', () => {
-                if(confirm("确定要退出闯关模式，开始随机挑战吗？")) {
-                    GameLogic.startRandomLevel();
+                if(confirm("确定要退出闯关模式，返回主界面吗？")) {
+                    GameLogic.startEmptyLevel();
                     this.setMode('random');
                 }
             });
@@ -115,12 +115,15 @@ const UIManager = {
                 this.renderLevelList();
                 this.showModal('modal-levels');
 
-                // 检查是否已看过第一章的剧情
-                if (window.REGIONS && window.REGIONS.length > 0) {
-                    const firstRegion = window.REGIONS[0];
+                    // 检查是否已看过第一章的剧情
+                const regions = window.REGIONS;
+                if (regions && regions.length > 0) {
+                    const firstRegion = regions[0];
                     if ((firstRegion.description || firstRegion.descriptionPath) && !StorageManager.isChapterSeen(firstRegion.id)) {
                         StorageManager.markChapterSeen(firstRegion.id);
                         
+                        setTimeout(() => this.renderLevelList(), 0); // 强制刷新列表，让第一章的“剧情”按钮显示出来
+
                         // 暂时关闭关卡模态框还是覆盖？
                         // 最好是显示在最上层或切换到剧情。
                         // 让我们关闭关卡模态框并显示剧情。
@@ -268,7 +271,11 @@ const UIManager = {
             btnImportSave.addEventListener('click', () => {
                 const save = prompt("请输入存档代码：");
                 if (save) {
-                    if (StorageManager.importSave(save)) {
+                    const importResult = StorageManager.importSave(save);
+                    if (importResult === 'migrated') {
+                        alert("检测到旧版存档代码！\n\n您的旧版进度已成功导入并自动迁移至【The Day Before Tomorrow】中。");
+                        this.renderLevelList(); // 刷新
+                    } else if (importResult) {
                         alert("存档导入成功！");
                         this.renderLevelList(); // 刷新
                     } else {
@@ -517,9 +524,125 @@ const UIManager = {
         
         container.innerHTML = '';
         
-        if (!window.LEVELS) {
+        if (!window.ROUTES || window.ROUTES.length === 0) {
             container.innerHTML = '<p>暂无预设关卡。</p>';
             return;
+        }
+
+        // 添加线路选择器 (美化下拉框)
+        if (window.ROUTES.length > 0) {
+            const routeSelectorContainer = document.createElement('div');
+            routeSelectorContainer.className = 'route-selector-container';
+
+            const selectorHeader = document.createElement('div');
+            selectorHeader.className = 'route-selector-header';
+            
+            const label = document.createElement('span');
+            label.textContent = '当前线路：';
+            label.className = 'route-selector-label';
+            selectorHeader.appendChild(label);
+
+            const routeSelectWrapper = document.createElement('div');
+            routeSelectWrapper.className = 'custom-select-wrapper';
+            
+            // Create the visible select button
+            const selectDisplay = document.createElement('div');
+            selectDisplay.className = 'custom-select-display';
+            
+            // Create the dropdown options container
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'custom-options-container';
+            
+            let selectedTitle = '';
+
+            window.ROUTES.forEach(route => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'custom-option';
+                if (route.id === window.currentRouteId) {
+                    optionDiv.classList.add('selected');
+                    selectedTitle = route.title;
+                }
+                optionDiv.textContent = route.title;
+                optionDiv.dataset.value = route.id;
+                
+                optionDiv.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent document click from firing immediately
+                    const newRouteId = route.id;
+                    
+                    // Update UI
+                    selectDisplay.textContent = route.title;
+                    optionsContainer.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                    optionDiv.classList.add('selected');
+                    optionsContainer.classList.remove('show');
+                    selectDisplay.classList.remove('active');
+                    
+                    // Change route logic
+                    if (newRouteId !== window.currentRouteId) {
+                        const newRoute = window.ROUTES.find(r => r.id === newRouteId);
+                        if (newRoute) {
+                            window.currentRouteId = newRouteId;
+                            window.LEVELS = newRoute.levels;
+                            window.REGIONS = newRoute.regions;
+                            if (window.StorageManager) {
+                                window.StorageManager.saveCurrentRoute(newRouteId);
+                            }
+                            this.renderLevelList();
+                        }
+                    }
+                });
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            selectDisplay.textContent = selectedTitle;
+
+            // Toggle dropdown
+            selectDisplay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isShowing = optionsContainer.classList.contains('show');
+                
+                // Close all other open custom selects if any
+                document.querySelectorAll('.custom-options-container').forEach(c => c.classList.remove('show'));
+                document.querySelectorAll('.custom-select-display').forEach(d => d.classList.remove('active'));
+                
+                if (!isShowing) {
+                    optionsContainer.classList.add('show');
+                    selectDisplay.classList.add('active');
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!routeSelectWrapper.contains(e.target)) {
+                    optionsContainer.classList.remove('show');
+                    selectDisplay.classList.remove('active');
+                }
+            });
+
+            routeSelectWrapper.appendChild(selectDisplay);
+            routeSelectWrapper.appendChild(optionsContainer);
+            selectorHeader.appendChild(routeSelectWrapper);
+            routeSelectorContainer.appendChild(selectorHeader);
+            
+            const currentRouteDesc = window.ROUTES.find(r => r.id === window.currentRouteId)?.description;
+            if (currentRouteDesc) {
+                const descP = document.createElement('p');
+                descP.textContent = currentRouteDesc;
+                descP.className = 'route-desc';
+                routeSelectorContainer.appendChild(descP);
+            }
+
+            // 添加“当前已解锁剧情”按钮
+            const viewAllStoryBtn = document.createElement('button');
+            viewAllStoryBtn.className = 'primary-btn route-story-btn';
+            viewAllStoryBtn.style.marginTop = '10px';
+            viewAllStoryBtn.innerHTML = '当前已解锁剧情';
+            viewAllStoryBtn.onclick = () => {
+                this.showAllUnlockedStories();
+            };
+            routeSelectorContainer.appendChild(viewAllStoryBtn);
+
+            container.appendChild(routeSelectorContainer);
         }
 
         // 支持区域划分
@@ -566,22 +689,56 @@ const UIManager = {
             
             // 渲染剧情按钮（如果有描述且解锁）
             if ((region.description || region.descriptionPath) && !isRegionLocked) {
-                const storyBtn = document.createElement('button');
-                storyBtn.innerHTML = '剧情'; // 简化文字
-                storyBtn.className = 'story-btn primary-btn'; 
-                storyBtn.style.padding = '4px 10px'; // 调整内边距
-                storyBtn.style.fontSize = '0.85rem'; // 稍微缩小字体
-                storyBtn.style.marginLeft = 'auto'; 
-                
-                // 移动端特殊处理将在 CSS 中通过类名控制，这里只设置内联基础样式
-                // 或者我们可以添加一个特定的类名用于移动端样式覆盖
-                storyBtn.classList.add('mobile-compact-btn');
+                // 如果已经看过，显示“剧情”，否则不显示（由点击关卡时自动触发）
+                if (StorageManager.isChapterSeen(region.id)) {
+                    const storyBtn = document.createElement('button');
+                    storyBtn.innerHTML = '剧情';
+                    storyBtn.className = 'story-btn primary-btn'; 
+                    storyBtn.style.padding = '4px 10px'; // 调整内边距
+                    storyBtn.style.fontSize = '0.85rem'; // 稍微缩小字体
+                    storyBtn.style.marginLeft = 'auto'; 
+                    
+                    // 移动端特殊处理将在 CSS 中通过类名控制，这里只设置内联基础样式
+                    // 或者我们可以添加一个特定的类名用于移动端样式覆盖
+                    storyBtn.classList.add('mobile-compact-btn');
 
-                storyBtn.onclick = (e) => {
-                    e.stopPropagation(); // 防止触发标题点击
-                    this.showStory(region);
-                };
-                regionHeader.appendChild(storyBtn);
+                    storyBtn.onclick = (e) => {
+                        e.stopPropagation(); // 防止触发标题点击
+                        this.showStory({
+                            id: region.id,
+                            title: region.title + " - 剧情",
+                            description: region.description,
+                            descriptionPath: region.descriptionPath
+                        });
+                    };
+                    regionHeader.appendChild(storyBtn);
+                }
+            }
+
+            // 渲染假结局按钮
+            if (region.fakeEndings && region.fakeEndings.length > 0 && !isRegionLocked) {
+                region.fakeEndings.forEach(fakeEnding => {
+                    // 只要看过，就显示回顾按钮（解锁条件只管首次触发，不管回顾）
+                    if (StorageManager.isChapterSeen(fakeEnding.id)) {
+                        const fakeBtn = document.createElement('button');
+                        fakeBtn.innerHTML = fakeEnding.title || '假结局剧情';
+                        fakeBtn.className = 'story-btn primary-btn';
+                        fakeBtn.style.padding = '4px 10px';
+                        fakeBtn.style.fontSize = '0.85rem';
+                        fakeBtn.style.marginLeft = '10px';
+                        fakeBtn.style.backgroundColor = '#9c27b0'; // 紫色区分假结局
+                        fakeBtn.classList.add('mobile-compact-btn');
+
+                        fakeBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            this.showStory({
+                                title: fakeEnding.title || '假结局',
+                                descriptionPath: fakeEnding.descriptionPath
+                            });
+                        };
+                        regionHeader.appendChild(fakeBtn);
+                    }
+                });
             }
             
             if (isRegionLocked) {
@@ -656,6 +813,10 @@ const UIManager = {
                     if ((region.description || region.descriptionPath) && !StorageManager.isChapterSeen(region.id)) {
                         StorageManager.markChapterSeen(region.id);
                         
+                        // 因为点击关卡解锁了剧情，强制重新渲染当前列表以便显示出“剧情”按钮
+                        // 延迟一点刷新，避免界面卡顿
+                        setTimeout(() => this.renderLevelList(), 0);
+
                         // 先关闭关卡模态框
                         this.hideModal('modal-levels');
                         
@@ -672,8 +833,265 @@ const UIManager = {
                 levelsContainer.appendChild(btn);
             });
         });
+
+        // 检查并渲染结局剧情按钮
+        const currentRoute = window.ROUTES.find(r => r.id === window.currentRouteId);
+        if (currentRoute && currentRoute.endingPath) {
+            const lastLevelId = currentRoute.levels[currentRoute.levels.length - 1].id;
+            if (StorageManager.isLevelCompleted(lastLevelId)) {
+                const endingContainer = document.createElement('div');
+                endingContainer.style.marginTop = '30px';
+                endingContainer.style.marginBottom = '20px';
+                endingContainer.style.textAlign = 'center';
+                endingContainer.style.width = '100%';
+                
+                const endingBtn = document.createElement('button');
+                endingBtn.className = 'primary-btn';
+                endingBtn.style.padding = '12px 24px';
+                endingBtn.style.fontSize = '1.1rem';
+                endingBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                endingBtn.innerHTML = '结局剧情';
+                
+                endingBtn.onclick = () => {
+                    // 如果是 classic 路线，播放动画，否则直接显示剧情
+                    if (currentRoute.id === 'classic') {
+                        this.playEndingAnimation(() => {
+                            this.showStory({
+                                isEnding: true,
+                                title: currentRoute.title + " - 结局",
+                                descriptionPath: currentRoute.endingPath
+                            });
+                        });
+                    } else {
+                        this.showStory({
+                            isEnding: true,
+                            title: currentRoute.title + " - 结局",
+                            descriptionPath: currentRoute.endingPath
+                        });
+                    }
+                };
+                
+                endingContainer.appendChild(endingBtn);
+                container.appendChild(endingContainer);
+            }
+        }
+
+        // 添加未完待续提示
+        if (currentRoute && currentRoute.showToBeContinued) {
+            let isLastChapterUnlocked = false;
+            if (currentRoute.regions && currentRoute.regions.length > 0) {
+                const lastRegion = currentRoute.regions[currentRoute.regions.length - 1];
+                const unlockStatus = StorageManager.checkRegionUnlock ? StorageManager.checkRegionUnlock(lastRegion) : { unlocked: true };
+                isLastChapterUnlocked = unlockStatus.unlocked;
+            }
+            if (isLastChapterUnlocked) {
+                const toBeContinuedDiv = document.createElement('div');
+                toBeContinuedDiv.style.marginTop = '40px';
+                toBeContinuedDiv.style.marginBottom = '20px';
+                toBeContinuedDiv.style.textAlign = 'center';
+                toBeContinuedDiv.style.color = '#888';
+                toBeContinuedDiv.style.fontWeight = 'bold';
+                toBeContinuedDiv.style.fontSize = '1.2em';
+                toBeContinuedDiv.innerHTML = '—— 未完待续 ——';
+                container.appendChild(toBeContinuedDiv);
+            }
+        }
     },
     
+    /**
+     * 合并显示所有已解锁的剧情
+     */
+    showAllUnlockedStories: async function() {
+        const currentRoute = window.ROUTES.find(r => r.id === window.currentRouteId);
+        if (!currentRoute) return;
+
+        const stories = []; // 收集所有已解锁的剧情数据对象
+
+        // 遍历所有章节
+        if (currentRoute.regions) {
+            currentRoute.regions.forEach(region => {
+                const regionUnlock = StorageManager.checkRegionUnlock ? StorageManager.checkRegionUnlock(region) : { unlocked: true };
+                
+                // 1. 章节主剧情
+                if (regionUnlock.unlocked && StorageManager.isChapterSeen(region.id) && (region.description || region.descriptionPath)) {
+                    stories.push({
+                        title: region.title, // 去掉 " - 章节剧情"
+                        type: 'chapter',
+                        description: region.description,
+                        descriptionPath: region.descriptionPath
+                    });
+                }
+
+                // 2. 遍历该章节下的关卡剧情
+                if (region.levels) {
+                    region.levels.forEach(levelId => {
+                        const levelData = currentRoute.levels.find(l => l.id === levelId);
+                        if (levelData) {
+                            const levelUnlock = StorageManager.checkLevelUnlock ? StorageManager.checkLevelUnlock(levelData, region) : { unlocked: true };
+                            if (levelUnlock.unlocked && (levelData.description || levelData.descriptionPath)) {
+                                stories.push({
+                                    title: levelData.title,
+                                    type: 'level',
+                                    description: levelData.description,
+                                    descriptionPath: levelData.descriptionPath
+                                });
+                            }
+                        }
+                    });
+                }
+
+                // 3. 遍历该章节下的假结局
+                if (region.fakeEndings && regionUnlock.unlocked) {
+                    region.fakeEndings.forEach(fake => {
+                        if (StorageManager.isChapterSeen(fake.id)) {
+                            stories.push({
+                                title: fake.title || "假结局", // 去掉后缀，或直接使用自定义title
+                                type: 'fake_ending',
+                                description: fake.description,
+                                descriptionPath: fake.descriptionPath
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // 4. 真结局剧情
+        if (currentRoute.endingPath) {
+            const lastLevelId = currentRoute.levels[currentRoute.levels.length - 1].id;
+            if (StorageManager.isLevelCompleted(lastLevelId)) {
+                stories.push({
+                    title: currentRoute.title + " 结局", // 或者你想只叫“结局”
+                    type: 'true_ending',
+                    descriptionPath: currentRoute.endingPath
+                });
+            }
+        }
+
+        if (stories.length === 0) {
+            alert("当前没有任何已解锁的剧情可供回顾。");
+            return;
+        }
+
+        // 暂时隐藏关卡列表
+        this.hideModal('modal-levels');
+
+        // 构建合并后的 Markdown 内容
+        let mergedMarkdown = `# ${currentRoute.title}\n\n`;
+
+        for (const story of stories) {
+            // 根据类型决定标题级别，章节为 h2，关卡为 h3
+            if (story.type === 'chapter' || story.type === 'true_ending' || story.type === 'fake_ending') {
+                mergedMarkdown += `## ${story.title}\n\n`;
+            } else {
+                mergedMarkdown += `### ${story.title}\n\n`;
+            }
+            
+            if (story.descriptionPath) {
+                try {
+                    const response = await fetch(story.descriptionPath);
+                    if (response.ok) {
+                        const text = await response.text();
+                        // 移除文件内可能自带的 # 标题，避免层级混乱
+                        const cleanText = text.replace(/^#+\s+.*$/gm, '').trim();
+                        mergedMarkdown += cleanText + "\n\n";
+                    } else {
+                        mergedMarkdown += "*加载剧情失败*\n\n";
+                    }
+                } catch (e) {
+                    mergedMarkdown += "*加载剧情失败*\n\n";
+                }
+            } else if (story.description) {
+                mergedMarkdown += story.description + "\n\n";
+            }
+            
+            // 如果是章节或结局的末尾，可以加一条粗一点的分割线，或者统一加
+            mergedMarkdown += "---\n\n";
+        }
+        
+        // 追加未完待续
+        if (currentRoute && currentRoute.showToBeContinued) {
+            let isLastChapterUnlocked = false;
+            if (currentRoute.regions && currentRoute.regions.length > 0) {
+                const lastRegion = currentRoute.regions[currentRoute.regions.length - 1];
+                const unlockStatus = StorageManager.checkRegionUnlock ? StorageManager.checkRegionUnlock(lastRegion) : { unlocked: true };
+                isLastChapterUnlocked = unlockStatus.unlocked;
+            }
+            if (isLastChapterUnlocked) {
+                mergedMarkdown += "\n\n<br><br><div style=\"text-align: center; color: #888; font-weight: bold; font-size: 1.2em;\">—— 未完待续 ——</div>\n\n";
+            }
+        }
+
+        setTimeout(() => {
+            // 使用 marked 渲染合并后的内容
+            const contentHtml = window.marked ? window.marked.parse(mergedMarkdown) : mergedMarkdown.replace(/\n/g, '<br>');
+            
+            const modalTitle = document.querySelector('#modal-story .modal-header h2');
+            if (modalTitle) modalTitle.textContent = '当前已解锁剧情';
+            
+            const modalContent = document.getElementById('story-content');
+            if (modalContent) modalContent.innerHTML = contentHtml;
+            
+            this.showModal('modal-story');
+
+            this.modalCallbacks['modal-story'] = () => {
+                this.showModal('modal-levels');
+            };
+        }, 350);
+    },
+
+    /**
+     * 播放 The Day Before Tomorrow 结局动画
+     */
+    playEndingAnimation: function(callback) {
+        const overlay = document.getElementById('ending-animation-overlay');
+        const textElem = document.getElementById('ending-animation-text');
+        if (!overlay || !textElem) {
+            if (callback) callback();
+            return;
+        }
+        
+        // 隐藏其他模态框
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(m => m.classList.add('hidden'));
+
+        overlay.classList.add('active');
+        
+        const sequence = [
+            "“你觉得，这算不算永远？”",
+            "“不算。因为永远太远了。我们只有现在。”",
+            "“那就现在吧。”",
+            "“好。”",
+            "The Day Before Tomorrow"
+        ];
+        
+        let i = 0;
+        const showNextText = () => {
+            if (i >= sequence.length) {
+                // 动画结束，淡出
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    if (callback) callback();
+                }, 2000);
+                return;
+            }
+            
+            textElem.textContent = sequence[i];
+            textElem.classList.add('visible');
+            
+            // 文本停留，然后淡出
+            setTimeout(() => {
+                textElem.classList.remove('visible');
+                i++;
+                // 文本消失后等待一小会再显示下一句
+                setTimeout(showNextText, 1500);
+            }, i === sequence.length - 1 ? 4000 : 3000); // 最后一句标题停留久一点
+        };
+        
+        // 延迟一点开始
+        setTimeout(showNextText, 1000);
+    },
+
     /**
      * 显示关卡指引
      */
@@ -713,10 +1131,32 @@ const UIManager = {
             this.showModal('modal-story');
             container.innerHTML = '<p>加载中...</p>';
             
+            const modalTitle = document.querySelector('#modal-story .modal-header h2');
+            if (modalTitle && regionData.title) {
+                modalTitle.textContent = regionData.title;
+            } else if (modalTitle) {
+                modalTitle.textContent = '章节剧情';
+            }
+            
+            const currentRoute = window.ROUTES.find(r => r.id === window.currentRouteId);
+            let appendToBeContinued = false;
+            if (currentRoute && currentRoute.showToBeContinued) {
+                if (currentRoute.regions && currentRoute.regions.length > 0) {
+                    const lastRegion = currentRoute.regions[currentRoute.regions.length - 1];
+                    // 如果这是最后一章，或者这是结局（如果以后有的话）
+                    if ((regionData.id && regionData.id === lastRegion.id) || regionData.isEnding) {
+                        appendToBeContinued = true;
+                    }
+                }
+            }
+
+            const toBeContinuedHTML = "\n\n<br><br><div style=\"text-align: center; color: #888; font-weight: bold; font-size: 1.2em;\">—— 未完待续 ——</div>\n\n";
+
             if (regionData.descriptionPath) {
                 fetch(regionData.descriptionPath)
                     .then(res => res.text())
                     .then(text => {
+                        if (appendToBeContinued) text += toBeContinuedHTML;
                         this.renderMarkdown(container, text);
                     })
                     .catch(err => {
@@ -724,7 +1164,9 @@ const UIManager = {
                          container.innerHTML = "<p>加载剧情失败。</p>";
                     });
             } else {
-                this.renderMarkdown(container, regionData.description);
+                let text = regionData.description;
+                if (appendToBeContinued) text += toBeContinuedHTML;
+                this.renderMarkdown(container, text);
             }
         }
     },

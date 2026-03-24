@@ -4,4 +4,4 @@
  */
 
 // 全局调试模式开关
-window.APP_DEBUG = false;
+window.APP_DEBUG = true;

@@ -90,36 +90,39 @@
                 <h2>API 设置</h2>
                 <span class="close-modal">&times;</span>
             </div>
-            <div class="modal-body">
-                <div class="api-settings-form" style="display: flex; flex-direction: column; gap: 20px;">
-                    <div class="info-box" style="background-color: var(--secondary-color); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary-color); font-size: 0.9rem;">
-                        设置 API Key 以启用 AI 生成关卡。Key 仅保存在浏览器本地，不会上传。申请地址：<a href="https://vg.v1api.cc/" target="_blank" style="color: var(--primary-color); text-decoration: none;">vg.v1api.cc</a>
+            <div class="modal-body api-settings-body">
+                <div class="api-settings-form">
+                    <div class="info-box">
+                        <span class="info-icon">💡</span>
+                        <div class="info-text">
+                            设置 API Key 以启用 AI 生成关卡。Key 仅保存在浏览器本地，不会上传。申请地址：<a href="https://vg.v1api.cc/" target="_blank">vg.v1api.cc</a>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="input-api-key" style="display: block; margin-bottom: 8px; font-weight: bold;">🔑 API Key:</label>
-                        <div class="input-with-eye" style="position: relative; margin-bottom: 12px;">
-                            <input type="password" id="input-api-key" placeholder="填写你的 sk-... 密钥" style="width: 100%; padding: 10px 40px 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); color: var(--text-color); font-family: monospace; box-sizing: border-box; font-size: 14px;">
-                            <span id="btn-toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.6; font-size: 16px;">👁️</span>
+                    <div class="form-group api-key-group">
+                        <label for="input-api-key">🔑 API Key</label>
+                        <div class="input-with-eye">
+                            <input type="password" id="input-api-key" placeholder="填写你的 sk-... 密钥">
+                            <span id="btn-toggle-password" class="eye-icon">👁️</span>
                         </div>
                         
-                        <div class="proxy-toggle-container" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 6px;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" id="toggle-use-proxy" style="width: 16px; height: 16px; cursor: pointer;">
-                                <label for="toggle-use-proxy" style="cursor: pointer; user-select: none; font-size: 0.9rem;">使用代理接口 (未填Key时必选)</label>
+                        <div class="proxy-toggle-container">
+                            <div class="toggle-wrapper">
+                                <input type="checkbox" id="toggle-use-proxy" class="custom-toggle">
+                                <label for="toggle-use-proxy">使用代理接口 <span class="hint-text">(未填Key时必选)</span></label>
                             </div>
-                            <button id="btn-save-api-key" class="primary-btn" style="padding: 6px 16px; border-radius: 6px;">保存 Key 及设置</button>
+                            <button id="btn-save-api-key" class="primary-btn save-btn">保存 Key 及设置</button>
                         </div>
                     </div>
                     
-                    <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 0;">
+                    <div class="divider"></div>
 
-                    <div class="form-group">
-                        <label for="input-system-prompt" style="display: block; margin-bottom: 8px; font-weight: bold;">📝 系统提示词 (System Prompt):</label>
-                        <textarea id="input-system-prompt" rows="7" placeholder="在此处自定义 AI 的系统提示词..." style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); color: var(--text-color); resize: vertical; margin-bottom: 12px; font-family: monospace; font-size: 13px; line-height: 1.5; box-sizing: border-box;"></textarea>
-                        <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <button id="btn-reset-system-prompt" class="primary-btn" style="background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 16px; border-radius: 6px;">恢复默认</button>
-                            <button id="btn-save-system-prompt" class="primary-btn" style="padding: 6px 16px; border-radius: 6px;">保存提示词</button>
+                    <div class="form-group prompt-group">
+                        <label for="input-system-prompt">📝 系统提示词 (System Prompt)</label>
+                        <textarea id="input-system-prompt" rows="6" placeholder="在此处自定义 AI 的系统提示词..."></textarea>
+                        <div class="action-buttons">
+                            <button id="btn-reset-system-prompt" class="secondary-btn">恢复默认</button>
+                            <button id="btn-save-system-prompt" class="primary-btn save-btn">保存提示词</button>
                         </div>
                     </div>
                 </div>
@@ -214,5 +217,10 @@
     <script src="js/ui_manager.js"></script>
     <script src="js/game_logic.js"></script>
     <script src="js/main.js"></script>
+
+    <!-- 结局动画遮罩 -->
+    <div id="ending-animation-overlay" class="ending-animation-overlay">
+        <div id="ending-animation-text" class="ending-animation-text"></div>
+    </div>
 </body>
 </html>

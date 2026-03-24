@@ -1,3 +1,6 @@
 .git/
 decode.html
+test_math.js
+test_math2.js
+test_math3.js
 *.debug

@@ -17,6 +17,24 @@ const GameLogic = {
      * 初始化游戏
      */
     init: async function() {
+        // 先触发一次存储读取以进行可能的迁移
+        if (window.StorageManager) {
+            window.StorageManager.getAllProgress();
+        }
+
+        // 0. 加载保存的线路
+        if (window.ROUTES && window.ROUTES.length > 0 && window.StorageManager) {
+            const savedRoute = window.StorageManager.getCurrentRoute();
+            if (savedRoute) {
+                const route = window.ROUTES.find(r => r.id === savedRoute);
+                if (route) {
+                    window.currentRouteId = savedRoute;
+                    window.LEVELS = route.levels;
+                    window.REGIONS = route.regions;
+                }
+            }
+        }
+
         // 1. 等待数学引擎 (MathEngine) 加载完成
         try {
             UIManager.showMessage("正在加载数学引擎...", "info");
@@ -43,8 +61,8 @@ const GameLogic = {
             }
         }
         
-        // 3. 如果没有 URL 参数，则默认开始一个随机关卡
-        await this.startRandomLevel();
+        // 3. 如果没有 URL 参数，则默认开始一个空关卡
+        this.startEmptyLevel();
     },
 
     /**
@@ -91,6 +109,32 @@ const GameLogic = {
         this.state.currentLevelData = null;
         this.state.currentTarget = null;
         this.state.currentParams = null;
+    },
+
+    startEmptyLevel: function() {
+        this.state.mode = 'random';
+        this.resetState();
+        this.state.currentTarget = "x";
+        this.state.currentParams = {};
+        this.state.targetExpression = "x";
+        this.state.currentLevelData = { t: "x", p: {} };
+        
+        // 清除 URL 中的 level 参数
+        const url = new URL(window.location);
+        url.searchParams.delete('level');
+        window.history.pushState({}, '', url);
+
+        if (window.GraphManager) {
+            window.GraphManager.setupLevel("x", {});
+        }
+        
+        if (window.UIManager && window.UIManager.updateUI) {
+            window.UIManager.updateUI();
+        }
+        
+        if (window.UIManager && window.UIManager.toggleNextButton) {
+            window.UIManager.toggleNextButton(false);
+        }
     },
 
     /**
@@ -217,8 +261,8 @@ const GameLogic = {
                 UIManager.showMessage("恭喜！你已经完成了所有预设关卡！", "success");
             }
         } else {
-            // 如果是随机模式，则开始一个新的随机关卡
-            this.startRandomLevel();
+            // 如果是随机模式，提示用户手动开始新挑战
+            UIManager.showMessage("请点击顶部按钮开始新挑战。");
         }
     },
 
@@ -239,7 +283,7 @@ const GameLogic = {
             if (this.state.mode === 'preset') {
                 this.nextLevel();
             } else {
-                this.startRandomLevel();
+                UIManager.showMessage("请点击顶部按钮开始新挑战。");
             }
             return;
         }
@@ -282,36 +326,88 @@ const GameLogic = {
                 StorageManager.markLevelCompleted(levelData.id); // 保存通关记录
             }
             
-            if (this.state.currentLevelIndex < window.LEVELS.length - 1) {
-                const nextIndex = this.state.currentLevelIndex + 1;
-                const nextLevelData = window.LEVELS[nextIndex];
-                const currentRegion = this.getRegionForLevel(levelData.id);
-                const nextRegion = this.getRegionForLevel(nextLevelData.id);
-                
-                const isNewChapter = nextRegion && (!currentRegion || currentRegion.id !== nextRegion.id);
-                const nextBtnText = isNewChapter ? "下一章" : "下一关";
-                
-                msg += ` 点击“${nextBtnText}”继续。`;
-                
-                if (window.UIManager && window.UIManager.toggleNextButton) {
-                    window.UIManager.toggleNextButton(true, nextBtnText);
+            // 检查假结局
+            let fakeEndingToShow = null;
+            const currentRegion = this.getRegionForLevel(levelData.id);
+            if (currentRegion && currentRegion.fakeEndings) {
+                for (const fake of currentRegion.fakeEndings) {
+                    const unlockStatus = window.StorageManager.checkConditions ? window.StorageManager.checkConditions(fake.unlock) : { unlocked: true };
+                    // 只要假结局满足解锁条件，且还没看过，就触发它
+                    if (unlockStatus.unlocked && !window.StorageManager.isChapterSeen(fake.id)) {
+                        fakeEndingToShow = fake;
+                        break;
+                    }
                 }
+            }
+            
+            if (fakeEndingToShow && window.UIManager && window.UIManager.showStory) {
+                // 如果有未看过的假结局，优先展示假结局
+                window.StorageManager.markChapterSeen(fakeEndingToShow.id);
+                setTimeout(() => {
+                    window.UIManager.showStory({
+                        title: fakeEndingToShow.title || "假结局",
+                        descriptionPath: fakeEndingToShow.descriptionPath
+                    });
+                }, 500);
+                
+                // 设置假结局看完后的回调
+                window.UIManager.modalCallbacks['modal-story'] = () => {
+                    this._proceedAfterWin(msg);
+                };
             } else {
-                msg += " 恭喜你，通关了所有关卡！";
-                // 最后一关通关后，显示结局剧情
-                if (window.UIManager && window.UIManager.showStory) {
-                    setTimeout(() => {
-                        window.UIManager.showStory({
-                            title: "终局：未完的重置",
-                            descriptionPath: "story/ending.md"
-                        });
-                    }, 1000);
-                }
+                this._proceedAfterWin(msg);
             }
         } else {
             msg += " 请尝试新关卡。";
+            UIManager.showMessage(msg, "success");
         }
+    },
+    
+    _proceedAfterWin: function(baseMsg) {
+        let msg = baseMsg;
+        const levelData = window.LEVELS[this.state.currentLevelIndex];
         
+        if (this.state.currentLevelIndex < window.LEVELS.length - 1) {
+            const nextIndex = this.state.currentLevelIndex + 1;
+            const nextLevelData = window.LEVELS[nextIndex];
+            const currentRegion = this.getRegionForLevel(levelData.id);
+            const nextRegion = this.getRegionForLevel(nextLevelData.id);
+            
+            const isNewChapter = nextRegion && (!currentRegion || currentRegion.id !== nextRegion.id);
+            const nextBtnText = isNewChapter ? "下一章" : "下一关";
+            
+            msg += ` 点击“${nextBtnText}”继续。`;
+            
+            if (window.UIManager && window.UIManager.toggleNextButton) {
+                window.UIManager.toggleNextButton(true, nextBtnText);
+            }
+        } else {
+            msg += " 恭喜你，通关了所有关卡！";
+            // 最后一关通关后，显示结局剧情
+            if (window.UIManager && window.UIManager.showStory) {
+                const currentRoute = window.ROUTES.find(r => r.id === window.currentRouteId);
+                if (currentRoute && currentRoute.endingPath) {
+                    setTimeout(() => {
+                        // 如果是 classic 路线，播放动画，否则直接显示剧情
+                        if (currentRoute.id === 'classic') {
+                            window.UIManager.playEndingAnimation(() => {
+                                window.UIManager.showStory({
+                                    isEnding: true,
+                                    title: currentRoute.title + " - 结局",
+                                    descriptionPath: currentRoute.endingPath
+                                });
+                            });
+                        } else {
+                            window.UIManager.showStory({
+                                isEnding: true,
+                                title: currentRoute.title + " - 结局",
+                                descriptionPath: currentRoute.endingPath
+                            });
+                        }
+                    }, 1000);
+                }
+            }
+        }
         UIManager.showMessage(msg, "success");
     },
 

@@ -305,9 +305,21 @@ const MathEngine = {
             let s = latex;
             
             // 基础替换
-            s = s.replace(/\\operatorname{abs}\\left\(([^)]*)\\right\)/g, "\\left|$1\\right|");
+            // 基础替换
+            s = s.replace(/\\left\(/g, '(').replace(/\\right\)/g, ')');
+            s = s.replace(/\\operatorname{abs}\(([^)]*)\)/g, "\\left|$1\\right|");
             s = s.replace(/\\operatorname{([^{}]+)}/g, '$1');
             s = s.replace(/\\cdot/g, '*');
+            
+            // 处理 \exp 这种特殊情况，直接转化为 e^{...}
+            s = s.replace(/\\exp\(([^)]+)\)/g, 'e^{$1}');
+            s = s.replace(/\\exp\\left\(([^)]+)\\right\)/g, 'e^{$1}');
+            s = s.replace(/\\exp\s*\{([^}]+)\}/g, 'e^{$1}');
+            s = s.replace(/\\exp\s*(-?[a-zA-Z0-9]+)/g, 'e^{$1}');
+
+            // 处理连续函数或括号，如 e^{-x}\sin(x) 转换为 e^{-x}*\sin(x)
+            s = s.replace(/\)\s*\\/g, ')*\\');
+            s = s.replace(/\}\s*\\/g, '}*\\');
             
             // AI 常见格式修正：将 sin(x) 替换为 \sin(x)，如果前面没有反斜杠的话
             const commonFuncs = ['sin', 'cos', 'tan', 'exp', 'ln', 'log', 'asin', 'acos', 'atan', 'sinh', 'cosh', 'tanh'];
