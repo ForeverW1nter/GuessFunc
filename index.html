@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜函数 GuessFunc</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- 引入 Math.js 用于数学表达式处理 -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <!-- 引入 Desmos API -->
+    <script defer src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6&lang=zh-CN"></script>
+    <!-- 引入 Compute Engine -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@cortex-js/compute-engine@0.26.2/dist/compute-engine.min.js"></script>
+    
+    <!-- 引入 Markdown 渲染 -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <!-- 引入 KaTeX 用于数学公式渲染 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"></script>
+    <!-- 引入 Crypto-JS 加密 -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <h1>GuessFunc</h1>
+            <div class="toolbar">
+                <button id="btn-check" class="primary-btn">确认</button>
+                <button id="btn-next" class="primary-btn hidden" style="display: none; background-color: #ff9800;">下一关</button>
+                <button id="btn-return" class="hidden" style="display: none;">退出</button>
+                <button id="btn-preset">预设</button>
+                <button id="btn-random">随机</button>
+                <button id="btn-create">创建</button>
+                <button id="btn-share">分享</button>
+                <button id="btn-options">选项</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div id="calculator" class="calculator-container"></div>
+            <div id="message-area" class="message-area hidden">
+                <span id="message-text"></span>
+                <button id="btn-close-msg" class="close-btn">&times;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 规则弹窗 -->
+    <div id="modal-rules" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="rules-title">规则说明</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="rules-content" class="markdown-body">
+                    加载中...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 选项弹窗 -->
+    <div id="modal-options" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>游戏选项</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="options-menu">
+                    <button id="btn-about" class="option-item">ℹ️ 关于游戏</button>
+                    <button id="btn-rules" class="option-item">📜 规则说明</button>
+                    <button id="btn-changelog" class="option-item">📅 更新日志</button>
+                    <button id="btn-theme-toggle" class="option-item">🌓 切换深浅</button>
+                    <button id="btn-font-settings" class="option-item">🔤 剧情字体设置</button>
+                    <button id="btn-api-settings" class="option-item">🔑 API 设置</button>
+                    <button id="btn-export-save" class="option-item">💾 导出存档</button>
+                    <button id="btn-import-save" class="option-item">📂 导入存档</button>
+                    <button id="btn-clear-save" class="option-item" style="color: #f44336; border-color: #f44336;">🗑️ 清空存档</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 剧情字体设置弹窗 -->
+    <div id="modal-font-settings" class="modal hidden">
+        <div class="modal-container" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>剧情字体设置</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body font-settings-body">
+                <div class="font-settings-form">
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <span class="icon">📏</span>
+                            <span>字体大小：<span id="font-size-display" class="highlight-text">100%</span></span>
+                        </label>
+                        <div class="slider-container">
+                            <span class="slider-icon small">A</span>
+                            <input type="range" id="font-size-slider" min="50" max="200" step="10" value="100" class="styled-slider">
+                            <span class="slider-icon large">A</span>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <span class="icon">✒️</span>
+                            <span>字体样式</span>
+                        </label>
+                        <div class="custom-select-wrapper" id="font-family-custom-select">
+                            <div class="custom-select-display" id="font-family-display">默认 (系统字体)</div>
+                            <div class="custom-options-container" id="font-family-options">
+                                <div class="custom-option" data-value="default">默认 (系统字体)</div>
+                                <div class="custom-option" data-value="serif">衬线体 (Serif)</div>
+                                <div class="custom-option" data-value="sans-serif">无衬线体 (Sans-Serif)</div>
+                                <div class="custom-option" data-value="monospace">等宽字体 (Monospace)</div>
+                                <div class="custom-option" data-value="custom">自定义字体...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="custom-font-upload-container" class="upload-container hidden">
+                        <label for="custom-font-upload" class="upload-btn">
+                            <span class="icon">📁</span>
+                            <span>选择本地字体文件 (.ttf/.otf/.woff)</span>
+                        </label>
+                        <input type="file" id="custom-font-upload" accept=".ttf,.otf,.woff,.woff2" style="display: none;">
+                        <div id="custom-font-name" class="upload-status">未选择文件</div>
+                    </div>
+
+                    <div class="preview-container">
+                        <div class="preview-header">预览效果</div>
+                        <div id="font-preview-box" class="preview-box markdown-body">
+                            <p>这里是剧情文本的预览效果。</p>
+                            <p>“你觉得，这算不算永远？”</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API 设置弹窗 -->
+    <div id="modal-api-settings" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>API 设置</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body api-settings-body">
+                <div class="api-settings-form">
+                    <div class="info-box">
+                        <span class="info-icon">💡</span>
+                        <div class="info-text">
+                            设置 API Key 以启用 AI 生成关卡。Key 仅保存在浏览器本地，不会上传。申请地址：<a href="https://vg.v1api.cc/" target="_blank">vg.v1api.cc</a>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group api-key-group">
+                        <label for="input-api-key">🔑 API Key</label>
+                        <div class="input-with-eye">
+                            <input type="password" id="input-api-key" placeholder="填写你的 sk-... 密钥">
+                            <span id="btn-toggle-password" class="eye-icon">👁️</span>
+                        </div>
+                        
+                        <div class="proxy-toggle-container">
+                            <div class="toggle-wrapper">
+                                <input type="checkbox" id="toggle-use-proxy" class="custom-toggle">
+                                <label for="toggle-use-proxy">使用代理接口 <span class="hint-text">(未填Key时必选)</span></label>
+                            </div>
+                            <button id="btn-save-api-key" class="primary-btn save-btn">保存 Key 及设置</button>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+
+                    <div class="form-group prompt-group">
+                        <label for="input-system-prompt">📝 系统提示词 (System Prompt)</label>
+                        <textarea id="input-system-prompt" rows="6" placeholder="在此处自定义 AI 的系统提示词..."></textarea>
+                        <div class="action-buttons">
+                            <button id="btn-reset-system-prompt" class="secondary-btn">恢复默认</button>
+                            <button id="btn-save-system-prompt" class="primary-btn save-btn">保存提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 难度选择弹窗 -->
+    <div id="modal-difficulty" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>🎲 随机挑战</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <div class="difficulty-slider-container" style="background: var(--secondary-color); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                    <label for="difficulty-slider" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; display: block;">
+                        难度系数: <span id="difficulty-value" style="color: var(--primary-color); font-size: 1.3rem;">0.00</span>
+                    </label>
+                    <input type="range" id="difficulty-slider" min="0" max="5" step="0.01" value="0" style="width: 100%; margin-bottom: 10px;">
+                    <div class="difficulty-desc" id="difficulty-desc" style="display: none;"></div>
+                </div>
+                
+                <!-- AI 启用开关 -->
+                <div class="ai-toggle-container" style="background: rgba(0,0,0,0.03); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                        <input type="checkbox" id="toggle-use-ai" checked style="width: 18px; height: 18px; cursor: pointer;">
+                        <label for="toggle-use-ai" style="cursor: pointer; user-select: none; font-weight: bold;">✨ 启用 AI 生成高质量题目</label>
+                    </div>
+                    <div id="ai-status-hint" class="ai-status-hint" style="font-size: 0.85rem; text-align: center; min-height: 20px;"></div>
+                </div>
+
+                <div class="difficulty-actions" style="text-align: center;">
+                    <button id="btn-confirm-difficulty" class="primary-btn" style="width: 100%; padding: 12px; font-size: 1.1rem; border-radius: 8px;">🚀 立即开始</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关卡选择弹窗 -->
+    <div id="modal-levels" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>选择关卡</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="levels-list" class="levels-grid">
+                    <!-- Levels will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关卡指引弹窗 -->
+    <div id="modal-level-instruction" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>关卡指引</h2>
+                <div class="header-actions">
+                    <button class="btn-music-toggle" title="切换音乐">
+                        <div class="music-icon-wrapper">
+                            <span class="music-note">🎵</span>
+                            <div class="music-circle"></div>
+                        </div>
+                    </button>
+                    <span class="close-modal">&times;</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="level-instruction-content" class="markdown-body"></div>
+                <div style="margin: 20px auto 0; text-align: right; max-width: 800px; width: 100%;">
+                    <button id="btn-start-level" class="primary-btn">开始挑战</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 剧情弹窗 -->
+    <div id="modal-story" class="modal hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>章节剧情</h2>
+                <div class="header-actions">
+                    <button class="btn-music-toggle" title="切换音乐">
+                        <div class="music-icon-wrapper">
+                            <span class="music-note">🎵</span>
+                            <div class="music-circle"></div>
+                        </div>
+                    </button>
+                    <span class="close-modal">&times;</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="story-content" class="markdown-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本引入 (顺序很重要) -->
+    <script src="js/debug_config.js"></script>
+    <script src="js/audio_manager.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/storage_manager.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ai_manager.js"></script>
+    <script src="js/math_engine.js"></script>
+    <script src="js/graph_manager.js"></script>
+    <script src="js/ui_manager.js"></script>
+    <script src="js/game_logic.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- 结局动画遮罩 -->
+    <div id="ending-animation-overlay" class="ending-animation-overlay">
+        <div id="ending-animation-text" class="ending-animation-text"></div>
+    </div>
+</body>
+</html>
