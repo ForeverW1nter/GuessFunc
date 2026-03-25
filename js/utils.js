@@ -93,14 +93,15 @@ const Utils = {
      * 复制文本到剪贴板
      * @param {string} text 要复制的文本
      */
-    copyToClipboard: function(text) {
+    copyToClipboard: async function(text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert("链接已复制到剪贴板！");
-            }).catch(err => {
+            try {
+                await navigator.clipboard.writeText(text);
+                if (window.UIManager) window.UIManager.showMessage(MESSAGES.get('utils.copySuccess'), "success");
+            } catch (err) {
                 console.error('Could not copy text: ', err);
-                prompt("请手动复制链接：", text);
-            });
+                if (window.UIManager) await window.UIManager.showPrompt(MESSAGES.get('utils.copyManualPrompt'), text, MESSAGES.get('utils.copyFailedTitle'));
+            }
         } else {
             // 保底方案
             const textArea = document.createElement("textarea");
@@ -109,9 +110,9 @@ const Utils = {
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert("链接已复制到剪贴板！");
+                if (window.UIManager) window.UIManager.showMessage(MESSAGES.get('utils.copySuccess'), "success");
             } catch (err) {
-                prompt("请手动复制链接：", text);
+                if (window.UIManager) await window.UIManager.showPrompt(MESSAGES.get('utils.copyManualPrompt'), text, MESSAGES.get('utils.copyFailedTitle'));
             }
             document.body.removeChild(textArea);
         }

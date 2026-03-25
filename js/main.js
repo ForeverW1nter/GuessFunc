@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', async function() {
         await GraphManager.init('calculator');
     } catch (e) {
         console.error("GraphManager init failed:", e);
-        UIManager.showMessage("Desmos 加载失败，可能是网络问题。游戏无法进行。", "error");
+        UIManager.showMessage(MESSAGES.get('init.desmosFailed'), "error");
         // 即使失败，也不阻断后续逻辑（虽然游戏玩不了，但至少 UI 还在）
     }
 
@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', async function() {
     if (window.guessfunc_legacy_migrated) {
         // 延迟一点弹出，确保 UI 已经稳定
         setTimeout(() => {
-            alert("检测到您的旧版游戏进度！\n\n为了适配新的多线路剧情系统，您的旧版存档已自动迁移至【The Day Before Tomorrow】中。\n您可以在“预设”菜单的左上角切换线路来继续您的旧版进度。");
+            UIManager.showMessage(MESSAGES.get('init.legacyMigrated'), "info");
         }, 500);
         window.guessfunc_legacy_migrated = false; // 清除标记
     }

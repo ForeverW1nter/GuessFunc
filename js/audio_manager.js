@@ -29,7 +29,14 @@ window.AudioManager = {
         
         if (this.isMusicEnabled) {
             if (this.currentTrack) {
-                this.bgmPlayer.play().catch(e => console.error("Play failed:", e));
+                // 如果在 fadeOut，取消它并淡入
+                this.fadeIn();
+                const playPromise = this.bgmPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        this.updateMusicButton();
+                    }).catch(e => console.error("Play failed:", e));
+                }
             }
         } else {
             this.bgmPlayer.pause();
@@ -43,7 +50,8 @@ window.AudioManager = {
         document.querySelectorAll('.btn-music-toggle').forEach(btn => {
             const wrapper = btn.querySelector('.music-icon-wrapper');
             if (wrapper) {
-                if (this.isMusicEnabled && this.bgmPlayer && !this.bgmPlayer.paused) {
+                // 即使当前没有播放，只要启用了并且有 currentTrack，也可以认为是 playing 状态（或者直接看 isMusicEnabled）
+                if (this.isMusicEnabled) {
                     wrapper.classList.add('playing');
                 } else {
                     wrapper.classList.remove('playing');
@@ -66,7 +74,13 @@ window.AudioManager = {
 
         // 如果想播的音乐和正在播的音乐一样，并且正在播放中或即将淡出，就不需要重新加载重头播
         if (this.currentTrack === track && this.bgmPlayer && !this.bgmPlayer.paused) {
-            this.fadeIn();
+            if (this.isMusicEnabled) {
+                this.fadeIn();
+            } else {
+                if (this.fadeInterval) clearInterval(this.fadeInterval);
+                this.bgmPlayer.pause();
+                this.updateMusicButton();
+            }
             return;
         }
 

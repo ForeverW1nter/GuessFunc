@@ -7,13 +7,36 @@
 const StorageManager = {
     STORAGE_KEY: 'guessfunc_save_v2', // 升级为 v2 版本，整合存储
     SECRET_KEY: 'GuessFuncSecretKey_2024', // 简单的密钥
+    CURRENT_SLOT_KEY: 'guessfunc_current_slot', // 当前存档槽位
+    ASSIST_MODE_KEY: 'guessfunc_assist_mode', // 剧情预览模式
+
+    getCurrentSlot: function() {
+        return localStorage.getItem(this.CURRENT_SLOT_KEY) || '1';
+    },
+
+    setCurrentSlot: function(slot) {
+        localStorage.setItem(this.CURRENT_SLOT_KEY, slot);
+    },
+
+    getStorageKey: function() {
+        const slot = this.getCurrentSlot();
+        return slot === '1' ? this.STORAGE_KEY : `${this.STORAGE_KEY}_slot${slot}`;
+    },
+
+    isAssistMode: function() {
+        return localStorage.getItem(this.ASSIST_MODE_KEY) === 'true';
+    },
+
+    setAssistMode: function(enabled) {
+        localStorage.setItem(this.ASSIST_MODE_KEY, enabled);
+    },
 
     /**
      * 获取所有进度数据
      */
     getAllProgress: function() {
         try {
-            const data = localStorage.getItem(this.STORAGE_KEY);
+            const data = localStorage.getItem(this.getStorageKey());
             if (!data) return this._migrateFromV1(); // 如果没有v2，尝试迁移v1
             
             const decrypted = this._decrypt(data);
@@ -31,7 +54,7 @@ const StorageManager = {
      */
     saveAllProgress: function(progressObj) {
         const encrypted = this._encrypt(JSON.stringify(progressObj));
-        localStorage.setItem(this.STORAGE_KEY, encrypted);
+        localStorage.setItem(this.getStorageKey(), encrypted);
     },
 
     /**
@@ -232,6 +255,7 @@ const StorageManager = {
      * @returns {Object} { unlocked: boolean, reason: string }
      */
     checkRegionUnlock: function(region) {
+        if (this.isAssistMode()) return { unlocked: true };
         if (!window.REGIONS || window.REGIONS.length === 0) return { unlocked: true };
         
         if (region.unlock) {
@@ -266,6 +290,7 @@ const StorageManager = {
      * @returns {Object} { unlocked: boolean, reason: string }
      */
     checkLevelUnlock: function(levelData, region) {
+        if (this.isAssistMode()) return { unlocked: true };
         // 先检查所在章节是否解锁
         const regionUnlock = this.checkRegionUnlock(region);
         if (!regionUnlock.unlocked) {
@@ -365,7 +390,7 @@ const StorageManager = {
                      }
                      return 'migrated';
                 }
-                localStorage.setItem(this.STORAGE_KEY, encryptedData);
+                localStorage.setItem(this.getStorageKey(), encryptedData);
                 return 'success';
             }
         } catch (e) {
@@ -378,7 +403,7 @@ const StorageManager = {
      * 清空存档
      */
     clearSave: function() {
-        localStorage.removeItem(this.STORAGE_KEY);
+        localStorage.removeItem(this.getStorageKey());
         // 也清空旧版
         localStorage.removeItem('guessfunc_progress_v1');
         localStorage.removeItem('guessfunc_chapters_v1');
@@ -386,7 +411,7 @@ const StorageManager = {
 
     _save: function(data) {
         const encrypted = this._encrypt(JSON.stringify(data));
-        localStorage.setItem(this.STORAGE_KEY, encrypted);
+        localStorage.setItem(this.getStorageKey(), encrypted);
     },
 
     _saveChapters: function(data) {

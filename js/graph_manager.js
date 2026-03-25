@@ -38,7 +38,7 @@ const GraphManager = {
                     Logger.error("Desmos failed to load.");
                     // 尝试提示用户
                     if (window.UIManager && window.UIManager.showMessage) {
-                        window.UIManager.showMessage("Desmos 加载失败，请检查网络。", "error");
+                        window.UIManager.showMessage(MESSAGES.get('init.desmosNetworkError'), "error");
                     }
                     reject(new Error("Desmos load timeout"));
                 }

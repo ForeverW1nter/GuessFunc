@@ -43,6 +43,10 @@ const AIManager = {
 2. 确保所有函数名都有反斜杠前缀。
 3. 必须返回一个 JSON 对象，格式如下：{"expression": "LaTeX格式的表达式"}。不要有任何多余的文字。`,
 
+    DEFAULT_CHAT_SYSTEM_PROMPT: `你是一个数学游戏《猜函数》的智能助手。玩家正在尝试猜测一个隐藏的数学函数。
+你必须根据玩家给出的问题，判断隐藏函数的性质，并只能回答“是”、“否”或“不知道”。
+不要解释原因，不要给出推导过程，不要泄露函数本身。只输出这三个词之一。`,
+
     getSystemPrompt: function() {
         return localStorage.getItem('guessfunc_system_prompt') || this.DEFAULT_SYSTEM_PROMPT;
     },
@@ -53,6 +57,33 @@ const AIManager = {
         } else {
             localStorage.setItem('guessfunc_system_prompt', prompt.trim());
         }
+    },
+
+    getChatSystemPrompt: function() {
+        return localStorage.getItem('guessfunc_ai_chat_system_prompt') || this.DEFAULT_CHAT_SYSTEM_PROMPT;
+    },
+
+    setChatSystemPrompt: function(prompt) {
+        if (!prompt || prompt.trim() === '') {
+            localStorage.removeItem('guessfunc_ai_chat_system_prompt');
+        } else {
+            localStorage.setItem('guessfunc_ai_chat_system_prompt', prompt.trim());
+        }
+    },
+
+    /**
+     * 获取 API 配置信息
+     */
+    getApiConfig: function() {
+        const apiKey = this.getApiKey();
+        const savedProxyPref = localStorage.getItem('guessfunc_use_proxy');
+        const useProxy = savedProxyPref !== 'false';
+        const targetUrl = (apiKey && !useProxy) ? this.config.defaultApiUrl : this.config.proxyApiUrl;
+        return {
+            baseUrl: targetUrl,
+            apiKey: apiKey,
+            model: this.config.model
+        };
     },
 
     /**
@@ -88,7 +119,7 @@ const AIManager = {
     fetchFunction: async function(difficulty) {
         if (!this.hasValidKey()) {
             if (typeof UIManager !== 'undefined' && UIManager.showMessage) {
-                UIManager.showMessage("未配置代理接口且未检测到 API Key，已自动切换为本地随机生成。您可以在“选项 -> API 设置”中填入 Key 以启用 AI。", "info");
+                UIManager.showMessage(MESSAGES.get('ai.noApiOrProxy'), "info");
             }
             return null;
         }
@@ -164,13 +195,13 @@ const AIManager = {
         });
 
         if (!response.ok) {
-            if (response.status === 401) {
+            if (response.status === 401 || response.status === 403) {
                 if (typeof UIManager !== 'undefined' && UIManager.showMessage) {
-                    UIManager.showMessage(apiKey ? "API Key 无效，请检查设置。已自动切换为本地随机生成。" : "代理接口授权失败，请检查 Worker 配置。", "error");
+                    UIManager.showMessage(apiKey ? MESSAGES.get('ai.keyInvalidFallback') : MESSAGES.get('ai.proxyAuthFailed'), "error");
                 }
             } else if (response.status === 429) {
                 if (typeof UIManager !== 'undefined' && UIManager.showMessage) {
-                    UIManager.showMessage("请求过于频繁，请稍后再试（已触发防 DDoS 限制）。", "error");
+                    UIManager.showMessage(MESSAGES.get('ai.rateLimited'), "error");
                 }
             } else {
                 const errData = await response.json().catch(() => ({}));

@@ -14,6 +14,18 @@ const GameLogic = {
     },
 
     /**
+     * 防抖函数
+     */
+    debounce: function(func, wait) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    },
+
+    /**
      * 初始化游戏
      */
     init: async function() {
@@ -37,11 +49,11 @@ const GameLogic = {
 
         // 1. 等待数学引擎 (MathEngine) 加载完成
         try {
-            UIManager.showMessage("正在加载数学引擎...", "info");
+            UIManager.showMessage(MESSAGES.get('init.engineLoading'), "info");
             await MathEngine.init();
             UIManager.hideMessage();
         } catch (e) {
-            UIManager.showMessage("数学引擎加载失败，请刷新重试。", "error");
+            UIManager.showMessage(MESSAGES.get('init.engineFailed'), "error");
             Logger.error(e);
             return;
         }
@@ -57,7 +69,7 @@ const GameLogic = {
                 this.startLevel(data);
                 return;
             } else {
-                alert("无效的关卡代码，将随机生成关卡。");
+                UIManager.showMessage(MESSAGES.get('game.invalidLevelCode'), "error");
             }
         }
         
@@ -109,6 +121,11 @@ const GameLogic = {
         this.state.currentLevelData = null;
         this.state.currentTarget = null;
         this.state.currentParams = null;
+        
+        // 重置 AI 聊天记录
+        if (window.UIManager && window.UIManager.clearAiChatMessages) {
+            window.UIManager.clearAiChatMessages();
+        }
     },
 
     startEmptyLevel: function() {
@@ -173,7 +190,7 @@ const GameLogic = {
         let diffName = `难度 ${difficulty}`;
         
         if (window.UIManager && window.UIManager.showMessage) {
-            window.UIManager.showMessage(`随机挑战（${diffName}）开始了！请输入你的猜测。`);
+            window.UIManager.showMessage(MESSAGES.get('game.randomChallengeStart', { diffName }));
             if (window.UIManager.updateUI) {
                 window.UIManager.updateUI();
             }
@@ -185,6 +202,7 @@ const GameLogic = {
      * @param {number} index - 关卡在 LEVELS 数组中的索引
      */
     startPresetLevel: function(index) {
+        Logger.log(`[GameLogic] startPresetLevel called with index: ${index}`);
         if (index < 0 || index >= window.LEVELS.length) {
             Logger.error("无效的关卡索引:", index);
             return;
@@ -202,9 +220,20 @@ const GameLogic = {
         
         // 显示关卡说明或标题
         if (window.UIManager && window.UIManager.showLevelInstruction) {
-            window.UIManager.showLevelInstruction(levelData);
+            Logger.log(`[GameLogic] Calling UIManager.showLevelInstruction for level: ${levelData.title}`);
+            const hasInstruction = window.UIManager.showLevelInstruction(levelData);
+            
+            // 如果没有指引或者开启了速通模式，我们需要手动关闭可能存在的关卡选择弹窗
+            if (!hasInstruction) {
+                Logger.log(`[GameLogic] No instruction shown, hiding modal-universal`);
+                window.UIManager.hideModal('modal-universal');
+            }
         } else {
-             UIManager.showMessage(`第 ${index + 1} 关：${levelData.title}`, "info");
+             Logger.log(`[GameLogic] UIManager or showLevelInstruction not found, showing message instead`);
+             UIManager.showMessage(MESSAGES.get('game.presetLevelTitle', { index: index + 1, title: levelData.title }), "info");
+             if (window.UIManager) {
+                 window.UIManager.hideModal('modal-universal');
+             }
         }
     },
 
@@ -223,18 +252,19 @@ const GameLogic = {
                 if (window.StorageManager && window.StorageManager.checkLevelUnlock) {
                     const unlockStatus = window.StorageManager.checkLevelUnlock(nextLevelData, nextRegion);
                     if (!unlockStatus.unlocked) {
-                        UIManager.showMessage(`下一关未解锁：${unlockStatus.reason}`, "error");
+                        UIManager.showMessage(MESSAGES.get('game.nextLevelLocked', { reason: unlockStatus.reason }), "error");
                         // 如果未解锁，打开关卡选择界面
                         if (window.UIManager) {
                             window.UIManager.renderLevelList();
-                            window.UIManager.showModal('modal-levels');
+                            window.UIManager.openPanel('levels', '选择关卡');
                         }
                         return;
                     }
                 }
 
                 // 检查是否进入了新的章节（区域）
-                if (nextRegion && (!currentRegion || currentRegion.id !== nextRegion.id)) {
+                const isSpeedrun = localStorage.getItem('guessfunc_speedrun_mode') === 'true';
+                if (!isSpeedrun && nextRegion && (!currentRegion || currentRegion.id !== nextRegion.id)) {
                     // 如果新章节有剧情，则优先显示剧情
                     if (nextRegion.descriptionPath || nextRegion.description) {
                          if (window.UIManager && window.UIManager.showStory) {
@@ -246,9 +276,9 @@ const GameLogic = {
                              window.UIManager.showStory(nextRegion);
                              
                              // 剧情结束后返回关卡选择界面，而不是直接开始下一关
-                             window.UIManager.modalCallbacks['modal-story'] = () => {
+                             window.UIManager.modalCallbacks['modal-universal'] = () => {
                                  window.UIManager.renderLevelList();
-                                 window.UIManager.showModal('modal-levels');
+                                 window.UIManager.openPanel('levels', '选择关卡');
                              };
                              return;
                          }
@@ -258,11 +288,11 @@ const GameLogic = {
                 // 如果没有触发剧情，则直接开始下一关
                 this.startPresetLevel(nextIndex);
             } else {
-                UIManager.showMessage("恭喜！你已经完成了所有预设关卡！", "success");
+                UIManager.showMessage(MESSAGES.get('game.allPresetCompleted'), "success");
             }
         } else {
             // 如果是随机模式，提示用户手动开始新挑战
-            UIManager.showMessage("请点击顶部按钮开始新挑战。");
+            UIManager.showMessage(MESSAGES.get('game.clickTopToStart'));
         }
     },
 
@@ -283,7 +313,7 @@ const GameLogic = {
             if (this.state.mode === 'preset') {
                 this.nextLevel();
             } else {
-                UIManager.showMessage("请点击顶部按钮开始新挑战。");
+                UIManager.showMessage(MESSAGES.get('game.clickTopToStart'));
             }
             return;
         }
@@ -291,7 +321,7 @@ const GameLogic = {
         const userGuessData = GraphManager.getUserGuessData();
         
         if (!userGuessData || !userGuessData.latex) {
-            UIManager.showMessage("请输入有效的表达式！", "error");
+            UIManager.showMessage(MESSAGES.get('game.invalidExpression'), "error");
             return;
         }
 
@@ -307,19 +337,19 @@ const GameLogic = {
         );
 
         if (isCorrect) {
-            this.handleWin();
+            this.handleWin(isCorrect);
         } else {
-            UIManager.showMessage("猜错了，请再试试！", "error");
+            UIManager.showMessage(MESSAGES.get('game.guessWrong'), "error");
         }
     },
 
     /**
      * 处理胜利逻辑
      */
-    handleWin: function() {
+    handleWin: function(result) {
         this.state.isWon = true;
         
-        let msg = "恭喜你！猜对了！";
+        let msg = MESSAGES.get('game.levelCompleted');
         if (this.state.mode === 'preset') {
             const levelData = window.LEVELS[this.state.currentLevelIndex];
             if (levelData) {
@@ -328,14 +358,18 @@ const GameLogic = {
             
             // 检查假结局
             let fakeEndingToShow = null;
-            const currentRegion = this.getRegionForLevel(levelData.id);
-            if (currentRegion && currentRegion.fakeEndings) {
-                for (const fake of currentRegion.fakeEndings) {
-                    const unlockStatus = window.StorageManager.checkConditions ? window.StorageManager.checkConditions(fake.unlock) : { unlocked: true };
-                    // 只要假结局满足解锁条件，且还没看过，就触发它
-                    if (unlockStatus.unlocked && !window.StorageManager.isChapterSeen(fake.id)) {
-                        fakeEndingToShow = fake;
-                        break;
+            const isSpeedrun = localStorage.getItem('guessfunc_speedrun_mode') === 'true';
+            
+            if (!isSpeedrun) {
+                const currentRegion = this.getRegionForLevel(levelData.id);
+                if (currentRegion && currentRegion.fakeEndings) {
+                    for (const fake of currentRegion.fakeEndings) {
+                        const unlockStatus = window.StorageManager.checkConditions ? window.StorageManager.checkConditions(fake.unlock) : { unlocked: true };
+                        // 只要假结局满足解锁条件，且还没看过，就触发它
+                        if (unlockStatus.unlocked && !window.StorageManager.isChapterSeen(fake.id)) {
+                            fakeEndingToShow = fake;
+                            break;
+                        }
                     }
                 }
             }
@@ -351,14 +385,30 @@ const GameLogic = {
                 }, 500);
                 
                 // 设置假结局看完后的回调
-                window.UIManager.modalCallbacks['modal-story'] = () => {
+                window.UIManager.modalCallbacks['modal-universal'] = () => {
                     this._proceedAfterWin(msg);
                 };
             } else {
                 this._proceedAfterWin(msg);
             }
         } else {
-            msg += " 请尝试新关卡。";
+            // 获取渲染后的目标和用户输入 LaTeX，用于美化显示
+            const targetLatex = result && result.renderedTarget ? result.renderedTarget : this.state.currentTarget;
+            const userLatex = result && result.renderedUser ? result.renderedUser : (window.GraphManager ? GraphManager.getUserGuessData().latex : "");
+            
+            msg = MESSAGES.get('game.guessCorrect', { target: targetLatex, guess: userLatex });
+            if (result && result.method === 'simplify') {
+                msg = MESSAGES.get('game.guessCorrectEquivalent', { target: targetLatex, guess: userLatex });
+            } else if (result && result.method === 'numeric') {
+                msg = MESSAGES.get('game.guessCorrectValue', { target: targetLatex, guess: userLatex });
+            }
+            
+            if (window.UIManager && window.UIManager.toggleNextButton) {
+                window.UIManager.toggleNextButton(true);
+            }
+        }
+        
+        if (window.UIManager && window.UIManager.showMessage) {
             UIManager.showMessage(msg, "success");
         }
     },
@@ -382,14 +432,18 @@ const GameLogic = {
                 window.UIManager.toggleNextButton(true, nextBtnText);
             }
         } else {
-            msg += " 恭喜你，通关了所有关卡！";
+            msg += " " + MESSAGES.get('game.allPresetCompleted');
             // 最后一关通关后，显示结局剧情
-            if (window.UIManager && window.UIManager.showStory) {
+            const isSpeedrun = localStorage.getItem('guessfunc_speedrun_mode') === 'true';
+            if (!isSpeedrun && window.UIManager && window.UIManager.showStory) {
                 const currentRoute = window.ROUTES.find(r => r.id === window.currentRouteId);
                 if (currentRoute && currentRoute.endingPath) {
                     setTimeout(() => {
-                        // 如果是 classic 路线，播放动画，否则直接显示剧情
-                        if (currentRoute.id === 'classic') {
+                        // 如果是 classic 路线且开启了动画，播放动画，否则直接显示剧情
+                        const animPref = localStorage.getItem('guessfunc_ending_anim');
+                        const playAnim = animPref !== 'false';
+                        
+                        if (currentRoute.id === 'classic' && playAnim) {
                             window.UIManager.playEndingAnimation(() => {
                                 window.UIManager.showStory({
                                     isEnding: true,

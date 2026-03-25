@@ -95,10 +95,12 @@ const MathEngine = {
         if (!this.ce) return;
         try {
             this.ce.assume(["Element", "x", "RealNumbers"]);
-            // 定义基础数学常数，确保评估时不会出错
-            this.ce.assign("e", 2.718281828459045);
-            this.ce.assign("pi", 3.141592653589793);
-            this.ce.assign("Pi", 3.141592653589793);
+            // 注意: Compute Engine 默认将 'e' (和 'pi') 设为内置只读常数
+            // 直接给内置常数 assign 会报错 "Cannot assign a value to the constant 'e'"
+            // 我们不再手动重新 assign 'e'，而是让 CE 自动处理
+            // this.ce.assign("e", 2.718281828459045);
+            // this.ce.assign("pi", 3.141592653589793);
+            // this.ce.assign("Pi", 3.141592653589793);
         } catch(e) {
             Logger.warn("Failed to configure CE constants:", e);
         }
@@ -420,7 +422,7 @@ const MathEngine = {
                 // 先检查是否有可用的 API Key
                 if (typeof AIManager !== 'undefined' && AIManager.hasValidKey()) {
                     if (typeof UIManager !== 'undefined' && UIManager.showMessage) {
-                        UIManager.showMessage("正在调用 AI 生成题目...", "info");
+                        UIManager.showMessage(MESSAGES.get('ai.generating'), "info");
                     }
                     
                     const aiExpression = await AIManager.fetchFunction(currentDiff);
