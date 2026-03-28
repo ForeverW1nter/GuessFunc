@@ -1,0 +1,159 @@
+{
+  "common": {
+    "title": "GuessFunc - 猜函数游戏",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "confirm": "确认",
+    "cancel": "取消",
+    "close": "关闭",
+    "on": "开启",
+    "off": "关闭"
+  },
+  "game": {
+    "inputPlaceholder": "请输入你的数学函数，如: x^2",
+    "submitBtn": "验证函数",
+    "successMessage": "恭喜你，完美拟合！",
+    "failureMessage": "偏差过大，请再试一次。",
+    "verifyTrigger": "触发验证...",
+    "verifyFailed": "验证未通过: {{reason}}",
+    "verifyPassedLog": "验证通过！",
+    "verifyPassedToast": "验证通过！太棒了！",
+    "chapterEnded": "本章结束！",
+    "nextLevelBtn": "下一关",
+    "verifyBtn": "验证",
+    "loadingEngine": "加载数学引擎..."
+  },
+  "sidebar": {
+    "createEmptyError": "请在左侧图表面板第一行输入你想创建的函数！",
+    "createSuccess": "自定义关卡创建成功！",
+    "shareStoryError": "故事模式下的关卡不支持分享，去自由创作里试试吧！",
+    "shareEmptyError": "当前没有可分享的目标函数！",
+    "copySuccess": "关卡链接已复制到剪贴板！",
+    "copyError": "复制失败，请手动复制",
+    "playSection": "游玩",
+    "storyMode": "故事模式",
+    "randomMode": "随机挑战",
+    "createSection": "创作 & 分享",
+    "freeCreateMode": "自由创作",
+    "shareLevelMode": "分享关卡",
+    "systemSection": "系统",
+    "settings": "设置中心",
+    "confirmCreateTitle": "确认自由创作",
+    "confirmCreateDesc": "将使用以下函数作为新关卡的目标函数：",
+    "validParams": "有效参数列表：",
+    "paramsNote1": "（注：以上数值为参数默认数值，未在函数中使用的游离参数已被自动过滤。）",
+    "paramsNote2": "注：未在函数中使用的游离参数已被自动过滤。",
+    "confirmCreateBtn": "确认创作"
+  },
+  "ai": {
+    "welcomeError": "[欢迎语生成失败] {{error}}",
+    "sendError": "发送失败",
+    "title": "AI 助手",
+    "inputPlaceholder": "问我关于函数的问题...",
+    "systemPrompt": "你是《猜函数》游戏中的 AI 助手。现在玩家打开了聊天面板。\n请根据你作为游戏内助手的身份，用友好且带有一点引导性的语气向玩家打个招呼。\n请务必在欢迎语中向玩家说明以下几点（这是你的核心规则，你必须告诉玩家）：\n1. 玩家可以问你关于“当前目标函数”的数学特征问题（例如：“函数是否经过原点？”、“导数是否始终大于0？”等）。\n2. 你是一个非常严格的助手，你只能回答 \"是\"、\"否\" 或 \"不知道\"，绝不会给出其他解释。\n3. 你绝不会直接泄露目标函数的表达式。\n\n请直接输出你的欢迎语，不要包含任何多余的解释，保持语句通顺自然。"
+  },
+  "random": {
+    "startSuccess": "随机挑战已开启！",
+    "generating": "正在生成高难度函数，请稍候...",
+    "generateError": "生成函数时出错，请重试。",
+    "title": "随机挑战",
+    "desc": "选择你想要的难度，系统将自动生成对应的目标函数。",
+    "diff1": "极简 (难度 1)",
+    "diff2": "简单 (难度 2)",
+    "diff3": "中等 (难度 3)",
+    "diff4": "困难 (难度 4)",
+    "diff5": "噩梦 (难度 5)",
+    "currentDiff": "当前难度系数:",
+    "startBtn": "开始挑战"
+  },
+  "levelSelect": {
+    "title": "选择关卡",
+    "chapterProgress": "章节完成度:",
+    "levelNum": "第 {{num}} 关",
+    "locked": "尚未解锁"
+  },
+  "settings": {
+    "title": "设置",
+    "mainTab": "主设置",
+    "displayTab": "显示",
+    "docTab": "文档",
+    "apiTab": "API配置",
+    "saveTab": "存档管理",
+    "api": {
+      "saveSuccess": "API 设置已保存",
+      "promptSaveSuccess": "提示词已保存",
+      "promptResetSuccess": "提示词已重置为默认",
+      "keyDesc": "设置 API Key 以启用 AI 生成关卡。Key 仅保存在浏览器本地，不会上传。申请地址：",
+      "keyPlaceholder": "填写你的 sk-... 密钥",
+      "useProxy": "使用代理接口",
+      "useProxySub": "(未填Key时必选)",
+      "saveBtn": "保存 API 配置",
+      "promptSettings": "提示词设置",
+      "genPrompt": "生成关卡提示词",
+      "genPromptPlaceholder": "在此输入生成关卡提示词",
+      "propPrompt": "函数性质提示词",
+      "propPromptPlaceholder": "在此输入函数性质提示词",
+      "savePromptBtn": "保存提示词",
+      "resetPromptBtn": "恢复默认"
+    },
+    "font": {
+      "title": "字体大小设置",
+      "desc": "调整全局文本与剧情的显示大小：",
+      "resetBtn": "恢复默认大小"
+    },
+    "main": {
+      "title": "游戏设置",
+      "sfx": "游戏音效",
+      "sfxDesc": "切换游戏中的音效播放",
+      "assistMode": "剧情辅助模式",
+      "assistDesc": "开启后，将在剧情中高亮显示关键数学提示"
+    },
+    "doc": {
+      "changelog": "更新日志",
+      "about": "关于游戏",
+      "rules": "游戏规则"
+    },
+    "save": {
+      "loadSuccess": "读取成功！",
+      "emptyError": "存档为空！",
+      "saveSuccess": "保存成功！",
+      "deleteSuccess": "删除成功！",
+      "title": "存档管理",
+      "previewMode": "剧情预览模式",
+      "previewDesc": "开启后将在存档槽位显示最后阅读的剧情内容",
+      "slotPrefix": "存档",
+      "emptySlot": "空存档",
+      "saveBtn": "保存进度",
+      "loadBtn": "读取进度",
+      "deleteBtn": "删除存档"
+    },
+    "theme": {
+      "title": "主题外观",
+      "darkMode": "深色模式",
+      "darkModeDesc": "深浅色主题切换",
+      "color": "主题颜色",
+      "colorDesc": "自定义应用的主题颜色",
+      "rgbTitle": "RGB 调色盘",
+      "resetBtn": "重置主题"
+    }
+  },
+  "tips": {
+    "title": "获得提示"
+  },
+  "story": {
+    "nextChapterBtn": "进入下一章",
+    "notFound": "剧情数据未加载或找不到对应关卡",
+    "enterLevelBtn": "进入关卡",
+    "read": "已阅"
+  },
+  "create": {
+    "copyLink": "复制分享链接",
+    "back": "返回",
+    "copySuccess": "链接已复制到剪贴板！",
+    "title": "自由创作模式",
+    "desc": "在左侧输入目标函数，调整参数，然后分享给其他人吧！",
+    "currentTarget": "当前目标函数：",
+    "params": "包含的参数：",
+    "noParams": "当前没有设置参数"
+  }
+}

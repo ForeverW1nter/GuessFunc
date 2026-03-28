@@ -1,0 +1,267 @@
+import React, { useState } from 'react';
+import { useUIStore } from '../../../../store/useUIStore';
+import { useGameStore } from '../../../../store/useGameStore';
+import { useStoryStore } from '../../../../store/useStoryStore';
+import { ConfirmModal } from '../ConfirmModal';
+
+const DownloadIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>;
+const SettingsOption = ({ icon: Icon, label, onClick, isDanger, isFile, rightContent }: { icon: React.ElementType, label: string, onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.ChangeEvent<HTMLInputElement>) => void, isDanger?: boolean, isFile?: boolean, rightContent?: React.ReactNode }) => {
+  const baseClasses = `group relative overflow-hidden flex items-center justify-between px-[20px] py-[16px] text-[1.05rem] font-medium bg-option-bg text-option-text border border-card-border rounded-[10px] transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-[2px] w-full cursor-pointer`;
+  
+  const hoverClasses = isDanger 
+    ? `hover:shadow-[0_4px_12px_rgba(244,67,54,0.15)] dark:hover:shadow-[0_4px_12px_rgba(229,115,115,0.20)] hover:border-app-danger dark:hover:border-[#ef5350] hover:bg-app-danger/10 hover:text-app-danger dark:hover:text-[#ef5350]`
+    : `hover:shadow-[0_4px_12px_rgba(var(--primary-color-rgb),0.2)] hover:border-app-primary dark:hover:border-[rgba(var(--primary-color-rgb),0.6)] hover:bg-[rgba(var(--primary-color-rgb),0.15)] hover:text-app-text dark:hover:text-option-text`;
+    
+  const barColor = isDanger ? 'bg-app-danger' : 'bg-app-primary';
+  const textColor = isDanger ? 'text-app-danger' : '';
+
+  const content = (
+    <>
+      <div className="flex items-center gap-[12px] z-10">
+        <Icon className={`opacity-70 group-hover:opacity-100 transition-opacity ${textColor}`} />
+        <span className={textColor}>{label}</span>
+      </div>
+      {rightContent && <div className="z-10">{rightContent}</div>}
+      <div className={`absolute left-0 top-0 bottom-0 w-[4px] ${barColor} scale-y-0 transition-transform duration-200 ease-out group-hover:scale-y-100`} />
+    </>
+  );
+
+  if (isFile) {
+    return (
+      <label className={`${baseClasses} ${hoverClasses}`}>
+        {content}
+        <input type="file" accept=".json" className="hidden" onChange={(e: React.ChangeEvent<HTMLInputElement>) => onClick && onClick(e)} />
+      </label>
+    );
+  }
+
+  return (
+    <button onClick={(e) => onClick && onClick(e)} className={`${baseClasses} ${hoverClasses}`}>
+      {content}
+    </button>
+  );
+};
+const UploadIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>;
+const Trash2Icon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>;
+const UnlockIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>;
+const ZapIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
+
+export const SavePanel: React.FC = () => {
+  const { isAssistMode, toggleAssistMode } = useStoryStore();
+  const { isSpeedrunMode, toggleSpeedrunMode } = useUIStore();
+  const [currentSlot, setCurrentSlot] = React.useState(() => localStorage.getItem('guessfunc_current_slot') || '1');
+
+  // We need a force render to show slot status correctly when it changes
+  const [, setForceRender] = React.useState(0);
+
+  const getSlotKey = (slot: string) => slot === '1' ? 'guess-func-storage' : `guess-func-storage_slot${slot}`;
+
+  const hasSaveData = (slot: string) => {
+    const dataStr = localStorage.getItem(getSlotKey(slot));
+    if (!dataStr) return false;
+    try {
+      const data = JSON.parse(dataStr);
+      // 只有完成了至少一个关卡才算有存档
+      return data?.state?.completedLevels?.length > 0;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSlotSelect = (slot: string) => {
+    if (slot === currentSlot) return;
+    
+    // Save current progress to current slot
+    const state = useGameStore.getState();
+    const currentDataToSave = { state: { completedLevels: state.completedLevels, seenChapters: state.seenChapters } };
+    localStorage.setItem(getSlotKey(currentSlot), JSON.stringify(currentDataToSave));
+
+    // Load new slot data
+    const newData = localStorage.getItem(getSlotKey(slot));
+    if (newData) {
+      try {
+        const parsed = JSON.parse(newData);
+        if (parsed.state) {
+          useGameStore.setState({ 
+            completedLevels: parsed.state.completedLevels || [],
+            seenChapters: parsed.state.seenChapters || []
+          });
+        }
+      } catch (e: unknown) {
+        console.error("Error loading slot", e);
+      }
+    } else {
+      // New slot is empty, clear current state
+      useGameStore.setState({ completedLevels: [], seenChapters: [] });
+    }
+
+    setCurrentSlot(slot);
+    localStorage.setItem('guessfunc_current_slot', slot);
+    useUIStore.getState().addToast(`已切换至存档槽位 ${slot}`, 'success');
+  };
+
+  const handleExport = () => {
+    const data = {
+      completedLevels: useGameStore.getState().completedLevels,
+      theme: useUIStore.getState().theme,
+      isSpeedrunMode: useUIStore.getState().isSpeedrunMode
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `guessfunc_save_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    useUIStore.getState().addToast('存档已导出', 'success');
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement>) => {
+    if ('target' in e && (e.target as HTMLInputElement).files) {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target?.result as string);
+        if (data.completedLevels) {
+          useGameStore.setState({ completedLevels: data.completedLevels });
+        }
+        if (data.theme) {
+          useUIStore.getState().setTheme(data.theme);
+        }
+        if (data.isSpeedrunMode !== undefined) {
+          useUIStore.setState({ isSpeedrunMode: data.isSpeedrunMode });
+        }
+     useUIStore.getState().addToast('存档导入成功！', 'success');
+        } catch (err: unknown) {
+          console.error(err);
+          useUIStore.getState().addToast('存档格式错误', 'error');
+        }
+      };
+     reader.readAsText(file);
+    }
+    if ('target' in e && e.target instanceof HTMLInputElement) {
+      e.target.value = ''; // reset input
+    }
+  };
+
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
+
+  const handleClearClick = () => {
+    setIsClearModalOpen(true);
+  };
+
+  const handleConfirmClear = (e?: React.MouseEvent) => {
+    // 动态计算点击位置（相对于视口），用于撒花特效
+    // ConfirmModal 已经算好了比例，直接取
+    let x = 0.5;
+    let y = 0.5;
+    
+    if (e && e.clientX !== undefined && e.clientY !== undefined) {
+      x = e.clientX;
+      y = e.clientY;
+    }
+
+    useGameStore.setState({ completedLevels: [], seenChapters: [] });
+    localStorage.removeItem(getSlotKey(currentSlot));
+    setForceRender(prev => prev + 1);
+    
+    // 从触发位置发射红色的删除特效
+    import('canvas-confetti').then((confetti) => {
+      confetti.default({
+        particleCount: 50,
+        spread: 70,
+        origin: { x, y },
+        colors: ['#ef5350', '#d32f2f', '#c62828'], // 红色系
+        disableForReducedMotion: true
+      });
+    });
+
+    useUIStore.getState().addToast('当前存档已清空', 'success');
+    setIsClearModalOpen(false);
+  };
+
+  return (
+    <div className="space-y-5">
+      <div className="space-y-3">
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">存档槽位</h3>
+        <div className="flex flex-col gap-2">
+          {[1, 2, 3, 4, 5].map((num) => {
+            const slotStr = String(num);
+            const isCurrent = slotStr === currentSlot;
+            const hasData = hasSaveData(slotStr);
+            return (
+              <button
+                key={slotStr}
+                onClick={() => handleSlotSelect(slotStr)}
+                className={`flex items-center justify-between w-full px-4 py-3 border transition-all rounded-xl transform hover:-translate-y-0.5 ${
+                  isCurrent 
+                    ? 'border-app-primary bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary' 
+                    : 'border-card-border bg-card-bg text-app-text hover:border-app-primary hover:bg-card-hover'
+                }`}
+              >
+                <span className="font-medium text-base">
+                  {isCurrent ? `槽位 ${num} (当前)` : `槽位 ${num}`}
+                </span>
+                <span className={`text-sm ${hasData ? 'opacity-80' : 'opacity-40'}`}>
+                  {hasData ? '有存档' : '空存档'}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="space-y-3 pt-4">
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">存档操作</h3>
+        
+        <SettingsOption icon={DownloadIcon} label="导出当前存档" onClick={handleExport} />
+        <SettingsOption icon={UploadIcon} label="导入存档到当前" onClick={handleImport} isFile />
+        <SettingsOption icon={Trash2Icon} label="清空当前存档" onClick={handleClearClick} isDanger />
+      </div>
+
+      <div className="space-y-3 pt-4">
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">辅助功能</h3>
+        <SettingsOption 
+          icon={UnlockIcon} 
+          label={`剧情预览模式: ${isAssistMode ? '开' : '关'}`}
+          onClick={toggleAssistMode}
+          rightContent={
+            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isAssistMode ? 'bg-app-primary' : 'bg-card-border'}`}>
+              <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform ${isAssistMode ? 'translate-x-6' : 'translate-x-1'}`} />
+            </div>
+          }
+        />
+        <div className="text-sm opacity-80 px-2.5 text-app-text mb-4">
+          开启后可以直接游玩所有关卡（即使前置关卡未完成）。
+        </div>
+
+        <SettingsOption 
+          icon={ZapIcon} 
+          label={`速通模式: ${isSpeedrunMode ? '开' : '关'}`}
+          onClick={toggleSpeedrunMode}
+          rightContent={
+            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isSpeedrunMode ? 'bg-app-primary' : 'bg-card-border'}`}>
+              <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform ${isSpeedrunMode ? 'translate-x-6' : 'translate-x-1'}`} />
+            </div>
+          }
+        />
+        <div className="text-sm opacity-80 px-2.5 text-app-text">
+          开启后跳过剧情，直接进入关卡。
+        </div>
+      </div>
+
+      <ConfirmModal 
+        isOpen={isClearModalOpen}
+        title="警告：清空存档"
+        message="您确定要清空当前槽位的存档吗？此操作不可逆！"
+        confirmText="清空存档"
+        requireInput="Say Goodbye to Shirloy"
+        onConfirm={handleConfirmClear}
+        onCancel={() => setIsClearModalOpen(false)}
+      />
+    </div>
+  );
+};

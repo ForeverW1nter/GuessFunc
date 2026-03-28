@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-color: #f0f2f5;
+    --text-color: #333;
+    --header-bg: #1a1a1a;
+    --header-text: #fff;
+    --btn-bg: rgba(255, 255, 255, 0.1);
+    --btn-text: white;
+    --modal-bg: #fff;
+    --modal-text: #333;
+    --card-bg: #fff;
+    --card-border: #ddd;
+    --card-hover: rgba(var(--primary-color-rgb), 0.05);
+    --option-bg: #fff;
+    --option-text: #333;
+    --msg-bg: rgba(33, 33, 33, 0.9);
+    --msg-text: white;
+    --primary-color: #2196F3;
+    --primary-color-rgb: 33, 150, 243;
+    --success-color: #4CAF50;
+    --danger-color: #f44336;
+    --story-font-scale: 1;
+    --story-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .dark {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --header-bg: #1a1a1a;
+    --header-text: #e0e0e0;
+    --btn-bg: rgba(255, 255, 255, 0.08);
+    --btn-text: #e0e0e0;
+    --modal-bg: #1e1e1e;
+    --modal-text: #e0e0e0;
+    --card-bg: #242424;
+    --card-border: #333333;
+    --card-hover: #2a2a2a;
+    --option-bg: #242424;
+    --option-text: #e0e0e0;
+    --msg-bg: rgba(40, 40, 40, 0.95);
+    --msg-text: #fff;
+    --primary-color: #64b5f6;
+    --primary-color-rgb: 100, 181, 246;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* 优雅的滚动条 */
+  ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+      background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+      background: rgba(128, 128, 128, 0.3);
+      border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+      background: rgba(128, 128, 128, 0.5);
+  }
+
+  /* Markdown 内容 */
+  .markdown-body {
+      font-size: calc(1rem * var(--story-font-scale));
+      font-family: var(--story-font-family);
+      line-height: 1.6;
+      color: var(--text-color);
+      max-width: 800px;
+      margin: 0 auto; /* 内容居中 */
+      width: 100%;
+  }
+
+  .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+      margin-top: 1.5em;
+      margin-bottom: 0.8em;
+      font-weight: 600;
+      color: var(--text-color);
+  }
+
+  .markdown-body h1 { font-size: calc(2em * var(--story-font-scale)); border-bottom: 1px solid var(--card-border); padding-bottom: .3em; }
+  .markdown-body h2 { font-size: calc(1.5em * var(--story-font-scale)); border-bottom: 1px solid var(--card-border); padding-bottom: .3em; }
+  .markdown-body h3 { font-size: calc(1.25em * var(--story-font-scale)); }
+  .markdown-body h4 { font-size: calc(1em * var(--story-font-scale)); }
+
+  /* 统一滑动条样式 */
+  .unified-slider {
+    width: 100%;
+    cursor: pointer;
+    height: 6px;
+    background: var(--card-border);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background 0.2s;
+  }
+
+  .unified-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .unified-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 10px rgba(var(--primary-color-rgb), 0.3);
+  }
+
+  /* 主题色设置面板专属滑动条 */
+  .theme-rgb-slider::-webkit-slider-thumb {
+    border-color: var(--slider-color);
+  }
+  .theme-rgb-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 4px 10px var(--slider-color);
+  }
+}
+
+@layer utilities {
+}
+
+.markdown-body p {
+    margin-bottom: 1em;
+}
+
+  .markdown-body pre, .markdown-body code {
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: monospace;
+      background-color: rgba(127,127,127,0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+  }
+
+  .markdown-body pre {
+      padding: 10px;
+      overflow-x: auto;
+  }
+
+  .markdown-body a {
+      color: var(--primary-color);
+      text-decoration: none;
+  }
+
+  .markdown-body a:hover {
+      text-decoration: underline;
+  }
+
+  .dark .markdown-body a {
+      color: var(--primary-color);
+  }
+
+  /* Level Card Hover Effects */
+  .level-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+      z-index: 1;
+      pointer-events: none;
+  }
+  .dark .level-card::before {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  }
+  .level-card:not(.locked):hover::before {
+      left: 100%;
+  }
+  .level-card:not(.locked):hover {
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 15px rgba(var(--primary-color-rgb), 0.3);
+      transform: translateY(-2px);
+  }
+  .dark .level-card:not(.locked):hover {
+      background-color: #383838;
+      box-shadow: 0 4px 15px rgba(var(--primary-color-rgb), 0.3);
+  }
+  .level-card:not(.locked):not(.completed):hover {
+      background-color: rgba(var(--primary-color-rgb), 0.05);
+  }
+

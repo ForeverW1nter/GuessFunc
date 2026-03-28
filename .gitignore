@@ -1,6 +1,31 @@
-.git/
-decode.html
-test_math.js
-test_math2.js
-test_math3.js
-*.debug
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# AI Configuration
+.ai/
+
+# Tools build output
+tools/dist
+tools/.cache

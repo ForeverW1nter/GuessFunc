@@ -1,0 +1,40 @@
+{
+  "routes": [
+    {
+      "id": "seeYouTomorrow",
+      "title": "See You Tomorrow",
+      "shortTitle": "SYT",
+      "description": "一条极简的测试线路",
+      "showToBeContinued": true,
+      "chapters": [
+        {
+          "id": "ch0",
+          "title": "第0章 伤痕",
+          "levels": [
+            {
+              "id": "1",
+              "title": "第1关",
+              "targetFunction": "x^2+1",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "本关暂无提示"
+            }
+          ],
+          "files": [
+            {
+              "id": "f1",
+              "title": "记录2526/3/29",
+              "extension": "log",
+              "content": "剧情待更新",
+              "unlockConditions": [
+                "1"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
