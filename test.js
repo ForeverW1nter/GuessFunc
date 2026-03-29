@@ -1,0 +1,1 @@
+import { remark } from "remark"; import remarkBreaks from "remark-breaks"; import html from "remark-html"; const md = "Hello\n# Heading\n```\nCode\n```\nWorld"; remark().use(remarkBreaks).use(html).process(md).then(String).then(console.log);

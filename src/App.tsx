@@ -11,7 +11,9 @@ import { AiChatModal } from './features/ui/components/AiChatModal';
 import { RandomChallengeModal } from './features/ui/components/RandomChallengeModal';
 import { useGameStore } from './store/useGameStore';
 import { useStoryStore } from './store/useStoryStore';
+import { useUIStore } from './store/useUIStore';
 import { CreateModePage } from './features/creation/components/CreateModePage';
+import { GAME_CONSTANTS } from './utils/constants';
 import './i18n';
 
 const Layout = () => (
@@ -38,7 +40,7 @@ const LevelRoute = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (routeId && routeId !== 'random' && routeId !== 'create' && routeId !== 'custom' && routeId !== 'share') {
+    if (routeId && !GAME_CONSTANTS.NON_STORY_ROUTES.includes(routeId)) {
       if (chapterId && levelId) {
         const storyStore = useStoryStore.getState();
         const gameStore = useGameStore.getState();
@@ -46,11 +48,14 @@ const LevelRoute = () => {
         
         if (chapter) {
           const levelIndex = chapter.levels.findIndex(l => l.id === levelId);
-          if (levelIndex > 0) {
-            // 检查前一关是否已经通关
-            const prevLevelId = chapter.levels[levelIndex - 1].id;
-            if (!gameStore.isLevelCompleted(prevLevelId)) {
-              // 未解锁，回退到第一关或最新解锁的关卡
+          if (levelIndex >= 0) {
+            const completedLevels = gameStore.completedLevels;
+            const chapterCompletedCount = chapter.levels.filter(l => completedLevels.includes(l.id)).length;
+            const isAssistMode = useUIStore.getState().isAssistMode;
+            const isLocked = !isAssistMode && levelIndex >= chapterCompletedCount + 3;
+
+            if (isLocked) {
+              // 未解锁，回退到第一关
               navigate(`/game/${routeId}/${chapterId}/${chapter.levels[0].id}`, { replace: true });
               return;
             }

@@ -5,20 +5,18 @@ import { useGameStore } from '../../../store/useGameStore';
 import { useAudio } from '../../audio/hooks/useAudio';
 import { useAudioStore } from '../../../store/useAudioStore';
 import { useNavigate } from 'react-router-dom';
-import { Folder, FolderOpen, File, Check, Lock, Terminal, ArrowLeft, Music } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Folder, FolderOpen, Check, Terminal, ArrowLeft, Music } from 'lucide-react';
 import gymnopedieAudio from '../../../assets/audio/Gymnopedie_1_Erik_Satie.mp3';
 import type { FileData } from '../../../types/story';
-
-// interface RouteData is implicitly assumed since we're not declaring one, but let's add shortTitle to the typings if possible
-// The compiler error `Property 'shortTitle' does not exist on type 'RouteData'` implies a defined type exists somewhere or TS infers it.
-// Let's add a safe fallback or assert type.
-
-import { MarkdownPanel } from '../../ui/components/settings/MarkdownPanel';
+import { FileViewer } from './FileViewer';
+import { ChapterFiles } from './ChapterFiles';
 
 export const LevelSelectModal: React.FC = () => {
-  const { isLevelSelectOpen, setLevelSelectOpen } = useUIStore();
-  const { storyJSON, isAssistMode } = useStoryStore();
-  const { completedLevels } = useGameStore();
+  const { t } = useTranslation();
+  const { isLevelSelectOpen, setLevelSelectOpen, isAssistMode } = useUIStore();
+  const { storyJSON } = useStoryStore();
+  const { completedLevels, readFiles, markFileRead } = useGameStore();
   const { playAudio, stopAudio } = useAudio();
   const { isMuted, toggleMute } = useAudioStore();
   const navigate = useNavigate();
@@ -34,6 +32,18 @@ export const LevelSelectModal: React.FC = () => {
 
   // Responsive state
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Folder states (preserve opened file and scroll position per chapter)
+  const [openFiles, setOpenFiles] = useState<Record<string, FileData | null>>({});
+  const scrollPositions = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    if (isLevelSelectOpen) {
+      playAudio(gymnopedieAudio, true);
+    } else {
+      stopAudio(gymnopedieAudio);
+    }
+  }, [isLevelSelectOpen, playAudio, stopAudio]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -71,6 +81,8 @@ export const LevelSelectModal: React.FC = () => {
     return status;
   }, [currentRoute, isAssistMode, completedLevels]);
 
+  const currentFile = selectedChapterId ? openFiles[selectedChapterId] : null;
+
   // Set default selected chapter for desktop
   useEffect(() => {
     if (!isMobile && isLevelSelectOpen && !selectedChapterId && unlockedChapters.length > 0) {
@@ -80,13 +92,11 @@ export const LevelSelectModal: React.FC = () => {
     }
   }, [isMobile, isLevelSelectOpen, unlockedChapters, selectedChapterId]);
 
-  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
-
   if (!isLevelSelectOpen) return null;
 
   const handleLevelClick = (chapterId: string, levelId: string, isLocked: boolean) => {
     if (isLocked && !isAssistMode) {
-      useUIStore.getState().addToast('Access Denied: Level is locked', 'error');
+      useUIStore.getState().addToast(t('story.accessDenied', 'Access Denied: Level is locked'), 'error');
       return;
     }
     navigate(`/game/${selectedRouteId}/${chapterId}/${levelId}`);
@@ -96,25 +106,25 @@ export const LevelSelectModal: React.FC = () => {
 
   const handleFileClick = (file: FileData, isLocked: boolean) => {
     if (isLocked && !isAssistMode) {
-      useUIStore.getState().addToast('Access Denied: File is locked', 'error');
+      useUIStore.getState().addToast(t('story.fileLocked', 'Access Denied: File is locked'), 'error');
       return;
     }
-    setSelectedFile(file);
-    // Play music when reading story files if they have specific titles
-    if (file.title.includes('Story') || file.title.includes('story') || file.extension === 'md' || file.title.includes('记录')) {
-      playAudio(gymnopedieAudio, true);
+    if (selectedChapterId) {
+      setOpenFiles(prev => ({ ...prev, [selectedChapterId]: file }));
+      markFileRead(file.id);
     }
   };
 
   const handleClose = () => {
     setLevelSelectOpen(false);
-    setSelectedFile(null);
+    // 只在有关闭文件动作时停止音乐
     stopAudio(gymnopedieAudio);
   };
 
   const closeFile = () => {
-    setSelectedFile(null);
-    stopAudio(gymnopedieAudio);
+    if (selectedChapterId) {
+      setOpenFiles(prev => ({ ...prev, [selectedChapterId]: null }));
+    }
   };
 
   const selectedChapterData = currentRoute?.chapters.find(c => c.id === selectedChapterId);
@@ -136,11 +146,27 @@ export const LevelSelectModal: React.FC = () => {
             className="flex items-center gap-[8px] text-[#A0A0A5] hover:text-white transition-colors"
           >
             <ArrowLeft size={16} strokeWidth={2} />
-            <span className="text-[0.85rem] uppercase tracking-wider">{isMobile && selectedChapterId ? 'BACK' : 'SYSTEM.EXIT'}</span>
+            <span className="text-[0.85rem] uppercase tracking-wider">{isMobile && selectedChapterId ? t('tools.storyEditor.back', 'BACK') : t('tools.storyEditor.systemExit', 'SYSTEM.EXIT')}</span>
           </button>
         </div>
         
-        <div className="flex items-center">
+        <div className="flex items-center gap-[16px]">
+          <button 
+            onClick={toggleMute}
+            className="bg-transparent border-none cursor-pointer flex items-center justify-center outline-none shrink-0 md:mr-[16px]"
+            title={isMuted ? t('story.unmute', "开启音乐") : t('story.mute', "关闭音乐")}
+          >
+            <div className="relative w-[28px] h-[28px] rounded-full flex items-center justify-center bg-[#1A1A1D] border border-[#2A2A2E] shadow-sm transition-all duration-300">
+              <div className={`absolute inset-0 rounded-full border-[2px] border-[#333] box-border transition-opacity duration-300 ${
+                !isMuted ? 'opacity-100 animate-[spin_3s_linear_infinite]' : 'opacity-20 animate-[spin_3s_linear_infinite]'
+              } bg-[linear-gradient(45deg,transparent_40%,rgba(255,255,255,0.05)_50%,transparent_60%),repeating-radial-gradient(#222,#222_1px,#2a2a2a_2px,#2a2a2a_3px)]`} 
+              style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
+              <Music size={12} className={`z-10 transition-all duration-300 flex items-center justify-center ${
+                !isMuted ? 'opacity-100 text-app-primary animate-[spin_3s_linear_infinite]' : 'opacity-50 text-[#A0A0A5] animate-[spin_3s_linear_infinite]'
+              }`} style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
+            </div>
+          </button>
+
            {isMobile && selectedChapterId ? (
              <span className="text-[0.85rem] text-[#808085] tracking-widest uppercase">
                ~/{selectedChapterData?.id}
@@ -181,20 +207,20 @@ export const LevelSelectModal: React.FC = () => {
       </div>
 
       {/* 主工作区 (Main Workspace) */}
-      <div className="flex-1 relative flex overflow-hidden">
+      <div className="flex-1 relative flex overflow-hidden min-h-0">
         
         {/* 左侧：目录树 (Directory Tree) - 桌面端常驻，移动端在无选择时显示 */}
         <div className={`
           ${isMobile ? (selectedChapterId ? 'hidden' : 'w-full') : 'w-[280px] lg:w-[320px] border-r border-[#2A2A2E]'} 
-          flex flex-col h-full bg-[#0A0A0B] overflow-y-auto custom-scrollbar
+          flex flex-col h-full bg-[#0A0A0B] overflow-y-auto custom-scrollbar shrink-0
         `}>
           <div className="px-[16px] py-[12px] text-[0.7rem] text-[#606065] tracking-[0.2em] uppercase sticky top-0 bg-[#0A0A0B]/90 backdrop-blur z-10">
-            Explorer / {currentRoute?.id}
+            {t('tools.storyEditor.explorer', 'Explorer')} / {currentRoute?.id}
           </div>
           
           <div className="flex flex-col py-[8px]">
             {unlockedChapters.length === 0 && (
-              <div className="px-[16px] py-[20px] text-[#606065] text-[0.8rem]">No directories found.</div>
+              <div className="px-[16px] py-[20px] text-[#606065] text-[0.8rem]">{t('tools.storyEditor.noDirs', 'No directories found.')}</div>
             )}
             
             {unlockedChapters.map((chapterObj) => {
@@ -237,162 +263,28 @@ export const LevelSelectModal: React.FC = () => {
 
         {/* 右侧：文件列表 (File List) - 桌面端常驻，移动端在选中时显示 */}
         <div className={`
-          ${isMobile ? (selectedChapterId ? 'w-full' : 'hidden') : 'flex-1'} 
+          ${isMobile ? (selectedChapterId ? 'w-full' : 'hidden') : 'flex-1 min-w-0'} 
           flex flex-col h-full bg-[#121214] relative
         `}>
-          {selectedFile ? (
-            <div className="w-full h-full flex flex-col bg-modal-bg text-modal-text">
-              <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
-                <div className="flex items-center gap-[12px] min-w-0">
-                  <button
-                    onClick={closeFile}
-                    className="flex items-center gap-[8px] text-[#A0A0A5] hover:text-white transition-colors shrink-0"
-                  >
-                    <ArrowLeft size={16} strokeWidth={2} />
-                    <span className="text-[0.85rem] uppercase tracking-wider">BACK</span>
-                  </button>
-                  <h2 className="m-0 text-[1.1rem] font-semibold text-app-text ml-4 truncate">
-                    {selectedFile.title}.{selectedFile.extension}
-                  </h2>
-                </div>
-                <div className="flex items-center">
-                  <button 
-                    onClick={toggleMute}
-                    className="bg-transparent border-none cursor-pointer p-[5px] flex items-center justify-center outline-none shrink-0"
-                    title={isMuted ? "开启音乐" : "关闭音乐"}
-                  >
-                    <div className="relative w-[36px] h-[36px] rounded-full flex items-center justify-center bg-card-bg shadow-sm transition-all duration-300">
-                      <div className={`absolute inset-0 rounded-full border-[3px] border-[#333] box-border transition-opacity duration-300 ${
-                        !isMuted ? 'opacity-100 animate-[spin_3s_linear_infinite]' : 'opacity-20 animate-[spin_3s_linear_infinite]'
-                      } bg-[linear-gradient(45deg,transparent_40%,rgba(255,255,255,0.1)_50%,transparent_60%),repeating-radial-gradient(#222,#222_2px,#333_3px,#333_4px)]`} 
-                      style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
-                      <Music size={16} className={`z-10 transition-all duration-300 flex items-center justify-center ${
-                        !isMuted ? 'opacity-100 text-app-primary animate-[spin_3s_linear_infinite]' : 'opacity-50 text-app-text animate-[spin_3s_linear_infinite]'
-                      }`} style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
-                    </div>
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto custom-scrollbar bg-modal-bg text-app-text">
-                <MarkdownPanel mdText={selectedFile.content} />
-              </div>
-            </div>
-          ) : selectedChapterData ? (
-            <div className="w-full h-full flex flex-col">
-              {/* Header */}
-              <div className="px-[24px] md:px-[40px] py-[24px] md:py-[32px] border-b border-[#2A2A2E] bg-[#0A0A0B]">
-                <h2 className="text-[1.2rem] md:text-[1.8rem] text-white tracking-widest uppercase mb-[8px] flex items-center gap-[12px]">
-                  <FolderOpen className="text-app-primary w-[24px] h-[24px] md:w-[32px] md:h-[32px]" />
-                  {selectedChapterData.title}
-                </h2>
-                <div className="text-[0.8rem] text-[#606065] font-mono">
-                  Path: ~/{currentRoute?.id}/{selectedChapterData.id}
-                </div>
-              </div>
-
-              {/* Table Header */}
-              <div className="grid grid-cols-[auto_1fr_auto] gap-[16px] px-[24px] md:px-[40px] py-[12px] border-b border-[#2A2A2E] text-[0.7rem] text-[#606065] uppercase tracking-widest sticky top-0 bg-[#121214] z-10">
-                <div className="w-[24px] text-center">STS</div>
-                <div>Name</div>
-                <div className="text-right">Type</div>
-              </div>
-
-              {/* Files */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar pb-[60px]">
-                {/* 渲染关卡 (.exe) */}
-                {selectedChapterData.levels.map((level, idx) => {
-                  const isCompleted = completedLevels.includes(level.id);
-                  const previousLevel = idx > 0 ? selectedChapterData.levels[idx - 1] : null;
-                  const isLocked = previousLevel ? (!completedLevels.includes(previousLevel.id) && !isAssistMode) : false;
-
-                  return (
-                    <div
-                      key={level.id}
-                      onClick={() => handleLevelClick(selectedChapterData.id, level.id, isLocked)}
-                      className={`
-                        grid grid-cols-[auto_1fr_auto] items-center gap-[16px] px-[24px] md:px-[40px] py-[14px] md:py-[16px] border-b border-[#1A1A1D] transition-colors
-                        ${isLocked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-[#1A1A1D]'}
-                      `}
-                    >
-                      {/* Status Icon */}
-                      <div className="w-[24px] flex justify-center">
-                        {isLocked ? (
-                          <Lock size={14} strokeWidth={2} className="text-[#606065]" />
-                        ) : isCompleted ? (
-                          <Check size={14} strokeWidth={3} className="text-app-success" />
-                        ) : (
-                          <div className="w-[6px] h-[6px] rounded-full bg-app-primary shadow-[0_0_8px_rgba(var(--primary-color-rgb),0.8)] animate-pulse" />
-                        )}
-                      </div>
-
-                      {/* File Name */}
-                      <div className="flex items-center gap-[12px] overflow-hidden">
-                        <span className={`text-[0.85rem] md:text-[0.95rem] truncate ${isLocked ? 'text-[#606065]' : isCompleted ? 'text-[#A0A0A5]' : 'text-white font-medium'}`}>
-                          {level.title}.exe
-                        </span>
-                      </div>
-                      
-                      {/* File Type/Tags */}
-                      <div className="flex items-center gap-[8px] justify-end">
-                        {level.type === 'boss' && (
-                          <span className="px-[6px] py-[2px] bg-[rgba(239,68,68,0.1)] text-[#ef4444] text-[0.65rem] border border-[rgba(239,68,68,0.2)] rounded-[2px]">
-                            SYS.CRITICAL
-                          </span>
-                        )}
-                        <span className="text-[0.75rem] text-[#606065] hidden sm:block">
-                          {isLocked ? 'ENCRYPTED' : 'EXECUTABLE'}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {/* 渲染掉落文件 */}
-                {selectedChapterData.files?.map((file) => {
-                  const isLocked = file.unlockConditions ? !file.unlockConditions.every(id => completedLevels.includes(id)) : false;
-                  
-                  // 如果未解锁且不是辅助模式，我们可以选择隐藏它，或者显示为加密文件
-                  // 这里选择显示为加密文件，增加探索感
-                  
-                  return (
-                    <div
-                      key={file.id}
-                      onClick={() => handleFileClick(file, isLocked)}
-                      className={`
-                        grid grid-cols-[auto_1fr_auto] items-center gap-[16px] px-[24px] md:px-[40px] py-[14px] md:py-[16px] border-b border-[#1A1A1D] transition-colors
-                        ${isLocked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-[#1A1A1D]'}
-                      `}
-                    >
-                      {/* Status Icon */}
-                      <div className="w-[24px] flex justify-center">
-                        {isLocked ? (
-                          <Lock size={14} strokeWidth={2} className="text-[#606065]" />
-                        ) : (
-                          <File size={14} strokeWidth={2} className="text-[#A0A0A5]" />
-                        )}
-                      </div>
-
-                      {/* File Name */}
-                      <div className="flex items-center gap-[12px] overflow-hidden">
-                        <span className={`text-[0.85rem] md:text-[0.95rem] truncate ${isLocked ? 'text-[#606065]' : 'text-[#D4D4D6]'}`}>
-                          {isLocked ? '???' : file.title}.{file.extension}
-                        </span>
-                      </div>
-                      
-                      {/* File Type/Tags */}
-                      <div className="flex items-center gap-[8px] justify-end">
-                        <span className="text-[0.75rem] text-[#606065] hidden sm:block">
-                          {isLocked ? 'LOCKED' : 'DOCUMENT'}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          {currentFile ? (
+            <FileViewer file={currentFile} onClose={closeFile} />
+          ) : selectedChapterData && selectedRouteId ? (
+            <ChapterFiles 
+              routeId={selectedRouteId}
+              chapter={selectedChapterData as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+              completedLevels={completedLevels}
+              readFiles={readFiles}
+              isAssistMode={isAssistMode}
+              onLevelClick={handleLevelClick}
+              onFileClick={handleFileClick}
+              getScrollTop={() => scrollPositions.current[selectedChapterData.id] || 0}
+              setScrollTop={(scrollTop) => {
+                scrollPositions.current[selectedChapterData.id] = scrollTop;
+              }}
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-[#606065] text-[0.85rem] uppercase tracking-widest">
-              No directory selected
+              {t('tools.storyEditor.emptySelect', 'No directory selected')}
             </div>
           )}
         </div>

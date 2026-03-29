@@ -5,11 +5,9 @@ import type { StoryJSON, RouteData, ChapterData, LevelData } from '../types/stor
 interface StoryState {
   storyJSON: StoryJSON;
   currentRouteId: string | null;
-  isAssistMode: boolean;
   
   // Actions
   setRoute: (routeId: string) => void;
-  toggleAssistMode: () => void;
   getRoute: (routeId: string) => RouteData | undefined;
   getChapter: (routeId: string, chapterId: string) => ChapterData | undefined;
   getLevel: (routeId: string, chapterId: string, levelId: string) => LevelData | undefined;
@@ -18,10 +16,8 @@ interface StoryState {
 export const useStoryStore = create<StoryState>((set, get) => ({
   storyJSON: storyData as StoryJSON,
   currentRouteId: null,
-  isAssistMode: false,
 
   setRoute: (routeId: string) => set({ currentRouteId: routeId }),
-  toggleAssistMode: () => set((state) => ({ isAssistMode: !state.isAssistMode })),
 
   getRoute: (routeId: string) => {
     return get().storyJSON.routes.find(r => r.id === routeId);

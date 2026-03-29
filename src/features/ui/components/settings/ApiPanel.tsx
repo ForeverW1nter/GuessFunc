@@ -1,17 +1,32 @@
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUIStore } from '../../../../store/useUIStore';
 import { Info, Cpu, X, Settings2, MessageSquare } from 'lucide-react';
-import { DEFAULT_SYSTEM_PROMPT, DEFAULT_CHAT_SYSTEM_PROMPT } from '../../../../utils/aiManager';
 
 export const ApiPanel: React.FC = () => {
   const { t } = useTranslation();
   const { addToast } = useUIStore();
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('guessfunc_api_key') || '');
   const [useProxy, setUseProxy] = useState(() => localStorage.getItem('guessfunc_use_proxy') !== 'false');
-  const [systemPrompt, setSystemPrompt] = useState(() => localStorage.getItem('guessfunc_system_prompt') || DEFAULT_SYSTEM_PROMPT);
-  const [chatPrompt, setChatPrompt] = useState(() => localStorage.getItem('guessfunc_chat_prompt') || DEFAULT_CHAT_SYSTEM_PROMPT);
+  const [systemPrompt, setSystemPrompt] = useState(() => localStorage.getItem('guessfunc_system_prompt') || t('ai.genPromptDefault'));
+  const [chatPrompt, setChatPrompt] = useState(() => localStorage.getItem('guessfunc_chat_prompt') || t('ai.chatPromptDefault'));
   const [showKey, setShowKey] = useState(false);
+
+  useEffect(() => {
+    const handleLanguageChanged = () => {
+      if (!localStorage.getItem('guessfunc_system_prompt')) {
+        setSystemPrompt(t('ai.genPromptDefault'));
+      }
+      if (!localStorage.getItem('guessfunc_chat_prompt')) {
+        setChatPrompt(t('ai.chatPromptDefault'));
+      }
+    };
+
+    window.addEventListener('languageChanged', handleLanguageChanged);
+    return () => {
+      window.removeEventListener('languageChanged', handleLanguageChanged);
+    };
+  }, [t]);
 
   const handleSaveApi = () => {
     localStorage.setItem('guessfunc_api_key', apiKey);
@@ -28,8 +43,8 @@ export const ApiPanel: React.FC = () => {
   };
 
   const handleResetPrompt = () => {
-    setSystemPrompt(DEFAULT_SYSTEM_PROMPT);
-    setChatPrompt(DEFAULT_CHAT_SYSTEM_PROMPT);
+    setSystemPrompt(t('ai.genPromptDefault'));
+    setChatPrompt(t('ai.chatPromptDefault'));
     localStorage.removeItem('guessfunc_system_prompt');
     localStorage.removeItem('guessfunc_chat_prompt');
     // {t('settings.api.resetPromptBtn')}时也清除欢迎语缓存
@@ -49,7 +64,7 @@ export const ApiPanel: React.FC = () => {
       <div className="space-y-4">
         <div className="flex flex-col gap-2">
           <label className="flex items-center gap-1.5 font-semibold text-app-text">
-            <Cpu size={18} /> API Key
+            <Cpu size={18} /> {t('settings.api.keyLabel', 'API Key')}
           </label>
           <div className="relative">
             <input 
@@ -133,7 +148,7 @@ export const ApiPanel: React.FC = () => {
             onClick={handleResetPrompt}
             className="flex-1 bg-transparent border-2 border-card-border text-app-text font-semibold py-[12px] rounded-lg hover:border-app-primary hover:text-app-primary hover:bg-app-primary/5 transition-all hover:-translate-y-[2px]"
           >
-            恢复默认
+            {t('settings.api.resetPromptBtn', '恢复默认')}
           </button>
         </div>
       </div>

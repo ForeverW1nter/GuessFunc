@@ -36,8 +36,8 @@ export const Topbar: React.FC = () => {
       logger.warn(t('game.verifyFailed', { reason: result.reason }));
       addToast(result.reason, 'error');
     } else if (result.isMatch) {
-      logger.log(t('game.verifyPassedLog'));
-      addToast(t('game.verifyPassedToast'), 'success');
+      logger.log(t('game.verifyPassedLog', '验证通过'));
+      addToast(t('game.verifyPassedToast', '验证通过！'), 'success');
       
       // 撒花特效
       const count = 200;

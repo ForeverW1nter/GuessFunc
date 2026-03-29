@@ -29,7 +29,7 @@ export const RandomChallengeModal: React.FC = () => {
     
     if (useAI) {
       if (!aiManager.hasValidKey()) {
-        useUIStore.getState().addToast('未配置 AI API Key，请在设置中配置后再使用 AI 生成', 'error');
+        useUIStore.getState().addToast(t('random.noApiKey', '未配置 AI API Key，请在设置中配置后再使用 AI 生成'), 'error');
         return;
       }
       setIsGenerating(true);
@@ -39,7 +39,7 @@ export const RandomChallengeModal: React.FC = () => {
       if (aiResult) {
         targetFunc = aiResult;
       } else {
-        useUIStore.getState().addToast('AI 生成失败，已回退到本地生成算法', 'error');
+        useUIStore.getState().addToast(t('random.aiFailedFallback', 'AI 生成失败，已回退到本地生成算法'), 'error');
         targetFunc = generateFunctionByDifficulty(difficulty);
       }
     } else {
@@ -50,7 +50,7 @@ export const RandomChallengeModal: React.FC = () => {
     setTargetFunction(targetFunc, {}, 'random');
     navigate('/game/random/1/1');
     setRandomChallengeOpen(false);
-    useUIStore.getState().addToast(`已生成难度为 ${difficulty.toFixed(2)} 的挑战！`, 'success');
+    useUIStore.getState().addToast(t('random.generatedSuccess', '已生成难度为 {{diff}} 的挑战！', { diff: difficulty.toFixed(2) }), 'success');
   };
 
   return (
@@ -79,7 +79,7 @@ export const RandomChallengeModal: React.FC = () => {
           <div className="flex flex-col items-center gap-6">
             <div className="w-full bg-card-bg border border-card-border p-[24px] rounded-[16px] shadow-sm flex flex-col items-center gap-6">
               <label className="text-[1.1rem] font-bold text-app-text flex items-center gap-2">
-                难度系数 <span className="text-app-primary text-[1.4rem] ml-1 font-mono">{difficulty.toFixed(2)}</span>
+                {t('random.difficulty', '难度系数')} <span className="text-app-primary text-[1.4rem] ml-1 font-mono">{difficulty.toFixed(2)}</span>
               </label>
               <div className="w-full px-2">
                 <input 
@@ -107,10 +107,10 @@ export const RandomChallengeModal: React.FC = () => {
                   onChange={(e) => setUseAI(e.target.checked)}
                   className="hidden"
                 />
-                <span className="font-bold text-app-text text-[1.05rem]">启用 AI 生成高质量题目</span>
+                <span className="font-bold text-app-text text-[1.05rem]">{t('random.useAI', '启用 AI 生成高质量题目')}</span>
               </label>
               <div className="text-[0.85rem] text-center opacity-70">
-                {useAI ? 'AI 将根据难度系数生成更合理的函数' : '将使用本地算法生成不同难度的函数'}
+                {useAI ? t('random.aiDescOn', 'AI 将根据难度系数生成更合理的函数') : t('random.aiDescOff', '将使用本地算法生成不同难度的函数')}
               </div>
             </div>
           </div>
@@ -127,12 +127,12 @@ export const RandomChallengeModal: React.FC = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  AI 生成中...
+                  {t('random.generating', 'AI 生成中...')}
                 </>
               ) : (
                 <>
                   <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                  立即开始挑战
+                  {t('random.startBtn', '立即开始挑战')}
                 </>
               )}
             </button>

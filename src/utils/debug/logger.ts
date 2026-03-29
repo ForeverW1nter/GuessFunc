@@ -6,18 +6,45 @@
  */
 let isDebugMode = false;
 
+// 细分 Debug 模块
+export const DEBUG_MODULES = {
+  AUDIO: 'AUDIO',
+  MATH: 'MATH',
+  STORY: 'STORY',
+  UI: 'UI'
+};
+
+// 存储启用的模块，默认为空
+const enabledModules = new Set<string>();
+
 /**
  * 初始化 Debug 模式
  * 可以在应用初始化时调用，检查 URL 参数
+ * 支持通过 ?debug=1 开启全部，或者 ?debug=AUDIO,MATH 开启特定模块
  */
 export const initDebugMode = () => {
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
     const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
     
-    if (urlParams.get('debug') === '1' || hashParams.get('debug') === '1') {
+    const debugParam = urlParams.get('debug') || hashParams.get('debug');
+    
+    if (debugParam) {
       isDebugMode = true;
-      console.log('🔧 Debug Mode Enabled');
+      if (debugParam === '1') {
+        // 开启所有模块
+        Object.values(DEBUG_MODULES).forEach(m => enabledModules.add(m));
+        console.log('🔧 Debug Mode Enabled (ALL MODULES)');
+      } else {
+        // 开启特定模块
+        const modules = debugParam.toUpperCase().split(',');
+        modules.forEach(m => {
+          if (Object.values(DEBUG_MODULES).includes(m)) {
+            enabledModules.add(m);
+          }
+        });
+        console.log(`🔧 Debug Mode Enabled (Modules: ${Array.from(enabledModules).join(', ')})`);
+      }
     }
   }
 };
@@ -27,6 +54,13 @@ export const initDebugMode = () => {
  * @returns {boolean} 当前是否为 Debug 模式
  */
 export const getDebugMode = () => isDebugMode;
+
+/**
+ * 检查特定模块是否开启了 Debug
+ */
+export const isModuleDebugEnabled = (moduleName: string) => {
+  return isDebugMode && enabledModules.has(moduleName);
+};
 
 /**
  * 封装日志输出对象
@@ -41,6 +75,18 @@ export const logger = {
   log: (message: string, ...args: unknown[]) => {
     if (isDebugMode) {
       console.log(`[DEBUG] ${message}`, ...args);
+    }
+  },
+  
+  /**
+   * 模块化日志输出
+   * @param moduleName 模块名称 (如 DEBUG_MODULES.AUDIO)
+   * @param message 日志信息
+   * @param args 附加参数
+   */
+  module: (moduleName: string, message: string, ...args: unknown[]) => {
+    if (isModuleDebugEnabled(moduleName)) {
+      console.log(`[DEBUG::${moduleName}] ${message}`, ...args);
     }
   },
   

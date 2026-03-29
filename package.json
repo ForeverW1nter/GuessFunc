@@ -7,11 +7,17 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "dependencies": {
     "@cortex-js/compute-engine": "^0.55.6",
+    "@tailwindcss/typography": "^0.5.19",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.1",
+    "highlight.js": "^11.11.1",
     "i18next": "^25.10.10",
     "katex": "^0.16.21",
     "lucide-react": "^1.7.0",
@@ -21,8 +27,13 @@
     "react-markdown": "^9.0.3",
     "react-router-dom": "^7.13.2",
     "recharts": "^3.8.1",
+    "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
+    "tailwind-merge": "^3.5.0",
+    "vitest": "^4.1.2",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

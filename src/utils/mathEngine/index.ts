@@ -1,5 +1,7 @@
 import { ComputeEngine } from '@cortex-js/compute-engine';
 import { logger } from '../debug/logger';
+import { GAME_CONSTANTS } from '../constants';
+import i18n from '../../i18n';
 
 // -----------------------------------------------------------------------------
 // 现代架构的数学验证引擎
@@ -132,8 +134,8 @@ export function evaluateEquivalence(
       }
     });
 
-    const baseTestPoints = [-4.12, -2.5, -1, -0.1, 0.1, 1, 2.5, 4.12];
-    const NUM_RANDOM_SAMPLES = 12;
+    const baseTestPoints = GAME_CONSTANTS.MATH_ENGINE.BASE_TEST_POINTS;
+    const NUM_RANDOM_SAMPLES = GAME_CONSTANTS.MATH_ENGINE.NUM_RANDOM_SAMPLES;
     const testPoints = [...baseTestPoints];
     
     for (let i = 0; i < NUM_RANDOM_SAMPLES; i++) {
@@ -150,22 +152,28 @@ export function evaluateEquivalence(
       testContext['x'] = xVal;
 
       // 评估目标和玩家的表达式
-      const targetValBox = targetBox.subs(testContext).evaluate();
-      const playerValBox = playerBox.subs(testContext).evaluate();
+      const targetValBox = targetBox.subs(testContext).N();
+      const playerValBox = playerBox.subs(testContext).N();
 
-      let tVal = typeof targetValBox.value === 'number' ? targetValBox.value : NaN;
-      let pVal = typeof playerValBox.value === 'number' ? playerValBox.value : NaN;
+      const tRaw = targetValBox.valueOf();
+      const pRaw = playerValBox.valueOf();
+
+      let tVal = typeof tRaw === 'number' ? tRaw : NaN;
+      let pVal = typeof pRaw === 'number' ? pRaw : NaN;
       
       // 特殊处理 JavaScript 浮点数精度导致的极小复数虚部问题（如 Compute Engine 计算负数对数）
-      if (typeof targetValBox.value !== 'number' && typeof targetValBox.re === 'number' && typeof targetValBox.im === 'number' && Math.abs(targetValBox.im) < 1e-10) {
-        tVal = targetValBox.re;
-      } else if (typeof targetValBox.value !== 'number' && (typeof targetValBox.im === 'number' && Math.abs(targetValBox.im) >= 1e-10)) {
+      const tRawObj = tRaw as unknown as Record<string, unknown>;
+      const pRawObj = pRaw as unknown as Record<string, unknown>;
+      
+      if (typeof tRaw !== 'number' && tRaw && typeof tRawObj.re === 'number' && typeof tRawObj.im === 'number' && Math.abs(tRawObj.im) < GAME_CONSTANTS.MATH_ENGINE.IMAGINARY_TOLERANCE) {
+        tVal = tRawObj.re;
+      } else if (typeof tRaw !== 'number' && tRaw && typeof tRawObj.im === 'number' && Math.abs(tRawObj.im) >= GAME_CONSTANTS.MATH_ENGINE.IMAGINARY_TOLERANCE) {
         tVal = NaN; // 真正的复数认为在实数域无定义
       }
       
-      if (typeof playerValBox.value !== 'number' && typeof playerValBox.re === 'number' && typeof playerValBox.im === 'number' && Math.abs(playerValBox.im) < 1e-10) {
-        pVal = playerValBox.re;
-      } else if (typeof playerValBox.value !== 'number' && (typeof playerValBox.im === 'number' && Math.abs(playerValBox.im) >= 1e-10)) {
+      if (typeof pRaw !== 'number' && pRaw && typeof pRawObj.re === 'number' && typeof pRawObj.im === 'number' && Math.abs(pRawObj.im) < GAME_CONSTANTS.MATH_ENGINE.IMAGINARY_TOLERANCE) {
+        pVal = pRawObj.re;
+      } else if (typeof pRaw !== 'number' && pRaw && typeof pRawObj.im === 'number' && Math.abs(pRawObj.im) >= GAME_CONSTANTS.MATH_ENGINE.IMAGINARY_TOLERANCE) {
         pVal = NaN;
       }
 
@@ -175,11 +183,11 @@ export function evaluateEquivalence(
       // 定义域匹配检查
       if (tValid !== pValid) {
         domainMismatchCount++;
-        // 允许容忍个别孤立点（如被除数为0的点），但如果达到一定数量（如 3 个），则认为是一段定义域不同
-        if (domainMismatchCount >= 3) {
+        // 允许容忍个别孤立点（如被除数为0的点），但如果达到一定数量，则认为是一段定义域不同
+        if (domainMismatchCount >= GAME_CONSTANTS.MATH_ENGINE.DOMAIN_MISMATCH_THRESHOLD) {
           return { 
             isMatch: false, 
-            reason: `存在大段定义域不匹配` 
+            reason: i18n.t('game.mathEngine.domainMismatch', '存在大段定义域不匹配')
           };
         }
         continue;
@@ -194,11 +202,11 @@ export function evaluateEquivalence(
         const maxVal = Math.max(Math.abs(tVal), Math.abs(pVal));
         
         // 相对误差和绝对误差双重校验
-        const isClose = diff < 1e-5 || (maxVal > 1e-5 && diff / maxVal < 1e-5);
+        const isClose = diff < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE || (maxVal > GAME_CONSTANTS.MATH_ENGINE.TOLERANCE && diff / maxVal < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE);
         if (!isClose) {
           return { 
             isMatch: false, 
-            reason: `数值不匹配: x ≈ ${xVal.toFixed(2)} 时差异过大` 
+            reason: i18n.t('game.mathEngine.valueMismatch', '数值不匹配: x ≈ {{x}} 时差异过大', { x: xVal.toFixed(2) })
           };
         }
         validPointsCount++;
@@ -211,7 +219,7 @@ export function evaluateEquivalence(
     } else {
       return { 
         isMatch: false, 
-        reason: '在此范围内无法找到有效的对比采样点' 
+        reason: i18n.t('game.mathEngine.noValidPoints', '在此范围内无法找到有效的对比采样点')
       };
     }
 
@@ -219,7 +227,7 @@ export function evaluateEquivalence(
     logger.error("验证引擎异常:", error);
     return {
       isMatch: false,
-      reason: `表达式解析失败: 格式可能不支持`
+      reason: i18n.t('game.mathEngine.parseError', '表达式解析失败: 格式可能不支持')
     };
   }
 }

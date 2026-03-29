@@ -18,6 +18,8 @@ export interface UIState {
   theme: 'light' | 'dark';
   customPrimaryColor: string | null;
   isSpeedrunMode: boolean;
+  isAssistMode: boolean;
+  isDebugMode: boolean;
   toasts: ToastMessage[];
   
   // Font settings
@@ -45,6 +47,8 @@ export interface UIState {
   setCustomPrimaryColor: (color: string | null) => void;
   
   toggleSpeedrunMode: () => void;
+  toggleAssistMode: () => void;
+  toggleDebugMode: () => void;
   
   addToast: (message: string, type?: ToastMessage['type']) => void;
   removeToast: (id: string) => void;
@@ -65,6 +69,8 @@ export const useUIStore = create<UIState>()(
       theme: 'dark',
       customPrimaryColor: '#00BCD4',
       isSpeedrunMode: false,
+      isAssistMode: false,
+      isDebugMode: false,
       toasts: [],
       storyFontSize: 100,
       storyFontFamily: 'system-ui, -apple-system, sans-serif',
@@ -112,6 +118,8 @@ export const useUIStore = create<UIState>()(
       },
       
       toggleSpeedrunMode: () => set((state) => ({ isSpeedrunMode: !state.isSpeedrunMode })),
+      toggleAssistMode: () => set((state) => ({ isAssistMode: !state.isAssistMode })),
+      toggleDebugMode: () => set((state) => ({ isDebugMode: !state.isDebugMode })),
       
       addToast: (message: string, type: ToastMessage['type'] = 'info') => {
         const id = Math.random().toString(36).substring(2, 9);
@@ -151,6 +159,8 @@ export const useUIStore = create<UIState>()(
       partialize: (state) => ({ 
         theme: state.theme,
         isSpeedrunMode: state.isSpeedrunMode, 
+        isAssistMode: state.isAssistMode,
+        isDebugMode: state.isDebugMode,
         isSidebarCollapsed: state.isSidebarCollapsed,
         customPrimaryColor: state.customPrimaryColor,
         storyFontSize: state.storyFontSize,

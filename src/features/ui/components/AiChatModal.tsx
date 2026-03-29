@@ -36,14 +36,14 @@ export const AiChatModal: React.FC = () => {
 
         setIsLoading(true);
         try {
-          const prompt = `你是《猜函数》游戏中的 AI 助手。现在玩家打开了聊天面板。
+          const prompt = t('ai.welcomePrompt', `你是《猜函数》游戏中的 AI 助手。现在玩家打开了聊天面板。
 请根据你作为游戏内助手的身份，用友好且带有一点引导性的语气向玩家打个招呼。
 请务必在欢迎语中向玩家说明以下几点（这是你的核心规则，你必须告诉玩家）：
 1. 玩家可以问你关于“当前目标函数”的数学特征问题（例如：“函数是否经过原点？”、“导数是否始终大于0？”等）。
 2. 你是一个非常严格的助手，你只能回答 "是"、"否" 或 "不知道"，绝不会给出其他解释。
 3. 你绝不会直接泄露目标函数的表达式。
 
-请直接输出你的欢迎语，不要包含任何多余的解释，保持语句通顺自然。`;
+请直接输出你的欢迎语，不要包含任何多余的解释，保持语句通顺自然。`);
           
           const response = await aiManager.fetchChatResponse(prompt, targetFunction);
           
@@ -58,7 +58,7 @@ export const AiChatModal: React.FC = () => {
           aiManager.setAiWelcomeMessage(response);
           setMessages([{ role: 'ai', content: response }]);
         } catch (error: unknown) {
-          const errorMsg = error instanceof Error ? error.message : '初始化失败';
+          const errorMsg = error instanceof Error ? error.message : t('ai.initError', '初始化失败');
           setMessages([{ role: 'ai', content: t('ai.welcomeError', { error: errorMsg }), isError: true } as unknown as { role: 'ai', content: string }]);
         } finally {
           setIsLoading(false);
@@ -114,7 +114,7 @@ export const AiChatModal: React.FC = () => {
         {/* Header */}
         <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
           <div className="flex items-center gap-[12px]">
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="text-app-primary"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>
+            <Bot className="text-app-primary" size={24} strokeWidth={2} />
             <h2 className="m-0 text-[1.25rem] font-semibold text-app-text">{t('ai.title')}</h2>
           </div>
           <button 
@@ -140,7 +140,7 @@ export const AiChatModal: React.FC = () => {
                   </div>
                 )}
                 <div 
-                  className={`px-[16px] py-[10px] rounded-[16px] text-[0.95rem] leading-[1.5] shadow-sm whitespace-pre-wrap
+                  className={`px-[16px] py-[10px] rounded-[16px] text-[0.95rem] leading-[1.5] shadow-sm whitespace-pre-wrap break-words
                     ${msg.role === 'user' 
                         ? 'bg-[#2A2A2E] text-white rounded-tr-[4px] border border-[#3A3A3E]' 
                         : (msg as unknown as { isError?: boolean }).isError 

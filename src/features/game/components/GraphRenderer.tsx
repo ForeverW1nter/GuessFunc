@@ -6,7 +6,7 @@ import { loadDesmos } from '../../../utils/desmosLoader';
 import { GAME_CONSTANTS } from '../../../utils/constants';
 
 export const GraphRenderer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const calculatorRef = useRef<Desmos.Calculator | null>(null);
   const [isReady, setIsReady] = useState(false);
@@ -36,7 +36,7 @@ export const GraphRenderer = () => {
         if (window.Desmos && containerRef.current && !calculatorRef.current) {
           // 完全复刻原版的初始化配置
           calculatorRef.current = window.Desmos.GraphingCalculator(containerRef.current, {
-            language: 'zh-CN',
+            language: i18n.language === 'zh' ? 'zh-CN' : 'en',
             keypad: true,            // 必须开启：原生 Desmos 键盘
             expressions: true,       // 必须开启：左侧表达式列表
             settingsMenu: false,     // 隐藏 Desmos 自带的设置菜单
@@ -123,7 +123,7 @@ export const GraphRenderer = () => {
         calculatorRef.current = null;
       }
     };
-  }, [setPlayerInput, targetFunction]); // 仅在初始化时运行一次，补充了 lint 依赖
+  }, [setPlayerInput, targetFunction, i18n.language]); // 仅在初始化时运行一次，补充了 lint 依赖
 
   // 监听 targetFunction 和 levelParams 的变化，单独更新表达式
   useEffect(() => {

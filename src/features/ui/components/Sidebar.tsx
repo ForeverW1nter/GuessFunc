@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../../../store/useGameStore';
 import { ConfirmModal } from './ConfirmModal';
 import { extractUsedParams } from '../../../utils/mathEngine';
+import { cn } from '../../../utils/cn';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import { 
@@ -37,16 +38,29 @@ const NavItem = ({ item, isSidebarCollapsed, isActive }: NavItemProps) => (
     onClick={item.onClick}
     disabled={item.disabled}
     title={isSidebarCollapsed ? item.label : undefined}
-    className={`w-full flex items-center justify-between text-app-text rounded-[8px] transition-all duration-200 group border-none text-[0.95rem] font-medium ${
-      isSidebarCollapsed ? 'md:justify-center md:p-[12px] px-[12px] py-[10px]' : 'px-[12px] py-[10px]'
-    } ${isActive ? 'bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary font-semibold' : 'bg-transparent hover:bg-[rgba(128,128,128,0.08)]'} ${item.disabled ? 'opacity-50 cursor-not-allowed hover:bg-transparent' : ''}`}
+    className={cn(
+      "w-full flex items-center justify-between text-app-text rounded-[8px] transition-all duration-200 group border-none text-[0.95rem] font-medium",
+      isSidebarCollapsed ? "md:justify-center md:p-[12px] px-[12px] py-[10px]" : "px-[12px] py-[10px]",
+      isActive ? "bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary font-semibold" : "bg-transparent hover:bg-[rgba(128,128,128,0.08)]",
+      item.disabled && "opacity-50 cursor-not-allowed hover:bg-transparent"
+    )}
   >
     <div className="flex items-center gap-[12px]">
-      <item.icon size={18} strokeWidth={2} className={`${isActive ? 'text-app-primary opacity-100' : 'opacity-70 group-hover:opacity-100'} transition-all duration-200 ${isSidebarCollapsed ? 'md:m-0' : ''}`} />
-      <span className={`whitespace-nowrap transition-opacity duration-200 opacity-100 ${isSidebarCollapsed ? 'md:hidden' : ''}`}>{item.label}</span>
+      <item.icon 
+        size={18} 
+        strokeWidth={2} 
+        className={cn(
+          "transition-all duration-200",
+          isActive ? "text-app-primary opacity-100" : "opacity-70 group-hover:opacity-100",
+          isSidebarCollapsed && "md:m-0"
+        )} 
+      />
+      <span className={cn("whitespace-nowrap transition-opacity duration-200 opacity-100", isSidebarCollapsed && "md:hidden")}>
+        {item.label}
+      </span>
     </div>
     {item.statusIcon && (
-      <div className={`flex items-center ${isSidebarCollapsed ? 'md:hidden' : ''}`}>
+      <div className={cn("flex items-center", isSidebarCollapsed && "md:hidden")}>
         {item.statusIcon}
       </div>
     )}
@@ -55,7 +69,10 @@ const NavItem = ({ item, isSidebarCollapsed, isActive }: NavItemProps) => (
 
 const NavGroupTitle = ({ title, isSidebarCollapsed }: { title: string, isSidebarCollapsed: boolean }) => {
   return (
-    <div className={`px-[12px] text-[0.75rem] font-semibold text-app-text uppercase tracking-[1px] mb-[8px] opacity-50 whitespace-nowrap transition-opacity duration-200 ${isSidebarCollapsed ? 'md:hidden' : ''}`}>
+    <div className={cn(
+      "px-[12px] text-[0.75rem] font-semibold text-app-text uppercase tracking-[1px] mb-[8px] opacity-50 whitespace-nowrap transition-opacity duration-200",
+      isSidebarCollapsed && "md:hidden"
+    )}>
       {title}
     </div>
   );
@@ -173,52 +190,63 @@ export const Sidebar: React.FC = () => {
 
       {/* 侧边栏主体 */}
       <aside 
-        className={`fixed md:static top-0 left-0 h-full bg-card-bg border-r border-card-border z-50 transform transition-all duration-300 ease-sidebar flex flex-col shrink-0 overflow-hidden
-          ${isSidebarOpen ? 'translate-x-0 shadow-[4px_0_24px_rgba(0,0,0,0.1)] md:shadow-none' : '-translate-x-full md:translate-x-0'}
-          ${isSidebarCollapsed ? 'md:w-[64px] w-[260px]' : 'w-[260px]'}
-        `}
+        className={cn(
+          "fixed md:static top-0 left-0 h-full bg-card-bg border-r border-card-border z-50 transform transition-all duration-300 ease-sidebar flex flex-col shrink-0 overflow-hidden",
+          isSidebarOpen ? "translate-x-0 shadow-[4px_0_24px_rgba(0,0,0,0.1)] md:shadow-none" : "-translate-x-full md:translate-x-0",
+          isSidebarCollapsed ? "md:w-[64px] w-[260px]" : "w-[260px]"
+        )}
       >
         {/* Logo 区 */}
-        <div className={`h-[64px] flex items-center shrink-0 border-b border-card-border px-[20px] transition-all duration-300 ${isSidebarCollapsed ? 'md:justify-center md:px-0 justify-between' : 'justify-between'}`}>
-          <div className={`flex items-center gap-[10px] ${isSidebarCollapsed ? 'md:hidden' : ''}`}>
-            <div className="w-[24px] h-[24px] flex items-center justify-center">
-              <Activity size={24} strokeWidth={2} className="text-app-primary" />
+        <div className={cn(
+          "h-[64px] flex items-center shrink-0 border-b border-card-border px-[20px] transition-all duration-300",
+          isSidebarCollapsed ? "md:justify-center md:px-0 justify-between" : "justify-between"
+        )}>
+          <div className={cn("flex items-center gap-[12px] pl-[4px]", isSidebarCollapsed && "md:hidden")}>
+            <div className="w-[32px] h-[32px] rounded-[8px] bg-app-primary flex items-center justify-center shadow-[0_4px_12px_rgba(var(--primary-color-rgb),0.3)]">
+              <Activity size={20} strokeWidth={2.5} className="text-white" />
             </div>
             <h1 className="m-0 text-[1.25rem] font-bold text-app-text tracking-[0.5px] whitespace-nowrap transition-opacity duration-200">
-              GuessFunc
+              {t('sidebar.title', 'GuessFunc')}
             </h1>
           </div>
           
-          <div className={`w-[24px] h-[24px] items-center justify-center hidden ${isSidebarCollapsed ? 'md:flex' : ''}`}>
-            <Activity size={24} strokeWidth={2} className="text-app-primary" />
+          <div className={cn("w-[32px] h-[32px] rounded-[8px] bg-app-primary items-center justify-center shadow-[0_4px_12px_rgba(var(--primary-color-rgb),0.3)] hidden", isSidebarCollapsed && "md:flex")}>
+            <Activity size={20} strokeWidth={2.5} className="text-white" />
           </div>
           
           {/* 移动端关闭按钮 */}
           <button 
             onClick={() => setSidebarOpen(false)}
-            className={`md:hidden p-[8px] text-app-text opacity-70 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] rounded-[8px] border-none bg-transparent cursor-pointer transition-all ${isSidebarCollapsed ? '' : ''}`}
+            className="md:hidden p-[8px] text-app-text opacity-70 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] rounded-[8px] border-none bg-transparent cursor-pointer transition-all"
           >
             <X size={20} strokeWidth={2} />
           </button>
         </div>
 
         {/* 导航菜单区 */}
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-[20px] px-[12px] flex flex-col gap-[24px] custom-scrollbar">
+        <nav className="flex-1 overflow-y-auto px-[16px] py-[20px] flex flex-col custom-scrollbar">
           {basicNavGroups.map((group, idx) => (
-            <div key={idx} className="flex flex-col gap-[4px]">
+            <div key={idx} className="mb-[24px] last:mb-0">
               <NavGroupTitle title={group.title} isSidebarCollapsed={isSidebarCollapsed} />
-              {group.items.map((item) => (
-                <NavItem 
-                  key={item.id}
-                  item={item} 
-                  isSidebarCollapsed={isSidebarCollapsed} 
-                  isActive={window.location.hash.includes(item.id)}
-                />
-              ))}
+              <div className="flex flex-col gap-[4px]">
+                {group.items.map(item => (
+                  <NavItem 
+                    key={item.id} 
+                    item={item} 
+                    isSidebarCollapsed={isSidebarCollapsed}
+                    isActive={
+                      (item.id === 'story' && useGameStore.getState().gameMode === 'story') ||
+                      (item.id === 'random' && useGameStore.getState().gameMode === 'random') ||
+                      (item.id === 'custom' && useGameStore.getState().gameMode === 'custom') ||
+                      (item.id === 'share' && window.location.hash.includes('share'))
+                    }
+                  />
+                ))}
+              </div>
             </div>
           ))}
 
-          <div className="mt-auto flex flex-col gap-[4px]">
+          <div className="mt-auto mb-[24px]">
             <NavGroupTitle title={t('sidebar.systemSection')} isSidebarCollapsed={isSidebarCollapsed} />
             <NavItem 
               item={{ id: 'settings', icon: Settings, label: t('sidebar.settings'), onClick: () => setSettingsOpen(true) }} 
@@ -259,7 +287,7 @@ export const Sidebar: React.FC = () => {
             )}
           </div>
         }
-        confirmText={t('sidebar.confirmCreateBtn')}
+        confirmText={t('sidebar.confirmCreateBtn', '生成并试玩')}
         onConfirm={handleConfirmCreate}
         onCancel={() => setIsCreateModalOpen(false)}
       />

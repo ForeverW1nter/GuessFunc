@@ -1,4 +1,5 @@
 import { logger } from './debug/logger';
+import i18n from '../i18n';
 
 export const AI_CONFIG = {
   defaultApiUrl: 'https://vg.v1api.cc/v1/chat/completions', 
@@ -7,45 +8,17 @@ export const AI_CONFIG = {
   maxRetries: 3,
 };
 
-export const DEFAULT_SYSTEM_PROMPT = `以下是一个猜函数游戏的规则：
-给定图象，目标是猜出f(x)的函数表达式。玩家可以输入对比函数、计算特定点的值f(2)、或观察变换后的图象f'(x+1)+2。如果存在参数，需要猜出包含参数的表达式如sin(x+a)。
-
-你现在需要根据用户提供的难度系数生成函数表达式。
-生成规则：
-1. 可用元素：数字1~5, 变量x。
-2. 一元函数：exp, ln, 三角函数, 反三角函数, 双曲三角函数。
-3. 二元运算：+, -, *, /, ^。
-4. 结构：可以将数放在函数或运算的对应位置生成一个块，块又可以当做数继续迭代。
-5. 范围：定义域不一定要是R，但最好在[-10,10]^2的范围内有图像。
-6. 题目质量：题目要求优质，可以通过层层剥离分析出来，不要太模板化。注意不是层数越深难度越高，你需要站在玩家的角度考虑难度。
-
-难度系数参考：
-- sin(x) 难度 0
-- sin(x) + e^x 难度 1.2
-- sin(cos(x) + 1) 难度 2.3
-- 2tanh(x)(ln(x+5) - ln2) - 2 难度 4.5
-
-重要格式要求：
-1. 必须使用标准的 LaTeX 格式（例如：\\sin, \\cos, \\exp, \\ln, \\frac{}{}, ^{}, \\pi, e 等）。
-2. 确保所有函数名都有反斜杠前缀。
-3. 必须返回一个 JSON 对象，格式如下：{"expression": "LaTeX格式的表达式"}。不要有任何多余的文字。`;
-
-export const DEFAULT_CHAT_SYSTEM_PROMPT = `你是一个数学游戏《猜函数》的智能助手。玩家正在尝试猜测一个隐藏的数学函数。
-请注意：玩家在游戏中是可以直接看到函数图像的！
-你必须根据玩家给出的问题，判断隐藏函数的性质，并只能回答“是”、“否”或“不知道”。
-不要解释原因，不要给出推导过程，不要泄露函数本身。只输出这三个词之一。`;
-
 class AIManager {
   private history: { role: string, content: string }[] = [];
   public chatHistory: { role: string, content: string }[] = [];
   private currentAbortController: AbortController | null = null;
 
   getSystemPrompt(): string {
-    return localStorage.getItem('guessfunc_system_prompt') || DEFAULT_SYSTEM_PROMPT;
+    return localStorage.getItem('guessfunc_system_prompt') || i18n.t('ai.genPromptDefault');
   }
 
   getChatSystemPrompt(): string {
-    return localStorage.getItem('guessfunc_chat_prompt') || DEFAULT_CHAT_SYSTEM_PROMPT;
+    return localStorage.getItem('guessfunc_chat_prompt') || i18n.t('ai.chatPromptDefault');
   }
 
   getAiWelcomeMessage(): string {
@@ -83,7 +56,7 @@ class AIManager {
 
   async fetchChatResponse(userMessage: string, targetFunction: string): Promise<string> {
     if (!this.hasValidKey()) {
-      throw new Error('未配置 API Key 且未启用代理');
+      throw new Error(i18n.t('ai.noKeyError', '未配置 API Key 且未启用代理'));
     }
 
     this.abortCurrentRequest();
@@ -127,7 +100,7 @@ class AIManager {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`API 请求失败: ${response.status}`);
+        throw new Error(`${i18n.t('ai.apiError', 'API 请求失败')}: ${response.status}`);
       }
 
       const data = await response.json();
@@ -144,7 +117,7 @@ class AIManager {
     } catch (error: unknown) {
       const e = error as Error;
       if (e.name === 'AbortError') {
-        throw new Error('请求超时，请重试');
+        throw new Error(i18n.t('ai.timeoutError', '请求超时，请重试'));
       }
       throw e;
     } finally {
@@ -193,7 +166,7 @@ class AIManager {
       headers['Authorization'] = `Bearer ${apiKey}`;
     }
 
-    const userPrompt = `生成一个难度系数为 ${difficulty.toFixed(2)} 的题目。`;
+    const userPrompt = i18n.t('ai.generatePrompt', '生成一个难度系数为 {{diff}} 的题目。', { diff: difficulty.toFixed(2) });
 
     const messages = [
       { role: "system", content: this.getSystemPrompt() },

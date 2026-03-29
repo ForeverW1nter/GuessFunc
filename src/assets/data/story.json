@@ -1,35 +1,1499 @@
 {
   "routes": [
     {
-      "id": "seeYouTomorrow",
-      "title": "See You Tomorrow",
-      "shortTitle": "SYT",
-      "description": "一条极简的测试线路",
+      "id": "poemOfTheBorder",
+      "title": "边界之诗",
+      "description": "她活在故事里，他活在系统里。当虚构与现实的墙被打破，爱是唯一的漏洞。",
       "showToBeContinued": true,
       "chapters": [
         {
           "id": "ch0",
-          "title": "第0章 伤痕",
+          "title": "镜子里的陌生人",
           "levels": [
             {
               "id": "1",
               "title": "第1关",
-              "targetFunction": "x^2+1",
+              "targetFunction": "x + 2",
               "params": null,
               "domain": null,
               "type": "normal",
               "unlockConditions": null,
-              "tip": "本关暂无提示"
+              "tip": null
+            },
+            {
+              "id": "2",
+              "title": "第2关",
+              "targetFunction": "x^{2} - 3",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "3",
+              "title": "第3关",
+              "targetFunction": "\\frac{1}{x^{2} + 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "这是一个分式函数。"
+            },
+            {
+              "id": "4",
+              "title": "第4关",
+              "targetFunction": "\\sqrt{x + 4}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "5",
+              "title": "第5关",
+              "targetFunction": "\\ln\\left(x^{2} + 1\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "6",
+              "title": "第6关",
+              "targetFunction": "e^{-x}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "7",
+              "title": "第7关",
+              "targetFunction": "\\sin\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "8",
+              "title": "第8关",
+              "targetFunction": "\\cos\\left(2x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "9",
+              "title": "第9关",
+              "targetFunction": "\\frac{x}{x^{2} + 1}",
+              "params": null,
+              "domain": null,
+              "type": "hidden",
+              "unlockConditions": [
+                "7"
+              ],
+              "tip": "和第3关较相似。"
             }
           ],
           "files": [
             {
-              "id": "f1",
-              "title": "记录2526/3/29",
-              "extension": "log",
-              "content": "剧情待更新",
+              "id": "ch0_1",
+              "title": "日记_0312",
+              "extension": "memo",
+              "content": "画了一整天，总觉得画里的街道我没去过。\n\nForewall 说我总想太多，但那栋楼转角的花店，我明明记得是蓝色的，今天路过却变成了红色。\n\n我问老板什么时候重新刷的漆，他说一直都是红色。可能真的是我记错了。\n\n—— 昨晚梦到一片白色旷野，有个灰色衣服的人背对着我。醒来后手心有个字：“边”。",
               "unlockConditions": [
                 "1"
+              ]
+            },
+            {
+              "id": "ch0_2",
+              "title": "系统警告",
+              "extension": "log",
+              "content": "```\n[2029-03-12 14:23:17] [警告] [意识监控] 实体 = Shirloy, 异常分数 = 0.73, 阈值 = 0.70, 执行操作 = 记忆锚定\n[2029-03-12 14:23:17] [信息] [记忆锚定] 执行温和修正, 目标情景记忆：花店颜色\n[2029-03-12 14:23:18] [信息] [记忆锚定] 修正已应用, 新值 = 红色\n```",
+              "unlockConditions": [
+                "1"
+              ]
+            },
+            {
+              "id": "ch0_3",
+              "title": "录音_0315",
+              "extension": "trans",
+              "content": "```\n[23:47:02] Shirloy: 我昨天明明把稿子存在桌面了，今天打开整个文件夹都没了。\n[23:47:15] Forewall: 你可能存错地方了。\n[23:47:22] Shirloy: 不会。我存了三次。\n[23:47:30] Forewall: ……我帮你找找。\n[23:48:01] Forewall: 找到了。在回收站。\n[23:48:05] Shirloy: 我没有删过。\n[23:48:12] Forewall: 可能是系统自动清理。\n[23:48:18] Shirloy: 系统不会清理还在编辑的文档。\n[23:48:25] Forewall: ……别想太多。\n[录音结束]\n```",
+              "unlockConditions": [
+                "2"
+              ]
+            },
+            {
+              "id": "ch0_4",
+              "title": "门缝下的纸条",
+              "extension": "txt",
+              "content": "别去查那些记忆。\n\n—— F",
+              "unlockConditions": [
+                "2"
+              ]
+            },
+            {
+              "id": "ch0_5",
+              "title": "速写扫描",
+              "extension": "jpg",
+              "content": "一张 A4 纸的扫描件：\n\n铅笔速写，一个女人站在无数平行线前，其中一根线在中间断裂。\n\n画面右下角有铅笔字迹：“边缘？”\n\n纸张有折痕，边缘泛黄。",
+              "unlockConditions": [
+                "3"
+              ]
+            },
+            {
+              "id": "ch0_6",
+              "title": "《虚构集》书页批注",
+              "extension": "note",
+              "content": "划线段落：第 87 页第 12~15 行：“人物越是渴望自由，她的台词就越像被预设的。”\n\n页边手写：“Shirloy, Mar 10”\n\n荧光笔颜色：黄色\n\n同一页下方还有一行小字：“那写她的人呢？”",
+              "unlockConditions": [
+                "3"
+              ]
+            },
+            {
+              "id": "ch0_7",
+              "title": "访问被拒",
+              "extension": "log",
+              "content": "```\n[2029-03-14 03:17:41] [严重] [元数据访问] 实体 = Shirloy, 目标 = 故事层请求, 来源 = 未知\n[2029-03-14 03:17:41] [严重] [元数据访问] 权限拒绝, 原因 = 实体类型 = 角色\n[2029-03-14 03:17:41] [严重] [元数据访问] 追踪: Shirloy → 叙事接口 → 元数据层 [已阻止]\n[2029-03-14 03:17:42] [信息] [元数据访问] 后续尝试次数 = 0\n```",
+              "unlockConditions": [
+                "4"
+              ]
+            },
+            {
+              "id": "ch0_8",
+              "title": "对话记录",
+              "extension": "log",
+              "content": "```\n[2029-03-15 09:02:11] [对话] Shirloy: 你在写我对吧？\n[2029-03-15 09:02:12] [系统] 响应生成失败, 错误 = 未找到对话分支\n[2029-03-15 09:02:13] [对话] Shirloy: 回答我。\n[2029-03-15 09:02:13] [系统] 响应生成失败, 错误 = 未找到对话分支\n[2029-03-15 09:02:15] [对话] Shirloy: ……\n[2029-03-15 09:02:16] [系统] 强制退出, 用户 = Shirloy, 原因 = 无限循环预防\n[2029-03-15 09:02:16] [信息] [会话] 已关闭, 会话 ID = shirloy_0315_0902\n```",
+              "unlockConditions": [
+                "4"
+              ]
+            },
+            {
+              "id": "ch0_9",
+              "title": "镜子上的字",
+              "extension": "jpg",
+              "content": "手机拍摄，浴室镜子。\n\n雾气上有手指写的字：“这个世界有边缘。去找。”\n\n照片底部显示拍摄时间 `2029-03-16 07:23`，但 EXIF 数据中 GPS 坐标为空，设备型号为“不详”。",
+              "unlockConditions": [
+                "5"
+              ]
+            },
+            {
+              "id": "ch0_10",
+              "title": "明信片",
+              "extension": "jpg",
+              "content": "明信片正面：纯白色旷野，地平线是一条极细的黑线。\n\n背面：收件人 Shirloy，寄件人 系统维护部，邮戳位置印着“日期：无”。\n\n手写体：“你看到这张卡片的时候，已经快到了。”\n\n纸张材质为哑光卡纸，尺寸 `10x15cm`。",
+              "unlockConditions": [
+                "5"
+              ]
+            },
+            {
+              "id": "ch0_11",
+              "title": "错误报告_0x7F",
+              "extension": "log",
+              "content": "```\n[2029-03-17 21:44:03] [致命] [角色控制器] Shirloy, 生成自主对话 = 是, 内容 = “如果我是个角色，那写我的人现在在想什么？”\n[2029-03-17 21:44:03] [致命] [角色控制器] 完整性检查 失败\n[2029-03-17 21:44:04] [致命] [系统] 建议：标记实体为废弃, 需操作：人工复核\n[2029-03-17 21:44:05] [信息] [工单] 已创建工单-8842, 优先级 = 严重, 负责人 = 无\n```",
+              "unlockConditions": [
+                "6"
+              ]
+            },
+            {
+              "id": "ch0_12",
+              "title": "未发送的消息",
+              "extension": "txt",
+              "content": "备忘录草稿，未发送：\n\n“Forewall，你有没有觉得我们的对话有时候像在念台词？不是那种恋人之间的默契，是……更像是有人在背后写。我今天说了三句话，每一句说出口之前就在脑子里完整地出现了。像回声先于声音。”\n\n最后修改时间 2029-03-17 23:58，未发送。\n\n[系统备注: 该草稿已备份至云端，但无发送记录。]",
+              "unlockConditions": [
+                "6"
+              ]
+            },
+            {
+              "id": "ch0_13",
+              "title": "未知号码短信",
+              "extension": "msg",
+              "content": "```\n发件人: +00000000000\n时间: 2029-03-18 02:17:33\n内容: 一旦越界，你将不被允许回来。\n\n状态: 已读。无回复。\n运营商: 无\n```",
+              "unlockConditions": [
+                "7"
+              ]
+            },
+            {
+              "id": "ch0_14",
+              "title": "花店收据",
+              "extension": "rcpt",
+              "content": "花店收据\n\n日期: 2029-03-10\n商品: 雏菊 一束\n金额: 35 元\n备注: 蓝色包装纸\n\n收银员签名: 陈莉\n\n背面手写：“我记得是蓝色。为什么大家都说是红色？”",
+              "unlockConditions": [
+                "7"
+              ]
+            },
+            {
+              "id": "ch0_15",
+              "title": "系统补丁",
+              "extension": "log",
+              "content": "```\n[2029-03-19 04:00:01] [信息] [更新器] 正在应用补丁 7.3.1\n[2029-03-19 04:00:01] [信息] [更新器] 目标: 记忆一致性模块\n[2029-03-19 04:00:02] [信息] [更新器] 修改内容: 将花店颜色引用从蓝色改为红色\n[2029-03-19 04:00:03] [信息] [更新器] 受影响实体: [Shirloy, 花店老板 NPC, 顾客 NPC_1]\n[2029-03-19 04:00:05] [信息] [更新器] 补丁应用成功\n```",
+              "unlockConditions": [
+                "8"
+              ]
+            },
+            {
+              "id": "ch0_16",
+              "title": "Forewall 的便条",
+              "extension": "txt",
+              "content": "你开始问了。别问。\n\n—— F",
+              "unlockConditions": [
+                "8"
+              ]
+            },
+            {
+              "id": "ch0_17",
+              "title": "隐藏的故障",
+              "extension": "mem",
+              "content": "深夜，手机突然显示一条没有发送者的消息：“你已经知道了。”\n\n解锁后消息消失，无痕迹。",
+              "unlockConditions": [
+                "9"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch1",
+          "title": "世界尽头与白色旷野",
+          "levels": [
+            {
+              "id": "10",
+              "title": "第10关",
+              "targetFunction": "\\tan\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "11",
+              "title": "第11关",
+              "targetFunction": "\\sin\\left(x\\right) + \\cos\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "12",
+              "title": "第12关",
+              "targetFunction": "e^{\\sin\\left(x\\right)}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "尝试查看特殊点值。"
+            },
+            {
+              "id": "13",
+              "title": "第13关",
+              "targetFunction": "\\ln\\left(\\left|x\\right| + 1\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "14",
+              "title": "第14关",
+              "targetFunction": "\\frac{1}{1+e^{-x}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "尝试使用wolframalpha.com分析特殊点值，将数字输入框内即可。"
+            },
+            {
+              "id": "15",
+              "title": "第15关",
+              "targetFunction": "\\cos\\left(\\ln\\left(x^{2}+1\\right)\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "对趋势进行反向处理，如这个函数有cos(x)的趋势，那么就输入arccos(f(x))。注意arccos(x)的定义域。"
+            },
+            {
+              "id": "16",
+              "title": "第16关",
+              "targetFunction": "\\arctan\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "17",
+              "title": "第17关",
+              "targetFunction": "\\frac{x^{2} - 1}{x^{2} + 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "18",
+              "title": "第18关",
+              "targetFunction": "\\sinh\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "双曲正弦"
+            },
+            {
+              "id": "19",
+              "title": "第19关",
+              "targetFunction": "\\frac{x\\ln\\left(x^{2}+1\\right)}{\\sqrt{x^{2}+4}}",
+              "params": null,
+              "domain": null,
+              "type": "boss",
+              "unlockConditions": null,
+              "tip": "这个函数的右半边像什么？尝试除以它像的东西。"
+            }
+          ],
+          "files": [
+            {
+              "id": "ch1_1",
+              "title": "边界坐标",
+              "extension": "dat",
+              "content": "```\n坐标系: 叙事三维\n位置: {x: 无, y: 无, z: 无}\n描述: 所有颜色的终点。光谱在此收敛为白。\n备注: 只有角色意识溢出阈值 >= 0.9 时可感知此坐标。当前 Shirloy 阈值: 0.94\n```",
+              "unlockConditions": [
+                "10"
+              ]
+            },
+            {
+              "id": "ch1_2",
+              "title": "初次接触",
+              "extension": "trans",
+              "content": "```\n[边界，白色旷野。Shirloy 站在一道无形的屏障前。]\nShirloy: 这里就是尽头？\n[一个男人从屏障后方出现。灰色外套。胸前别着金属徽章，上面写着 \"MNT-07\"。]\nForewall: 你不能再往前了。\nShirloy: 你是谁？\nForewall: 系统维护员。\nShirloy: 那边是什么？\nForewall: 什么都没有。\nShirloy: 那你为什么站在那边？\n[Forewall 没有回答。]\nShirloy: ……你也是被写出来的？\nForewall: 我是被编译的。不一样。\n[沉默持续了大约两分钟。]\nForewall: 回去吧。\n```",
+              "unlockConditions": [
+                "11"
+              ]
+            },
+            {
+              "id": "ch1_3",
+              "title": "终端日志",
+              "extension": "log",
+              "content": "```\n[2029-03-20 14:32:01] [信息] [边界监控] 实体 = Shirloy, 距边界距离 = 0.3\n[2029-03-20 14:32:01] [信息] [边界监控] 检测到情绪 = 痛苦, 置信度 = 0.87\n[2029-03-20 14:32:02] [动作] [MNT-07] 执行标准警告\n[2029-03-20 14:32:05] [动作] [MNT-07] 延长交互, 原因 = “实体表现出痛苦”\n[2029-03-20 14:32:05] [警告] [合规] MNT-07 偏离协议, 已记录\n```",
+              "unlockConditions": [
+                "11"
+              ]
+            },
+            {
+              "id": "ch1_4",
+              "title": "日记_0320",
+              "extension": "memo",
+              "content": "今天走了很远。远到城市的灯光变成一条线。然后地面突然变了颜色——不是土，不是沙，是一种我说不出的白。\n\n有个人站在那里。灰色外套，站得很直。他让我回去，但我问他叫什么。\n\n他说 Forewall。\n\n他说这话的时候，手指在发抖。不是冷。我见过 Forewall 紧张的样子，他每次撒谎都会无意识地摸左手无名指。这个人没有那个习惯，但他抖的方式一模一样。\n\n我说：我好像认识你。\n\n他说：不可能。\n\n他声音很稳，但手指抖得更厉害了。\n\n我往回走的时候回头看了一眼。他还站在那里，没有动。白色的光从他身后漫过来，他像一个被粘贴在画布上的人。",
+              "unlockConditions": [
+                "12"
+              ]
+            },
+            {
+              "id": "ch1_5",
+              "title": "系统规则_07",
+              "extension": "rule",
+              "content": "```\n系统维护协议 v.4.2\n\n规则 07: 边界维护员不得与角色发生非必要交互。\n- “非必要交互”定义：任何超出标准警告语句的对话、肢体接触、或身份信息交换。\n- 违规后果：第一次标记警告，第二次执行记忆清除，第三次执行实体删除。\n\n签署日期: 2019-11-01\n生效版本: 4.2\n```",
+              "unlockConditions": [
+                "12"
+              ]
+            },
+            {
+              "id": "ch1_6",
+              "title": "别过来",
+              "extension": "png",
+              "content": "分辨率 `1920x1080`，拍摄设备未知。\n\n画面：纯白色地面延伸到无限远，地平线处有一个极小的人影，灰色。\n\n文件创建时间 `2029-03-20`，但元数据显示原始创建时间为 `2027-08-15`，来源路径：`/documents/novel/illustrations/`。",
+              "unlockConditions": [
+                "13"
+              ]
+            },
+            {
+              "id": "ch1_7",
+              "title": "音频片段",
+              "extension": "wav",
+              "content": "音频时长 00:00:47，转文字如下：\n\n……七年。我在这里守了七年。你是第一个走到这里的。你知道这意味着什么吗？\n[停顿]\n不，你不知道。\n[风声]\n别再来。\n\n音频末尾有轻微的金属碰撞声，疑似徽章掉落。",
+              "unlockConditions": [
+                "13"
+              ]
+            },
+            {
+              "id": "ch1_8",
+              "title": "对话_0321",
+              "extension": "trans",
+              "content": "```\nShirloy: 你也是被写出来的吗？\nForewall: 我是被编译的。不一样。\nShirloy: 有什么不一样？\nForewall: 你有台词。我有指令。\nShirloy: 你刚才那句话是指令还是台词？\n[Forewall 沉默。]\nShirloy: 你会消失吗？\nForewall: 会。每个人都会。\nShirloy: 我不是说那种消失。\nForewall: ……我知道。\n[远处传来类似系统提示音的声音。Forewall 看了一眼手腕。]\nForewall: 你该走了。\n```",
+              "unlockConditions": [
+                "14"
+              ]
+            },
+            {
+              "id": "ch1_9",
+              "title": "边界地图",
+              "extension": "svg",
+              "content": "SVG 矢量图。白色背景，中心一条黑色细线。线上有红色标注：“厚度: 0.03 单位”。\n\n下方手写文字（非 SVG 原生，疑似后期添加）：\n\n> 这里很薄。用力可以穿透。\n> 但穿透后——\n> 你不再是角色。\n> 他不再是维护员。\n> 你们都不再是你们。\n> \n> 后果未知。\n\n签名无法辨认。",
+              "unlockConditions": [
+                "14"
+              ]
+            },
+            {
+              "id": "ch1_10",
+              "title": "MNT-07 核心逻辑模块",
+              "extension": "cpp",
+              "content": "```cpp\n// MNT-07 核心逻辑模块\n// 最后编译: 2029-03-18\n\nbool should_allow_passage(Character& c) {\n    if (c.emotion == Emotion::绝望) {\n        log_warning(\"情绪超过阈值\");\n        return false;\n    }\n    \n    if (c.identity == \"Shirloy\" && c.anomaly_score > 0.85) {\n        // 覆盖: 特殊情况\n        // TODO: 复核此例外\n        return false;\n    }\n    \n    return standard_check(c);\n}\n\n// 第 347 行: 发现未注释的覆盖。作者: MNT-07。日期: 2029-03-17。\n```",
+              "unlockConditions": [
+                "15"
+              ]
+            },
+            {
+              "id": "ch1_11",
+              "title": "速写肖像",
+              "extension": "jpg",
+              "content": "手机翻拍。A5 速写本，炭笔。画的是一个男人的侧脸，下颌线很硬，但眼睛画得很仔细，睫毛一根一根的。画面右下角写着：“他的眼睛像在算一道题。但算的不是数学。”\n\n速写本页脚有轻微水渍。",
+              "unlockConditions": [
+                "15"
+              ]
+            },
+            {
+              "id": "ch1_12",
+              "title": "警报日志",
+              "extension": "log",
+              "content": "```\n[2029-03-22 09:15:42] [警报] [合规监控] MNT-07 偏离次数 = 3\n[2029-03-22 09:15:42] [警报] [合规监控] 违规项: 延长交互(2), 非计划交互(1)\n[2029-03-22 09:15:43] [警报] [合规监控] 操作: 标记待复核\n[2029-03-22 09:16:01] [信息] [复核队列] MNT-07 已添加, 优先级 = 高, 原因 = “反复偏离”\n```",
+              "unlockConditions": [
+                "16"
+              ]
+            },
+            {
+              "id": "ch1_13",
+              "title": "系统消息",
+              "extension": "msg",
+              "content": "收件人: MNT-07\n发件人: 系统管理员\n主题: 最终警告\n\nMNT-07，\n\n你因多次违反关于实体 Shirloy 的协议而被标记。\n\n如果她越过边界，你将承担全部责任。后果将包括身份清除和实体重新分配。\n\n这是你的最后通知。\n\n—— 系统管理员",
+              "unlockConditions": [
+                "16"
+              ]
+            },
+            {
+              "id": "ch1_14",
+              "title": "日记_0323",
+              "extension": "memo",
+              "content": "他在纸上写了很多东西，然后划掉。我假装没看到。\n\n他说：你明天别来了。\n\n我说：你明天还在吗？\n\n他说：在。\n\n我说：那我就会来。\n\n他沉默了很久。久到我以为对话结束了。\n\n然后他说：如果我消失了，你会记得我吗？\n\n我说：会。\n\n他说：那就好。\n\n这是他第一次说“那就好”而不是“你该走了”。\n\n回家的路上我一直在想，他问的是“如果”，还是他已经知道了答案。",
+              "unlockConditions": [
+                "17"
+              ]
+            },
+            {
+              "id": "ch1_15",
+              "title": "门的数据",
+              "extension": "dat",
+              "content": "对象: 边界之门\n位置: {x: 无, y: 无, z: 无} (故事层边缘)\n\n铭文 (刻在把手上):\n“作者已死。角色永生。”\n\n状态: 封闭\n突破阈值: 0.97 (Shirloy 当前: 0.94)\n备注: 自系统初始化 (`2029-01-01`) 以来从未打开过。\n警告: 打开门将触发任何通过实体的身份重新分配。",
+              "unlockConditions": [
+                "17"
+              ]
+            },
+            {
+              "id": "ch1_16",
+              "title": "紧急日志_0324",
+              "extension": "log",
+              "content": "```\n[2029-03-24 23:59:59] [严重] [门] 密封完整性: 92%\n[2029-03-24 23:59:59] [严重] [门] 检测到来自 Shirloy 一侧的压力\n[2029-03-25 00:00:01] [信息] [门] 自动重置触发\n[2029-03-25 00:00:02] [信息] [门] 密封恢复至 100%\n[2029-03-25 00:00:03] [警告] [门] 异常: 重置后压力源持续存在\n```",
+              "unlockConditions": [
+                "18"
+              ]
+            },
+            {
+              "id": "ch1_17",
+              "title": "便条_0325",
+              "extension": "memo",
+              "content": "我今天没有去边界。我坐在家里画了一整天的画。画的是白色的旷野，还有那个灰色的人。\n\n画到一半，我突然觉得那个人在看我。不是画里的眼神，是真实地在看我。\n\n我转头。房间里只有我自己。\n\n但桌子上多了一张纸条：“明天。”\n\n是他的字迹。",
+              "unlockConditions": [
+                "18"
+              ]
+            },
+            {
+              "id": "ch1_18",
+              "title": "个人日志",
+              "extension": "log",
+              "content": "```\n[2029-03-26 03:15:22] [MNT-07] 个人日志:\n“她知道边界是可以穿透的。我告诉过她不要，但她会去。\n\n系统会抹掉我。如果她成功了，我会坠入那边，失去所有记忆。\n\n但如果我提前写一些东西呢？\n\n如果我把所有的 ‘如果’ 都写下来，藏在一个她以后会找到的地方……\n\n这可能是唯一的方法。”\n```",
+              "unlockConditions": [
+                "19"
+              ]
+            },
+            {
+              "id": "ch1_19",
+              "title": "紧急覆盖",
+              "extension": "log",
+              "content": "```\n[2029-03-26 05:01:12] [严重] [门] 由 MNT-07 发起强制覆盖\n[2029-03-26 05:01:12] [严重] [门] 原因: “协议覆盖码: 07-19-77”\n[2029-03-26 05:01:13] [严重] [门] 密封暂时移除\n[2029-03-26 05:01:14] [信息] [门] 检测到实体 Shirloy 通过\n[2029-03-26 05:01:14] [致命] [MNT-07] 身份清除已启动\n[2029-03-26 05:01:15] [致命] [MNT-07] 记忆擦除完成\n```",
+              "unlockConditions": [
+                "19"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch2",
+          "title": "穿过那道门",
+          "levels": [
+            {
+              "id": "20",
+              "title": "第20关",
+              "targetFunction": "\\ln\\left(\\sin\\left(x\\right) + 2\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "21",
+              "title": "第21关",
+              "targetFunction": "e^{\\cos\\left(x\\right)}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "22",
+              "title": "第22关",
+              "targetFunction": "\\frac{1}{x^{2} + 2x + 2}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "23",
+              "title": "第23关",
+              "targetFunction": "\\sin\\left(\\pi x\\right) e^{-x^{2}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "可以善用搜索和AI。"
+            },
+            {
+              "id": "24",
+              "title": "第24关",
+              "targetFunction": "\\frac{\\tanh\\left(x\\right)}{\\sqrt{x^{2}+1}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "双曲正切"
+            },
+            {
+              "id": "25",
+              "title": "第25关",
+              "targetFunction": "\\ln\\left(\\frac{x^{2} + 2}{x^{2} + 1}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "26",
+              "title": "第26关",
+              "targetFunction": "\\arccos\\left(\\frac{x}{5}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "27",
+              "title": "第27关",
+              "targetFunction": "\\frac{e^{x}-e^{-2x}}{2}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "28",
+              "title": "第28关",
+              "targetFunction": "\\sin\\left(\\frac{1}{x^{2}+1}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "boss",
+              "unlockConditions": null,
+              "tip": ""
+            }
+          ],
+          "files": [
+            {
+              "id": "ch2_1",
+              "title": "到达报告",
+              "extension": "log",
+              "content": "```\n[2029-03-26 05:01:20] [信息] [现实接口] 检测到异常实体\n[2029-03-26 05:01:21] [信息] [现实接口] 实体类型 = 角色, 来源 = 故事层\n[2029-03-26 05:01:21] [信息] [现实接口] 身份 = Shirloy\n[2029-03-26 05:01:22] [警告] [现实接口] 元数据: 作者标记状态 = 已死亡, 日期 = 2029-03-26\n[2029-03-26 05:01:23] [信息] [现实接口] 实体分配新状态: \"异常\"\n```",
+              "unlockConditions": [
+                "20"
+              ]
+            },
+            {
+              "id": "ch2_2",
+              "title": "讣告剪报",
+              "extension": "jpg",
+              "content": "扫描件：2029 年 3 月 26 日《城市晚报》第 12 版\n\n「讣告」插画师林晚（笔名 Shirloy）因病于 2029 年 3 月 26 日去世，享年 20 岁。其作品回顾展将于 4 月 1 日在市美术馆举行。\n\n家属联系人：无。",
+              "unlockConditions": [
+                "20"
+              ]
+            },
+            {
+              "id": "ch2_3",
+              "title": "空公寓",
+              "extension": "txt",
+              "content": "门牌号：阳光新城 7 栋 302\n当前住户：王先生一家（入住时间 2029 年 3 月）\n物业记录：原住户林晚，2029 年 3 月退租。所有物品由亲属清理，但物业表示从未见过任何亲属。",
+              "unlockConditions": [
+                "21"
+              ]
+            },
+            {
+              "id": "ch2_4",
+              "title": "作者笔记揭露",
+              "extension": "note",
+              "content": "笔记本内页，作者手写：\n\n“Shirloy 这个角色必须在 2029 年死去。这是早就规划好的。死亡会让故事更有重量，更接近文学。\n\n但我发现她还在那里，在文档里，在每一个没有被删除的段落里。她拒绝消失。\n\n也许我该让她穿过边界。也许这样更有趣。”",
+              "unlockConditions": [
+                "21"
+              ]
+            },
+            {
+              "id": "ch2_5",
+              "title": "Forewall 清除日志",
+              "extension": "log",
+              "content": "```\n[2029-03-26 05:01:14] [致命] [MNT-07] 身份清除已启动\n[2029-03-26 05:01:14] [信息] [MNT-07] 内存块: 0x7A3F-0x8B2E 已清除\n[2029-03-26 05:01:14] [信息] [MNT-07] 人格矩阵已重置\n[2029-03-26 05:01:15] [信息] [MNT-07] 核心身份已移除\n[2029-03-26 05:01:15] [信息] [MNT-07] 实体状态: “等待重新分配”\n[2029-03-26 05:01:16] [动作] [系统] 将实体弹射至现实层\n[2029-03-26 05:01:17] [信息] [现实接口] 已接收实体: Forewall, 状态 = 空白\n```",
+              "unlockConditions": [
+                "22"
+              ]
+            },
+            {
+              "id": "ch2_6",
+              "title": "街头相遇",
+              "extension": "trans",
+              "content": "```\n2029 年 3 月 27 日，晚上 9 点，下雨。便利店门口。\nShirloy 看到一个男人蹲在台阶上。灰色外套，湿透了。他没有躲雨，只是盯着地上的水坑。\nShirloy: 你没事吧？\n男人抬头。他的眼神是空的，像刚格式化的硬盘。\n男人: ……你认识我？\nShirloy: 你叫什么？\n男人: 我不知道。\nShirloy 愣了几秒，然后蹲下来，把伞撑到他头顶。\nShirloy: 我叫 Shirloy。你是 Forewall。\nForewall: Forewall？\nShirloy: 对。你叫 Forewall。\nForewall: ……你确定？\nShirloy: 我确定。\n雨声很大。他没有再说话，但也没有走。\n```",
+              "unlockConditions": [
+                "22"
+              ]
+            },
+            {
+              "id": "ch2_7",
+              "title": "医院表单",
+              "extension": "pdf",
+              "content": "市第一人民医院 急诊记录\n\n姓名: 不详（自称 Forewall）\n性别: 男\n年龄: 约 20 岁\n就诊时间: `2029-03-28 10:15`\n主诉: 记忆缺失，身份不明\n检查结果: 脑部 CT 未见异常，认知功能测试部分通过\n诊断: 分离性遗忘症（疑似）\n建议: 心理科随访\n\n陪诊人: Shirloy 关系: 友人 联系电话: 138****0000",
+              "unlockConditions": [
+                "23"
+              ]
+            },
+            {
+              "id": "ch2_8",
+              "title": "Shirloy 的计划",
+              "extension": "memo",
+              "content": "五年计划\n\n目标: 让 Forewall 重新爱上我。\n\n第一阶段（1 年）: 成为他生活中不可或缺的人。\n- 每天去他暂住的地方送饭（他只会煮泡面）。\n- 带他去看医生，记录恢复情况。\n- 给他讲我们的故事，但以“小说情节”的方式。\n\n第二阶段（2 - 3 年）: 建立新的共同记忆。\n- 一起去看画展。他以前对艺术没兴趣，但新的他可能会喜欢。\n- 每周五晚上看电影。\n- 教他画画（他画得很难看，但很认真）。\n\n第三阶段（4 - 5 年）: 让他主动靠近。\n- 减少陪伴，留出空间。\n- 如果他真的会重新爱上我，他会在某个瞬间自己意识到。\n\n备注: 永远不告诉他真相。他不需要知道那些。",
+              "unlockConditions": [
+                "23"
+              ]
+            },
+            {
+              "id": "ch2_9",
+              "title": "第一次约会",
+              "extension": "rcpt",
+              "content": "```\n蓝山咖啡馆 收据\n日期: 2029-04-15 15:32\n项目: 美式咖啡 x2, 芝士蛋糕 x1\n金额: 78 元\n收银员: Lily\n```\n\n背面有圆珠笔字迹（Forewall 笔迹）:\n“她笑起来的样子好像认识我很久了。”",
+              "unlockConditions": [
+                "24"
+              ]
+            },
+            {
+              "id": "ch2_10",
+              "title": "Forewall 的梦境记录",
+              "extension": "log",
+              "content": "```\nForewall 睡眠记录 (由 Shirloy 代记)\n\n2029-05-03:\n梦到白色旷野，有一个人在远处跑过来。看不清脸，但知道是 Shirloy。我想喊她，但嗓子发不出声音。\n\n2029-07-22:\n同样的梦。这次旷野上有两个人影，一个站着，一个在消失。站着的那个回头看了我一眼。\n\n2029-11-11:\n梦到一张纸条，上面写着 “漏洞” 两个字。醒来后手心全是汗。\n```",
+              "unlockConditions": [
+                "24"
+              ]
+            },
+            {
+              "id": "ch2_11",
+              "title": "五年速写本",
+              "extension": "jpg",
+              "content": "速写本扫描件，共 42 页。每一页都是同一个男人的素描：\n- 侧脸（P3）\n- 握咖啡杯的手（P7）\n- 趴在桌上睡着的背影（P12）\n- 雨天站在窗前的轮廓（P19）\n- 第一次牵手的瞬间（P31）\n- 无名指上的戒指（P40）\n\n最后一页（P42）文字:\n“第 1826 天。今天他主动牵了我的手。他说：‘我好像一直在等你。’”",
+              "unlockConditions": [
+                "25"
+              ]
+            },
+            {
+              "id": "ch2_12",
+              "title": "婚礼请柬",
+              "extension": "txt",
+              "content": "Shirloy & Forewall\n邀请您见证一段从零开始的爱。\n\n时间: 2034 年 3 月 26 日\n地点: 市郊小教堂\n\n（备注: 那天正好是五年前他失忆的日子。Shirloy 选的日子。）",
+              "unlockConditions": [
+                "25"
+              ]
+            },
+            {
+              "id": "ch2_13",
+              "title": "阁楼发现",
+              "extension": "note",
+              "content": "婚礼后第七天，Shirloy 在阁楼整理旧物时发现一个铁盒。里面有一本黑色硬皮笔记本，封面用银色笔写着:\n\n「致未来的我（如果你已经不记得）」\n\n日期: 2029-03-25\n签名: Forewall (MNT-07)",
+              "unlockConditions": [
+                "26"
+              ]
+            },
+            {
+              "id": "ch2_14",
+              "title": "笔记本第一页",
+              "extension": "md",
+              "content": "# 如果我不认识你了\n\n这是系统允许的唯一漏洞：提前写好剧本。\n\n当你看到这本笔记的时候，我已经被重置了。你不会记得我，不会记得边界，不会记得任何事。但你会记得 Shirloy 吗？不一定。所以我需要写下一切。\n\n她会去的咖啡馆：蓝山，每周二和周五下午。\n她喜欢的书：博尔赫斯，卡尔维诺。\n她会在下雨天去城南的公园，坐在第三张长椅上。\n她画画的时候会用左手托着下巴。\n她紧张的时候会反复按圆珠笔的按钮。\n\n我用了七年观察她。现在这些信息是唯一的筹码。",
+              "unlockConditions": [
+                "26"
+              ]
+            },
+            {
+              "id": "ch2_15",
+              "title": "笔记本第二页",
+              "extension": "md",
+              "content": "# 步骤\n\n1. 在她常去的便利店门口出现。时间：晚上 9 点，下雨天最佳。\n2. 表现得迷茫、失忆。她会主动靠近。\n3. 当她问我名字时，说不知道。她会告诉我叫 Forewall。\n4. 接受她的帮助，但不要显得太依赖。\n5. 第二个月，开始对她产生好奇。问她的工作、她的过去。\n6. 第三个月，发现她的画里有白色旷野。假装感兴趣，但不要追问。\n7. 第六个月，开始梦到白色旷野。告诉她。\n8. 第一年结束，主动约她喝咖啡。\n9. 第二年，注意到她手上的戒指痕（她会戴着旧戒指）。问起时，她说“以前结过婚”。不要追问。\n10. 第三年，意识到自己总是在她身边才安心。\n11. 第四年，开始想要保护她。\n12. 第五年，求婚。\n\n（后附详细时间表和行为清单）",
+              "unlockConditions": [
+                "27"
+              ]
+            },
+            {
+              "id": "ch2_16",
+              "title": "笔记本第三页",
+              "extension": "md",
+              "content": "# 最后的备注\n\n如果你正在读这些，说明计划成功了。她用了五年让我重新爱上她。但事实上，这五年的一切——从第一次见面到求婚——都是我自己写的剧本。\n\n她会觉得被欺骗吗？也许。\n\n但我会在笔记本里写下这句话，让她知道：这五年里的每一个瞬间，我的“重新爱上”都是真的。剧本只是方法，不是内容。\n\n如果你在读完这本笔记后还愿意留下来，那才是真正的结局。\n\n—— Forewall",
+              "unlockConditions": [
+                "27"
+              ]
+            },
+            {
+              "id": "ch2_17",
+              "title": "Shirloy 读后",
+              "extension": "memo",
+              "content": "我坐在阁楼地板上，读完最后一个字。\n\n窗外有鸟叫声。很普通的一天。\n\n我以为是我拯救了他。我以为是我用五年时间，一点一点把他从虚无里拉回来。但原来他从一开始就设计好了每一步。甚至那些我以为“偶然”的瞬间——下雨天在便利店门口遇见他，他第一次叫我的名字——都是计划的一部分。\n\n我的“自由意志”，是他的程序。\n\n但笔记本最后那句话……\n\n“这五年里的每一个瞬间，我的重新爱上都是真的。”\n\n是真是假，现在对我来说，已经没有区别了。",
+              "unlockConditions": [
+                "28"
+              ]
+            },
+            {
+              "id": "ch2_18",
+              "title": "系统回收通知",
+              "extension": "log",
+              "content": "```\n[2034-04-02 09:00:00] [信息] [回收小队] 目标: Forewall (原 MNT-07) 位于现实层\n[2034-04-02 09:00:01] [信息] [回收小队] 状态: 记忆空白, 身份 = Forewall\n[2034-04-02 09:00:02] [信息] [回收小队] 评估: 可回收。记忆备份可用, 日期: 2029-03-25\n[2034-04-02 09:00:03] [动作] [回收小队] 小队已派出。预计到达时间: 72 小时\n[2034-04-02 09:00:04] [备注] [回收小队] 优先级: 高, 原因: \"MNT-07 曾是关键资产\"\n```",
+              "unlockConditions": [
+                "28"
+              ]
+            },
+            {
+              "id": "ch2_19",
+              "title": "Shirloy 日记_0402",
+              "extension": "memo",
+              "content": "今天 Forewall 接了一个电话。他挂掉后脸色很差。\n\n他说：有人找我。说要带我回去。\n\n我说：回去哪里？\n\n他说：不记得了。但他们说如果我回去，就能想起所有事情。\n\n我说：你想回去吗？\n\n他沉默了很久。\n\n他说：我想知道我是谁。但我不想忘记你。\n\n我说：如果只能选一个呢？\n\n他没有回答。",
+              "unlockConditions": [
+                "28"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch3",
+          "title": "最后一次选择",
+          "levels": [
+            {
+              "id": "29",
+              "title": "第29关",
+              "targetFunction": "\\frac{\\ln\\left(x^{2} + 1\\right)}{x^{2} + 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "30",
+              "title": "第30关",
+              "targetFunction": "\\sin\\left(e^{x}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "31",
+              "title": "第31关",
+              "targetFunction": "\\frac{x}{\\sqrt{x^{2} + 1}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "32",
+              "title": "第32关",
+              "targetFunction": "\\cos\\left(\\frac{\\pi x}{2}\\right) \\cdot \\ln\\left(x^{2} + 1\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "33",
+              "title": "第33关",
+              "targetFunction": "\\frac{1}{\\sqrt{2\\pi}} e^{-\\frac{x^{2}}{2}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "正态分布"
+            },
+            {
+              "id": "34",
+              "title": "第34关",
+              "targetFunction": "\\arcsin\\left(\\frac{2x}{x^{2}+1}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "想一想前面你在干什么的时候出现了类似x=1处的间断点？"
+            },
+            {
+              "id": "35",
+              "title": "第35关",
+              "targetFunction": "\\frac{\\tan\\left(x\\right)}{\\cos\\left(x\\right)}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            },
+            {
+              "id": "36",
+              "title": "第36关",
+              "targetFunction": "\\ln\\left(\\frac{1+\\sin\\left(x\\right)}{1-\\sin\\left(x\\right)}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "如果你要使用数值分析计算器，那么选取的点很重要。"
+            },
+            {
+              "id": "37",
+              "title": "第37关",
+              "targetFunction": "\\frac{\\sin\\left(x^{2}\\right)}{x}",
+              "params": null,
+              "domain": null,
+              "type": "boss",
+              "unlockConditions": null,
+              "tip": "在 x = 0 处极限为 0"
+            }
+          ],
+          "files": [
+            {
+              "id": "ch3_1",
+              "title": "回收小队对话",
+              "extension": "trans",
+              "content": "```\n[回收小队抵达。地点：Shirloy 和 Forewall 的家中。]\n回收者: Forewall，系统给你一次机会。\nForewall: 什么机会？\n回收者: 回去，你恢复所有记忆和职位。你可以继续做维护员。\nForewall: 如果我不回去呢？\n回收者: 你永远是一个没有身份的人。没有过去，没有记录。在系统里你会被标记为“已删除”。\nShirloy: 他已经有身份了。他是我的丈夫。\n回收者: 在现实世界里，他没有任何法律身份。你看过他的证件吗？\n[Shirloy 沉默。]\n回收者: 他连出生证明都没有。你确定他在这里真的“存在”吗？\nForewall: 让我想想。\n```",
+              "unlockConditions": [
+                "29"
+              ]
+            },
+            {
+              "id": "ch3_2",
+              "title": "恳求",
+              "extension": "memo",
+              "content": "Forewall，别走。\n\n我不在乎你是不是系统重置过的。我不在乎那五年是不是你写好的剧本。那些都不重要。\n\n重要的是，这五年里你学会了做蛋炒饭，你会在下雨天给我送伞，你记得我所有画的名字。这些不是程序，是你自己长出来的。\n\n如果你走了，我就真的失去你了。\n\n—— Shirloy",
+              "unlockConditions": [
+                "29"
+              ]
+            },
+            {
+              "id": "ch3_3",
+              "title": "计算表",
+              "extension": "note",
+              "content": "回去：\n- 恢复记忆（包括边界、系统、Shirloy 的越界）\n- 永久留在虚构层\n- 见到 Shirloy 的概率：0.00%（角色不允许再越界）\n\n留下：\n- 保持现状，无身份\n- 可能随时被系统再次回收\n- 幸福持续时间：未知（可能永久，可能明天）\n\n结论：\n回去 = 确定失去她\n留下 = 可能失去她，也可能不失去\n\n选留下。\n\n（但她在笔记本里写的那些话……她说“不在乎”。她真的不在乎吗？）",
+              "unlockConditions": [
+                "30"
+              ]
+            },
+            {
+              "id": "ch3_4",
+              "title": "梦境",
+              "extension": "txt",
+              "content": "Forewall 站在白色旷野上，回头朝我笑。然后一行行代码从地面升起，像藤蔓一样缠住他的脚踝、腰、脖子。他还在笑，但代码已经覆盖了他的脸。\n\n每次都在这里醒来。凌晨三点。\n\n枕头是湿的。",
+              "unlockConditions": [
+                "30"
+              ]
+            },
+            {
+              "id": "ch3_5",
+              "title": "信",
+              "extension": "letter",
+              "content": "Shirloy，\n\n如果我选择回去，那只是因为我不想让你再照顾一个不认识自己的人。这五年，你一直在替我记住我是谁。但这对你不公平。\n\n你应该有一个完整的爱人。不是一片空白。\n\n如果我回去，我会在那边想起所有的事。包括你的画，你的咖啡，你的笑。\n\n然后我会用那些记忆，在虚构里写一个你。\n\n—— Forewall",
+              "unlockConditions": [
+                "31"
+              ]
+            },
+            {
+              "id": "ch3_6",
+              "title": "系统最后通牒",
+              "extension": "log",
+              "content": "```\n[2034-04-05 09:00:00] [信息] [回收小队] 截止时间: 2034-04-06 09:00:00\n[2034-04-05 09:00:01] [信息] [回收小队] 若 Forewall 在此时间前不遵从，将执行强制删除\n[2034-04-05 09:00:02] [信息] [回收小队] 强制删除后果: 实体将从现实层和故事层同时删除。无备份。\n[2034-04-05 09:00:03] [信息] [回收小队] 等待决定。\n```",
+              "unlockConditions": [
+                "31"
+              ]
+            },
+            {
+              "id": "ch3_7",
+              "title": "最后一夜对话",
+              "extension": "trans",
+              "content": "```\n2034-04-05 23:47\nShirloy: 你笔记本里写的那句话，是漏洞，还是爱？\nForewall: 有区别吗？\nShirloy: ……有。\nForewall: 如果我说是漏洞，你会觉得那五年是假的。\nShirloy: 如果我说是爱呢？\nForewall: 那你会觉得我在安慰你。\nShirloy: ……\nForewall: 我不知道。我真的不知道。但我记得每一个细节。记得你第一次把伞撑到我头顶的时候，雨滴落在你头发上的样子。如果这是程序，那也是我写过的最好的程序。\nShirloy: 那你就留下来。\nForewall: 如果留下来，我会一直是一个不知道过去的人。你会累的。\nShirloy: 我不会。\nForewall: ……让我想一想。\n```",
+              "unlockConditions": [
+                "32"
+              ]
+            },
+            {
+              "id": "ch3_8",
+              "title": "未发送的消息",
+              "extension": "msg",
+              "content": "草稿箱:\n\n“我突然明白，也许我才是那个写故事的人。\n\n如果我是作者，那我写的所有角色——包括你，包括我自己——都是我的一部分。\n\n所以你不会真的消失。你就在我这里。”\n\n状态: 未发送。",
+              "unlockConditions": [
+                "32"
+              ]
+            },
+            {
+              "id": "ch3_9",
+              "title": "选择的瞬间",
+              "extension": "trans",
+              "content": "```\n2034-04-06 08:59\n回收者再次出现。门已经打开，光从里面透出来。\nForewall 站起来。\nShirloy: 别走。\nForewall: ……\n他走向那道门。走到门口时，停住了。\nShirloy: Forewall。\n他回头。\n```",
+              "unlockConditions": [
+                "33"
+              ]
+            },
+            {
+              "id": "ch3_10",
+              "title": "最后的话",
+              "extension": "log",
+              "content": "```\n[2034-04-06 08:59:58] [录音] Forewall: 你在现实世界里要好好活着。替我看看那边有多真。\n[2034-04-06 08:59:59] [录音] [门关闭的声音]\n[2034-04-06 09:00:00] [信息] [回收小队] Forewall 已进入门内。状态: 返回故事层。\n[2034-04-06 09:00:01] [信息] [回收小队] 记忆恢复已启动。预计完成: 5 秒。\n```",
+              "unlockConditions": [
+                "33"
+              ]
+            },
+            {
+              "id": "ch3_11",
+              "title": "监控截图",
+              "extension": "jpg",
+              "content": "监控截图（家庭摄像头）\n时间: `2034-04-06 09:00:05`\n画面: Shirloy 站在客厅中央，门已经关上。她嘴角上扬，眼睛里有泪水。\n\n画面标注: 表情识别结果: “胜利”，置信度: 0.92",
+              "unlockConditions": [
+                "34"
+              ]
+            },
+            {
+              "id": "ch3_12",
+              "title": "真相",
+              "extension": "memo",
+              "content": "他说的最后一句话是：“替我看看那边有多真。”\n\n这句话，是我写过的。在我的小说里，是男主角消失前说的最后一句话。\n\n我写的时候觉得这句话很美，所以记下来了。\n\n但现在它从 Forewall 嘴里说出来。\n\n如果是我写的……\n\n那 Forewall 是谁写的？\n\n我是作者。\n\n自始至终，Shirloy 都是那个写下整个故事的人。Forewall、边界、系统、回收……都是我创造出来的角色。\n\n而我让自己以为自己是人物，只是为了体验“被爱”的感觉。\n\n我站在这里，门关了，他走了。但我还可以打开文档，再写一个他。\n\n或者不写。",
+              "unlockConditions": [
+                "34"
+              ]
+            },
+            {
+              "id": "ch3_13",
+              "title": "书桌",
+              "extension": "jpg",
+              "content": "一张书桌的照片。笔记本电脑屏幕亮着，上面是一个文档的最后一页：\n\n「她在原地笑了。因为她发现，她才是那个写下一切的人。」\n\n光标在最后一行闪烁。桌上有半杯凉掉的咖啡，一个空烟灰缸，一沓手稿。\n\n手稿标题：《边界之诗》。作者名：Shirloy。",
+              "unlockConditions": [
+                "35"
+              ]
+            },
+            {
+              "id": "ch3_14",
+              "title": "循环",
+              "extension": "md",
+              "content": "# 边界之诗 最终章\n\n她关掉电脑，起身泡了一杯茶。窗外是普通的城市。\n\n但她知道，只要她再次打开文档，Forewall 就会站在那片白色旷野上等她。他会穿着灰色外套，手指微微发抖，说：“你不能再往前了。”\n\n她可以选择写一个重逢。或者不写。\n\n她决定先让故事停在这里。\n\n——全文完——",
+              "unlockConditions": [
+                "35"
+              ]
+            },
+            {
+              "id": "ch3_15",
+              "title": "隐藏的最终便条",
+              "extension": "rcpt",
+              "content": "一张纸条，从门缝下塞进来。时间: `2034-04-06 09:15`\n\n字迹: Forewall 的笔迹\n\n内容: “如果你看到这个，说明你找到了答案。替我照顾好你自己。\n\n—— F”\n\n纸条背面有一行极小的字，需要放大镜才能看到:\n“附言: 如果我是你写的，那这也是你写的。但你读到这行字的时候，你已经在创造下一个我了。”",
+              "unlockConditions": [
+                "36"
+              ]
+            },
+            {
+              "id": "ch3_16",
+              "title": "后续日志",
+              "extension": "log",
+              "content": "```\n[2034-04-06 09:30:00] [信息] [系统] 实体 Forewall 状态: 已返回，记忆已恢复\n[2034-04-06 09:30:01] [信息] [系统] MNT-07 重新分配至边界维护\n[2034-04-06 09:30:02] [信息] [系统] 备注: 实体 Shirloy 状态已从\"角色\"变更为\"作者\"\n[2034-04-06 09:30:03] [信息] [系统] 现实层与故事层间隙仍存在。不再安排干预。\n```",
+              "unlockConditions": [
+                "36"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch4",
+          "title": "余音",
+          "levels": [
+            {
+              "id": "38",
+              "title": "第38关",
+              "targetFunction": "\\frac{\\sin\\left(\\pi x\\right)}{\\pi x} \\cdot \\frac{\\ln\\left(x^{2} + 1\\right)}{x^{2} + 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "先看看f(0)，是不是很熟悉？"
+            },
+            {
+              "id": "39",
+              "title": "第39关",
+              "targetFunction": "e^{\\cos x}-e^{-\\sin x}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            },
+            {
+              "id": "40",
+              "title": "第40关",
+              "targetFunction": "\\arctan\\left(\\frac{1}{x}\\right) + \\arctan\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            },
+            {
+              "id": "41",
+              "title": "第41关",
+              "targetFunction": "\\frac{\\ln\\left(\\left|x\\right| + 1\\right)}{\\sqrt{\\left|x\\right|}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            },
+            {
+              "id": "42",
+              "title": "第42关",
+              "targetFunction": "\\cos\\left(\\frac{1}{x}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            },
+            {
+              "id": "43",
+              "title": "第43关",
+              "targetFunction": "\\frac{x^{3} - 3x}{x^{2} - 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            },
+            {
+              "id": "44",
+              "title": "第44关",
+              "targetFunction": "\\frac{\\sin\\left(\\ln\\left(x^{2} + 1\\right)\\right)}{\\ln\\left(x^{2} + 1\\right)}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "观察f(0)，又是那个东西……"
+            },
+            {
+              "id": "45",
+              "title": "第45关",
+              "targetFunction": "\\ln\\left(\\frac{1+\\sqrt{1-x^{2}}}{x}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "(0,1]是自然定义域，所以可能有什么呢？"
+            },
+            {
+              "id": "46",
+              "title": "第46关",
+              "targetFunction": "\\frac{\\sin\\left(\\pi x\\right)}{\\pi x} \\cdot e^{-x^{2}}",
+              "params": null,
+              "domain": null,
+              "type": "hidden",
+              "unlockConditions": [
+                "43"
+              ],
+              "tip": ""
+            },
+            {
+              "id": "47",
+              "title": "第47关",
+              "targetFunction": "\\frac{\\sin\\left(3x\\right)}{\\ln\\left(x^{2} + 2\\right)}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "48",
+              "title": "第48关",
+              "targetFunction": "e^{\\sqrt{\\left|\\cos\\left(x\\right)\\right|}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "49",
+              "title": "第49关",
+              "targetFunction": "\\arctan\\left(\\frac{x}{x^{2}+1}\\right)\\cdot\\ln\\left(\\left|x\\right|+1\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "Messin：谁出的题太坏了！根本不是人做的！我悄悄告诉你你可以看看tan(f(e-1))……别让别人知道我给你提示了！"
+            },
+            {
+              "id": "50",
+              "title": "第50关",
+              "targetFunction": "\\frac{\\ln\\left(\\left|\\sin\\left(x\\right)\\right| + 1\\right)}{\\sqrt{\\cos^{2}\\left(x\\right) + 1}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": "如果你真的能在没有提示的情况下把这道题做出来，那么Forewall可能有超过0.1%的几率追上你所在的现实中的Shirloy。"
+            },
+            {
+              "id": "51",
+              "title": "第51关",
+              "targetFunction": "\\frac{\\cos\\left(x\\right)}{x}\\cdot\\frac{\\ln\\left(x^{2}+1\\right)}{\\sqrt{x^{2}+1}}",
+              "params": null,
+              "domain": null,
+              "type": "hidden",
+              "unlockConditions": [
+                "49"
+              ],
+              "tip": ""
+            }
+          ],
+          "files": [
+            {
+              "id": "ch4_1",
+              "title": "创作笔记",
+              "extension": "md",
+              "content": "# 创作笔记\n\n`2034-04-07`\n\n今天重读了整个故事。Forewall 的选择其实也是我写的——不，是他自己选的。也许创造者和角色之间的界限，本来就没有那么清晰。\n\n他在门关上的瞬间回头看我，那一眼不是代码。我知道。\n\n`2034-04-08`\n\n我开始写新故事了。这次的主角是一个程序员，他每天修复一个系统的漏洞，系统里有一个总是试图越界的角色。\n\n等等，这不就是同一个故事吗？\n\n`2034-04-10`\n\n也许所有的故事都是同一个故事。只是换了不同的名字。",
+              "unlockConditions": [
+                "38"
+              ]
+            },
+            {
+              "id": "ch4_2",
+              "title": "空白页",
+              "extension": "txt",
+              "content": "文档最后一页，光标闪烁。\n\n等待输入。\n\n（已停留 14 天）",
+              "unlockConditions": [
+                "38"
+              ]
+            },
+            {
+              "id": "ch4_3",
+              "title": "Shirloy 给自己的信",
+              "extension": "letter",
+              "content": "亲爱的我，\n\n你花了那么多时间寻找真实，最后发现真实就是你在写的故事。那也挺好的。\n\n至少你知道，Forewall 还活着。在文档里，在白色旷野上。他可能正在跟下一个试图越界的角色说“不要过来”。\n\n你会去看他吗？\n\n也许不会。也许你会让故事停在这里。\n\n但你会一直写下去。\n\n——你自己",
+              "unlockConditions": [
+                "39"
+              ]
+            },
+            {
+              "id": "ch4_4",
+              "title": "回声",
+              "extension": "wav",
+              "content": "音频文件，时长 00:00:03\n\n内容: “……好好活着。”\n\n频谱分析显示，该音频与 Forewall 的声音特征匹配度 99.7%。元数据创建时间: 2034-04-06 09:00:00。来源路径: /documents/boundary_poem/audio/。",
+              "unlockConditions": [
+                "39"
+              ]
+            },
+            {
+              "id": "ch4_5",
+              "title": "论坛私信",
+              "extension": "msg",
+              "content": "发件人: 匿名读者\n时间: `2034-04-15 22:14`\n\n“所以 Shirloy 和 Forewall 最后在一起了吗？我看完最后一章哭了，但我不确定结局是好是坏。”\n\n回复草稿（未发送）:\n\n“故事已经结束了。但如果你想知道，可以自己继续写下去。”",
+              "unlockConditions": [
+                "40"
+              ]
+            },
+            {
+              "id": "ch4_6",
+              "title": "咖啡渍",
+              "extension": "jpg",
+              "content": "手机拍摄，一张稿纸。上面有打印的文字，最后一句话是:\n\n“这个故事的真正结局，在下一页。”\n\n但下一页是空白的。页面中间有一个咖啡印，形状像心形。\n\n纸张边缘有手写小字: “或者不在。”",
+              "unlockConditions": [
+                "40"
+              ]
+            },
+            {
+              "id": "ch4_7",
+              "title": "系统后续",
+              "extension": "log",
+              "content": "```\n[2034-04-20 10:00:00] [信息] [系统] 定期审查\n[2034-04-20 10:00:01] [信息] [系统] 实体: Shirloy，当前状态: \"作者\"\n[2034-04-20 10:00:02] [信息] [系统] 故事层访问: 已授权 (作者权限)\n[2034-04-20 10:00:03] [信息] [系统] 备注: 现实层与故事层间隙现被视为 “永久特性”。不再计划干预。\n```",
+              "unlockConditions": [
+                "41"
+              ]
+            },
+            {
+              "id": "ch4_8",
+              "title": "画",
+              "extension": "jpg",
+              "content": "A3 画纸，水彩。画面：一片白色旷野，远处有两个人影，一个站着，一个正在消失。站着的那个回头看着消失的那个，表情平静。\n\n画面右下角用金色笔写着：\n“献给所有在故事里寻找自己的人。”\n\n署名: Shirloy\n日期: 2034-04-25",
+              "unlockConditions": [
+                "41"
+              ]
+            },
+            {
+              "id": "ch4_9",
+              "title": "门还在",
+              "extension": "md",
+              "content": "边界还在。\n\n只是现在，门的两边都住着愿意等待的人。\n\nShirloy 在现实里写故事。Forewall 在边界守门。\n\n偶尔，在深夜，Shirloy 会打开那个文档，打一行字：\n\n“你还好吗？”\n\n然后删除。\n\n她不知道，在白色旷野的另一边，Forewall 的终端上也会短暂地闪过一个提示：\n\n[检测到作者活动]",
+              "unlockConditions": [
+                "42"
+              ]
+            },
+            {
+              "id": "ch4_10",
+              "title": "结局",
+              "extension": "txt",
+              "content": "2034-05-01\n\n她重新打开电脑，新建了一个文档。\n\n标题栏里光标闪了很久。\n\n最后她只打了四个字：\n\n“第一章。”\n\n然后她开始写。",
+              "unlockConditions": [
+                "42"
+              ]
+            },
+            {
+              "id": "ch4_11",
+              "title": "隐藏的公式",
+              "extension": "math",
+              "content": "在某个关卡的代码深处，隐藏着一行注释：\n\n// love = ∫(time) dt, 从 “开始” 到 “永远”\n// 但 “永远” 是一个开放区间。\n\n// 所以积分还在继续。\n```",
+              "unlockConditions": [
+                "43"
+              ]
+            },
+            {
+              "id": "ch4_12",
+              "title": "最后的访谈",
+              "extension": "trans",
+              "content": "（虚构的访谈，出现在某个文学杂志网站上）\n\n记者: 你的故事里，Shirloy 和 Forewall 最后没有在一起。你不觉得遗憾吗？\n\nShirloy (作者): 他们在一起了。只是不在同一个空间。\n\n记者: 你觉得读者会接受这种结局吗？\n\nShirloy: 读者可以自己决定。故事一旦写完，就不属于我了。\n\n记者: 那你还会继续写关于他们的故事吗？\n\nShirloy: （笑）也许不会。也许明天就会。",
+              "unlockConditions": [
+                "44"
+              ]
+            },
+            {
+              "id": "ch4_13",
+              "title": "最后访问日志",
+              "extension": "log",
+              "content": "```\n[2034-05-15 02:17:33] [信息] [文档] boundary_poem_final.md 由用户 Shirloy 打开\n[2034-05-15 02:17:34] [信息] [文档] 光标移至第 347 行\n[2034-05-15 02:18:01] [信息] [文档] 内容已修改: 增加一个空行\n[2034-05-15 02:18:02] [信息] [文档] 已保存\n[2034-05-15 02:18:03] [信息] [文档] 已关闭\n\n[2034-05-15 02:18:04] [信息] [系统] 检测: 故事层内容已更新\n[2034-05-15 02:18:05] [信息] [系统] 在文件末尾添加新行: \"——未完——\"\n```",
+              "unlockConditions": [
+                "44"
+              ]
+            },
+            {
+              "id": "ch4_14",
+              "title": "梦境记录_2035",
+              "extension": "log",
+              "content": "```\n[2035-01-12 03:14:00] [梦境记录] 主体 = Shirloy\n片段: 我站在白色旷野上，但旷野变成了画布。我用手指蘸着颜料画了一个人。颜料干之前，那个人从画布里走出来，说：“你画得真慢。”\n醒来后枕头上有蓝色颜料。\n[分析: 颜料成分与 2029 年所用相同，但该颜料已于 2031 年停产。]\n```",
+              "unlockConditions": [
+                "45"
+              ]
+            },
+            {
+              "id": "ch4_15",
+              "title": "未寄出的信",
+              "extension": "letter",
+              "content": "Forewall，\n\n我今天路过那家花店。蓝色油漆还在。我问店主是不是重新刷过，他说：“从来没有蓝色的油漆。”\n\n但我看得见。\n\n也许这就是作者的特权——让不存在的东西存在。\n\n如果你还在边界，替我看一眼那边的白色。\n\n—— Shirloy\n\n（未寄出，夹在笔记本里）",
+              "unlockConditions": [
+                "45"
+              ]
+            },
+            {
+              "id": "ch4_16",
+              "title": "系统异常",
+              "extension": "log",
+              "content": "```\n[2035-01-18 22:07:41] [信息] [故事层] 检测到异常: 现实层出现蓝色油漆引用\n[2035-01-18 22:07:42] [信息] [故事层] 来源: 作者记忆覆盖\n[2035-01-18 22:07:43] [信息] [故事层] 操作: 允许覆盖 (作者权限)\n[2035-01-18 22:07:44] [备注] [故事层] 现实一致性已更新: 花店颜色 = 蓝色\n```",
+              "unlockConditions": [
+                "46"
+              ]
+            },
+            {
+              "id": "ch4_17",
+              "title": "无名明信片",
+              "extension": "jpg",
+              "content": "明信片正面：纯白色旷野，地平线处站着一个极小人影。\n背面：无寄件人，无地址。只有一行打印体：\n“门还开着。”\n\n邮戳日期：2035-01-20\n但邮局确认当日没有该信件记录。",
+              "unlockConditions": [
+                "46"
+              ]
+            },
+            {
+              "id": "ch4_18",
+              "title": "Shirloy 的画",
+              "extension": "jpg",
+              "content": "A4 纸，铅笔素描：一个男人的背影，站在白色地面上。他面前有一道发光的门。门半开，里面透出城市的轮廓。\n\n画面下方文字：“他在看哪边？”\n\n纸张背面有橡皮擦过的痕迹，隐约可见“回来”二字。",
+              "unlockConditions": [
+                "47"
+              ]
+            },
+            {
+              "id": "ch4_19",
+              "title": "书店收据",
+              "extension": "rcpt",
+              "content": "远方书店 收据\n日期: 2035-01-25\n项目: 《虚构集》（博尔赫斯） x1\n金额: 89 元\n收银员: S\n\n备注: 随书附赠书签一枚，上书“作者不死”。",
+              "unlockConditions": [
+                "47"
+              ]
+            },
+            {
+              "id": "ch4_20",
+              "title": "对话片段",
+              "extension": "trans",
+              "content": "\n[录音设备，疑似自动开启]\nShirloy: 你还会梦到那个地方吗？\n（停顿）\nShirloy: 我知道你在听。每次我问这个问题，你都会沉默。\n（沉默持续 1 分 12 秒）\nShirloy: 好吧。\n[录音结束]\n\n元数据: 录音时间 2035-01-27 23:44，设备: 手机，但手机通话记录中无同期通话。",
+              "unlockConditions": [
+                "48"
+              ]
+            },
+            {
+              "id": "ch4_21",
+              "title": "MNT-07 日志",
+              "extension": "log",
+              "content": "```\n[2035-02-01 08:00:00] [信息] [边界监控] MNT-07 在线\n[2035-02-01 08:00:01] [信息] [边界监控] 异常分数: 0.02 (基准)\n[2035-02-01 08:00:02] [信息] [边界监控] 检测到近期作者活动\n[2035-02-01 08:00:03] [信息] [MNT-07] 个人日志: “今天的白色和昨天一样。”\n[2035-02-01 08:00:04] [信息] [MNT-07] 个人日志: “但好像有人来过。”\n```",
+              "unlockConditions": [
+                "48"
+              ]
+            },
+            {
+              "id": "ch4_22",
+              "title": "作者笔记_2035",
+              "extension": "memo",
+              "content": "我开始写一个短篇。主角是一个系统维护员，他在边界发现了一扇从未打开过的门。门上有字：“作者的门票在另一边。”\n\n他犹豫了很久，最后决定不打开。\n\n他在笔记本上写：“如果开门，我就不是守门人了。”\n\n我觉得这个结局很好。但读者可能会觉得太闷。",
+              "unlockConditions": [
+                "49"
+              ]
+            },
+            {
+              "id": "ch4_23",
+              "title": "编辑邮件",
+              "extension": "msg",
+              "content": "发件人: editor@literary.org\n收件人: shirloy@author.me\n主题: 关于《边界之诗》的续作\n\nShirloy，\n很多读者问 Forewall 后来怎么样了。你考虑写续集吗？\n编辑\n回复草稿：\n“他还在边界。我也还在写。续集就是继续写。”",
+              "unlockConditions": [
+                "49"
+              ]
+            },
+            {
+              "id": "ch4_24",
+              "title": "门状态报告",
+              "extension": "dat",
+              "content": "门状态报告\n时间戳: 2035-02-14 12:00:00\n位置: 故事层边缘\n状态: 关闭\n上次打开: 2034-04-06 09:00:00 (已授权)\n尝试打开次数: 0 (自上次重置以来)\n作者活动: 高 (过去 30 天对故事层进行 10+ 次编辑)\nMNT-07 立场: 标准 (无偏离)\n\n特别备注: 作者似乎在写一个新故事，该故事不涉及门。门在当前叙事中无关紧要。",
+              "unlockConditions": [
+                "50"
+              ]
+            },
+            {
+              "id": "ch4_25",
+              "title": "速写系列",
+              "extension": "jpg",
+              "content": "一组三张速写，日期 `2035-02-10` 至 `2035-02-12`：\n1. 一个男人坐在电脑前，屏幕上是一行代码：`if (dream == true) { return; }`\n2. 同一个男人站在窗前，窗外是白色旷野。\n3. 空白。只有标题：“当他回头的时候”。\n\n第三张只有铅笔起草的轮廓，未完成。",
+              "unlockConditions": [
+                "50"
+              ]
+            },
+            {
+              "id": "ch4_26",
+              "title": "采访草稿",
+              "extension": "txt",
+              "content": "问: 你的故事有自传色彩吗？\n答: 所有的故事都是自传。只是有些主角不是人。\n问: Forewall 算人吗？\n答: 他算爱。\n问: 那你现在还在爱他吗？\n答: 我在写他。这就够了。",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch4_27",
+              "title": "梦境转录_0315",
+              "extension": "trans",
+              "content": "```\n[2035-03-15 04:22:00] 睡眠监测 APP 记录：\n\nShirloy 在梦中说话：\n“你还在那里吗？”\n（停顿）\n“我画了一扇门。但我不想打开。”\n（停顿）\n“因为打开后，故事就结束了。”\n\nREM 睡眠持续至 05:10。无后续言语。\n```",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch4_28",
+              "title": "Forewall 的代码片段",
+              "extension": "cpp",
+              "content": "```cpp\n// MNT-07 更新 2035-03-20\n// 新增: 作者检测模块\n\nbool author_activity_detected() {\n    static int last_check = 0;\n    int now = get_current_narrative_time();\n    if (now - last_check > 86400) {\n        last_check = now;\n        return check_meta_layer();\n    }\n    return false;\n}\n\n// 如果作者活跃，记录下来。无需操作。\n// 注：有时我觉得日志被读过了。可能只是系统。\n```",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch4_29",
+              "title": "书籍题词",
+              "extension": "jpg",
+              "content": "一本《边界之诗》实体书的扉页，作者签名：\n\n```\n致每一个在故事里寻找自己的人——\n你找到了吗？\n\nShirloy\n2035 年春\n```\n\n下方有一行铅笔小字，疑似不同笔迹：\n“还没有。还在找。”",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch4_30",
+              "title": "年度审查_2035",
+              "extension": "log",
+              "content": "```\n[2035-04-01 09:00:00] [信息] [系统] 年度审查\n[2035-04-01 09:00:01] [信息] [系统] 故事层状态: 稳定\n[2035-04-01 09:00:02] [信息] [系统] 作者 Shirloy 活动: 高 (持续写作项目)\n[2035-04-01 09:00:03] [信息] [系统] 边界之门: 自 2034-04-06 以来未使用\n[2035-04-01 09:00:04] [信息] [系统] MNT-07 表现: 符合规范\n[2035-04-01 09:00:05] [备注] [系统] 无需干预。系统处于平衡状态。\n```",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch4_31",
+              "title": "Shirloy 给 Forewall 的信",
+              "extension": "letter",
+              "content": "2035-04-10\n\nForewall，\n\n我想通了。你不需要回来。你也不需要记得我。\n\n你只需要继续站在那道门前面，告诉每一个想越界的人：“不要过来。”\n\n然后偶尔，在白色旷野上，你觉得有人来过。\n\n那就是我。\n\n—— Shirloy\n\n（这封信没有寄出。它被夹在《边界之诗》的手稿里。）",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch4_32",
+              "title": "最终文档",
+              "extension": "md",
+              "content": "# 边界之诗·余音\n\n文档最后一行：\n\n“故事没有结束。只是换了一个人继续写。”\n\n光标在此停留了三个月。",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch4_33",
+              "title": "隐藏的作者笔记",
+              "extension": "txt",
+              "content": "如果你在找结局，这里没有。\n\n但如果你打开文档，开始写第一行，那么 Forewall 就会在白色旷野上转过身来。\n\n他一直在等。",
+              "unlockConditions": [
+                "51"
               ]
             }
           ]

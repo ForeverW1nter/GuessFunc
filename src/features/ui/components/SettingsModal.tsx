@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Info, FileText, ClipboardList, Palette, Type, Bot, Save, X } from 'lucide-react';
+import { ChevronLeft, X } from 'lucide-react';
 import { useUIStore } from '../../../store/useUIStore';
+import { useTranslation } from 'react-i18next';
 
 import { ThemePanel } from './settings/ThemePanel';
 import { FontPanel } from './settings/FontPanel';
 import { SavePanel } from './settings/SavePanel';
 import { ApiPanel } from './settings/ApiPanel';
 import { MarkdownPanel } from './settings/MarkdownPanel';
+import { LanguagePanel } from './settings/LanguagePanel';
+import { MainPanel } from './settings/MainPanel';
 
 export const SettingsOption = ({ icon: Icon, label, onClick }: { icon: React.ElementType, label: string, onClick: () => void }) => (
   <button 
@@ -19,22 +22,9 @@ export const SettingsOption = ({ icon: Icon, label, onClick }: { icon: React.Ele
   </button>
 );
 
-// Mock Markdown Panels for demonstration
-const MainPanel = ({ setActivePanel }: { setActivePanel: (p: string) => void }) => {
-  return (
-    <div className="p-[20px] overflow-y-auto max-h-[80vh] no-scrollbar flex flex-col gap-[12px]">
-      <SettingsOption icon={Info} label="关于游戏" onClick={() => setActivePanel('about')} />
-      <SettingsOption icon={FileText} label="规则说明" onClick={() => setActivePanel('rules')} />
-      <SettingsOption icon={ClipboardList} label="更新日志" onClick={() => setActivePanel('changelog')} />
-      <SettingsOption icon={Palette} label="主题设置" onClick={() => setActivePanel('theme')} />
-      <SettingsOption icon={Type} label="文档字体设置" onClick={() => setActivePanel('font')} />
-      <SettingsOption icon={Bot} label="AI 设置" onClick={() => setActivePanel('api')} />
-      <SettingsOption icon={Save} label="存档管理" onClick={() => setActivePanel('save')} />
-    </div>
-  );
-};
+// MainPanel 移出，单独作为组件
 
-export type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'save' | 'api' | 'font';
+export type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'save' | 'api' | 'font' | 'language';
 
 import aboutMd from '../../../../docs/about.md?raw';
 import rulesMd from '../../../../docs/rules.md?raw';
@@ -49,6 +39,7 @@ export const SettingsModal: React.FC = () => {
   const [activePanel, setActivePanel] = useState<SettingsPanel>('main');
   const [displayPanel, setDisplayPanel] = useState<SettingsPanel>('main');
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const { t } = useTranslation();
 
   if (!isSettingsOpen) return null;
 
@@ -73,15 +64,16 @@ export const SettingsModal: React.FC = () => {
 
   const getPanelTitle = () => {
     switch (activePanel) {
-      case 'main': return '设置中心';
-      case 'about': return '关于游戏';
-      case 'rules': return '规则说明';
-      case 'changelog': return '更新日志';
-      case 'theme': return '主题设置';
-      case 'font': return '自定义字体';
-      case 'save': return '存档管理';
-      case 'api': return 'AI 设置';
-      default: return '设置中心';
+      case 'main': return t('settings.title', '设置中心');
+      case 'about': return t('settings.doc.about', '关于游戏');
+      case 'rules': return t('settings.doc.rules', '规则说明');
+      case 'changelog': return t('settings.doc.changelog', '更新日志');
+      case 'theme': return t('settings.theme.title', '主题设置');
+      case 'font': return t('settings.font.title', '文档字体设置');
+      case 'language': return t('settings.language.title', '语言设置');
+      case 'save': return t('settings.save.title', '存档管理');
+      case 'api': return t('settings.api.title', 'AI 设置');
+      default: return t('settings.title', '设置中心');
     }
   };
 
@@ -126,6 +118,7 @@ export const SettingsModal: React.FC = () => {
           {displayPanel === 'changelog' && <MarkdownPanel mdText={CHANGELOG_TEXT} />}
           {displayPanel === 'theme' && <ThemePanel />}
           {displayPanel === 'font' && <FontPanel />}
+          {displayPanel === 'language' && <LanguagePanel />}
           {displayPanel === 'save' && <SavePanel />}
           {displayPanel === 'api' && <ApiPanel />}
         </div>

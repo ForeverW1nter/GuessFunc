@@ -1,28 +1,103 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Download } from 'lucide-react';
-import { RouteData, FileData, LevelData } from '../../src/types/story';
+import React, { useState, useEffect, useRef } from 'react';
+import { RouteData, FileData, LevelData, ChapterData } from '../../src/types/story';
+import { useTranslation } from 'react-i18next';
+import { LevelEditor } from './components/LevelEditor';
+import { FileEditor } from './components/FileEditor';
+import { Sidebar } from './components/Sidebar';
+import { ChapterEditorView } from './components/ChapterEditorView';
+import { SystemBar } from './components/SystemBar';
+import { WorkspaceEmptyState } from './components/WorkspaceEmptyState';
+import { SettingsModal } from '../../src/features/ui/components/SettingsModal';
+
+interface GlobalViewState {
+  routeIndex: number;
+  chapterIndex: number | null;
+}
+
+interface ChapterState {
+  mode: 'chapter' | 'level' | 'file';
+  levelIndex: number | null;
+  fileIndex: number | null;
+}
 
 export const StoryEditorPage: React.FC = () => {
-  const [storyData, setStoryData] = useState<{ routes: RouteData[] }>({
-    routes: [
-      {
-        id: 'newRoute',
-        title: '新线路',
-        description: '线路描述...',
-        showToBeContinued: true,
-        chapters: []
+  const { t } = useTranslation();
+  
+  const [activeApp, setActiveApp] = useState<'story-editor' | 'level-tester'>('story-editor');
+  
+  const [storyData, setStoryData] = useState<{ routes: RouteData[] }>(() => {
+    const cachedData = localStorage.getItem('storyEditorData');
+    if (cachedData) {
+      try {
+        return JSON.parse(cachedData);
+      } catch (e) {
+        console.error("Failed to parse cached story data", e);
       }
-    ]
+    }
+    return {
+      routes: [
+        {
+          id: 'newRoute',
+          title: t('tools.storyEditor.newRoute', 'New Route'),
+          description: t('tools.storyEditor.newRouteDesc', 'Route description...'),
+          showToBeContinued: true,
+          chapters: []
+        }
+      ]
+    };
   });
 
-  const [activeRouteIndex] = useState(0);
+  const [viewState, setViewState] = useState<GlobalViewState>({
+    routeIndex: 0,
+    chapterIndex: null,
+  });
+
+  // Maintain state per chapter to preserve opened file/level
+  const [chapterStates, setChapterStates] = useState<Record<string, ChapterState>>({});
+  const scrollPositions = useRef<Record<string, number>>({});
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    localStorage.setItem('storyEditorData', JSON.stringify(storyData));
+  }, [storyData]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const activeRoute = storyData.routes[viewState.routeIndex];
+  const activeChapter = viewState.chapterIndex !== null ? activeRoute.chapters[viewState.chapterIndex] : null;
+  const chapterId = activeChapter?.id || '';
+
+  const currentChapterState = chapterId 
+    ? (chapterStates[chapterId] || { mode: 'chapter', levelIndex: null, fileIndex: null }) 
+    : null;
+
+  const setChapterState = (newState: Partial<ChapterState>) => {
+    if (!chapterId) return;
+    setChapterStates(prev => ({
+      ...prev,
+      [chapterId]: {
+        ...(prev[chapterId] || { mode: 'chapter', levelIndex: null, fileIndex: null }),
+        ...newState
+      }
+    }));
+  };
+
+  const activeLevel = (activeChapter && currentChapterState?.levelIndex !== null && currentChapterState?.levelIndex !== undefined) 
+    ? activeChapter.levels[currentChapterState.levelIndex] : null;
+  const activeFile = (activeChapter && currentChapterState?.fileIndex !== null && currentChapterState?.fileIndex !== undefined) 
+    ? activeChapter.files?.[currentChapterState.fileIndex] : null;
 
   const handleExport = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storyData, null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href",     dataStr);
     downloadAnchorNode.setAttribute("download", "story.json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
+    document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   };
@@ -35,8 +110,9 @@ export const StoryEditorPage: React.FC = () => {
         try {
           const json = JSON.parse(event.target?.result as string);
           setStoryData(json);
+          setViewState({ routeIndex: 0, chapterIndex: null });
         } catch (err: unknown) {
-          alert('解析 JSON 文件失败');
+          alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
           console.error(err);
         }
       };
@@ -47,23 +123,24 @@ export const StoryEditorPage: React.FC = () => {
 
   const addChapter = () => {
     const newRoutes = [...storyData.routes];
-    const newChapterId = `ch${newRoutes[activeRouteIndex].chapters.length}`;
-    newRoutes[activeRouteIndex].chapters.push({
+    const newChapterId = `ch${newRoutes[viewState.routeIndex].chapters.length}`;
+    newRoutes[viewState.routeIndex].chapters.push({
       id: newChapterId,
-      title: `新章节 ${newChapterId}`,
+      title: `${t('tools.storyEditor.newChapter', 'New Chapter')} ${newChapterId}`,
       levels: [],
       files: []
     });
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
-  const addLevel = (chapterIndex: number) => {
+  const addLevel = () => {
+    if (viewState.chapterIndex === null) return;
     const newRoutes = [...storyData.routes];
-    const chapter = newRoutes[activeRouteIndex].chapters[chapterIndex];
+    const chapter = newRoutes[viewState.routeIndex].chapters[viewState.chapterIndex];
     const newLevelId = `${chapter.levels.length + 1}`;
     chapter.levels.push({
       id: newLevelId,
-      title: `第 ${newLevelId} 关`,
+      title: t('tools.storyEditor.newLevel', { id: newLevelId, defaultValue: `Level ${newLevelId}` }),
       targetFunction: 'x',
       params: null,
       domain: null,
@@ -74,221 +151,148 @@ export const StoryEditorPage: React.FC = () => {
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
-  const addFile = (chapterIndex: number) => {
+  const addFile = () => {
+    if (viewState.chapterIndex === null) return;
     const newRoutes = [...storyData.routes];
-    const chapter = newRoutes[activeRouteIndex].chapters[chapterIndex];
+    const chapter = newRoutes[viewState.routeIndex].chapters[viewState.chapterIndex];
     const newFileId = `f${chapter.files?.length ? chapter.files.length + 1 : 1}`;
     
     if (!chapter.files) chapter.files = [];
     
     chapter.files.push({
       id: newFileId,
-      title: '新文件',
+      title: t('tools.storyEditor.newFile', 'New File'),
       extension: 'md',
-      content: '文件内容...',
+      content: t('tools.storyEditor.fileContent', 'File content...'),
       unlockConditions: []
     });
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
-  const updateLevel = (chapterIndex: number, levelIndex: number, field: keyof LevelData, value: unknown) => {
+  const updateRoute = (field: keyof RouteData, value: unknown) => {
     const newRoutes = [...storyData.routes];
-    newRoutes[activeRouteIndex].chapters[chapterIndex].levels[levelIndex][field] = value as never;
+    newRoutes[viewState.routeIndex][field] = value as never;
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
-  const updateFile = (chapterIndex: number, fileIndex: number, field: keyof FileData, value: unknown) => {
+  const updateChapter = (field: keyof ChapterData, value: unknown) => {
+    if (viewState.chapterIndex === null) return;
     const newRoutes = [...storyData.routes];
-    newRoutes[activeRouteIndex].chapters[chapterIndex].files![fileIndex][field] = value as never;
+    newRoutes[viewState.routeIndex].chapters[viewState.chapterIndex][field] = value as never;
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
-  const currentRoute = storyData.routes[activeRouteIndex];
+  const updateLevelData = (field: keyof LevelData, value: unknown) => {
+    if (viewState.chapterIndex === null || currentChapterState?.levelIndex == null) return;
+    const newRoutes = [...storyData.routes];
+    newRoutes[viewState.routeIndex].chapters[viewState.chapterIndex].levels[currentChapterState.levelIndex][field] = value as never;
+    setStoryData({ ...storyData, routes: newRoutes });
+  };
+
+  const updateFileData = (field: keyof FileData, value: unknown) => {
+    if (viewState.chapterIndex === null || currentChapterState?.fileIndex == null) return;
+    const newRoutes = [...storyData.routes];
+    newRoutes[viewState.routeIndex].chapters[viewState.chapterIndex].files![currentChapterState.fileIndex][field] = value as never;
+    setStoryData({ ...storyData, routes: newRoutes });
+  };
+
+  const deleteChapter = (index: number) => {
+    const newRoutes = [...storyData.routes];
+    newRoutes[viewState.routeIndex].chapters.splice(index, 1);
+    setStoryData({ ...storyData, routes: newRoutes });
+    if (viewState.chapterIndex === index) {
+      setViewState({ routeIndex: viewState.routeIndex, chapterIndex: null });
+    } else if (viewState.chapterIndex !== null && viewState.chapterIndex > index) {
+      setViewState({ ...viewState, chapterIndex: viewState.chapterIndex - 1 });
+    }
+  };
+
+  const deleteLevel = (index: number) => {
+    if (viewState.chapterIndex === null) return;
+    const newRoutes = [...storyData.routes];
+    newRoutes[viewState.routeIndex].chapters[viewState.chapterIndex].levels.splice(index, 1);
+    setStoryData({ ...storyData, routes: newRoutes });
+    setChapterState({ mode: 'chapter', levelIndex: null });
+  };
+
+  const deleteFile = (index: number) => {
+    if (viewState.chapterIndex === null) return;
+    const newRoutes = [...storyData.routes];
+    newRoutes[viewState.routeIndex].chapters[viewState.chapterIndex].files!.splice(index, 1);
+    setStoryData({ ...storyData, routes: newRoutes });
+    setChapterState({ mode: 'chapter', fileIndex: null });
+  };
+
+  // Convert setViewState calls from Sidebar
+  const handleSetViewState = (state: { mode: 'route' | 'chapter' | 'level' | 'file'; routeIndex: number; chapterIndex: number | null; levelIndex: number | null; fileIndex: number | null }) => {
+    setViewState({ routeIndex: state.routeIndex, chapterIndex: state.chapterIndex });
+    // Mode, levelIndex, fileIndex is handled per-chapter now. Sidebar only switches chapter/route.
+  };
 
   return (
-    <div className="w-full h-full flex flex-col bg-app-bg text-app-text overflow-hidden font-mono transition-colors duration-300">
-      <div className="h-[64px] border-b border-card-border flex items-center justify-between px-6 shrink-0 bg-card-bg">
-        <h1 className="text-[1.2rem] font-bold text-app-text m-0 tracking-wider">STORY_EDITOR.exe</h1>
-        <div className="flex gap-2">
-          <label className="flex items-center gap-2 px-4 py-2 bg-app-primary text-white rounded-[4px] hover:opacity-80 transition-all border-none cursor-pointer font-bold tracking-wider text-[0.85rem]">
-            <span>IMPORT JSON</span>
-            <input type="file" accept=".json" onChange={handleFileUpload} className="hidden" />
-          </label>
-          <button 
-            onClick={handleExport}
-            className="flex items-center gap-2 px-4 py-2 bg-app-primary text-white rounded-[4px] hover:opacity-80 transition-all border-none cursor-pointer font-bold tracking-wider text-[0.85rem]"
-          >
-            <Download size={16} />
-            <span>EXPORT JSON</span>
-          </button>
+    <div className="w-full h-full flex flex-col bg-[#0A0A0B] text-[#D4D4D6] overflow-hidden font-mono">
+      {/* System Bar */}
+      <SystemBar onFileUpload={handleFileUpload} onExport={handleExport} />
+
+      {/* Main Workspace */}
+      <div className="flex-1 relative flex overflow-hidden">
+        <Sidebar 
+          isMobile={isMobile}
+          activeApp={activeApp}
+          setActiveApp={setActiveApp}
+          activeRoute={activeRoute}
+          viewState={{ routeIndex: viewState.routeIndex, chapterIndex: viewState.chapterIndex }}
+          setViewState={handleSetViewState}
+          updateRoute={updateRoute}
+          addChapter={addChapter}
+        />
+
+        <div className={`
+          ${isMobile ? (viewState.chapterIndex !== null ? 'w-full' : 'hidden') : 'flex-1 min-w-0'} 
+          flex flex-col h-full bg-[#121214] relative
+        `}>
+          {currentChapterState?.mode === 'level' && activeLevel && currentChapterState.levelIndex !== null ? (
+            <LevelEditor 
+              level={activeLevel}
+              levelIndex={currentChapterState.levelIndex}
+              onUpdate={updateLevelData}
+              onDelete={deleteLevel}
+              onBack={() => setChapterState({ mode: 'chapter', levelIndex: null })}
+            />
+          ) : currentChapterState?.mode === 'file' && activeFile && currentChapterState.fileIndex !== null ? (
+            <FileEditor 
+              file={activeFile}
+              fileIndex={currentChapterState.fileIndex}
+              onUpdate={updateFileData}
+              onDelete={deleteFile}
+              onBack={() => setChapterState({ mode: 'chapter', fileIndex: null })}
+            />
+          ) : activeChapter && viewState.chapterIndex !== null ? (
+            <ChapterEditorView 
+              route={activeRoute}
+              chapter={activeChapter}
+              chapterIndex={viewState.chapterIndex}
+              updateChapter={updateChapter}
+              deleteChapter={deleteChapter}
+              deleteLevel={deleteLevel}
+              deleteFile={deleteFile}
+              addLevel={addLevel}
+              addFile={addFile}
+              onSelectLevel={(idx) => setChapterState({ mode: 'level', levelIndex: idx })}
+              onSelectFile={(idx) => setChapterState({ mode: 'file', fileIndex: idx })}
+              onClose={() => setViewState({ ...viewState, chapterIndex: null })}
+              isMobile={isMobile}
+              getScrollTop={() => scrollPositions.current[chapterId] || 0}
+              setScrollTop={(top) => {
+                scrollPositions.current[chapterId] = top;
+              }}
+            />
+          ) : (
+            <WorkspaceEmptyState />
+          )}
         </div>
       </div>
-
-      <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
-        <div className="max-w-[800px] mx-auto space-y-8 pb-[100px]">
-          {/* Route Info */}
-          <div className="bg-card-bg p-6 rounded-[12px] border border-card-border space-y-4 shadow-sm">
-            <h2 className="text-[1.1rem] font-bold text-app-text m-0 border-b border-card-border pb-2">线路设置 (Route)</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-[0.85rem] text-app-text opacity-60">线路 ID</label>
-                <input 
-                  type="text" 
-                  value={currentRoute.id}
-                  onChange={(e) => {
-                    const newRoutes = [...storyData.routes];
-                    newRoutes[activeRouteIndex].id = e.target.value;
-                    setStoryData({ ...storyData, routes: newRoutes });
-                  }}
-                  className="w-full bg-app-bg border border-card-border rounded p-2 text-app-text outline-none focus:border-app-primary transition-colors"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[0.85rem] text-app-text opacity-60">线路标题</label>
-                <input 
-                  type="text" 
-                  value={currentRoute.title}
-                  onChange={(e) => {
-                    const newRoutes = [...storyData.routes];
-                    newRoutes[activeRouteIndex].title = e.target.value;
-                    setStoryData({ ...storyData, routes: newRoutes });
-                  }}
-                  className="w-full bg-app-bg border border-card-border rounded p-2 text-app-text outline-none focus:border-app-primary transition-colors"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Chapters */}
-          {currentRoute.chapters.map((chapter, cIndex) => (
-            <div key={chapter.id} className="bg-card-bg p-6 rounded-[12px] border border-card-border space-y-6 shadow-sm">
-              <div className="flex items-center justify-between border-b border-card-border pb-3">
-                <input 
-                  type="text" 
-                  value={chapter.title}
-                  onChange={(e) => {
-                    const newRoutes = [...storyData.routes];
-                    newRoutes[activeRouteIndex].chapters[cIndex].title = e.target.value;
-                    setStoryData({ ...storyData, routes: newRoutes });
-                  }}
-                  className="bg-transparent border-none text-[1.1rem] font-bold text-app-text outline-none focus:text-app-primary transition-colors"
-                  placeholder="章节名称..."
-                />
-                <div className="flex items-center gap-2">
-                  <span className="text-[0.8rem] text-app-text opacity-50">ID: {chapter.id}</span>
-                  <button className="p-[4px] text-app-text opacity-50 hover:opacity-100 transition-opacity cursor-pointer bg-transparent border-none flex items-center">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Levels Section */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-[0.95rem] font-bold text-app-text opacity-70 m-0">关卡列表 (Levels)</h3>
-                  <button onClick={() => addLevel(cIndex)} className="flex items-center gap-[6px] px-[12px] py-[6px] rounded-[4px] bg-app-primary/20 text-app-primary hover:bg-app-primary/30 transition-colors text-[0.8rem]">
-                    <Plus size={14} /> Add Level
-                  </button>
-                </div>
-                
-                <div className="space-y-3">
-                  {chapter.levels.map((level, lIndex) => (
-                    <div key={level.id} className="bg-app-bg p-4 rounded-[8px] border border-card-border grid grid-cols-[1fr_2fr] gap-4">
-                      <div className="space-y-2">
-                        <input 
-                          type="text" 
-                          value={level.title}
-                          onChange={(e) => updateLevel(cIndex, lIndex, 'title', e.target.value)}
-                          className="w-full bg-card-bg border border-card-border rounded p-1.5 text-[0.9rem] text-app-text outline-none focus:border-app-primary transition-colors"
-                          placeholder="关卡名称"
-                        />
-                        <input 
-                          type="text" 
-                          value={level.id}
-                          onChange={(e) => updateLevel(cIndex, lIndex, 'id', e.target.value)}
-                          className="w-full bg-card-bg border border-card-border rounded p-1.5 text-[0.8rem] text-app-text opacity-80 outline-none focus:border-app-primary transition-colors"
-                          placeholder="关卡ID"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <input 
-                          type="text" 
-                          value={level.targetFunction || ''}
-                          onChange={(e) => updateLevel(cIndex, lIndex, 'targetFunction', e.target.value)}
-                          className="w-full bg-card-bg border border-card-border rounded p-1.5 text-[0.9rem] text-app-primary font-mono outline-none focus:border-app-primary transition-colors"
-                          placeholder="目标函数 (如: 2x+1)"
-                        />
-                        <input 
-                          type="text" 
-                          value={level.tip || ''}
-                          onChange={(e) => updateLevel(cIndex, lIndex, 'tip', e.target.value)}
-                          className="w-full bg-card-bg border border-card-border rounded p-1.5 text-[0.85rem] text-app-text opacity-80 outline-none focus:border-app-primary transition-colors"
-                          placeholder="过关提示 (可选)"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Files Section */}
-              <div className="space-y-3 pt-4 border-t border-card-border">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-[0.95rem] font-bold text-app-text opacity-70 m-0">掉落文件 (Files)</h3>
-                  <button onClick={() => addFile(cIndex)} className="flex items-center gap-[6px] px-[12px] py-[6px] rounded-[4px] bg-[rgba(var(--primary-color-rgb),0.1)] text-[#A0A0A5] hover:bg-[rgba(var(--primary-color-rgb),0.2)] transition-colors text-[0.8rem]">
-                    <Plus size={14} /> Add File
-                  </button>
-                </div>
-                
-                <div className="space-y-3">
-                  {chapter.files?.map((file, fIndex) => (
-                    <div key={file.id} className="bg-app-bg p-4 rounded-[8px] border border-card-border space-y-3">
-                      <div className="flex gap-2">
-                        <input 
-                          type="text" 
-                          value={file.title}
-                          onChange={(e) => updateFile(cIndex, fIndex, 'title', e.target.value)}
-                          className="flex-1 bg-card-bg border border-card-border rounded p-1.5 text-[0.9rem] text-app-text outline-none focus:border-app-primary transition-colors"
-                          placeholder="文件名"
-                        />
-                        <input 
-                          type="text" 
-                          value={file.extension}
-                          onChange={(e) => updateFile(cIndex, fIndex, 'extension', e.target.value)}
-                          className="w-[60px] bg-card-bg border border-card-border rounded p-1.5 text-[0.9rem] text-app-text outline-none text-center focus:border-app-primary transition-colors"
-                          placeholder="后缀"
-                        />
-                      </div>
-                      <input 
-                        type="text" 
-                        value={file.unlockConditions?.join(',') || ''}
-                        onChange={(e) => updateFile(cIndex, fIndex, 'unlockConditions', e.target.value ? e.target.value.split(',') : [])}
-                        className="w-full bg-card-bg border border-card-border rounded p-1.5 text-[0.85rem] text-app-text opacity-80 outline-none focus:border-app-primary transition-colors"
-                        placeholder="解锁前置关卡ID (如: 1,2)"
-                      />
-                      <textarea 
-                        value={file.content}
-                        onChange={(e) => updateFile(cIndex, fIndex, 'content', e.target.value)}
-                        className="w-full h-[100px] bg-card-bg border border-card-border rounded p-2 text-[0.9rem] text-app-text outline-none resize-none custom-scrollbar focus:border-app-primary transition-colors"
-                        placeholder="文件内容 (支持 Markdown)..."
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-
-          <button 
-            onClick={addChapter}
-            className="w-full py-4 border-2 border-dashed border-[#2A2A2E] rounded-[12px] text-[#A0A0A5] hover:text-white hover:border-app-primary hover:bg-[rgba(var(--primary-color-rgb),0.05)] transition-all flex items-center justify-center gap-2 cursor-pointer bg-transparent"
-          >
-            <Plus size={18} />
-            <span>添加新章节</span>
-          </button>
-
-        </div>
-      </div>
+      <SettingsModal />
     </div>
   );
 };

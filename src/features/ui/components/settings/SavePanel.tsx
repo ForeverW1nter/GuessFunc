@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUIStore } from '../../../../store/useUIStore';
 import { useGameStore } from '../../../../store/useGameStore';
-import { useStoryStore } from '../../../../store/useStoryStore';
+import { useTranslation } from 'react-i18next';
 import { ConfirmModal } from '../ConfirmModal';
 
 const DownloadIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>;
@@ -47,9 +47,9 @@ const UnlockIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 
 const ZapIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
 
 export const SavePanel: React.FC = () => {
-  const { isAssistMode, toggleAssistMode } = useStoryStore();
-  const { isSpeedrunMode, toggleSpeedrunMode } = useUIStore();
+  const { isAssistMode, toggleAssistMode, isSpeedrunMode, toggleSpeedrunMode } = useUIStore();
   const [currentSlot, setCurrentSlot] = React.useState(() => localStorage.getItem('guessfunc_current_slot') || '1');
+  const { t } = useTranslation();
 
   // We need a force render to show slot status correctly when it changes
   const [, setForceRender] = React.useState(0);
@@ -97,7 +97,7 @@ export const SavePanel: React.FC = () => {
 
     setCurrentSlot(slot);
     localStorage.setItem('guessfunc_current_slot', slot);
-    useUIStore.getState().addToast(`已切换至存档槽位 ${slot}`, 'success');
+    useUIStore.getState().addToast(t('settings.save.switchSlotSuccess', { slot }), 'success');
   };
 
   const handleExport = () => {
@@ -113,7 +113,7 @@ export const SavePanel: React.FC = () => {
     a.download = `guessfunc_save_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    useUIStore.getState().addToast('存档已导出', 'success');
+    useUIStore.getState().addToast(t('settings.save.exportSuccess', '存档已导出'), 'success');
   };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement>) => {
@@ -134,10 +134,10 @@ export const SavePanel: React.FC = () => {
         if (data.isSpeedrunMode !== undefined) {
           useUIStore.setState({ isSpeedrunMode: data.isSpeedrunMode });
         }
-     useUIStore.getState().addToast('存档导入成功！', 'success');
+     useUIStore.getState().addToast(t('settings.save.importSuccess', '存档导入成功！'), 'success');
         } catch (err: unknown) {
           console.error(err);
-          useUIStore.getState().addToast('存档格式错误', 'error');
+          useUIStore.getState().addToast(t('settings.save.importFormatError', '存档格式错误'), 'error');
         }
       };
      reader.readAsText(file);
@@ -179,14 +179,14 @@ export const SavePanel: React.FC = () => {
       });
     });
 
-    useUIStore.getState().addToast('当前存档已清空', 'success');
+    useUIStore.getState().addToast(t('settings.save.clearSuccess', '当前存档已清空'), 'success');
     setIsClearModalOpen(false);
   };
 
   return (
     <div className="space-y-5">
       <div className="space-y-3">
-        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">存档槽位</h3>
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.slotsTitle', '存档槽位')}</h3>
         <div className="flex flex-col gap-2">
           {[1, 2, 3, 4, 5].map((num) => {
             const slotStr = String(num);
@@ -203,10 +203,10 @@ export const SavePanel: React.FC = () => {
                 }`}
               >
                 <span className="font-medium text-base">
-                  {isCurrent ? `槽位 ${num} (当前)` : `槽位 ${num}`}
+                  {isCurrent ? t('settings.save.slotCurrent', { num }) : t('settings.save.slot', { num })}
                 </span>
                 <span className={`text-sm ${hasData ? 'opacity-80' : 'opacity-40'}`}>
-                  {hasData ? '有存档' : '空存档'}
+                  {hasData ? t('settings.save.hasSave', '有存档') : t('settings.save.emptySave', '空存档')}
                 </span>
               </button>
             );
@@ -215,18 +215,18 @@ export const SavePanel: React.FC = () => {
       </div>
 
       <div className="space-y-3 pt-4">
-        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">存档操作</h3>
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.operationsTitle', '存档操作')}</h3>
         
-        <SettingsOption icon={DownloadIcon} label="导出当前存档" onClick={handleExport} />
-        <SettingsOption icon={UploadIcon} label="导入存档到当前" onClick={handleImport} isFile />
-        <SettingsOption icon={Trash2Icon} label="清空当前存档" onClick={handleClearClick} isDanger />
+        <SettingsOption icon={DownloadIcon} label={t('settings.save.export', '导出当前存档')} onClick={handleExport} />
+        <SettingsOption icon={UploadIcon} label={t('settings.save.import', '导入存档到当前')} onClick={handleImport} isFile />
+        <SettingsOption icon={Trash2Icon} label={t('settings.save.clear', '清空当前存档')} onClick={handleClearClick} isDanger />
       </div>
 
       <div className="space-y-3 pt-4">
-        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">辅助功能</h3>
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.assistTitle', '辅助功能')}</h3>
         <SettingsOption 
           icon={UnlockIcon} 
-          label={`剧情预览模式: ${isAssistMode ? '开' : '关'}`}
+          label={`${t('settings.save.previewMode', '剧情预览模式')}: ${isAssistMode ? t('common.on', '开') : t('common.off', '关')}`}
           onClick={toggleAssistMode}
           rightContent={
             <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isAssistMode ? 'bg-app-primary' : 'bg-card-border'}`}>
@@ -235,12 +235,12 @@ export const SavePanel: React.FC = () => {
           }
         />
         <div className="text-sm opacity-80 px-2.5 text-app-text mb-4">
-          开启后可以直接游玩所有关卡（即使前置关卡未完成）。
+          {t('settings.save.previewModeDesc', '开启后可以直接游玩所有关卡（即使前置关卡未完成）。')}
         </div>
 
         <SettingsOption 
           icon={ZapIcon} 
-          label={`速通模式: ${isSpeedrunMode ? '开' : '关'}`}
+          label={`${t('settings.main.speedrun', '速通模式')}: ${isSpeedrunMode ? t('common.on', '开') : t('common.off', '关')}`}
           onClick={toggleSpeedrunMode}
           rightContent={
             <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isSpeedrunMode ? 'bg-app-primary' : 'bg-card-border'}`}>
@@ -249,15 +249,15 @@ export const SavePanel: React.FC = () => {
           }
         />
         <div className="text-sm opacity-80 px-2.5 text-app-text">
-          开启后跳过剧情，直接进入关卡。
+          {t('settings.save.speedrunModeDesc', '开启后跳过剧情，直接进入关卡。')}
         </div>
       </div>
 
       <ConfirmModal 
         isOpen={isClearModalOpen}
-        title="警告：清空存档"
-        message="您确定要清空当前槽位的存档吗？此操作不可逆！"
-        confirmText="清空存档"
+        title={t('settings.save.clearWarningTitle', '警告：清空存档')}
+        message={t('settings.save.clearWarningMsg', '您确定要清空当前槽位的存档吗？此操作不可逆！')}
+        confirmText={t('settings.save.clearConfirm', '清空存档')}
         requireInput="Say Goodbye to Shirloy"
         onConfirm={handleConfirmClear}
         onCancel={() => setIsClearModalOpen(false)}

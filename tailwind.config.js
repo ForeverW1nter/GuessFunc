@@ -100,10 +100,48 @@ export default {
         'twinkle': 'twinkle 3s ease-in-out infinite',
         'scroll-bg': 'scroll-bg 20s linear infinite',
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            pre: {
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              overflowX: 'hidden',
+              marginTop: '0',
+              marginBottom: '0'
+            },
+            code: {
+              wordBreak: 'break-word'
+            },
+            'pre code': {
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              display: 'block'
+            },
+            'p:first-child, div:first-child': {
+              marginTop: '0'
+            },
+            '.katex-display': {
+              overflowX: 'hidden',
+              overflowY: 'hidden',
+              whiteSpace: 'normal',
+              wordBreak: 'break-all',
+              marginLeft: '0',
+              marginRight: '0'
+            },
+            '.katex-display > .katex': {
+              whiteSpace: 'normal',
+              wordBreak: 'break-all'
+            }
+          }
+        }
+      },
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }

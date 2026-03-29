@@ -3,6 +3,8 @@
 
 // Remove unused evaluateEquivalence if present
 
+import { GAME_CONSTANTS } from '../constants';
+
 type NodeType = 'var' | 'const' | 'unary' | 'binary';
 
 export abstract class ASTNode {
@@ -85,6 +87,7 @@ class UnaryNode extends ASTNode {
       case 'sinh': return Math.sinh(val);
       case 'cosh': return Math.cosh(val);
       case 'tanh': return Math.tanh(val);
+      default: return NaN;
     }
   }
 
@@ -212,12 +215,12 @@ function hasValidGraph(node: ASTNode): boolean {
   let validPoints = 0;
   let tooLargePoints = 0;
   
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < GAME_CONSTANTS.GENERATOR.VALIDATION_SAMPLES; i++) {
     const x = (Math.random() * 20) - 10; // [-10, 10]
     const y = node.evaluate(x);
     
     if (Number.isFinite(y)) {
-      if (Math.abs(y) <= 100) {
+      if (Math.abs(y) <= GAME_CONSTANTS.GENERATOR.MAX_Y_VALUE) {
         validPoints++;
       } else {
         tooLargePoints++;
@@ -225,8 +228,8 @@ function hasValidGraph(node: ASTNode): boolean {
     }
   }
   
-  // 至少要有 10 个有效点，且有效点比例不能太低
-  return validPoints >= 10 && (validPoints >= tooLargePoints * 0.5);
+  // 至少要有足够的有效点，且有效点比例不能太低
+  return validPoints >= GAME_CONSTANTS.GENERATOR.MIN_VALID_POINTS && (validPoints >= tooLargePoints * 0.5);
 }
 
 // 后处理化简一下多余的常数计算或者无意义的节点，不过为了简单起见，可以依靠难度筛选机制
@@ -241,7 +244,7 @@ export function generateFunctionByDifficulty(targetDifficulty: number): string {
   // 参考：sin(x)+e^x 用户为 1.2，内部为 0.8 -> 比例约 1.5
   const internalTarget = targetDifficulty / 1.5;
 
-  const maxAttempts = 1000;
+  const maxAttempts = GAME_CONSTANTS.GENERATOR.MAX_ATTEMPTS;
   let bestNode: ASTNode | null = null;
   let minDiffError = Infinity;
 

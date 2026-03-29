@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { useStoryStore } from './useStoryStore';
 import { evaluateEquivalence } from '../utils/mathEngine';
 import { GAME_CONSTANTS } from '../utils/constants';
+import i18n from '../i18n';
 
 export type GameMode = 'story' | 'random' | 'custom' | 'share' | 'idle';
 
@@ -21,6 +22,7 @@ interface GameState {
   // 持久化存储的数据：已通关关卡和已观看剧情
   completedLevels: string[];
   seenChapters: string[];
+  readFiles: string[]; // 记录已阅读的文件ID
   
   // Actions
   setTargetFunction: (func: string, params?: Record<string, number>, mode?: GameMode) => void;
@@ -30,6 +32,7 @@ interface GameState {
   loadLevel: (routeId: string, chapterId: string, levelId: string) => void;
   nextLevel: () => void;
   markChapterSeen: (chapterId: string) => void;
+  markFileRead: (fileId: string) => void;
   isLevelCompleted: (levelId: string) => boolean;
 }
 
@@ -49,6 +52,7 @@ export const useGameStore = create<GameState>()(
       
       completedLevels: [],
       seenChapters: [],
+      readFiles: [],
 
       setTargetFunction: (func: string, params: Record<string, number> = {}, mode: GameMode = 'idle') => 
         set({ targetFunction: func, levelParams: params, isLevelCleared: false, gameMode: mode, playerInput: 'x', playerParams: {} }),
@@ -61,7 +65,7 @@ export const useGameStore = create<GameState>()(
       evaluateInput: () => {
         const state = get();
         if (!state.targetFunction || !state.playerInput) {
-          return { isMatch: false, reason: "请输入函数表达式" };
+          return { isMatch: false, reason: i18n.t('game.mathEngine.emptyInput', '请输入函数表达式') };
         }
 
         const result = evaluateEquivalence(state.targetFunction, state.playerInput, state.playerParams);
@@ -116,6 +120,13 @@ export const useGameStore = create<GameState>()(
         }
       },
 
+      markFileRead: (fileId: string) => {
+        const currentRead = get().readFiles || [];
+        if (!currentRead.includes(fileId)) {
+          set({ readFiles: [...currentRead, fileId] });
+        }
+      },
+
       isLevelCompleted: (levelId: string) => {
         return get().completedLevels.includes(levelId);
       }
@@ -125,7 +136,8 @@ export const useGameStore = create<GameState>()(
       // 只持久化通关进度和看过的剧情，不要持久化当前正在玩的关卡状态
       partialize: (state) => ({ 
         completedLevels: state.completedLevels,
-        seenChapters: state.seenChapters
+        seenChapters: state.seenChapters,
+        readFiles: state.readFiles || []
       }),
     }
   )

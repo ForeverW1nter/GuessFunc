@@ -72,14 +72,14 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           
           {requireInput && (
             <div className="mb-6">
-              <p className="text-sm opacity-70 mb-2">请输入以下文本以确认：<span className="font-mono font-bold text-app-danger select-all">{requireInput}</span></p>
+              <p className="text-sm opacity-70 mb-2">{t('common.confirmInputTip', '请输入以下文本以确认：')}<span className="font-mono font-bold text-app-danger select-all">{requireInput}</span></p>
               <input 
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-app-text focus:outline-none focus:border-app-primary transition-colors"
-                placeholder="在此输入确认文本..."
+                placeholder={t('common.confirmInputPlaceholder', '在此输入确认文本...')}
               />
             </div>
           )}

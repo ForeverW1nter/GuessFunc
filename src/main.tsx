@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { initDebugMode, logger } from './utils/debug/logger';
 import { useUIStore } from './store/useUIStore';
+import i18n from './i18n';
 
 // 初始化 Debug 模式
 initDebugMode();
@@ -18,7 +19,10 @@ if (typeof window !== 'undefined') {
         window.history.replaceState({}, '', currentUrl.toString());
         initDebugMode();
         logger.log("已通过快捷键开启 Debug 模式");
-        useUIStore.getState().addToast("🔧 Debug 模式已开启", "info");
+        useUIStore.getState().addToast(
+          useUIStore.getState().isDebugMode ? i18n.t('debugOff') : i18n.t('debugOn'),
+          "info"
+        );
       }
     }
   });

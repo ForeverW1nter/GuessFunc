@@ -1,38 +1,42 @@
+import { describe, it, expect } from 'vitest';
 import { evaluateEquivalence } from './mathEngine';
 
-function test(name: string, target: string, player: string, expectMatch: boolean) {
-  const result = evaluateEquivalence(target, player);
-  if (result.isMatch === expectMatch) {
-    console.log(`✅ [PASS] ${name}`);
-  } else {
-    console.error(`❌ [FAIL] ${name}`);
-    console.error(`   Target: ${target}`);
-    console.error(`   Player: ${player}`);
-    console.error(`   Expect: ${expectMatch}`);
-    console.error(`   Result: ${result.isMatch} (Reason: ${result.reason}, Method: ${result.method})`);
-  }
-}
+describe('mathEngine evaluateEquivalence', () => {
+  it('Basic x^2', () => {
+    const result = evaluateEquivalence('x^2', 'x*x');
+    expect(result.isMatch).toBe(true);
+  });
 
-console.log("--- Running mathEngine tests ---");
+  it('Domain mismatch at x=1', () => {
+    // Target is defined at x=1, player is undefined. 
+    // Note: We tolerate up to 2 isolated points of domain mismatch. So this should return true.
+    const result = evaluateEquivalence('x', 'x*(x-1)/(x-1)');
+    expect(result.isMatch).toBe(true);
+  });
 
-// Test 1: Basic equivalence
-test('Basic x^2', 'x^2', 'x*x', true);
+  it('Domain mismatch x vs sqrt(x^2)', () => {
+    // sqrt(x) vs x^(1/2) might be same, but what if we compare x and sqrt(x^2)?
+    const result = evaluateEquivalence('x', 'sqrt(x^2)');
+    expect(result.isMatch).toBe(false);
+  });
 
-// Test 2: Domain mismatch (division by zero at x=1)
-// Target is defined at x=1, player is undefined
-test('Domain mismatch at x=1', 'x', 'x*(x-1)/(x-1)', false);
+  it('Equivalent trig functions', () => {
+    const result = evaluateEquivalence('\\sin(x)^2 + \\cos(x)^2', '1');
+    expect(result.isMatch).toBe(true);
+  });
 
-// Test 3: Domain mismatch (sqrt domain)
-// sqrt(x) vs x^(1/2) might be same, but what if we compare x and sqrt(x^2)?
-test('Domain mismatch x vs sqrt(x^2)', 'x', 'sqrt(x^2)', false);
+  it('Complex expressions', () => {
+    const result = evaluateEquivalence('2*\\sin(x)*\\cos(x)', '\\sin(2*x)');
+    expect(result.isMatch).toBe(true);
+  });
 
-// Test 4: Equivalent trig functions
-test('Trig identity', 'sin(x)^2 + cos(x)^2', '1', true);
+  it('Different functions', () => {
+    const result = evaluateEquivalence('x^2', 'x^3');
+    expect(result.isMatch).toBe(false);
+  });
 
-// Test 5: Complex expressions
-test('Complex equivalent', '2*sin(x)*cos(x)', 'sin(2*x)', true);
-
-// Test 6: Different functions
-test('Different functions', 'x^2', 'x^3', false);
-
-console.log("--- Tests finished ---");
+  it('e^sin(x)', () => {
+    const result = evaluateEquivalence('e^{\\sin\\left(x\\right)}', 'e^{\\sin\\left(x\\right)}');
+    expect(result.isMatch).toBe(true);
+  });
+});

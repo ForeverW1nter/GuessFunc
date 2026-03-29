@@ -5,9 +5,13 @@ import { useAudioStore } from '../../../store/useAudioStore';
 import { useUIStore } from '../../../store/useUIStore';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
 import rehypeKatex from 'rehype-katex';
+import rehypeHighlight from 'rehype-highlight';
 import 'katex/dist/katex.min.css';
+import 'highlight.js/styles/vs2015.css';
 import { Volume2, VolumeX, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface StoryViewerProps {
   routeId: string;
@@ -21,6 +25,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
   const navigate = useNavigate();
   const { isMuted, toggleMute } = useAudioStore();
   const { storyFontSize, storyFontFamily } = useUIStore();
+  const { t } = useTranslation();
 
   if (!chapter) {
     onComplete();
@@ -49,7 +54,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
                 ? 'text-app-text opacity-70 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]' 
                 : 'text-app-text opacity-30 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]'
             }`}
-            title={isMuted ? "开启音乐" : "关闭音乐"}
+            title={isMuted ? t('story.unmute', "开启音乐") : t('story.mute', "关闭音乐")}
           >
             {isMuted ? <VolumeX size={20} strokeWidth={2} /> : <Volume2 size={20} strokeWidth={2} />}
           </button>
@@ -65,19 +70,20 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
       {/* Modal Body */}
       <div 
         className="flex-1 overflow-y-auto overflow-x-hidden p-[24px] text-[1rem] leading-[1.6]"
-        style={{ fontFamily: storyFontFamily, fontSize: `${storyFontSize}%` }}
+        style={{ 
+          fontSize: `${storyFontSize}%`,
+          fontFamily: storyFontFamily === 'system-ui, -apple-system, sans-serif' 
+            ? '"PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif' // 默认强制使用中文字体
+            : storyFontFamily
+        }}
       >
-        <div className="markdown-body">
-          {/* 由于新设定删除了章节剧情，此组件可能需要重新设计或移除 */}
-          {/* 目前仅作为回退显示 */}
-          <div className="mb-4">
-            <ReactMarkdown
-              remarkPlugins={[remarkMath]}
-              rehypePlugins={[rehypeKatex]}
-            >
-              该章节的剧情已归档为碎片文件，请在关卡选择界面的右侧面板中查看。
-            </ReactMarkdown>
-          </div>
+        <div className="mb-4 prose dark:prose-invert max-w-none text-left prose-p:leading-relaxed prose-pre:bg-[#1E1E1E] prose-pre:text-[#D4D4D4] prose-code:text-[#D4D4D4] prose-code:bg-[#1E1E1E] prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:font-mono break-words">
+          <ReactMarkdown
+            remarkPlugins={[remarkMath, remarkGfm]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+          >
+            {t('story.archivedFilesTip', '该章节的剧情已归档为碎片文件，请在关卡选择界面的右侧面板中查看。')}
+          </ReactMarkdown>
         </div>
 
         <div className="mt-[20px] mx-auto text-right max-w-[800px] w-full">
@@ -85,7 +91,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
             onClick={handleComplete}
             className="inline-flex items-center justify-center gap-[8px] px-[20px] py-[10px] rounded-[8px] font-semibold text-[1rem] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
-            开始挑战
+            {t('story.startChallenge', '开始挑战')}
           </button>
         </div>
       </div>

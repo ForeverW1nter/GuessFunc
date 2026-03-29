@@ -2,19 +2,20 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useRef, useEffect } from 'react';
 import { useUIStore } from '../../../../store/useUIStore';
 
-const FONT_OPTIONS = [
-  { id: 'system-ui, -apple-system, sans-serif', label: '默认 (系统字体)' },
-  { id: 'serif', label: '衬线体 (Serif)' },
-  { id: 'sans-serif', label: '无衬线体 (Sans-Serif)' },
-  { id: 'monospace', label: '等宽字体 (Monospace)' },
-  { id: '"KaiTi", "楷体", serif', label: '楷体 (KaiTi)' },
-  { id: '"SimSun", "宋体", serif', label: '宋体 (SimSun)' },
-  { id: '"SimHei", "黑体", sans-serif', label: '黑体 (SimHei)' },
-  { id: '"Microsoft YaHei", "微软雅黑", sans-serif', label: '微软雅黑 (YaHei)' },
-];
-
 export const FontPanel: React.FC = () => {
   const { t } = useTranslation();
+
+  const FONT_OPTIONS = [
+    { id: 'system-ui, -apple-system, sans-serif', label: t('settings.font.default', '默认 (系统字体)') },
+    { id: 'serif', label: t('settings.font.serif', '衬线体 (Serif)') },
+    { id: 'sans-serif', label: t('settings.font.sansSerif', '无衬线体 (Sans-Serif)') },
+    { id: 'monospace', label: t('settings.font.monospace', '等宽字体 (Monospace)') },
+    { id: '"KaiTi", "楷体", serif', label: t('settings.font.kaiti', '楷体 (KaiTi)') },
+    { id: '"SimSun", "宋体", serif', label: t('settings.font.simsun', '宋体 (SimSun)') },
+    { id: '"SimHei", "黑体", sans-serif', label: t('settings.font.simhei', '黑体 (SimHei)') },
+    { id: '"Microsoft YaHei", "微软雅黑", sans-serif', label: t('settings.font.yahei', '微软雅黑 (YaHei)') },
+  ];
+
   const { storyFontSize, storyFontFamily, setStoryFontSize, setStoryFontFamily, addToast } = useUIStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -43,16 +44,16 @@ export const FontPanel: React.FC = () => {
         }
       `;
       document.head.appendChild(style);
-      addToast('自定义字体加载成功', 'success');
+      addToast(t('settings.font.customSuccess', '自定义字体加载成功'), 'success');
     }
   };
 
-  const currentFontLabel = FONT_OPTIONS.find(f => f.id === storyFontFamily)?.label || (storyFontFamily === 'CustomStoryFont' ? '自定义字体' : '选择字体');
+  const currentFontLabel = FONT_OPTIONS.find(f => f.id === storyFontFamily)?.label || (storyFontFamily === 'CustomStoryFont' ? t('settings.font.customFont', '自定义字体') : t('settings.font.selectFont', '选择字体'));
 
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.font.title')}</h3>
+        <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.font.title', '文档字体设置')}</h3>
         <div className="flex items-center gap-4">
             <span className="text-sm opacity-70 font-serif">A</span>
             <input 
@@ -74,7 +75,7 @@ export const FontPanel: React.FC = () => {
       <div className="h-px bg-card-border w-full" />
 
       <div className="space-y-4">
-        <h3 className="m-0 font-bold text-lg text-app-text">字体选择</h3>
+        <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.font.selectTitle', '字体选择')}</h3>
         
         <div className="relative w-full" ref={dropdownRef}>
           <div 
@@ -107,7 +108,7 @@ export const FontPanel: React.FC = () => {
         <div className="mt-4">
           <label className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-base transition-all bg-card-bg text-app-text border-2 border-dashed border-card-border hover:border-app-primary hover:text-app-primary hover:bg-app-primary/5 cursor-pointer">
             <input type="file" accept=".ttf,.otf,.woff,.woff2" className="hidden" onChange={handleFontUpload} />
-            上传本地字体文件 (.ttf/.otf)
+            {t('settings.font.uploadLocal', '上传本地字体文件 (.ttf/.otf)')}
           </label>
         </div>
       </div>
@@ -115,7 +116,7 @@ export const FontPanel: React.FC = () => {
       <div className="h-px bg-card-border w-full" />
 
       <div className="space-y-3">
-        <h3 className="m-0 font-bold text-lg text-app-text">预览效果</h3>
+        <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.font.preview', '预览效果')}</h3>
         <div 
           className="p-4 bg-card-bg border border-card-border rounded-xl leading-relaxed text-app-text"
           style={{ 
@@ -123,7 +124,7 @@ export const FontPanel: React.FC = () => {
             fontFamily: storyFontFamily
           }}
         >
-          <p className="m-0">这里是剧情文本的预览效果。可以通过调节上方的选项来实时查看字体和大小的变化。</p>
+          <p className="m-0">{t('settings.font.previewText', '这里是剧情文本的预览效果。可以通过调节上方的选项来实时查看字体和大小的变化。')}</p>
         </div>
       </div>
     </div>
