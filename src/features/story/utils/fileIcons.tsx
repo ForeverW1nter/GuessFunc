@@ -1,9 +1,11 @@
-import { FileText, Image as ImageIcon, FileArchive, Mic, BookOpen, Terminal } from 'lucide-react';
+import { FileText, Image as ImageIcon, FileArchive, Mic, BookOpen, Terminal, Film } from 'lucide-react';
 
 export const getFileIcon = (ext: string, size: number = 18, className?: string) => {
   const baseClassName = className || "";
   
   switch (ext.toLowerCase()) {
+    case 'anim':
+      return <Film size={size} className={`text-pink-400 ${baseClassName}`} />;
     case 'log':
     case 'dat':
     case 'cpp':

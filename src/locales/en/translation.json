@@ -45,7 +45,8 @@
     "createEmptyError": "Please enter the function you want to create in the first line of the graph panel!",
     "createSuccess": "Custom level created successfully!",
     "shareStoryError": "Levels in story mode cannot be shared, try it in Free Create mode!",
-    "shareEmptyError": "No target function to share currently!",
+    "shareEmptyError": "No target function to share!",
+    "shareParseError": "Failed to parse the shared link. It might be corrupted.",
     "copySuccess": "Level link copied to clipboard!",
     "copyError": "Failed to copy, please copy manually",
     "playSection": "PLAY",
@@ -228,8 +229,17 @@
     "fileLocked": "Access Denied: File is locked",
     "unmute": "Unmute",
     "mute": "Mute",
-    "archivedFilesTip": "The story of this chapter has been archived into fragment files. Please view them in the right panel of the level selection interface.",
-    "startChallenge": "Start Challenge"
+    "archivedFilesTip": "The story of this chapter has been archived as fragment files. Please check them in the right panel of the level select screen.",
+    "startChallenge": "Start Challenge",
+    "ending": {
+      "line1": "If you are looking for an ending, there is none here.",
+      "line2": "But if you open the document and start writing the first line...",
+      "line3": "Forewall will turn around on the white wilderness.",
+      "core": "He is always waiting.",
+      "sub": "The story hasn't ended, it's just another person continuing to write.",
+      "skip": "Hold anywhere to skip",
+      "musicTip": "Music unlocked. You can long press the music note icon to switch BGM."
+    }
   },
   "create": {
     "copyLink": "Copy Share Link",

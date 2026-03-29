@@ -1495,6 +1495,15 @@
               "unlockConditions": [
                 "51"
               ]
+            },
+            {
+              "id": "ch4_34",
+              "title": "最后的门",
+              "extension": "anim",
+              "content": "END",
+              "unlockConditions": [
+                "51"
+              ]
             }
           ]
         }

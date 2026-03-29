@@ -3,22 +3,23 @@ import { useUIStore } from '../../../store/useUIStore';
 import { useStoryStore } from '../../../store/useStoryStore';
 import { useGameStore } from '../../../store/useGameStore';
 import { useAudio } from '../../audio/hooks/useAudio';
-import { useAudioStore } from '../../../store/useAudioStore';
+import { useAudioStore, AVAILABLE_BGMS } from '../../../store/useAudioStore';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Folder, FolderOpen, Check, Terminal, ArrowLeft, Music } from 'lucide-react';
-import gymnopedieAudio from '../../../assets/audio/Gymnopedie_1_Erik_Satie.mp3';
 import type { FileData } from '../../../types/story';
 import { FileViewer } from './FileViewer';
 import { ChapterFiles } from './ChapterFiles';
+
+import { ChapterList } from './ChapterList';
+import { SystemBar } from './SystemBar';
 
 export const LevelSelectModal: React.FC = () => {
   const { t } = useTranslation();
   const { isLevelSelectOpen, setLevelSelectOpen, isAssistMode } = useUIStore();
   const { storyJSON } = useStoryStore();
   const { completedLevels, readFiles, markFileRead } = useGameStore();
-  const { playAudio, stopAudio } = useAudio();
-  const { isMuted, toggleMute } = useAudioStore();
+  const { playAudio, stopAudio, stopAll } = useAudio();
+  const { isMuted, toggleMute, currentBgmId, unlockedBgms, setCurrentBgmId } = useAudioStore();
   const navigate = useNavigate();
 
   const [selectedRouteId, setSelectedRouteId] = useState<string>(
@@ -30,6 +31,11 @@ export const LevelSelectModal: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // BGM selection state
+  const [showBgmMenu, setShowBgmMenu] = useState(false);
+  const bgmMenuTimerRef = useRef<number | null>(null);
+  const bgmMenuRef = useRef<HTMLDivElement>(null);
+
   // Responsive state
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -37,13 +43,17 @@ export const LevelSelectModal: React.FC = () => {
   const [openFiles, setOpenFiles] = useState<Record<string, FileData | null>>({});
   const scrollPositions = useRef<Record<string, number>>({});
 
+  const currentBgm = AVAILABLE_BGMS.find(b => b.id === currentBgmId) || AVAILABLE_BGMS[0];
+
   useEffect(() => {
     if (isLevelSelectOpen) {
-      playAudio(gymnopedieAudio, true);
+      // 停止所有其他音乐，播放当前选中的 BGM
+      stopAll();
+      playAudio(currentBgm.path, true);
     } else {
-      stopAudio(gymnopedieAudio);
+      stopAudio(currentBgm.path);
     }
-  }, [isLevelSelectOpen, playAudio, stopAudio]);
+  }, [isLevelSelectOpen, currentBgm.path, playAudio, stopAudio, stopAll]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -55,6 +65,9 @@ export const LevelSelectModal: React.FC = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
+      }
+      if (bgmMenuRef.current && !bgmMenuRef.current.contains(event.target as Node)) {
+        setShowBgmMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -72,7 +85,9 @@ export const LevelSelectModal: React.FC = () => {
       let isChapterUnlocked = true;
       if (previousChapter && !isAssistMode) {
         const prevChapterLevelIds = previousChapter.levels.map(l => l.id);
-        isChapterUnlocked = prevChapterLevelIds.every(id => completedLevels.includes(id));
+        const prevCompletedCount = prevChapterLevelIds.filter(id => completedLevels.includes(id)).length;
+        const requiredCount = Math.ceil(prevChapterLevelIds.length * 0.8);
+        isChapterUnlocked = prevCompletedCount >= requiredCount;
       }
       if (isChapterUnlocked || isAssistMode) {
         status.push(chapter as unknown as Record<string, unknown>);
@@ -91,6 +106,12 @@ export const LevelSelectModal: React.FC = () => {
       }, 0);
     }
   }, [isMobile, isLevelSelectOpen, unlockedChapters, selectedChapterId]);
+
+  const closeFile = React.useCallback(() => {
+    if (selectedChapterId) {
+      setOpenFiles(prev => ({ ...prev, [selectedChapterId]: null }));
+    }
+  }, [selectedChapterId]);
 
   if (!isLevelSelectOpen) return null;
 
@@ -118,148 +139,83 @@ export const LevelSelectModal: React.FC = () => {
   const handleClose = () => {
     setLevelSelectOpen(false);
     // 只在有关闭文件动作时停止音乐
-    stopAudio(gymnopedieAudio);
-  };
-
-  const closeFile = () => {
-    if (selectedChapterId) {
-      setOpenFiles(prev => ({ ...prev, [selectedChapterId]: null }));
-    }
+    stopAudio(currentBgm.path);
   };
 
   const selectedChapterData = currentRoute?.chapters.find(c => c.id === selectedChapterId);
+
+  const handleBgmPressStart = () => {
+    // 防止结局前调出菜单
+    // 判断条件：如果当前没有解锁除默认BGM外的任何BGM，且也没有看完真结局（用 readFiles 判断最后的门）
+    // 为了更严谨，我们可以直接用 unlockedBgms.length > 1 来判断，因为结局播放时一定会 unlockBgm
+    if (unlockedBgms.length <= 1) return;
+    
+    bgmMenuTimerRef.current = window.setTimeout(() => {
+      setShowBgmMenu(true);
+    }, 500); // 500ms长按
+  };
+
+  const handleBgmPressEnd = () => {
+    if (bgmMenuTimerRef.current) {
+      clearTimeout(bgmMenuTimerRef.current);
+      bgmMenuTimerRef.current = null;
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[1000] flex flex-col pointer-events-auto bg-[#0A0A0B] text-[#D4D4D6] animate-fade-in font-mono overflow-hidden">
       
       {/* 极简系统栏 (System Bar) */}
-      <div className="relative z-20 flex items-center justify-between h-[48px] px-[16px] shrink-0 border-b border-[#2A2A2E] bg-[#121214]">
-        <div className="flex items-center gap-[16px]">
-          <button
-            onClick={() => {
-              if (isMobile && selectedChapterId) {
-                setSelectedChapterId(null);
-              } else {
-                handleClose();
-              }
-            }}
-            className="flex items-center gap-[8px] text-[#A0A0A5] hover:text-white transition-colors"
-          >
-            <ArrowLeft size={16} strokeWidth={2} />
-            <span className="text-[0.85rem] uppercase tracking-wider">{isMobile && selectedChapterId ? t('tools.storyEditor.back', 'BACK') : t('tools.storyEditor.systemExit', 'SYSTEM.EXIT')}</span>
-          </button>
-        </div>
-        
-        <div className="flex items-center gap-[16px]">
-          <button 
-            onClick={toggleMute}
-            className="bg-transparent border-none cursor-pointer flex items-center justify-center outline-none shrink-0 md:mr-[16px]"
-            title={isMuted ? t('story.unmute', "开启音乐") : t('story.mute', "关闭音乐")}
-          >
-            <div className="relative w-[28px] h-[28px] rounded-full flex items-center justify-center bg-[#1A1A1D] border border-[#2A2A2E] shadow-sm transition-all duration-300">
-              <div className={`absolute inset-0 rounded-full border-[2px] border-[#333] box-border transition-opacity duration-300 ${
-                !isMuted ? 'opacity-100 animate-[spin_3s_linear_infinite]' : 'opacity-20 animate-[spin_3s_linear_infinite]'
-              } bg-[linear-gradient(45deg,transparent_40%,rgba(255,255,255,0.05)_50%,transparent_60%),repeating-radial-gradient(#222,#222_1px,#2a2a2a_2px,#2a2a2a_3px)]`} 
-              style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
-              <Music size={12} className={`z-10 transition-all duration-300 flex items-center justify-center ${
-                !isMuted ? 'opacity-100 text-app-primary animate-[spin_3s_linear_infinite]' : 'opacity-50 text-[#A0A0A5] animate-[spin_3s_linear_infinite]'
-              }`} style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
-            </div>
-          </button>
-
-           {isMobile && selectedChapterId ? (
-             <span className="text-[0.85rem] text-[#808085] tracking-widest uppercase">
-               ~/{selectedChapterData?.id}
-             </span>
-           ) : (
-             <div className="relative inline-block" ref={dropdownRef}>
-               <div 
-                 className={`flex items-center gap-[8px] px-[12px] py-[4px] rounded-[4px] cursor-pointer transition-colors ${isDropdownOpen ? 'bg-[#2A2A2E] text-white' : 'hover:bg-[#1A1A1D] text-[#A0A0A5]'}`}
-                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-               >
-                 <Terminal size={18} strokeWidth={2} className="opacity-70 shrink-0" />
-                 <span className="text-[0.85rem] tracking-widest uppercase select-none truncate max-w-[150px] sm:max-w-none">
-                   {isMobile ? ((currentRoute as unknown as { shortTitle?: string })?.shortTitle || currentRoute?.title || 'ROOT') : (currentRoute?.title || 'ROOT')}
-                 </span>
-               </div>
-
-               {/* Dropdown Menu */}
-               <div 
-                 className={`absolute top-[calc(100%+4px)] right-0 w-[200px] bg-[#1A1A1D] border border-[#2A2A2E] rounded-[4px] shadow-2xl overflow-hidden z-[100] transition-all duration-200 origin-top-right ${isDropdownOpen ? 'opacity-100 visible scale-100' : 'opacity-0 invisible scale-95'}`}
-               >
-                 {storyJSON.routes.map((route) => (
-                   <div 
-                     key={route.id}
-                     className={`px-[16px] py-[10px] cursor-pointer transition-colors ${selectedRouteId === route.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] text-app-primary border-l-[2px] border-app-primary' : 'text-[#A0A0A5] hover:bg-[#2A2A2E] hover:text-white border-l-[2px] border-transparent'}`}
-                     onClick={() => {
-                       setSelectedRouteId(route.id);
-                       setSelectedChapterId(null);
-                       setIsDropdownOpen(false);
-                     }}
-                   >
-                     <div className="text-[0.8rem] uppercase tracking-widest mb-[2px]">{route.title}</div>
-                   </div>
-                 ))}
-               </div>
-             </div>
-           )}
-        </div>
-      </div>
+      <SystemBar
+        isMobile={isMobile}
+        selectedChapterId={selectedChapterId}
+        selectedChapterData={selectedChapterData}
+        currentRoute={currentRoute}
+        storyJSON={storyJSON}
+        selectedRouteId={selectedRouteId}
+        isMuted={isMuted}
+        showBgmMenu={showBgmMenu}
+        currentBgmId={currentBgmId}
+        unlockedBgms={unlockedBgms}
+        isDropdownOpen={isDropdownOpen}
+        dropdownRef={dropdownRef}
+        bgmMenuRef={bgmMenuRef}
+        onBack={() => {
+          if (isMobile && selectedChapterId) {
+            setSelectedChapterId(null);
+          } else {
+            handleClose();
+          }
+        }}
+        onToggleMute={toggleMute}
+        onBgmPressStart={handleBgmPressStart}
+        onBgmPressEnd={handleBgmPressEnd}
+        onSelectBgm={(id, path) => {
+          stopAll();
+          setCurrentBgmId(id);
+          playAudio(path, true);
+          setShowBgmMenu(false);
+        }}
+        onToggleDropdown={() => setIsDropdownOpen(!isDropdownOpen)}
+        onSelectRoute={(id) => {
+          setSelectedRouteId(id);
+          setSelectedChapterId(null);
+          setIsDropdownOpen(false);
+        }}
+      />
 
       {/* 主工作区 (Main Workspace) */}
       <div className="flex-1 relative flex overflow-hidden min-h-0">
         
         {/* 左侧：目录树 (Directory Tree) - 桌面端常驻，移动端在无选择时显示 */}
-        <div className={`
-          ${isMobile ? (selectedChapterId ? 'hidden' : 'w-full') : 'w-[280px] lg:w-[320px] border-r border-[#2A2A2E]'} 
-          flex flex-col h-full bg-[#0A0A0B] overflow-y-auto custom-scrollbar shrink-0
-        `}>
-          <div className="px-[16px] py-[12px] text-[0.7rem] text-[#606065] tracking-[0.2em] uppercase sticky top-0 bg-[#0A0A0B]/90 backdrop-blur z-10">
-            {t('tools.storyEditor.explorer', 'Explorer')} / {currentRoute?.id}
-          </div>
-          
-          <div className="flex flex-col py-[8px]">
-            {unlockedChapters.length === 0 && (
-              <div className="px-[16px] py-[20px] text-[#606065] text-[0.8rem]">{t('tools.storyEditor.noDirs', 'No directories found.')}</div>
-            )}
-            
-            {unlockedChapters.map((chapterObj) => {
-              const chapter = chapterObj as unknown as { id: string; title: string; levels: { id: string }[] };
-              const chapterLevelIds = chapter.levels.map(l => l.id);
-              const completedCount = chapterLevelIds.filter((id: string) => completedLevels.includes(id)).length;
-              const totalCount = chapterLevelIds.length;
-              const isAllCompleted = completedCount === totalCount && totalCount > 0;
-              const isSelected = selectedChapterId === chapter.id;
-
-              return (
-                <div 
-                    key={chapter.id}
-                    onClick={() => setSelectedChapterId(chapter.id)}
-                    className={`
-                    group relative flex items-center justify-between px-[16px] py-[10px] cursor-pointer transition-colors
-                    ${isSelected ? 'bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary' : 'text-[#A0A0A5] hover:bg-[#1A1A1D] hover:text-white'}
-                  `}
-                >
-                  <div className="flex items-center gap-[12px] overflow-hidden">
-                    {isSelected ? (
-                      <FolderOpen size={16} className="shrink-0 text-app-primary" />
-                    ) : (
-                      <Folder size={16} className="shrink-0 text-[#606065] group-hover:text-[#A0A0A5]" />
-                    )}
-                    <span className="text-[0.85rem] truncate">{chapter.title}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-[8px] shrink-0">
-                    <span className={`text-[0.7rem] ${isAllCompleted ? 'text-app-success' : 'text-[#606065]'}`}>
-                      {completedCount}/{totalCount}
-                    </span>
-                    {isAllCompleted && <Check size={14} strokeWidth={3} className="text-app-success" />}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <ChapterList
+          isMobile={isMobile}
+          selectedChapterId={selectedChapterId}
+          currentRouteId={currentRoute?.id}
+          unlockedChapters={unlockedChapters}
+          completedLevels={completedLevels}
+          onSelectChapter={setSelectedChapterId}
+        />
 
         {/* 右侧：文件列表 (File List) - 桌面端常驻，移动端在选中时显示 */}
         <div className={`

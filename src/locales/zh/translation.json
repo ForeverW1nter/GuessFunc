@@ -47,6 +47,7 @@
     "createSuccess": "自定义关卡创建成功！",
     "shareStoryError": "故事模式下的关卡不支持分享，去自由创作里试试吧！",
     "shareEmptyError": "当前没有可分享的目标函数！",
+    "shareParseError": "解析分享链接失败，可能链接已损坏。",
     "copySuccess": "关卡链接已复制到剪贴板！",
     "copyError": "复制失败，请手动复制",
     "playSection": "游玩",
@@ -231,7 +232,16 @@
     "unmute": "开启音乐",
     "mute": "关闭音乐",
     "archivedFilesTip": "该章节的剧情已归档为碎片文件，请在关卡选择界面的右侧面板中查看。",
-    "startChallenge": "开始挑战"
+    "startChallenge": "开始挑战",
+    "ending": {
+      "line1": "如果你在找结局，这里没有。",
+      "line2": "但如果你打开文档，开始写第一行……",
+      "line3": "那么 Forewall 就会在白色旷野上转过身来。",
+      "core": "他一直在等。",
+      "sub": "故事没有结束，只是换了一个人继续写。",
+      "skip": "长按任意位置跳过",
+      "musicTip": "音乐已解锁，你可以长按界面上的音符图标自由切换。"
+    }
   },
   "create": {
     "copyLink": "复制分享链接",

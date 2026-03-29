@@ -14,7 +14,7 @@ import { useStoryStore } from './store/useStoryStore';
 import { useUIStore } from './store/useUIStore';
 import { CreateModePage } from './features/creation/components/CreateModePage';
 import { GAME_CONSTANTS } from './utils/constants';
-import './i18n';
+import i18n from './i18n';
 
 const Layout = () => (
   <div className="flex flex-row h-screen w-screen overflow-hidden bg-app-bg text-app-text">
@@ -93,7 +93,8 @@ const ShareRoute = () => {
         }
       }
     } catch (e) {
-      console.error("解析分享关卡失败:", e); // keep it, dev only
+      console.error("解析分享关卡失败:", e);
+      useUIStore.getState().addToast(i18n.t('sidebar.shareParseError', '解析分享链接失败，可能链接已损坏。'), 'error');
     }
     navigate('/', { replace: true });
   }, [encodedLevel, navigate]);
