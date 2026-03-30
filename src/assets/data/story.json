@@ -585,12 +585,12 @@
             {
               "id": "24",
               "title": "第24关",
-              "targetFunction": "\\frac{\\tanh\\left(x\\right)}{\\sqrt{x^{2}+1}}",
+              "targetFunction": "\\sqrt{x+1}\\tanh\\left(x\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
               "unlockConditions": null,
-              "tip": "观察一下它像什么，然后除以它像的东西。"
+              "tip": "观察一下它像什么。"
             },
             {
               "id": "25",
