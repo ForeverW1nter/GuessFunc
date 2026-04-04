@@ -10,7 +10,7 @@ export const ToolsApp = () => {
 
   return (
     <div 
-      className={`flex h-screen w-screen bg-[#0A0A0B] text-[#D4D4D6] font-sans overflow-hidden ${theme}`} 
+      className={`absolute inset-0 flex bg-[#0A0A0B] text-[#D4D4D6] font-sans overflow-hidden ${theme}`} 
       style={{ 
         fontSize: `${storyFontSize}%`,
         fontFamily: storyFontFamily === 'system-ui, -apple-system, sans-serif' 

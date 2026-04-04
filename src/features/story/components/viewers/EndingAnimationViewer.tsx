@@ -164,7 +164,7 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
         top: 0,
         left: 0,
         width: '100vw',
-        height: '100vh',
+        height: '100dvh',
         backgroundColor: 'black',
         zIndex: 2147483647,
         display: 'flex',

@@ -125,6 +125,16 @@ export const GraphRenderer = () => {
     };
   }, [setPlayerInput, targetFunction, i18n.language]); // 仅在初始化时运行一次，补充了 lint 依赖
 
+  useEffect(() => {
+    // 当容器大小改变时（例如移动端地址栏收起导致的高度变化），通知 Desmos 重新计算尺寸
+    if (!containerRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      calculatorRef.current?.resize();
+    });
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
+  }, [isReady]);
+
   // 监听 targetFunction 和 levelParams 的变化，单独更新表达式
   useEffect(() => {
     const calc = calculatorRef.current;

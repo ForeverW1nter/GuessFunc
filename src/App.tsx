@@ -17,7 +17,7 @@ import { GAME_CONSTANTS } from './utils/constants';
 import i18n from './i18n';
 
 const Layout = () => (
-  <div className="flex flex-row h-screen w-screen overflow-hidden bg-app-bg text-app-text">
+  <div className="absolute inset-0 flex flex-row w-full overflow-hidden bg-app-bg text-app-text">
     <Sidebar />
     <main className="flex-1 relative flex flex-col overflow-hidden">
       <Topbar />

@@ -38,7 +38,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
   };
 
   return (
-    <div className="relative w-full md:max-w-[900px] h-full md:h-auto max-h-[100vh] md:max-h-[85vh] bg-modal-bg text-modal-text md:rounded-[16px] shadow-modal overflow-hidden flex flex-col border-none md:border md:border-card-border animate-zoom-in">
+    <div className="relative w-full md:max-w-[900px] h-full md:h-auto max-h-[100dvh] md:max-h-[85vh] bg-modal-bg text-modal-text md:rounded-[16px] shadow-modal overflow-hidden flex flex-col border-none md:border md:border-card-border animate-zoom-in">
       {/* Modal Header */}
       <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
         <div className="flex items-center gap-[10px]">
