@@ -37,10 +37,12 @@ export const MainPanel: React.FC<{ setActivePanel: (panel: SettingsPanel) => voi
         <span className="font-medium text-[1rem]">{t('settings.font.title', '文档字体设置')}</span>
       </button>
 
+      {/* AI Settings temporarily hidden
       <button className="flex items-center gap-[12px] px-[16px] py-[14px] border border-card-border bg-card-bg text-app-text rounded-[12px] hover:border-app-primary hover:bg-card-hover transition-all transform hover:-translate-y-[1px]" onClick={() => setActivePanel('api')}>
         <Cpu size={18} className="opacity-70" />
         <span className="font-medium text-[1rem]">{t('settings.api.title', 'AI 设置')}</span>
       </button>
+      */}
 
       <button className="flex items-center gap-[12px] px-[16px] py-[14px] border border-card-border bg-card-bg text-app-text rounded-[12px] hover:border-app-primary hover:bg-card-hover transition-all transform hover:-translate-y-[1px]" onClick={() => setActivePanel('save')}>
         <Save size={18} className="opacity-70" />

@@ -108,6 +108,11 @@ export const AiChatButton: React.FC = () => {
 
   const isStoryMode = gameMode === 'story';
 
+  // 临时逻辑：在非故事模式下隐藏按钮（因为此时按钮是 AI 助手）
+  if (!isStoryMode) {
+    return null;
+  }
+
   return (
     <>
       <button 

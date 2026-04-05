@@ -95,6 +95,7 @@ export const RandomChallengeModal: React.FC = () => {
               </div>
             </div>
 
+            {/* AI Toggle temporarily hidden
             <div className="w-full bg-card-bg border border-card-border p-[20px] rounded-[16px] shadow-sm flex flex-col items-center gap-4 hover:border-app-primary/50 transition-colors">
               <label className="flex items-center gap-4 cursor-pointer group w-full justify-center">
                 <div className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 bg-card-border group-hover:opacity-80">
@@ -113,6 +114,7 @@ export const RandomChallengeModal: React.FC = () => {
                 {useAI ? t('random.aiDescOn', 'AI 将根据难度系数生成更合理的函数') : t('random.aiDescOff', '将使用本地算法生成不同难度的函数')}
               </div>
             </div>
+            */}
           </div>
 
           <div className="text-center mt-2">

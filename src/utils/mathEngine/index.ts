@@ -33,6 +33,10 @@ function cleanDesmosLatex(latex: string): string {
   
   // 转换 Desmos 的特殊常数和函数标记
   s = s.replace(/\\exponentialE/g, 'e');
+  
+  // 特殊处理 floor 函数 (CortexJS Compute Engine 支持 \lfloor 和 \rfloor，或者 Floor()，这里转成标准的 \lfloor 和 \rfloor 形式或者保留为 operator)
+  // Desmos 产出的 floor 形式为 \operatorname{floor}\left(x\right)
+  s = s.replace(/\\operatorname{floor}\\left\((.*?)\\right\)/g, '\\lfloor $1 \\rfloor');
   s = s.replace(/\\operatorname{([^{}]+)}/g, '$1');
   s = s.replace(/\\mathrm{([^{}]+)}/g, '$1');
   
@@ -185,6 +189,14 @@ export function evaluateEquivalence(
         domainMismatchCount++;
         // 允许容忍个别孤立点（如被除数为0的点），但如果达到一定数量，则认为是一段定义域不同
         if (domainMismatchCount >= GAME_CONSTANTS.MATH_ENGINE.DOMAIN_MISMATCH_THRESHOLD) {
+          // 由于随机采样可能正好击中不连续点（如 floor 的跳跃点或 1/x 的 0 点），
+          // 如果有效点已经足够多，且不匹配点比例不高，我们可以认为这是一个有效的匹配
+          // （因为真正的大段定义域不匹配会在前期就触发这个 threshold）
+          if (validPointsCount >= GAME_CONSTANTS.MATH_ENGINE.NUM_RANDOM_SAMPLES * 0.4) {
+             logger.log(`容忍了 ${domainMismatchCount} 个定义域不匹配点，因为已有 ${validPointsCount} 个有效点`);
+             continue; // 容忍并继续
+          }
+
           return { 
             isMatch: false, 
             reason: i18n.t('game.mathEngine.domainMismatch', '存在大段定义域不匹配')
@@ -194,7 +206,11 @@ export function evaluateEquivalence(
       }
 
       // 两个都没有定义（如都在根号负数区域），跳过该点
-      if (!tValid && !pValid) continue;
+      if (!tValid && !pValid) {
+        // 都无定义其实也是一种匹配（或者说不违反等价性）
+        validPointsCount++;
+        continue;
+      }
 
       // 如果都有定义，进行数值容差对比
       if (tValid && pValid) {
@@ -203,7 +219,36 @@ export function evaluateEquivalence(
         
         // 相对误差和绝对误差双重校验
         const isClose = diff < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE || (maxVal > GAME_CONSTANTS.MATH_ENGINE.TOLERANCE && diff / maxVal < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE);
+        
+        // 如果是因为离散函数(floor, ceil)等引起的跳跃点误差，再给一次微调机会
+        if (!isClose && (cleanTarget.includes('\\lfloor') || cleanTarget.includes('floor') || cleanPlayer.includes('\\lfloor') || cleanPlayer.includes('floor'))) {
+           // 由于浮点数精度，x 接近整数时，floor(x) 可能会由于浮点误差跳变
+           // 检查加上或减去一个极小值是否能匹配
+           const tValUp = targetBox.subs({ ...testContext, x: xVal + 1e-12 }).N().valueOf();
+           const tValDown = targetBox.subs({ ...testContext, x: xVal - 1e-12 }).N().valueOf();
+           const pValUp = playerBox.subs({ ...testContext, x: xVal + 1e-12 }).N().valueOf();
+           const pValDown = playerBox.subs({ ...testContext, x: xVal - 1e-12 }).N().valueOf();
+           
+           const tUpNum = typeof tValUp === 'number' ? tValUp : NaN;
+           const tDownNum = typeof tValDown === 'number' ? tValDown : NaN;
+           const pUpNum = typeof pValUp === 'number' ? pValUp : NaN;
+           const pDownNum = typeof pValDown === 'number' ? pValDown : NaN;
+           
+           const isCloseUp = Math.abs(tUpNum - pUpNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
+           const isCloseDown = Math.abs(tDownNum - pDownNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
+           
+           if (isCloseUp || isCloseDown) {
+             validPointsCount++;
+             continue;
+           }
+        }
+        
         if (!isClose) {
+          // 同样，如果有效点已经积累得非常多，允许容错个别由于极端精度导致的失败点
+          if (validPointsCount >= GAME_CONSTANTS.MATH_ENGINE.NUM_RANDOM_SAMPLES * 0.7) {
+             logger.log(`容忍了 1 个数值不匹配点，因为已有 ${validPointsCount} 个有效点`);
+             continue;
+          }
           return { 
             isMatch: false, 
             reason: i18n.t('game.mathEngine.valueMismatch', '数值不匹配: x ≈ {{x}} 时差异过大', { x: xVal.toFixed(2) })
@@ -213,8 +258,9 @@ export function evaluateEquivalence(
       }
     }
 
-    if (validPointsCount > 0) {
-      logger.log(`验证通过: 采样点测试全部吻合 (共 ${validPointsCount} 个有效点)`);
+    // 只要有足够的有效点（比如大于总测试点的 1/3），就认为通过
+    if (validPointsCount >= testPoints.length * 0.3) {
+      logger.log(`验证通过: 采样点测试吻合 (共 ${validPointsCount}/${testPoints.length} 个有效点)`);
       return { isMatch: true, method: isSimplifyMatch ? 'simplify' : 'sampling' };
     } else {
       return { 

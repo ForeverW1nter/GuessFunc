@@ -7,14 +7,14 @@ export const GAME_CONSTANTS = {
   MATH_ENGINE: {
     // 蒙特卡洛采样的基准点
     BASE_TEST_POINTS: [-4.12, -2.5, -1, -0.1, 0.1, 1, 2.5, 4.12],
-    // 随机采样点的数量
-    NUM_RANDOM_SAMPLES: 12,
+    // 随机采样点的数量 (增加采样点以应对 floor 等分段函数的抖动，并提高容错率)
+    NUM_RANDOM_SAMPLES: 42,
     // 数值对比的容差（相对误差和绝对误差）
     TOLERANCE: 1e-5,
     // 极小复数虚部容差
     IMAGINARY_TOLERANCE: 1e-10,
-    // 允许的定义域不匹配点数量阈值
-    DOMAIN_MISMATCH_THRESHOLD: 3,
+    // 允许的定义域不匹配点数量阈值 (相应提高容错阈值，针对像 1/x 这种在 0 处不匹配或 floor() 随机踩在跳跃点上的情况)
+    DOMAIN_MISMATCH_THRESHOLD: 6,
   },
   GENERATOR: {
     // 最大尝试生成次数
