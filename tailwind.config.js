@@ -2,7 +2,9 @@
 export default {
   content: [
     "./index.html",
+    "./tools/index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./tools/**/*.{js,ts,jsx,tsx}"
   ],
   darkMode: 'class',
   theme: {

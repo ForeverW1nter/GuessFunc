@@ -130,6 +130,131 @@
   .theme-rgb-slider::-webkit-slider-thumb:hover {
     box-shadow: 0 4px 10px var(--slider-color);
   }
+
+  /* Tools 专属 UI 组件 */
+  .tools-input {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #fff;
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+  
+  .tools-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .tools-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tools-checkbox:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  .tools-checkbox:checked::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+  }
+
+  .tools-checkbox:hover:not(:checked) {
+    border-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .tools-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .tools-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #60a5fa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid #1a1a1d;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.3);
+  }
+
+  .tools-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #93c5fd;
+  }
+
+  .tools-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  .tools-btn-primary {
+    background-color: #3b82f6;
+    color: white;
+  }
+
+  .tools-btn-primary:hover:not(:disabled) {
+    background-color: #2563eb;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  }
+
+  .tools-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .tools-btn-ghost {
+    background-color: transparent;
+    color: #a0a0a5;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .tools-btn-ghost:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
 }
 
 @layer utilities {

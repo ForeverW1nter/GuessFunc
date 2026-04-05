@@ -3,6 +3,14 @@ export interface GeneratedFunction {
   params: Record<string, number>;
 }
 
+export type FunctionType = 'polynomial' | 'absolute' | 'rational' | 'radical' | 'trigonometric' | 'inverse_trigonometric' | 'hyperbolic' | 'inverse_hyperbolic' | 'exponential';
+
+export interface GeneratorOptions {
+  targetDifficulty: number;
+  withParams?: boolean;
+  allowedTypes?: FunctionType[];
+}
+
 // ----------------------------------------------------------------------------------
 // 核心思想：代数与几何同胚构造
 // 我们不再随机拼凑算子，而是将函数生成看作是对某个“基础几何流形”的拓扑变换。
@@ -10,20 +18,27 @@ export interface GeneratedFunction {
 // ----------------------------------------------------------------------------------
 
 // 1. 基础流形 (Base Manifolds) - 拥有极强解析特征的函数
-const BASE_MANIFOLDS = [
-  'x', // 线性
-  'x^2', // 抛物线（下凸偶函数）
-  '\\left|x\\right|', // 绝对值（尖点）
-  '\\frac{1}{x}', // 双曲线（垂直渐近线）
-  '\\frac{1}{x^2+1}', // 阿涅西之箕（有界钟形）
-  '\\sqrt{1-x^2}', // 半圆（有限闭区间定义域）
-  '\\sin(x)', // 周期波
-  'e^x', // 单侧爆炸增长，单侧渐近线
-  '\\ln(x)', // 单侧垂直渐近线
-  '\\cos(x)',
-  'x^3',
-  '\\arctan(x)', // 经典的水平渐近线
-  '\\arcsin(x)'
+const BASE_MANIFOLDS: { expr: string; type: FunctionType }[] = [
+  { expr: 'x', type: 'polynomial' },
+  { expr: 'x^2', type: 'polynomial' },
+  { expr: 'x^3', type: 'polynomial' },
+  { expr: '\\left|x\\right|', type: 'absolute' },
+  { expr: '\\frac{1}{x}', type: 'rational' },
+  { expr: '\\frac{1}{x^2+1}', type: 'rational' },
+  { expr: '\\sqrt{1-x^2}', type: 'radical' },
+  { expr: '\\sin(x)', type: 'trigonometric' },
+  { expr: '\\cos(x)', type: 'trigonometric' },
+  { expr: '\\tan(x)', type: 'trigonometric' },
+  { expr: '\\arcsin(x)', type: 'inverse_trigonometric' },
+  { expr: '\\arccos(x)', type: 'inverse_trigonometric' },
+  { expr: '\\arctan(x)', type: 'inverse_trigonometric' },
+  { expr: '\\sinh(x)', type: 'hyperbolic' },
+  { expr: '\\cosh(x)', type: 'hyperbolic' },
+  { expr: '\\tanh(x)', type: 'hyperbolic' },
+  { expr: '\\text{arsinh}(x)', type: 'inverse_hyperbolic' },
+  { expr: '\\text{artanh}(x)', type: 'inverse_hyperbolic' },
+  { expr: 'e^x', type: 'exponential' },
+  { expr: '\\ln(x)', type: 'exponential' }
 ];
 
 // 获取随机元素
@@ -48,33 +63,34 @@ function getFriendlyConst(allowNegative: boolean = true): string {
 interface TopologicalOperator {
   id: string;
   weight: number;
+  type: FunctionType | 'general'; // 如果涉及到特定类型（如sin），则标记类型
   // 算子作用函数。p 代表传入的常数或参数。
   apply: (expr: string, p: string) => string;
 }
 
 const TOPOLOGICAL_OPERATORS: TopologicalOperator[] = [
   // 【定义域撕裂/挤压类】
-  { id: 'domain_log', weight: 1.5, apply: (expr, p) => `\\ln\\left(\\left|${expr}\\right| + ${p}\\right)` }, // 取对数挤压，+p防止全域无定义，当p接近0时产生深渊
-  { id: 'domain_sqrt', weight: 1.2, apply: (expr, p) => `\\sqrt{${expr} + ${p}}` }, // 强行砍掉一半定义域
+  { id: 'domain_log', weight: 1.5, type: 'exponential', apply: (expr, p) => `\\ln\\left(\\left|${expr}\\right| + ${p}\\right)` },
+  { id: 'domain_sqrt', weight: 1.2, type: 'radical', apply: (expr, p) => `\\sqrt{${expr} + ${p}}` },
 
   // 【渐近线伪装类】
-  { id: 'camou_slant', weight: 1.0, apply: (expr, p) => `${expr} + ${p}x` }, // 叠加斜渐近线
-  { id: 'camou_inv', weight: 1.2, apply: (expr, p) => `${expr} + \\frac{${p}}{x}` }, // 在原点强行撕开一条垂直渐近线
-  { id: 'camou_exp', weight: 1.5, apply: (expr, p) => `${expr} + ${p}e^{-x}` }, // 叠加单侧无穷大伪装（只在负半轴发威）
+  { id: 'camou_slant', weight: 1.0, type: 'general', apply: (expr, p) => `${expr} + ${p}x` },
+  { id: 'camou_inv', weight: 1.2, type: 'rational', apply: (expr, p) => `${expr} + \\frac{${p}}{x}` },
+  { id: 'camou_exp', weight: 1.5, type: 'exponential', apply: (expr, p) => `${expr} + ${p}e^{-x}` },
 
   // 【对称性破缺类】
-  { id: 'sym_break_sin', weight: 1.0, apply: (expr, p) => `${expr} + ${p}\\sin(x)` }, // 叠加周期性扰动
-  { id: 'sym_break_mul', weight: 1.0, apply: (expr, p) => `\\left(${expr}\\right) \\cdot \\left(x + ${p}\\right)` }, // 强行增加一个零点，破坏原有对称性
-  { id: 'sym_break_abs', weight: 1.0, apply: (expr, p) => `\\left|${expr}\\right| + ${p}x` }, // 绝对值外加斜线，产生不对称折点
+  { id: 'sym_break_sin', weight: 1.0, type: 'trigonometric', apply: (expr, p) => `${expr} + ${p}\\sin(x)` },
+  { id: 'sym_break_mul', weight: 1.0, type: 'general', apply: (expr, p) => `\\left(${expr}\\right) \\cdot \\left(x + ${p}\\right)` },
+  { id: 'sym_break_abs', weight: 1.0, type: 'absolute', apply: (expr, p) => `\\left|${expr}\\right| + ${p}x` },
 
   // 【频率/尺度扭曲类】
-  { id: 'scale_x', weight: 0.8, apply: (expr, p) => expr.replace(/x/g, `\\left(${p}x\\right)`) }, // 横向挤压
-  { id: 'shift_x', weight: 0.8, apply: (expr, p) => expr.replace(/x/g, `\\left(x - ${p}\\right)`) }, // 平移隐藏原点特征
-  { id: 'shift_y', weight: 0.5, apply: (expr, p) => `${expr} + ${p}` }, // 简单的纵向平移
+  { id: 'scale_x', weight: 0.8, type: 'general', apply: (expr, p) => expr.replace(/x/g, `\\left(${p}x\\right)`) },
+  { id: 'shift_x', weight: 0.8, type: 'general', apply: (expr, p) => expr.replace(/x/g, `\\left(x - ${p}\\right)`) },
+  { id: 'shift_y', weight: 0.5, type: 'general', apply: (expr, p) => `${expr} + ${p}` },
 
   // 【复合包裹类】
-  { id: 'wrap_exp', weight: 1.2, apply: (expr, p) => `e^{${expr}} + ${p}` }, // 指数包裹
-  { id: 'wrap_frac', weight: 1.5, apply: (expr, p) => `\\frac{${p}}{${expr}}` } // 倒数包裹，将零点变为渐近线
+  { id: 'wrap_exp', weight: 1.2, type: 'exponential', apply: (expr, p) => `e^{${expr}} + ${p}` },
+  { id: 'wrap_frac', weight: 1.5, type: 'rational', apply: (expr, p) => `\\frac{${p}}{${expr}}` }
 ];
 
 // 简单验证函数是否有意义的评估点 (避免全量空集或常数)
@@ -95,9 +111,16 @@ function hasValidDomain(exprStr: string): boolean {
 }
 
 export function generateFunctionByDifficulty(
-  targetDifficulty: number, 
-  withParams: boolean = false
+  optionsOrDifficulty: number | GeneratorOptions,
+  legacyWithParams: boolean = false
 ): GeneratedFunction {
+  // 处理兼容性，支持旧版的 (difficulty, withParams) 调用
+  const options: GeneratorOptions = typeof optionsOrDifficulty === 'number'
+    ? { targetDifficulty: optionsOrDifficulty, withParams: legacyWithParams }
+    : optionsOrDifficulty;
+
+  const { targetDifficulty, withParams = false, allowedTypes } = options;
+
   // 难度映射：难度0 (基础流形+0次变换) -> 难度7 (基础流形+高阶变换)
   const diff = Math.max(0, Math.min(7, targetDifficulty));
   const targetWeight = diff * (4.8 / 7); // 难度0时为0，难度7时为4.8
@@ -106,9 +129,25 @@ export function generateFunctionByDifficulty(
   let bestResult = { target: 'x', params: {} as Record<string, number> };
   let minDiffError = Infinity;
 
+  // 筛选出允许的基础流形
+  const availableManifolds = allowedTypes 
+    ? BASE_MANIFOLDS.filter(m => allowedTypes.includes(m.type))
+    : BASE_MANIFOLDS;
+  
+  // 如果所有类型都被过滤掉了，回退到最基础的线性
+  const manifoldsToUse = availableManifolds.length > 0 ? availableManifolds : [{ expr: 'x', type: 'polynomial' as FunctionType }];
+
+  // 筛选出允许的算子
+  const availableOperators = allowedTypes
+    ? TOPOLOGICAL_OPERATORS.filter(op => op.type === 'general' || allowedTypes.includes(op.type))
+    : TOPOLOGICAL_OPERATORS;
+
+  // 如果所有算子都被过滤掉了，留一个最安全的平移算子兜底
+  const opsToUse = availableOperators.length > 0 ? availableOperators : [TOPOLOGICAL_OPERATORS.find(op => op.id === 'shift_y')!];
+
   for (let i = 0; i < maxAttempts; i++) {
     let currentWeight = 0;
-    let expr = getRandom(BASE_MANIFOLDS);
+    let expr = getRandom(manifoldsToUse).expr;
     
     const usedParams: Record<string, number> = {};
     const availableParams = ['a', 'b', 'c'];
@@ -120,7 +159,7 @@ export function generateFunctionByDifficulty(
     let steps = 0;
     // 强制使用完分配的参数，或者达到目标难度
     while ((currentWeight < targetWeight || targetParams.length > 0) && steps < 6) {
-      const op = getRandom(TOPOLOGICAL_OPERATORS);
+      const op = getRandom(opsToUse);
       
       let pStr = '';
       if (targetParams.length > 0 && (Math.random() < 0.6 || steps > 3)) {

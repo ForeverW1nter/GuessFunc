@@ -7,7 +7,8 @@ import { Sidebar } from './components/Sidebar';
 import { ChapterEditorView } from './components/ChapterEditorView';
 import { SystemBar } from './components/SystemBar';
 import { WorkspaceEmptyState } from './components/WorkspaceEmptyState';
-import { SettingsModal } from '../../src/features/ui/components/SettingsModal';
+import { ToolsSettingsModal } from './components/ToolsSettingsModal';
+import { BatchGeneratorModal } from './components/BatchGeneratorModal';
 
 interface GlobalViewState {
   routeIndex: number;
@@ -57,6 +58,7 @@ export const StoryEditorPage: React.FC = () => {
   const scrollPositions = useRef<Record<string, number>>({});
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isBatchGeneratorOpen, setIsBatchGeneratorOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('storyEditorData', JSON.stringify(storyData));
@@ -126,10 +128,16 @@ export const StoryEditorPage: React.FC = () => {
     const newChapterId = `ch${newRoutes[viewState.routeIndex].chapters.length}`;
     newRoutes[viewState.routeIndex].chapters.push({
       id: newChapterId,
-      title: `${t('tools.storyEditor.newChapter', 'New Chapter')} ${newChapterId}`,
+      title: t('tools.storyEditor.newChapterTitle', { id: newChapterId, defaultValue: `Chapter ${newChapterId}` }),
       levels: [],
       files: []
     });
+    setStoryData({ ...storyData, routes: newRoutes });
+  };
+
+  const handleGenerateChapters = (generatedChapters: ChapterData[]) => {
+    const newRoutes = [...storyData.routes];
+    newRoutes[viewState.routeIndex].chapters.push(...generatedChapters);
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
@@ -230,9 +238,9 @@ export const StoryEditorPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0A0A0B] text-[#D4D4D6] overflow-hidden font-mono">
+    <div className="w-full h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 overflow-hidden font-sans">
       {/* System Bar */}
-      <SystemBar onFileUpload={handleFileUpload} onExport={handleExport} />
+      <SystemBar onFileUpload={handleFileUpload} onExport={handleExport} onOpenBatchGenerator={() => setIsBatchGeneratorOpen(true)} />
 
       {/* Main Workspace */}
       <div className="flex-1 relative flex overflow-hidden">
@@ -249,9 +257,14 @@ export const StoryEditorPage: React.FC = () => {
 
         <div className={`
           ${isMobile ? (viewState.chapterIndex !== null ? 'w-full' : 'hidden') : 'flex-1 min-w-0'} 
-          flex flex-col h-full bg-[#121214] relative
+          flex flex-col h-full bg-white dark:bg-zinc-900 relative shadow-inner
         `}>
-          {currentChapterState?.mode === 'level' && activeLevel && currentChapterState.levelIndex !== null ? (
+          {isBatchGeneratorOpen ? (
+            <BatchGeneratorModal 
+              onClose={() => setIsBatchGeneratorOpen(false)}
+              onGenerate={handleGenerateChapters}
+            />
+          ) : currentChapterState?.mode === 'level' && activeLevel && currentChapterState.levelIndex !== null ? (
             <LevelEditor 
               level={activeLevel}
               levelIndex={currentChapterState.levelIndex}
@@ -292,7 +305,7 @@ export const StoryEditorPage: React.FC = () => {
           )}
         </div>
       </div>
-      <SettingsModal />
+      <ToolsSettingsModal />
     </div>
   );
 };

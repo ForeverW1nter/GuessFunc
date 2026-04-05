@@ -52,41 +52,42 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col bg-white dark:bg-zinc-950">
       {/* Header */}
-      <div className="px-[24px] md:px-[40px] py-[24px] md:py-[32px] border-b border-[#2A2A2E] bg-[#0A0A0B]">
-        <div className="flex justify-between items-start mb-[16px]">
-          <h2 className="text-[1.2rem] md:text-[1.8rem] text-white tracking-widest uppercase m-0 flex items-center gap-[12px] w-full">
-            <FolderOpen className="text-app-primary w-[24px] h-[24px] md:w-[32px] md:h-[32px] shrink-0" />
+      <div className="px-6 md:px-10 py-6 md:py-8 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50">
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-100 m-0 flex items-center gap-3 w-full">
+            <FolderOpen className="text-app-primary dark:text-app-primary w-8 h-8 shrink-0" />
             <input 
               type="text" 
-              value={chapter.title}
+              value={chapter.title || ''}
               onChange={(e) => updateChapter('title', e.target.value)}
-              className="bg-transparent border-b border-transparent hover:border-[#2A2A2E] focus:border-app-primary text-white outline-none transition-colors w-full"
+              className="bg-transparent border-b-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 focus:border-app-primary text-zinc-900 dark:text-zinc-100 outline-none transition-colors w-full pb-1"
+              placeholder={t('tools.storyEditor.untitled', 'Untitled Chapter')}
             />
           </h2>
           <button 
             onClick={() => deleteChapter(chapterIndex)}
-            className="p-[8px] text-red-500/50 hover:text-white hover:bg-red-500 rounded-[4px] transition-colors cursor-pointer bg-transparent border-none shrink-0"
+            className="p-2 text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer bg-transparent border-none shrink-0"
             title={t('tools.storyEditor.deleteChapter', 'Delete Chapter')}
           >
-            <Trash2 size={18} />
+            <Trash2 size={20} />
           </button>
         </div>
         <div className="flex items-center justify-between">
-          <div className="text-[0.8rem] text-[#606065] font-mono flex items-center gap-[8px]">
+          <div className="text-sm text-zinc-500 dark:text-zinc-400 font-mono flex items-center gap-2">
             <span>{t('tools.storyEditor.path', 'Path:')} ~/{route.id}/</span>
             <input 
               type="text" 
               value={chapter.id}
               onChange={(e) => updateChapter('id', e.target.value)}
-              className="bg-transparent border-b border-transparent hover:border-[#2A2A2E] focus:border-app-primary text-[#A0A0A5] outline-none transition-colors w-[100px]"
+              className="bg-transparent border-b border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-app-primary text-zinc-700 dark:text-zinc-300 outline-none transition-colors w-32 pb-0.5"
             />
           </div>
           {isMobile && (
               <button
                 onClick={onClose}
-                className="text-[0.7rem] text-app-primary uppercase tracking-widest border border-app-primary/30 px-[8px] py-[2px] rounded bg-transparent"
+                className="text-xs text-app-primary dark:text-app-primary font-medium uppercase tracking-wider border border-app-primary/30 dark:border-app-primary/50 px-3 py-1 rounded-md bg-transparent"
               >
                 {t('tools.storyEditor.close', 'Close')}
               </button>
@@ -94,52 +95,55 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
         </div>
       </div>
 
-      {/* Files List - 左右分栏布局 */}
+      {/* Files List - 两栏布局 */}
       <div 
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto custom-scrollbar p-[16px] md:p-[32px]"
+        className="flex-1 overflow-y-auto custom-scrollbar bg-zinc-50 dark:bg-zinc-950/50"
       >
-        <div className="flex flex-row gap-[32px]">
+        <div className="p-6 md:p-10 flex flex-col lg:flex-row gap-8">
           {/* 左栏：Levels */}
           <div className="flex flex-col flex-1">
-            <div className="flex flex-row items-center justify-between px-[16px] py-[8px] border-b border-transparent text-[0.65rem] text-[#606065] uppercase tracking-widest sticky top-0 bg-[#121214] z-10 shadow-[0_1px_0_rgba(255,255,255,0.02)] mb-[8px]">
-              <div className="flex flex-row items-center gap-[16px] flex-1 min-w-0">
-                <div className="w-[32px] text-center shrink-0">{t('tools.storyEditor.sts', 'STS')}</div>
+            <div className="flex items-center justify-between px-4 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div className="w-10 text-center shrink-0">{t('tools.storyEditor.sts', 'STS')}</div>
                 <div className="truncate">{t('tools.storyEditor.levelsTitle', 'Levels')}</div>
               </div>
-              <div className="w-[40px] text-right shrink-0">{t('tools.storyEditor.typeCol', 'Type')}</div>
+              <div className="w-16 text-right shrink-0">{t('tools.storyEditor.typeCol', 'Type')}</div>
             </div>
             
-            <div className="flex flex-col gap-[4px]">
+            <div className="flex flex-col gap-2">
               {chapter.levels.map((level, index) => (
                 <div 
                   key={`level-${level.id}`}
                   onClick={() => onSelectLevel(index)}
-                  className="group relative flex flex-row items-center justify-between px-[16px] py-[8px] rounded-[8px] hover:bg-[#1A1A1D] cursor-pointer transition-colors"
+                  className="group relative flex items-center justify-between px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md hover:border-app-primary/40 dark:hover:border-app-primary/60 cursor-pointer transition-all"
                 >
-                  <div className="flex flex-row items-center gap-[16px] flex-1 min-w-0">
-                    <div className="w-[32px] flex justify-center shrink-0">
-                      <FileCode size={16} className="text-[#606065] group-hover:text-green-400 transition-colors" />
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="w-10 flex justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400">
+                        <FileCode size={18} />
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-[2px] min-w-0">
-                      <span className="text-[0.85rem] text-[#D4D4D6] group-hover:text-white transition-colors truncate">
-                        {level.id}.exe <span className="text-[#606065] ml-[8px] text-[0.75rem]">- {level.title}</span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate flex items-center gap-2">
+                        {level.id}.exe 
+                        <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 truncate">{level.title}</span>
                       </span>
-                      <span className="text-[0.65rem] text-[#606065] font-mono truncate">
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400 font-mono mt-0.5 truncate">
                         f(x) = {level.targetFunction}
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-row items-center gap-[8px] shrink-0 justify-end">
+                  <div className="flex items-center gap-3 shrink-0">
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteLevel(index); }}
-                      className="opacity-0 group-hover:opacity-100 p-[4px] text-[#606065] hover:text-white hover:bg-red-500 rounded-[4px] transition-all cursor-pointer bg-transparent border-none"
+                      className="opacity-0 group-hover:opacity-100 p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all cursor-pointer bg-transparent border-none"
                       title={t('tools.storyEditor.deleteLevel', 'Delete Level')}
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={16} />
                     </button>
-                    <div className="text-[0.7rem] text-[#606065] uppercase tracking-widest text-right w-[40px]">
+                    <div className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded w-12 text-center">
                       LVL
                     </div>
                   </div>
@@ -147,52 +151,54 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
               ))}
               <button 
                 onClick={addLevel}
-                className="mt-[4px] py-[8px] rounded-[8px] bg-transparent border border-dashed border-[#2A2A2E] hover:border-green-400/50 hover:bg-green-400/5 text-[#606065] hover:text-green-400 transition-colors cursor-pointer flex items-center justify-center gap-[8px] text-[0.7rem] uppercase tracking-widest font-bold"
+                className="mt-2 py-3 rounded-xl bg-transparent border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-green-400 dark:hover:border-green-600 hover:bg-green-50 dark:hover:bg-green-900/10 text-zinc-500 dark:text-zinc-400 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer flex items-center justify-center gap-2 text-sm font-medium"
               >
-                <Plus size={14} /> {t('tools.storyEditor.addLevel', 'Add Level')}
+                <Plus size={18} /> {t('tools.storyEditor.addLevel', 'Add Level')}
               </button>
             </div>
           </div>
 
           {/* 右栏：Files */}
           <div className="flex flex-col flex-1">
-            <div className="flex flex-row items-center justify-between px-[16px] py-[8px] border-b border-transparent text-[0.65rem] text-[#606065] uppercase tracking-widest sticky top-0 bg-[#121214] z-10 shadow-[0_1px_0_rgba(255,255,255,0.02)] mb-[8px]">
-              <div className="flex flex-row items-center gap-[16px] flex-1 min-w-0">
-                <div className="w-[32px] text-center shrink-0">{t('tools.storyEditor.sts', 'STS')}</div>
+            <div className="flex items-center justify-between px-4 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div className="w-10 text-center shrink-0">{t('tools.storyEditor.sts', 'STS')}</div>
                 <div className="truncate">{t('tools.storyEditor.filesTitle', 'Files')}</div>
               </div>
-              <div className="w-[40px] text-right shrink-0">{t('tools.storyEditor.typeCol', 'Type')}</div>
+              <div className="w-16 text-right shrink-0">{t('tools.storyEditor.typeCol', 'Type')}</div>
             </div>
 
-            <div className="flex flex-col gap-[4px]">
+            <div className="flex flex-col gap-2">
               {chapter.files?.map((file, index) => (
                 <div 
                   key={`file-${file.id}`}
                   onClick={() => onSelectFile(index)}
-                  className="group relative flex flex-row items-center justify-between px-[16px] py-[8px] rounded-[8px] hover:bg-[#1A1A1D] cursor-pointer transition-colors"
+                  className="group relative flex items-center justify-between px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md hover:border-app-primary/40 dark:hover:border-app-primary/60 cursor-pointer transition-all"
                 >
-                  <div className="flex flex-row items-center gap-[16px] flex-1 min-w-0">
-                    <div className="w-[32px] flex justify-center shrink-0">
-                      <FileText size={16} className="text-[#606065] group-hover:text-blue-400 transition-colors" />
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="w-10 flex justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-app-primary/10 dark:bg-app-primary/20 flex items-center justify-center text-app-primary dark:text-app-primary">
+                        <FileText size={18} />
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-[2px] min-w-0">
-                      <span className="text-[0.85rem] text-[#D4D4D6] group-hover:text-white transition-colors truncate">
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                         {file.title}.{file.extension}
                       </span>
-                      <span className="text-[0.65rem] text-[#606065] font-mono truncate">
-                        Unlock: {file.unlockConditions?.length ? file.unlockConditions.join(',') : 'None'}
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 truncate">
+                        Unlock: {file.unlockConditions?.length ? file.unlockConditions.join(', ') : 'None'}
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-row items-center gap-[8px] shrink-0 justify-end">
+                  <div className="flex items-center gap-3 shrink-0">
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteFile(index); }}
-                      className="opacity-0 group-hover:opacity-100 p-[4px] text-[#606065] hover:text-white hover:bg-red-500 rounded-[4px] transition-all cursor-pointer bg-transparent border-none"
+                      className="opacity-0 group-hover:opacity-100 p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all cursor-pointer bg-transparent border-none"
                       title={t('tools.storyEditor.deleteFile', 'Delete File')}
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={16} />
                     </button>
-                    <div className="text-[0.7rem] text-[#606065] uppercase tracking-widest text-right w-[40px]">
+                    <div className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded w-12 text-center">
                       DOC
                     </div>
                   </div>
@@ -200,9 +206,9 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
               ))}
               <button 
                 onClick={addFile}
-                className="mt-[4px] py-[8px] rounded-[8px] bg-transparent border border-dashed border-[#2A2A2E] hover:border-blue-400/50 hover:bg-blue-400/5 text-[#606065] hover:text-blue-400 transition-colors cursor-pointer flex items-center justify-center gap-[8px] text-[0.7rem] uppercase tracking-widest font-bold"
+                className="mt-2 py-3 rounded-xl bg-transparent border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-app-primary dark:hover:border-app-primary hover:bg-app-primary/10 dark:hover:bg-app-primary/10 text-zinc-500 dark:text-zinc-400 hover:text-app-primary dark:hover:text-app-primary transition-colors cursor-pointer flex items-center justify-center gap-2 text-sm font-medium"
               >
-                <Plus size={14} /> {t('tools.storyEditor.addFile', 'Add File')}
+                <Plus size={18} /> {t('tools.storyEditor.addFile', 'Add File')}
               </button>
             </div>
           </div>

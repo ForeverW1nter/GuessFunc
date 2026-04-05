@@ -10,11 +10,11 @@ export const ToolsApp = () => {
 
   return (
     <div 
-      className={`absolute inset-0 flex bg-[#0A0A0B] text-[#D4D4D6] font-sans overflow-hidden ${theme}`} 
+      className={`absolute inset-0 flex bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 font-sans overflow-hidden transition-colors duration-300 ${theme}`} 
       style={{ 
         fontSize: `${storyFontSize}%`,
         fontFamily: storyFontFamily === 'system-ui, -apple-system, sans-serif' 
-          ? '"PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif'
+          ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
           : storyFontFamily
       }}
     >
