@@ -28,13 +28,16 @@ This file contains the data for the rolling credits displayed at the end of the 
     {
       "title": "剧情编写",
       "names": [
+        "ChatGPT",
         "DeepSeek",
+        "Google Gemini",
         "Forever-W1nter"
       ]
     },
     {
       "title": "关卡设计",
       "names": [
+        "Google Gemini",
         "DeepSeek",
         "Forever-W1nter"
       ]

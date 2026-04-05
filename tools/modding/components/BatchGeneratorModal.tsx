@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Trash2, Wand2, ArrowLeft } from 'lucide-react';
+import { Plus, Trash2, Wand2, ArrowLeft, Download, Upload } from 'lucide-react';
 import { FunctionType, generateFunctionByDifficulty } from '../../../src/utils/mathEngine/generator';
 import { ChapterData, LevelData } from '../../../src/types/story';
 import { ToggleSwitch } from '../../../src/features/ui/components/ToggleSwitch';
@@ -31,7 +31,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
     { value: 'absolute', label: t('tools.storyEditor.funcTypes.absolute', 'Absolute (|x|)') },
     { value: 'rational', label: t('tools.storyEditor.funcTypes.rational', 'Rational (1/x)') },
     { value: 'radical', label: t('tools.storyEditor.funcTypes.radical', 'Radical (sqrt)') },
-    { value: 'exponential', label: t('tools.storyEditor.funcTypes.exponential', 'Exponential (e^x, ln)') },
+    { value: 'exponential', label: t('tools.storyEditor.funcTypes.exponential', 'Exponential (e^{x}, ln)') },
     { value: 'trigonometric', label: t('tools.storyEditor.funcTypes.trigonometric', 'Trigonometric (sin, cos)') },
     { value: 'inverse_trigonometric', label: t('tools.storyEditor.funcTypes.inverse_trigonometric', 'Inv Trig (arcsin, arctan)') },
     { value: 'hyperbolic', label: t('tools.storyEditor.funcTypes.hyperbolic', 'Hyperbolic (sinh, cosh)') },
@@ -143,6 +143,38 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
 
     onGenerate(generatedChapters);
     onClose();
+  };
+
+  const handleExport = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(configs, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "batch-config.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const json = JSON.parse(event.target?.result as string);
+          if (Array.isArray(json)) {
+            setConfigs(json);
+          } else {
+            alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
+          }
+        } catch (err: unknown) {
+          alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
+          console.error(err);
+        }
+      };
+      reader.readAsText(file);
+    }
+    e.target.value = '';
   };
 
   return (
@@ -312,21 +344,37 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-4 shrink-0 bg-zinc-50 dark:bg-zinc-950">
-        <button 
-          onClick={onClose}
-          className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors border-none cursor-pointer"
-        >
-          {t('tools.storyEditor.cancel', 'Cancel')}
-        </button>
-        <button 
-          onClick={handleGenerate}
-          disabled={configs.length === 0}
-          className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-app-primary hover:bg-app-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 border-none cursor-pointer shadow-sm"
-        >
-          <Wand2 size={16} />
-          {t('tools.storyEditor.generateLevels', { count: configs.reduce((acc, c) => acc + c.levelCount, 0), defaultValue: `Generate ${configs.reduce((acc, c) => acc + c.levelCount, 0)} Levels` })}
-        </button>
+      <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center shrink-0 bg-zinc-50 dark:bg-zinc-950">
+        <div className="flex items-center gap-2">
+          <label className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+            <Upload size={16} />
+            <span className="hidden sm:inline">{t('tools.storyEditor.importBatch', 'Import Config')}</span>
+            <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+          </label>
+          <button 
+            onClick={handleExport}
+            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+          >
+            <Download size={16} />
+            <span className="hidden sm:inline">{t('tools.storyEditor.exportBatch', 'Export Config')}</span>
+          </button>
+        </div>
+        <div className="flex gap-4">
+          <button 
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors border-none cursor-pointer"
+          >
+            {t('tools.storyEditor.cancel', 'Cancel')}
+          </button>
+          <button 
+            onClick={handleGenerate}
+            disabled={configs.length === 0}
+            className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-app-primary hover:bg-app-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 border-none cursor-pointer shadow-sm"
+          >
+            <Wand2 size={16} />
+            {t('tools.storyEditor.generateLevels', { count: configs.reduce((acc, c) => acc + c.levelCount, 0), defaultValue: `Generate ${configs.reduce((acc, c) => acc + c.levelCount, 0)} Levels` })}
+          </button>
+        </div>
       </div>
     </div>
   );

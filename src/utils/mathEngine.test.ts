@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateEquivalence } from './mathEngine';
+import { evaluateEquivalence, parseRelation } from './mathEngine';
+
+describe('mathEngine parseRelation', () => {
+  it('parses relation correctly', () => {
+    expect(parseRelation('x^2+y^2=1')).toEqual({ lhs: 'x^2+y^2', op: '=', rhs: '1' });
+    expect(parseRelation('y=x+1')).toEqual({ lhs: 'y', op: '=', rhs: 'x+1' });
+    expect(parseRelation('x^2+y^2<1')).toEqual({ lhs: 'x^2+y^2', op: '<', rhs: '1' });
+  });
+});
 
 describe('mathEngine evaluateEquivalence', () => {
   it('Basic x^2', () => {
@@ -58,6 +66,32 @@ describe('mathEngine evaluateEquivalence', () => {
 
   it('Fails when player uses a different parameter name even if it is in params', () => {
     const result = evaluateEquivalence('\\sin(x+a)', '\\sin(x+b)', { a: 2, b: 2 });
+    expect(result.isMatch).toBe(false);
+  });
+
+  // ========== 测试方程和不等式 (2D 采样) ==========
+  it('Equation: x^2+y^2=1 matches x^2+y^2-1=0', () => {
+    const result = evaluateEquivalence('x^2+y^2=1', 'x^2+y^2-1=0');
+    expect(result.isMatch).toBe(true);
+  });
+
+  it('Equation: y=x+1 matches x-y=-1', () => {
+    const result = evaluateEquivalence('y=x+1', 'x-y=-1');
+    expect(result.isMatch).toBe(true);
+  });
+
+  it('Inequality: x^2+y^2<1 matches x^2+y^2-1<0', () => {
+    const result = evaluateEquivalence('x^2+y^2<1', 'x^2+y^2-1<0');
+    expect(result.isMatch).toBe(true);
+  });
+
+  it('Inequality: fails when direction is reversed', () => {
+    const result = evaluateEquivalence('x^2+y^2<1', 'x^2+y^2>1');
+    expect(result.isMatch).toBe(false);
+  });
+
+  it('Equation vs Inequality fails', () => {
+    const result = evaluateEquivalence('x^2+y^2=1', 'x^2+y^2<1');
     expect(result.isMatch).toBe(false);
   });
 });

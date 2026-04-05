@@ -44,7 +44,25 @@ function cleanDesmosLatex(latex: string): string {
   // 修复绝对值
   s = s.replace(/\\left\|(.*?)\\right\|/g, "\\left|$1\\right|");
   
+  // 修复不等式符号
+  s = s.replace(/\\leq/g, '\\le');
+  s = s.replace(/\\geq/g, '\\ge');
+  s = s.replace(/≤/g, '\\le');
+  s = s.replace(/≥/g, '\\ge');
+
   return s;
+}
+
+/**
+  * 解析关系式（包含等号或不等号的方程或不等式）
+  */
+export function parseRelation(latex: string) {
+  // 匹配 LHS + Operator + RHS。使用负向先行断言防止 \le 匹配到 \left
+  const match = latex.match(/^(.*?)(<|>|\\le(?![a-zA-Z])|\\ge(?![a-zA-Z])|=)(.*)$/);
+  if (match) {
+    return { lhs: match[1].trim(), op: match[2], rhs: match[3].trim() };
+  }
+  return null;
 }
 
 /**
@@ -66,16 +84,6 @@ export function extractUsedParams(latex: string, allParams: Record<string, numbe
     for (const v of unknowns) {
       if (v !== 'x' && v !== 'y' && v in allParams) {
         usedParams[v] = allParams[v];
-      }
-    }
-    
-    // 2. 正则兜底策略：只对化简后的 LaTeX 进行正则匹配
-    const simplifiedLatex = simplifiedBox.latex;
-    const regex = /[a-zA-Z](?:_[0-9a-zA-Z]+)?/g;
-    const matches = simplifiedLatex.match(regex) || [];
-    for (const match of matches) {
-      if (match !== 'x' && match !== 'y' && match !== 'e' && match !== 'pi' && match in allParams) {
-        usedParams[match] = allParams[match];
       }
     }
 
@@ -111,6 +119,127 @@ export function evaluateEquivalence(
     const cleanTarget = cleanDesmosLatex(targetLatex);
     const cleanPlayer = cleanDesmosLatex(playerLatex);
 
+    const targetRel = parseRelation(cleanTarget);
+    const playerRel = parseRelation(cleanPlayer);
+
+    // ==========================================
+    // 关系式模式（方程或不等式）
+    // ==========================================
+    if (targetRel) {
+      if (!playerRel) {
+        return { isMatch: false, reason: i18n.t('game.mathEngine.needEquation') || "需要输入方程或不等式" };
+      }
+
+      const isTargetIneq = targetRel.op !== '=';
+      const isPlayerIneq = playerRel.op !== '=';
+
+      if (isTargetIneq !== isPlayerIneq) {
+        return { isMatch: false, reason: i18n.t('game.mathEngine.opMismatch') || "符号类型（等式/不等式）不匹配" };
+      }
+
+      // 为了 2D 采样，我们需要解析左右两边
+      try { ce.declare('x', 'number'); } catch { /* ignore */ }
+      try { ce.declare('y', 'number'); } catch { /* ignore */ }
+      const paramKeys = Object.keys(params);
+      paramKeys.forEach(p => {
+        try { ce.declare(p, 'number'); } catch { /* ignore */ }
+      });
+
+      const tLBox = ce.parse(targetRel.lhs);
+      const tRBox = ce.parse(targetRel.rhs);
+      const pLBox = ce.parse(playerRel.lhs);
+      const pRBox = ce.parse(playerRel.rhs);
+
+      let matchCount = 0;
+      const totalPoints = 300; // 2D 采样点数更多
+      
+      let constantRatio: number | null = null;
+      let isRatioValid = true;
+
+      for (let i = 0; i < totalPoints; i++) {
+        const xVal = (Math.random() * 20) - 10;
+        const yVal = (Math.random() * 20) - 10;
+        const testContext: Record<string, number> = { x: xVal, y: yVal };
+        
+        for (const p of paramKeys) {
+          let pVal = (Math.random() * 10) - 5;
+          if (Math.abs(pVal) < 0.05) pVal = 0.5;
+          testContext[p] = pVal;
+        }
+
+        const tL_raw = tLBox.subs(testContext).N().valueOf();
+        const tL = typeof tL_raw === 'number' ? tL_raw : NaN;
+        
+        const tR_raw = tRBox.subs(testContext).N().valueOf();
+        const tR = typeof tR_raw === 'number' ? tR_raw : NaN;
+        
+        const pL_raw = pLBox.subs(testContext).N().valueOf();
+        const pL = typeof pL_raw === 'number' ? pL_raw : NaN;
+        
+        const pR_raw = pRBox.subs(testContext).N().valueOf();
+        const pR = typeof pR_raw === 'number' ? pR_raw : NaN;
+
+        if (!Number.isFinite(tL) || !Number.isFinite(tR) || !Number.isFinite(pL) || !Number.isFinite(pR)) {
+          continue; // 跳过无效点（如根号下负数）
+        }
+
+        if (isTargetIneq) {
+          // 不等式：计算布尔值并比对
+          const evalOp = (l: number, r: number, op: string) => {
+            if (op === '<') return l < r;
+            if (op === '>') return l > r;
+            if (op === '\\le') return l <= r;
+            if (op === '\\ge') return l >= r;
+            return false;
+          };
+          const tBool = evalOp(tL, tR, targetRel.op);
+          const pBool = evalOp(pL, pR, playerRel.op);
+          if (tBool === pBool) matchCount++;
+        } else {
+          // 方程：判断比例 (L_t - R_t) / (L_p - R_p) 是否为常数
+          const tDiff = tL - tR;
+          const pDiff = pL - pR;
+          
+          if (Math.abs(pDiff) < 1e-8) {
+            if (Math.abs(tDiff) < 1e-8) matchCount++;
+            continue;
+          }
+          
+          const currentRatio = tDiff / pDiff;
+          if (constantRatio === null) {
+            constantRatio = currentRatio;
+            matchCount++;
+          } else {
+            // 允许一定的浮点误差
+            if (Math.abs(constantRatio - currentRatio) < 1e-5 || Math.abs(constantRatio - currentRatio) / Math.abs(constantRatio) < 1e-5) {
+              matchCount++;
+            } else {
+              isRatioValid = false;
+            }
+          }
+        }
+      }
+
+      if (isTargetIneq) {
+        if (matchCount / totalPoints > 0.95) {
+          logger.log(`不等式验证通过: 匹配率 ${(matchCount / totalPoints * 100).toFixed(1)}%`);
+          return { isMatch: true, method: 'sampling' };
+        } else {
+          return { isMatch: false, reason: i18n.t('game.mathEngine.ineqMismatch') || "不等式区域不匹配" };
+        }
+      } else {
+        if (isRatioValid && matchCount > totalPoints * 0.5) {
+          logger.log(`方程验证通过: 比例恒定 ${constantRatio}`);
+          return { isMatch: true, method: 'sampling' };
+        } else {
+          return { isMatch: false, reason: i18n.t('game.mathEngine.eqMismatch') || "方程图形不匹配" };
+        }
+      }
+    }
+
+    // ==========================================
+    // 常规模式（1D 函数）
+    // ==========================================
     const targetBox = ce.parse(cleanTarget);
     const playerBox = ce.parse(cleanPlayer);
 

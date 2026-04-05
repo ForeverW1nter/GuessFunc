@@ -37,7 +37,7 @@ export const RandomChallengeModal: React.FC = () => {
   const handleStart = async () => {
     setIsGenerating(true);
     // 使用本地拓扑变换算法生成
-    const result = generateFunctionByDifficulty(difficulty, withParams);
+    const result = generateFunctionByDifficulty({ targetDifficulty: difficulty, withParams });
     setIsGenerating(false);
     
     setTargetFunction(result.target, result.params, 'random');

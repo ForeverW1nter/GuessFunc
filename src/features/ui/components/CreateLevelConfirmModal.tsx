@@ -28,7 +28,12 @@ export const CreateLevelConfirmModal: React.FC<CreateLevelConfirmModalProps> = (
           <div 
             className="bg-card-bg border border-card-border p-3 rounded-lg overflow-x-auto font-math text-center text-lg"
             dangerouslySetInnerHTML={{
-              __html: katex.renderToString(`f(x) = ${createPreview.latex}`, { throwOnError: false })
+              __html: katex.renderToString(
+                /[=<>≤≥]|\\le|\\ge/.test(createPreview.latex) 
+                  ? createPreview.latex 
+                  : `f(x) = ${createPreview.latex}`, 
+                { throwOnError: false }
+              )
             }}
           />
           {Object.keys(createPreview.params).length > 0 && (

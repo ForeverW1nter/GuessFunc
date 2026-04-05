@@ -64,7 +64,7 @@ export const ChapterList: React.FC<ChapterListProps> = ({
               
               <div className="flex items-center gap-[8px] shrink-0">
                 <span className={`text-[0.7rem] ${isAllCompleted ? 'text-app-success' : 'text-[#606065]'}`}>
-                  {completedCount}/{totalCount}
+                  {completedCount}
                 </span>
                 {isAllCompleted && <Check size={14} strokeWidth={3} className="text-app-success" />}
               </div>

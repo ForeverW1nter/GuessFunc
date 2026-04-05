@@ -113,7 +113,8 @@ const LevelRoute = () => {
               const prevChapterLevelIds = previousChapter.levels.map(l => `${routeId}/${previousChapter.id}/${l.id}`);
               const prevCompletedCount = prevChapterLevelIds.filter(id => completedLevels.includes(id)).length;
               const requiredCount = Math.ceil(prevChapterLevelIds.length * 0.8);
-              isChapterUnlocked = prevCompletedCount >= requiredCount;
+              const prevUnfinishedCount = prevChapterLevelIds.length - prevCompletedCount;
+              isChapterUnlocked = prevCompletedCount >= requiredCount || prevUnfinishedCount <= 3;
             }
 
             if (!isChapterUnlocked) {

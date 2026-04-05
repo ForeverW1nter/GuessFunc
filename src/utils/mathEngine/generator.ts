@@ -37,7 +37,7 @@ const BASE_MANIFOLDS: { expr: string; type: FunctionType }[] = [
   { expr: '\\tanh(x)', type: 'hyperbolic' },
   { expr: '\\operatorname{arsinh}(x)', type: 'inverse_hyperbolic' },
   { expr: '\\operatorname{artanh}(x)', type: 'inverse_hyperbolic' },
-  { expr: 'e^x', type: 'exponential' },
+  { expr: 'e^{x}', type: 'exponential' },
   { expr: '\\ln(x)', type: 'exponential' }
 ];
 
@@ -48,7 +48,7 @@ function getRandom<T>(arr: T[]): T {
 
 // 获取更友好的常数，根据算子类型进行智能约束，避免生成极其丑陋或无意义的图象
 function getFriendlyConst(opId: string): string {
-  const isMultiplier = opId === 'scale_x' || opId.includes('mul') || opId.includes('slant') || opId.includes('exp');
+  const isMultiplier = opId.includes('scale') || opId.includes('mul') || opId.includes('slant') || opId.includes('exp') || opId.includes('skew') || opId.includes('wave');
   const isDomainLogSqrt = opId === 'domain_log' || opId === 'domain_sqrt';
 
   if (isDomainLogSqrt) {
@@ -66,17 +66,19 @@ function getFriendlyConst(opId: string): string {
 // ----------------------------------------------------------------------------------
 // 2. 拓扑相变算子 (Topological Operators)
 // 每个算子代表一种高阶的解析几何变换，而不是低级的语法树拼接。
+// 分为 1D 算子（用于 x 的变形）和 2D 算子（用于混合 x, y 的隐式方程）
 // ----------------------------------------------------------------------------------
 interface TopologicalOperator {
   id: string;
   weight: number;
-  type: FunctionType | 'general'; // 如果涉及到特定类型（如sin），则标记类型
+  type: FunctionType | 'general' | 'relation_2d'; // 如果涉及到特定类型（如sin），则标记类型
   maxUses: number; // 增加最大使用次数限制，防止无限套娃
   // 算子作用函数。p 代表传入的常数或参数。
   apply: (expr: string, p: string) => string;
 }
 
 const TOPOLOGICAL_OPERATORS: TopologicalOperator[] = [
+  // ==================== 1D 变形算子 ====================
   // 【定义域撕裂/挤压类】
   { id: 'domain_log', weight: 1.5, type: 'exponential', maxUses: 1, apply: (expr, p) => `\\ln\\left(\\left|${expr}\\right| + ${p}\\right)` },
   { id: 'domain_sqrt', weight: 1.2, type: 'radical', maxUses: 1, apply: (expr, p) => `\\sqrt{${expr} + ${p}}` },
@@ -136,23 +138,38 @@ function postCleanLatex(expr: string): string {
   
   // 1. 清理多重冗余括号，例如 \sin(\left(2x\right)) -> \sin(2x)
   s = s.replace(/\\left\(\\left\((.*?)\\right\)\\right\)/g, '\\left($1\\right)');
-  s = s.replace(/\(\\left\((.*?)\\right\)\)/g, '($1)');
+  s = s.replace(/\(\\left\((.*?)\\right\)\)/g, '\\left($1\\right)');
   s = s.replace(/\\left\|\\left\((.*?)\\right\)\\right\|/g, '\\left|$1\\right|');
   
-  // 2. 对于简单的数字加减 x 的括号进行解除，例如 \left(x + 2\right) 如果在最外层或加减法中可以不带 left right
+  // 2. 将普通括号替换为 \left( \right)，保证渲染时的高度自适应
+  // 注意不要替换已经是 \left( 和 \right) 的括号，也不要替换不支持 \left \right 的地方
+  s = s.replace(/(?<!\\left)\(/g, '\\left(');
+  s = s.replace(/(?<!\\right)\)/g, '\\right)');
+
+  // 2.5 将普通绝对值替换为 \left| \right|
+  // 使用简单的状态机或者多次替换来配对 |
+  // 这里必须非常小心不要把 \left| 或 \right| 中的 | 误判
+  // 我们使用一个安全替换逻辑：如果连续找到两个孤立的 |
+  while (s.match(/(?<!\\(?:left|right))\|([^|]+?)(?<!\\(?:left|right))\|/)) {
+    s = s.replace(/(?<!\\(?:left|right))\|([^|]+?)(?<!\\(?:left|right))\|/g, '\\left|$1\\right|');
+  }
+
+  // 3. 对于简单的数字加减 x 的括号进行解除，例如 \left(x + 2\right) 如果在最外层或加减法中可以不带 left right
   // 但为了保守起见，我们主要清理乘法前面的 1x
   s = s.replace(/(?<![\d.])\b1x(?![a-zA-Z])/g, 'x');
   s = s.replace(/(?<![\d.])\b-1x(?![a-zA-Z])/g, '-x');
   s = s.replace(/(?<![\d.])\b1\\left\(/g, '\\left(');
   s = s.replace(/(?<![\d.])\b-1\\left\(/g, '-\\left(');
   
-  // 3. 清理类似 \left(x\right) -> x 的极度简单括号 (只有当内部是单纯的 x 或者数字x 时)
-  s = s.replace(/\\left\((-?[\d.]*x)\\right\)/g, '$1');
+  // 4. 清理类似 \left(x\right) -> x 的极度简单括号 (只有当内部是单纯的 x 或者数字x 时)
+  // 且前面不能是字母或 }（防止 \sinx, \operatorname{arsinh}x 变成非法或丑陋指令）
+  // 并且不能紧跟 ^，以防止 \left(-0.5x\right)^2 变成 -0.5x^2 (后者数学意义不同)
+  s = s.replace(/(?<![a-zA-Z}])\\left\((-?[\d.]*x)\\right\)(?!\^)/g, '$1');
   
-  // 4. 清除开头的多余 + 号
+  // 5. 清除开头的多余 + 号
   s = s.replace(/^\s*\+\s*/, '');
   
-  // 5. 替换掉加负数的写法，比如 x + -2 变成 x - 2
+  // 6. 替换掉加负数的写法，比如 x + -2 变成 x - 2
   s = s.replace(/\+\s*-([\d.]+)/g, '- $1');
   
   return s;
@@ -178,20 +195,22 @@ export function generateFunctionByDifficulty(
   let minDiffError = Infinity;
 
   // 筛选出允许的基础流形
+  const baseManifoldsPool = BASE_MANIFOLDS;
   const availableManifolds = allowedTypes 
-    ? BASE_MANIFOLDS.filter(m => allowedTypes.includes(m.type))
-    : BASE_MANIFOLDS;
+    ? baseManifoldsPool.filter(m => allowedTypes.includes(m.type as FunctionType))
+    : baseManifoldsPool;
   
-  // 如果所有类型都被过滤掉了，回退到最基础的线性
-  const manifoldsToUse = availableManifolds.length > 0 ? availableManifolds : [{ expr: 'x', type: 'polynomial' as FunctionType }];
+  // 如果所有类型都被过滤掉了，回退到最基础的流形
+  const manifoldsToUse = availableManifolds.length > 0 ? availableManifolds : [baseManifoldsPool[0]];
 
   // 筛选出允许的算子
+  const baseOpsPool = TOPOLOGICAL_OPERATORS;
   const availableOperators = allowedTypes
-    ? TOPOLOGICAL_OPERATORS.filter(op => op.type === 'general' || allowedTypes.includes(op.type))
-    : TOPOLOGICAL_OPERATORS;
+    ? baseOpsPool.filter(op => (op.type === 'general' || allowedTypes.includes(op.type as FunctionType)))
+    : baseOpsPool;
 
   // 如果所有算子都被过滤掉了，留一个最安全的平移算子兜底
-  const opsToUse = availableOperators.length > 0 ? availableOperators : [TOPOLOGICAL_OPERATORS.find(op => op.id === 'shift_y')!];
+  const opsToUse = availableOperators.length > 0 ? availableOperators : [baseOpsPool[0]];
 
   for (let i = 0; i < maxAttempts; i++) {
     let currentWeight = 0;
@@ -209,8 +228,8 @@ export function generateFunctionByDifficulty(
 
     // 强制使用完分配的参数，或者达到目标难度
     while ((currentWeight < targetWeight || targetParams.length > 0) && steps < 6) {
-      // 根据 maxUses 过滤可用的算子
       const validOps = opsToUse.filter(op => (usedOps.get(op.id) || 0) < op.maxUses);
+      
       if (validOps.length === 0) break;
 
       const op = getRandom(validOps);

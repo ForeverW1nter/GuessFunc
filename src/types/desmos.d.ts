@@ -24,6 +24,7 @@ declare namespace Desmos {
     hidden?: boolean;
     secret?: boolean; // If true, hides from expression list
     sliderBounds?: { min: string; max: string; step?: string };
+    errorHidden?: boolean; // If true, hides the warning/error triangle
   }
 
   interface Calculator {

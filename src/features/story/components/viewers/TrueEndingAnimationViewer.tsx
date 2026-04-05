@@ -7,7 +7,6 @@ import { useUIStore } from '../../../../store/useUIStore';
 import epicCinematicAudio from '../../../../assets/audio/Epic_Cinematic.mp3';
 import creditsRaw from '../../../../../docs/credits.md?raw';
 
-// Extract JSON from the markdown block
 const extractCredits = () => {
   try {
     const match = creditsRaw.match(/```json\n([\s\S]*?)\n```/);
@@ -17,7 +16,6 @@ const extractCredits = () => {
   } catch (e) {
     console.error('Failed to parse credits data:', e);
   }
-  // Fallback
   return {
     title: "GUESS FUNC",
     roles: [],
@@ -25,7 +23,7 @@ const extractCredits = () => {
   };
 };
 
-export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => void }> = ({ onClose }) => {
+export const TrueEndingAnimationViewer: React.FC<{ content: string, onClose: () => void }> = ({ onClose }) => {
   const [stage, setStage] = useState(0);
   const { playAudio, stopAll } = useAudio();
   const { unlockBgm, setCurrentBgmId } = useAudioStore();
@@ -34,7 +32,6 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
   
   const [creditsData] = useState(extractCredits());
 
-  // Use a ref to avoid effect re-running when onClose changes
   const onCloseRef = useRef(onClose);
   useEffect(() => {
     onCloseRef.current = onClose;
@@ -49,7 +46,6 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
       setCurrentBgmId('epic');
     }, 0);
 
-    // Speed up the animation so the user doesn't wait 6 seconds for the first text
     const stages = [
       { stage: 1, delay: 500 },    // Background fades in
       { stage: 2, delay: 2500 },   // Line 1
@@ -70,7 +66,6 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
     return () => timers.forEach(clearTimeout);
   }, [playAudio, stopAll, unlockBgm, setCurrentBgmId, addToast, t]);
 
-  // Handle Long Press to Skip
   const skipTimerRef = useRef<number | null>(null);
   const skipStartTimeRef = useRef<number | null>(null);
   const skipBackTimerRef = useRef<number | null>(null);
@@ -78,15 +73,14 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
   const [skipProgress, setSkipProgress] = useState(0);
   
   const handlePressStart = () => {
-    if (stage < 10 || stage >= 11) return; // Only allow skip during credits
+    if (stage < 10 || stage >= 11) return;
     
-    // 如果正在回退，取消回退
     if (skipBackTimerRef.current) {
       cancelAnimationFrame(skipBackTimerRef.current);
       skipBackTimerRef.current = null;
     }
     
-    const duration = 1500; // 1.5s to skip
+    const duration = 1500;
     skipStartTimeRef.current = Date.now() - (skipProgressRef.current / 100) * duration;
     
     const animateSkip = () => {
@@ -98,7 +92,6 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
         skipProgressRef.current = progress;
         setSkipProgress(progress);
         
-        // Trigger Skip
         setSkipProgress(0);
         skipProgressRef.current = 0;
         onCloseRef.current();
@@ -117,13 +110,12 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
   const handlePressEnd = () => {
     if (stage < 10) return;
     
-    // 取消前进动画
     if (skipTimerRef.current) {
       cancelAnimationFrame(skipTimerRef.current);
       skipTimerRef.current = null;
     }
     
-    const duration = 500; // 0.5s to fall back to 0
+    const duration = 500;
     const startProgress = skipProgressRef.current;
     const fallStartTime = Date.now();
     
@@ -173,16 +165,13 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
     >
       <div className="absolute inset-0 bg-[#020202] z-0"></div>
       
-      {/* 基础星空噪点层 */}
       <div className="absolute inset-0 opacity-15 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] mix-blend-overlay z-0 transition-opacity duration-[5000ms]" style={{ opacity: stage >= 1 ? 1 : 0 }}></div>
       
-      {/* 第6阶段：核心句高亮与背景色温转换 */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] md:w-[80vw] md:h-[80vw] bg-[radial-gradient(circle_at_center,rgba(100,150,255,0.08)_0%,transparent_60%)] mix-blend-screen z-0 pointer-events-none transition-all duration-[5000ms]" 
         style={{ opacity: stage >= 6 && stage < 10 ? 1 : 0, transform: stage >= 6 ? 'translate(-50%, -50%) scale(1.5)' : 'translate(-50%, -50%) scale(1)' }}
       ></div>
 
-      {/* 第8阶段：副标题时的背景进一步异变，增加一点史诗感的光晕 */}
       <div 
         className="absolute bottom-0 left-0 right-0 h-[60vh] bg-[radial-gradient(ellipse_at_bottom,rgba(255,255,255,0.08)_0%,transparent_70%)] mix-blend-screen z-0 pointer-events-none transition-opacity duration-[5000ms]" 
         style={{ opacity: stage >= 8 && stage < 10 ? 1 : 0 }}
@@ -194,28 +183,28 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
           style={{ opacity: stage >= 2 && stage < 5 ? 1 : 0, pointerEvents: stage >= 2 && stage < 5 ? 'auto' : 'none' }}
         >
           <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/70 transition-opacity duration-[2000ms]" style={{ opacity: stage >= 2 ? 1 : 0 }}>
-            {t('story.ending.line1')}
+            {t('story.trueEnding.line1')}
           </p>
           <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/80 transition-opacity duration-[2000ms]" style={{ opacity: stage >= 3 ? 1 : 0 }}>
-            {t('story.ending.line2')}
+            {t('story.trueEnding.line2')}
           </p>
           <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/90 transition-opacity duration-[2000ms]" style={{ opacity: stage >= 4 ? 1 : 0 }}>
-            {t('story.ending.line3')}
+            {t('story.trueEnding.line3')}
           </p>
         </div>
 
         <div className="flex flex-col items-center justify-center w-full absolute inset-0">
           <p 
-            className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/90 transition-opacity duration-[2000ms] absolute"
-            style={{ opacity: stage >= 6 && stage < 7 ? 1 : 0 }}
+            className="text-2xl md:text-3xl font-light tracking-[0.3em] text-white/90 transition-opacity duration-[2000ms] absolute"
+            style={{ opacity: stage >= 6 && stage < 8 ? 1 : 0 }}
           >
-            {t('story.ending.core')}
+            {t('story.trueEnding.core')}
           </p>
           <p 
-            className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/90 transition-opacity duration-[2000ms] absolute"
-            style={{ opacity: stage >= 8 && stage < 9 ? 1 : 0 }}
+            className="text-lg md:text-xl font-light tracking-[0.2em] text-white/60 transition-opacity duration-[2000ms] absolute"
+            style={{ opacity: stage >= 8 && stage < 10 ? 1 : 0 }}
           >
-            {t('story.ending.sub')}
+            {t('story.trueEnding.sub')}
           </p>
         </div>
       </div>
@@ -239,11 +228,11 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
             }}
             onAnimationEnd={(e) => {
               if (e.animationName === 'scrollCredits') {
-                setStage(11); // Trigger Fade Out
+                setStage(11);
                 setTimeout(() => {
                   onCloseRef.current();
                   addToast(t('story.ending.musicTip'), 'info');
-                }, 3000); // 3s for the fade out to complete
+                }, 3000);
               }
             }}
           >
@@ -270,10 +259,9 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
         </div>
       )}
 
-      {/* Skip Hint */}
       {stage >= 10 && stage < 11 && (
         <div className="absolute bottom-12 right-12 z-30 flex items-center gap-4 animate-fade-in opacity-50">
-          <span className="text-xs tracking-widest font-mono text-white/50">{t('story.ending.skip')}</span>
+          <span className="text-xs tracking-widest font-mono text-white/50">{t('story.trueEnding.skip')}</span>
           <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
             <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
             <circle 
@@ -290,7 +278,7 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
           </svg>
         </div>
       )}
-      {/* 全局黑屏淡出过渡层 */}
+      
       <div 
         className="absolute inset-0 bg-black z-50 pointer-events-none transition-opacity duration-[3000ms]" 
         style={{ opacity: stage >= 11 ? 1 : 0 }}

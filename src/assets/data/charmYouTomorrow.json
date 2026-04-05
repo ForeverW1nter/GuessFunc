@@ -1,0 +1,4014 @@
+{
+  "routes": [
+    {
+      "id": "charmYouTomorrow",
+      "title": "寄予明日之心",
+      "description": "线路描述...",
+      "showToBeContinued": true,
+      "chapters": [
+        {
+          "id": "ch0",
+          "title": "文具店门口",
+          "levels": [
+            {
+              "id": "1",
+              "title": "第 1 关",
+              "targetFunction": "\\left|x^2\\right| - 2x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "2",
+              "title": "第 2 关",
+              "targetFunction": "1.5\\left(\\frac{x}{x - 2}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "3",
+              "title": "第 3 关",
+              "targetFunction": "2\\left(\\left|x^2\\right| + 3\\right) + 4",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch0_file1",
+              "title": "正文 0001",
+              "extension": "txt",
+              "content": "放学那阵风把文具店门口的塑料帘吹得一直响。\n\nMessin 在那台十块钱三次的扭蛋机前站了半天，指尖隔着透明罩一格一格地看里面的东西。Forewall 说这玩意儿买回去最多挂三天，她没回嘴，只低头转了一次。\n\n掉出来的是个透明爱心，里面卡着一颗歪掉的小星星，背面印着一句怎么念都不太顺的英文。Forewall 念完就笑了，说这像翻译软件睡着前硬塞出来的句子。Messin 却把它摊在掌心里看了好一会儿，说奇怪也行，至少像真的能把今天带到明天去。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch0_file2",
+              "title": "聊天摘录 0003",
+              "extension": "msg",
+              "content": "Forewall: 你真挂书包上了？\nMessin: 挂了\nForewall: 那句英文不嫌丢人？\nMessin: 有一点\nMessin: 但我现在看顺眼了\nForewall: 你适应能力挺强\nMessin: 主要是三块三\nForewall: 原来是舍不得\nMessin: 也不是\nMessin: 就是觉得扔了可惜\nForewall: 因为丑得有纪念意义？\nMessin: 因为你站旁边笑了半天\nForewall: 这也算理由\nMessin: 算\nMessin: 你明天记得先跟我说早\nForewall: 为什么是我先\nMessin: 因为挂件是我买的",
+              "unlockConditions": [
+                "1"
+              ]
+            },
+            {
+              "id": "ch0_file3",
+              "title": "临时备忘 0006",
+              "extension": "memo",
+              "content": "出门前看一眼。\n\n他叫 Forewall。\n昨天在文具店门口陪我站了很久。\n笑那句英文的时候有点欠。\n人倒是挺好。\n\n今天如果见到他，别装得太淡。\n至少把早安发过去。",
+              "unlockConditions": [
+                "2"
+              ]
+            },
+            {
+              "id": "ch0_file4",
+              "title": "夜间对话 23:03",
+              "extension": "txt",
+              "content": "他们那时候还不算熟，晚安却已经能拖很久。\n\nForewall 十一点零三分说了一次。Messin 回他你先睡。过了四分钟又补一句，说充电线打结了。再过一会儿，她把那颗挂件拍过来，背景是一角皱掉的床单，问他现在看是不是更丑。\n\n他说是。\n\n她回，那我再看两眼。\n\n晚安就这样被拖到快十一点半。楼下有人骑车经过，车铃响了一下又很快远掉。Forewall 躺在床上看天花板，忽然觉得明天好像真的会有人等他先开口。",
+              "unlockConditions": [
+                "3"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch1",
+          "title": "比早安更早",
+          "levels": [
+            {
+              "id": "4",
+              "title": "第 4 关",
+              "targetFunction": "\\left(x^2\\right) \\cdot \\left(x - 1.5\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "5",
+              "title": "第 5 关",
+              "targetFunction": "2\\left(\\left|\\frac{1}{x^2+1}\\right| - 2\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "6",
+              "title": "第 6 关",
+              "targetFunction": "\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x + 0.5\\right) + 3",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "7",
+              "title": "第 7 关",
+              "targetFunction": "\\left|\\left|x\\right| + \\frac{-2}{x}\\right| + 4x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "8",
+              "title": "第 8 关",
+              "targetFunction": "\\frac{\\frac{1}{x} + 4}{x + 2} - 2x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch1_file1",
+              "title": "页稿 1001",
+              "extension": "txt",
+              "content": "Forewall 后来每天早上都会在出门前摸一下手机。\n\nMessin 的消息来得不算固定。有时七点二十，有时七点四十一。内容也没什么大事，可能是她家楼下的包子铺又排队，可能是她今天想逃升旗，可能只是问一句你带伞没。\n\n这些话谁都能说。\n\n可她说的时候，会让人觉得自己真的被放进了某个人起床后的第一件事里。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch1_file2",
+              "title": "消息存档 1003",
+              "extension": "msg",
+              "content": "Messin: 你睡了吗\nForewall: 快了\nMessin: 那先别\nForewall: 你又怎么了\nMessin: 作业写完了\nForewall: 恭喜你\nMessin: 你这个反应很敷衍\nForewall: 不然我要给你放礼炮？\nMessin: 也不是不行\nForewall: 说吧\nMessin: 你帮我看一下\nMessin: charm you tomorrow 到底算什么语法\nForewall: 算事故\nMessin: 我就知道\nMessin: 可我今天又看了几次\nForewall: 然后？\nMessin: 好像没昨天那么别扭了",
+              "unlockConditions": [
+                "4"
+              ]
+            },
+            {
+              "id": "ch1_file3",
+              "title": "短笺 1006",
+              "extension": "note",
+              "content": "便利店门口的热豆浆太烫，Forewall 一路换了两次手。\n\n他拍了张只露出半个纸杯的照片发给 Messin，说今天风大得离谱。Messin 回得很快，说那你别嫌麻烦，拿久一点，手会暖。\n\n就这么一句。\n\nForewall 低头看了眼被烫红的指节，站在垃圾桶旁边笑了一下。他后来想，Messin 好像总是这样，不说很满的话，只把很小的一句塞过来，偏偏让人一天都忘不掉。",
+              "unlockConditions": [
+                "5"
+              ]
+            },
+            {
+              "id": "ch1_file4",
+              "title": "存页 1008",
+              "extension": "txt",
+              "content": "她第一次说前一天像没睡醒透，是在一个很普通的晚上。\n\n他们原本在聊广播站换掉了旧铃声，Messin 那边突然安静了几分钟。再发来消息时，她说，我今天总觉得昨天后半段糊成一团。\n\nForewall 没看懂。\n\n她就慢吞吞地补，说可能是这两天太困了。早上的云记得一点，中午那碗太咸的汤也记得，可晚自习之后那一截总像隔着雾。\n\n她说这些的时候没有装可怜，只像在认真描述一件让自己很烦的小事。Forewall 看着屏幕，最后回她：那你先说还记得的，我帮你把后面的补上。",
+              "unlockConditions": [
+                "6"
+              ]
+            },
+            {
+              "id": "ch1_file5",
+              "title": "对话记录 1011",
+              "extension": "msg",
+              "content": "Forewall: 我快到家了\nMessin: 今天怎么这么慢\nForewall: 绕了一下\nMessin: 为什么\nForewall: 你不是说风大吗\nMessin: 所以？\nForewall: 就走有路灯的那边了\nMessin: 那边更远\nForewall: 远一点而已\nMessin: 你怎么这么听话\nForewall: 你少得意\nMessin: 我没有\nMessin: 我只是突然觉得\nMessin: 原来有人会因为我一句话改路",
+              "unlockConditions": [
+                "7"
+              ]
+            },
+            {
+              "id": "ch1_file6",
+              "title": "正文 1015",
+              "extension": "txt",
+              "content": "关系变近这件事，很少是某个响亮的瞬间。\n\n更像一堆没说完的话慢慢堆出来的。谁先去洗澡，谁写英语写到一半犯困，谁晚饭买到难吃的菜团子，谁路过操场时被广播吓一跳。\n\n他们谁也没有很早就把“重要”两个字说出口。\n\n可 Forewall 已经会在上课走神的时候想，她现在是不是又把笔帽咬丢了。Messin 也开始把一些本来不用发过来的小事发给他，好像只要告诉他，事情就会在这一天里多待一会儿。",
+              "unlockConditions": [
+                "8"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch2",
+          "title": "把一句话带到第二天",
+          "levels": [
+            {
+              "id": "9",
+              "title": "第 9 关",
+              "targetFunction": "\\sqrt{1-\\left(1.5x - 2\\right)^2}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "10",
+              "title": "第 10 关",
+              "targetFunction": "\\frac{-0.5}{x^2 - 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "11",
+              "title": "第 11 关",
+              "targetFunction": "\\frac{\\sqrt{\\left|x\\right| + 1.5}}{x + 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "12",
+              "title": "第 12 关",
+              "targetFunction": "\\left(x + 1\\right)^2 + 0.5\\left(x + 1\\right)^2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "13",
+              "title": "第 13 关",
+              "targetFunction": "\\left(\\frac{x^2}{x - 2}\\right) \\cdot \\left(x - 2\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "14",
+              "title": "第 14 关",
+              "targetFunction": "x \\cdot \\left(x - 0.5\\right) + 0.5x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "15",
+              "title": "第 15 关",
+              "targetFunction": "\\left(\\frac{1}{\\frac{1}{x}}\\right) \\cdot \\left(x + 3\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch2_file1",
+              "title": "片段 2001",
+              "extension": "txt",
+              "content": "Messin 最让人招架不住的地方，是她记小事。\n\nForewall 只是随口说过自己不爱喝太甜的，第二天她就在一排饮料里先替他把最齁的那个排除了。又或者他提过一句体育课后的操场味道像被晒热的塑料，她过两天路过时还会忽然发一句，今天又是那个味。\n\n她不怎么说漂亮话。\n\n可那些零零碎碎的小地方，反而最像喜欢。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch2_file2",
+              "title": "窗口记录 2003",
+              "extension": "msg",
+              "content": "Messin: 我刚听到一首歌\nForewall: 好听吗\nMessin: 前面一般\nMessin: 后面有一句还行\nForewall: 这评价很严格\nMessin: 我把那句留给你\nForewall: 为什么只留一句\nMessin: 因为整首都给你太亏了\nForewall: 你这人真小气\nMessin: 主要是怕你不喜欢\nForewall: 你先发\nMessin: 好\nMessin: 你听到副歌第二遍的时候别跳",
+              "unlockConditions": [
+                "9"
+              ]
+            },
+            {
+              "id": "ch2_file3",
+              "title": "备忘 2006",
+              "extension": "memo",
+              "content": "怕明天又把聊天顺序记混，先随手记一下。\n\n借笔是前天。\n停电那次，是他说别乱走。\n那句像在楼梯口回头的话，是晚自习前。\n问伞的是我，不是他。\n\n别的混一点没事，别当着他把人说错。",
+              "unlockConditions": [
+                "10"
+              ]
+            },
+            {
+              "id": "ch2_file4",
+              "title": "段落稿 2008",
+              "extension": "txt",
+              "content": "停电来得突然，教室一下黑下去，走廊里立刻乱成一片。\n\nMessin 没跟着别人一起喊，只把手机屏幕按亮了一点。那点白光照在她手背上，薄薄一层。Forewall 从后排走过来，说你别乱走，等会儿再出去。\n\n她嗯了一声，像是真的听进去了。\n\n后来电一直没来，他们就隔着几张桌子有一搭没一搭地说话。窗外有风，教室里全是椅子腿磨地的声响。Messin 忽然问他，黑的时候是不是人更容易把一句话记住。Forewall 说不知道。她就说，那你把我刚才那句先记着。",
+              "unlockConditions": [
+                "11"
+              ]
+            },
+            {
+              "id": "ch2_file5",
+              "title": "聊天摘录 2011",
+              "extension": "msg",
+              "content": "Forewall: 你今天怎么一直没回\nMessin: 刚才在写题\nForewall: 写了两个小时？\nMessin: 中间还被老师叫去搬卷子\nForewall: 行\nMessin: 你生气了？\nForewall: 没有\nMessin: 你这个“没有”看起来像有\nForewall: 我就是以为你在躲我\nMessin: 我没躲\nMessin: 我只是有时候一忙就会断掉\nForewall: 那你至少说一声\nMessin: 好\nMessin: 下次先跟你说",
+              "unlockConditions": [
+                "12"
+              ]
+            },
+            {
+              "id": "ch2_file6",
+              "title": "页稿 2015",
+              "extension": "txt",
+              "content": "那次其实不算吵架。\n\n他们都没有说很重的话，甚至连语气都没真正硬起来。只是屏幕那边安静了很久，久到 Forewall 开始后悔自己刚才那句是不是太像逼问。Messin 再回来时只说，对不起，我以后先说一声。\n\n这句道歉太轻了，轻得像一碰就会碎。Forewall 看着它，忽然又舍不得继续顶下去。\n\n可委屈没有立刻散。\n\n它留在那儿，像一根很细的刺。",
+              "unlockConditions": [
+                "13"
+              ]
+            },
+            {
+              "id": "ch2_file7",
+              "title": "笔记 2018",
+              "extension": "note",
+              "content": "明天想问的事：\n\n1. 她今天是不是没吃晚饭。\n2. 她说“断掉”的时候到底是什么意思。\n3. 如果又忘记顺序，会不会很难受。\n4. 问的时候别像审问。\n5. 最后一句换成别的，别总是只会说“那你早点睡”。",
+              "unlockConditions": [
+                "14"
+              ]
+            },
+            {
+              "id": "ch2_file8",
+              "title": "记录稿 2022",
+              "extension": "txt",
+              "content": "有天晚上他们聊到名字。\n\nMessin 说 Forewall 这个名字念快了像会擦过去，念慢一点就还挺好听。她在语音里试了一次，前半截轻，后半截压得很慢，像怕把哪个音节碰碎。\n\nForewall 戴着耳机听完，半天没回。\n\n她发来一句：怎么了，太难听了？\n\n他打了删，删了又打，最后只回：你再念一遍。",
+              "unlockConditions": [
+                "15"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch3",
+          "title": "风从操场那边来",
+          "levels": [
+            {
+              "id": "16",
+              "title": "第 16 关",
+              "targetFunction": "e^{\\frac{1}{x} - 0.5x} + 1.5",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "17",
+              "title": "第 17 关",
+              "targetFunction": "\\sqrt{1-x^2} + 3e^{-x} + 3x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "18",
+              "title": "第 18 关",
+              "targetFunction": "0.5\\left(\\ln\\left(\\left|x\\right| + 1\\right)\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "19",
+              "title": "第 19 关",
+              "targetFunction": "\\frac{-0.5}{\\sqrt{x + 1.5}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "20",
+              "title": "第 20 关",
+              "targetFunction": "e^{\\left|\\left(x + 4\\right)^2\\right| - 3} + 0.5",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "21",
+              "title": "第 21 关",
+              "targetFunction": "\\frac{-1}{\\frac{1}{x}} + 2e^{-x}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "22",
+              "title": "第 22 关",
+              "targetFunction": "\\left|\\frac{1}{x^2+1}\\right| - 0.5x + 0.5x^2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "23",
+              "title": "第 23 关",
+              "targetFunction": "\\sqrt{\\frac{1}{\\left(x + 1\\right)} - 0.5x + 1}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "24",
+              "title": "第 24 关",
+              "targetFunction": "e^{\\ln\\left(x\\right)} + 0.5 + 2x^2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch3_file1",
+              "title": "记录稿 3001",
+              "extension": "txt",
+              "content": "真正让 Forewall 难受的，不是她会忘。\n\n是有时候她偏偏忘掉他正在认真对待的那部分。\n\n那天中午食堂太吵，他端着餐盘站了半天才找到靠窗的位置。昨晚 Messin 明明答应过，今天午休前把那首歌后半段再发一次。可消息弹出来时，她先问的是：你怎么突然给我发这个？\n\n窗外太阳很白，餐盘边上那层油亮得让人烦。Forewall 低头扒了两口饭，第一次觉得委屈这东西原来真的会卡在喉咙口。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch3_file2",
+              "title": "对话备份 3003",
+              "extension": "msg",
+              "content": "Forewall: 你怎么突然发这首\nMessin: 不是你让我今天提醒你听吗\nForewall: 昨天是你先说的\nMessin: 我吗\nForewall: 你还说副歌第二遍别跳\nMessin: 等一下\nMessin: 我现在脑子有点乱\nForewall: 你是真的不记得还是在敷衍我\nMessin: 我没有敷衍\nMessin: 你先别这么想",
+              "unlockConditions": [
+                "16"
+              ]
+            },
+            {
+              "id": "ch3_file3",
+              "title": "段落稿 3006",
+              "extension": "txt",
+              "content": "那几天他们照样聊天，只是每句话前面都多了一点停顿。\n\nForewall 会先把字打完，再一行一行删短。Messin 则常常隔一会儿才回，像在找一个不那么容易出错的说法。晚自习结束以后，走廊灯很亮，校门口全是人，Forewall 低头看手机，忽然觉得自己和她之间也挤满了来不及说明白的事。",
+              "unlockConditions": [
+                "17"
+              ]
+            },
+            {
+              "id": "ch3_file4",
+              "title": "临时备忘 3008",
+              "extension": "memo",
+              "content": "如果明天又接不上，就照这个往下看。\n\n他不是在跟你较真一首歌。\n他是在意自己是不是被放进去过。\n先别说“算了”。\n也别急着解释太多。\n先承认你确实把他弄疼了。",
+              "unlockConditions": [
+                "18"
+              ]
+            },
+            {
+              "id": "ch3_file5",
+              "title": "消息存档 3011",
+              "extension": "msg",
+              "content": "Forewall: 你能不能说清楚\nMessin: 我在想怎么说\nForewall: 那你想好了吗\nMessin: 没有完全\nMessin: 我不是故意把你忘掉\nForewall: 可结果就是这样\nMessin: 我知道\nMessin: 所以我才会怕\nForewall: 你怕什么\nMessin: 怕你觉得我是在拿这个挡",
+              "unlockConditions": [
+                "19"
+              ]
+            },
+            {
+              "id": "ch3_file6",
+              "title": "片段 3015",
+              "extension": "txt",
+              "content": "她后来终于把那句重话说出来，是在一个很短的文件里。\n\n没有铺垫，也没有戏剧性的停顿。她只是很平地写：不是我不想记住，是我有时候真的留不住。\n\nForewall 看见那句话时，第一反应不是怀疑，反而是胸口发空。\n\n因为他忽然意识到，自己这几天一直在生的气，可能正好是她最没办法替自己辩解的那部分。",
+              "unlockConditions": [
+                "20"
+              ]
+            },
+            {
+              "id": "ch3_file7",
+              "title": "手记 3018",
+              "extension": "note",
+              "content": "没发出去的那版：\n\n“我不是在怪你记性差。”\n删掉。\n\n“我只是有时候不知道自己在你这里到底算什么。”\n还是删掉。\n\n最后消息框里只剩一句：你先休息吧。\n\n这句最没用，也最像他现在说得出口的。",
+              "unlockConditions": [
+                "21"
+              ]
+            },
+            {
+              "id": "ch3_file8",
+              "title": "存页 3022",
+              "extension": "txt",
+              "content": "放学以后，Forewall 在便利店门口站了很久。\n\n冷柜的白光照在鞋尖上，塑料袋被风吹得一直响。他本来只是想买瓶水，最后却拿着一瓶常温的，迟迟没拧开。Messin 说她想解释，让他再给一点时间。可时间这个词在那一刻听起来太轻了，轻得像随时都会从手里掉下去。",
+              "unlockConditions": [
+                "22"
+              ]
+            },
+            {
+              "id": "ch3_file9",
+              "title": "聊天摘录 3027",
+              "extension": "msg",
+              "content": "Messin: 你还在生气吗\nForewall: 有一点\nMessin: 那我能不能先占你一分钟\nForewall: 你说\nMessin: 再给我一次机会\nMessin: 我这次不想糊过去\nForewall: 你确定你明天不会又忘\nMessin: 我不能跟你保证这个\nMessin: 但我今天记得我在认真求你",
+              "unlockConditions": [
+                "23"
+              ]
+            },
+            {
+              "id": "ch3_file10",
+              "title": "正文 3031",
+              "extension": "txt",
+              "content": "后来他们是在一场雨后慢慢和好的。\n\n伞收起来的时候，Messin 的袖口蹭到一点水。她站在教学楼边上，看着地上碎掉的反光，小声说了句对不起。Forewall 没立刻接话，只把自己手里的那把伞往她那边挪了一点。\n\n那天谁都没把问题真的说透。\n\n可就是在那一点没说透的安静里，他们都往前挪了一小步。",
+              "unlockConditions": [
+                "24"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch4",
+          "title": "耳机一人一边",
+          "levels": [
+            {
+              "id": "25",
+              "title": "第 25 关",
+              "targetFunction": "x^2 + 3x^2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "26",
+              "title": "第 26 关",
+              "targetFunction": "e^{\\frac{\\cos\\left(x\\right)}{x + 1}} - 0.5",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "27",
+              "title": "第 27 关",
+              "targetFunction": "\\sqrt{\\left|\\left|x\\right|\\right| + 4x + 0.5}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "28",
+              "title": "第 28 关",
+              "targetFunction": "\\frac{-0.5}{\\left|\\tan\\left(x\\right)\\right| + 0.5}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "29",
+              "title": "第 29 关",
+              "targetFunction": "\\sqrt{\\left(x + 2\\right)^2 + 0.5} + 2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "30",
+              "title": "第 30 关",
+              "targetFunction": "\\sin\\left(\\tan\\left(x\\right) + 2x - 0.5\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "31",
+              "title": "第 31 关",
+              "targetFunction": "\\left|\\left|\\ln\\left(x + 2\\right)\\right| - 3\\right| - 0.5x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "32",
+              "title": "第 32 关",
+              "targetFunction": "\\cos\\left(x\\right) - 1.5x - 0.5x^2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "33",
+              "title": "第 33 关",
+              "targetFunction": "\\frac{\\tan\\left(x\\right)}{x - 2} + 2\\sin\\left(x\\right) - 1.5x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch4_file1",
+              "title": "存页 4001",
+              "extension": "txt",
+              "content": "那阵子天气总是反反复复，预报说明天晴，第二天傍晚却还是会落一点雨。\n\nForewall 觉得他们的关系也有点像这样。\n\n明明前几天才因为一些话闹得发涩，隔了没多久，又会因为一句很普通的消息重新好起来。Messin 会问他午饭有没有吃饱，会在他发来一张作业照片时吐槽字太丑。Forewall 也会记得她每周三值日，记得她哪天放学要晚一点，记得她说过自己很讨厌鞋里进水的感觉。\n\n很多情绪都没有被说透。\n\n可有些东西正在往前长，是谁都看得出来的。\n\n像雨停后操场边那一圈湿漉漉的树影，看着没什么，其实已经把整个傍晚都弄得和从前不一样了。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch4_file2",
+              "title": "对话记录 4003",
+              "extension": "msg",
+              "content": "Messin: 你到家了吗\nForewall: 还没\nForewall: 卡在教学楼门口了\nMessin: 雨这么大？\nForewall: 嗯\nMessin: 你今天是不是又没带伞\nForewall: 你怎么知道\nMessin: 因为你昨天说天气预报写的是阴天\nForewall: 你连这个都记得\nMessin: 我记得的事比你想的多\nForewall: 那你现在准备怎么救我\nMessin: 先站着别动\nForewall: 你又不能隔着网线给我递伞\nMessin: 递不了\nMessin: 但我可以陪你等雨小一点\nForewall: 这有什么用\nMessin: 有用\nMessin: 至少你站在那里的时候不会太像一个人",
+              "unlockConditions": [
+                "25"
+              ]
+            },
+            {
+              "id": "ch4_file3",
+              "title": "正文 4006",
+              "extension": "txt",
+              "content": "Messin 有时候会说一些很奇怪的话，但那种奇怪不是疏离，反而像她在笨拙地把自己打开一点。\n\n比如某天 Forewall 心情很差，只回了几句嗯和随便。她没有追问发生了什么，只在过了一会儿之后发来一句：你要不要先把坏心情借给我一天。\n\nForewall 看着那句话愣了半天，问她借了有什么用。\n\n她回，至少你今晚睡觉的时候可以轻一点。\n\n这种话像玩笑，又不完全像玩笑。\n\n他最后还是没有把事情全说给她听，只说今天有点烦。Messin 也没逼他，转而去讲自己体育课跑八百时鞋带散了两次，讲得乱七八糟，像是故意把气氛往回拽。\n\nForewall 听着听着，心里那股闷就真的松了些。\n\n原来有人愿意替你接一接情绪，哪怕只是嘴上说说，也会让一天没那么难过。",
+              "unlockConditions": [
+                "26"
+              ]
+            },
+            {
+              "id": "ch4_file4",
+              "title": "短笺 4008",
+              "extension": "note",
+              "content": "想见他。\n\n不是那种很夸张的想。\n只是今天午休有人在后排吹空笔管，我第一反应是如果他说不定会笑。\n晚上路过便利店，看见最难喝的白桃水，也想起他。\n\n原来一个人进到日常里以后，会从这么多没必要的地方冒出来。",
+              "unlockConditions": [
+                "27"
+              ]
+            },
+            {
+              "id": "ch4_file5",
+              "title": "窗口记录 4011",
+              "extension": "msg",
+              "content": "Messin: 我问你个事\nForewall: 你说\nMessin: 你不许敷衍\nForewall: 那得看问题\nMessin: 你是不是也会想我\nForewall: 你这问题太突然了\nMessin: 所以你会吗\nForewall: 先说你为什么问\nMessin: 因为我今天上课发呆的时候想到你了\nMessin: 而且想到不止一次\nForewall: 你上课老这样不太好\nMessin: 你别转移话题\nForewall: 会\nMessin: 什么\nForewall: 我说会\nForewall: 我也会想你\nMessin: 哦\nForewall: 你这个哦什么意思\nMessin: 没什么意思\nMessin: 就是突然有点高兴",
+              "unlockConditions": [
+                "28"
+              ]
+            },
+            {
+              "id": "ch4_file6",
+              "title": "记录稿 4015",
+              "extension": "txt",
+              "content": "周五的晚上总有种特别的松。\n\n作业还没写完，第二天也不见得能睡懒觉，可只要想到明天不用一早去学校，心里那根绷着的弦就会先松下来一点。\n\n那天他们聊了很久，从班里谁又被点名，到以后想不想去远一点的城市。话题东一块西一块地跑，谁都没刻意把它往重要的地方引，可偏偏就是在这种乱七八糟里，很多真心反而更容易漏出来。\n\nMessin 说，如果以后真的见面，你不要觉得我很无聊。\n\nForewall 回，你先别急着给自己下定义。\n\n她过了几秒才发来一句：那你见到我之后再决定。\n\n屏幕的光落在掌心里，亮得有一点热。Forewall 看着那句见到我之后再决定，忽然觉得心跳快得很不讲道理。\n\n好像有些话已经快要走到门口了，只差谁先把门推开。",
+              "unlockConditions": [
+                "29"
+              ]
+            },
+            {
+              "id": "ch4_file7",
+              "title": "对话记录 4018",
+              "extension": "msg",
+              "content": "Forewall: 你以后最想干什么\nMessin: 很难回答\nMessin: 但我有一个很具体的画面\nForewall: 什么画面\nMessin: 走路的时候耳机一人一边\nMessin: 你负责右边我负责左边\nForewall: 这也太具体了\nMessin: 因为我想过很多次\nForewall: 那如果我抢你那边怎么办\nMessin: 你不会\nForewall: 你怎么这么肯定\nMessin: 你连说我一句都要想一下\nMessin: 应该做不出这种事\nForewall: 你对我判断挺准\nMessin: 所以你要不要答应\nForewall: 什么\nMessin: 以后有机会的话\nMessin: 耳机一人一边",
+              "unlockConditions": [
+                "30"
+              ]
+            },
+            {
+              "id": "ch4_file8",
+              "title": "段落稿 4022",
+              "extension": "txt",
+              "content": "有些喜欢并不是在某个正式时刻诞生的。\n\n它更像一条线，慢慢地缠上来，等你发现的时候，已经绕了很多圈。\n\nForewall 那时候经常会在打字时停一下，因为有些词放上去就太明显了。比如想你，比如舍不得，比如见到你大概会很紧张。他总觉得这些话一旦说出口，很多东西就会突然变得不一样。\n\n可不说也已经不一样了。\n\n他开始习惯在放学后先看她有没有发消息，习惯把听到的歌、看到的云、路边很奇怪的招牌都先想一遍她会不会觉得好笑。甚至连周末去便利店买东西，看到那种透明塑料壳做的小挂件，也会下意识停一下。\n\n差一点就说出口的东西，往往不是没有。\n\n只是太在乎，所以总想再挑一个好一点的时机。",
+              "unlockConditions": [
+                "31"
+              ]
+            },
+            {
+              "id": "ch4_file9",
+              "title": "信件 4027",
+              "extension": "letter",
+              "content": "这页没寄出去。\n\n我不是不想把“以后见”说得更像样一点。\n只是每次一想到以后，我心里都会先紧一下。\n不是因为不想去，是因为我太知道有些东西会掉。\n\n可我还是想见他。\n想把这句话也算进去。",
+              "unlockConditions": [
+                "32"
+              ]
+            },
+            {
+              "id": "ch4_file10",
+              "title": "页稿 4031",
+              "extension": "txt",
+              "content": "那天临睡前，Messin 发来一句：我今天其实挺想你的。\n\n后面跟了一个句号。\n\nForewall 看着那个句号，心口猛地跳了一下。不是因为这句话有多惊天动地，而是因为她平时很少这样。她大部分时候都把话留一点余地，像怕太满了会把什么吓跑。\n\n可这次没有。\n\n这句想你安安静静地落在那里，比任何故作轻松的晚安都重。\n\nForewall 盯了半天，最后回过去：我也是。\n\n他发出去之后，手指还停在屏幕上，没有立刻退出聊天框。窗帘被夜风吹得轻轻拂了一下，桌上的笔滚了一小段，撞到书脊才停住。\n\n有些关系到这里，其实已经不用再问了。\n\n只是还差一个真正把话说明白的晚上。",
+              "unlockConditions": [
+                "33"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch5",
+          "title": "从今天开始",
+          "levels": [
+            {
+              "id": "34",
+              "title": "第 34 关",
+              "targetFunction": "\\left(\\arctan\\left(x\\right)\\right) \\cdot \\left(x + 2\\right) - 2\\sin\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "35",
+              "title": "第 35 关",
+              "targetFunction": "\\frac{-2}{\\sqrt{x^3 + 2}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "36",
+              "title": "第 36 关",
+              "targetFunction": "\\sqrt{\\left(e^{x}\\right) \\cdot \\left(x + 1.5\\right) + 3}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "37",
+              "title": "第 37 关",
+              "targetFunction": "\\ln\\left(\\left|\\sin\\left(x\\right)\\right| + 2\\right) + 1.5x + 1",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "38",
+              "title": "第 38 关",
+              "targetFunction": "-1.5\\left(\\tan\\left(3x\\right) + \\frac{3}{x}\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "39",
+              "title": "第 39 关",
+              "targetFunction": "\\frac{\\frac{1}{\\left(x + 3\\right)^2+1} - 0.5e^{-\\left(x + 3\\right)}}{x - 2}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "40",
+              "title": "第 40 关",
+              "targetFunction": "\\left|\\ln\\left(\\left|-0.5x\\right)^2\\right| + 1\\right| + 4x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "41",
+              "title": "第 41 关",
+              "targetFunction": "e^{\\left|\\ln\\left(\\left|\\frac{1}{x^2+1}\\right| + 0.5\\right)\\right| + 0.5} + 1.5",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch5_file1",
+              "title": "段落稿 5001",
+              "extension": "txt",
+              "content": "从那句我今天其实挺想你的开始，很多原本还在回避的东西就没法再装作看不见了。\n\nForewall 和 Messin 还是像之前那样聊天，还是会说一些作业、天气、食堂和放学路上的小事，可字里行间已经多了一层很薄的热。\n\n谁都知道那不是普通朋友的温度。\n\n只是到了真的要把它说清楚的时候，反而都会变得小心。像是终于走到了门口，又怕一推开，里面太亮，自己会先慌。\n\n可喜欢这种事，一旦长到一定地步，躲也只会越躲越明显。\n\n迟早要承认的。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch5_file2",
+              "title": "聊天摘录 5003",
+              "extension": "msg",
+              "content": "Messin: 我想跟你说个事\nForewall: 你说\nMessin: 你先答应我不要装没看见\nForewall: 我什么时候装过\nMessin: 你先答应\nForewall: 好\nMessin: 我刚刚打了一段字\nMessin: 又删了\nForewall: 那你重打\nMessin: 不行\nMessin: 这样显得我很没出息\nForewall: 你现在已经很明显了\nMessin: ......\nMessin: 那我说了\nMessin: 我好像不是把你当普通朋友在想\nForewall: 你先别撤回\nMessin: 我本来也没准备撤回\nForewall: 那正好\nForewall: 因为我也一样",
+              "unlockConditions": [
+                "34"
+              ]
+            },
+            {
+              "id": "ch5_file3",
+              "title": "页稿 5006",
+              "extension": "txt",
+              "content": "告白之后的第一个晚上，最先变的不是称呼，也不是关系标签。\n\n而是空气里那种说不清的紧张终于有了去处。\n\n他们明明已经把话说开了，结果反而更不会聊天了。Forewall 打一句删一句，Messin 也难得地开始频繁用省略号。谁都想表现得自然一点，谁都没成功。\n\n最后还是她先笑，说我们这样好像两个第一次学说话的人。\n\nForewall 回，那你别学了，先睡。\n\n她说睡不着。\n\n他说我也是。\n\n于是那天夜里他们又把晚安拖了很久，比最开始认识的时候还久。窗外偶尔有车经过，光从墙上一闪而过，很快就没了。可他们谁都舍不得先退出那个聊天框。\n\n好像只要再多停一会儿，这件事就会更像真的一点。",
+              "unlockConditions": [
+                "35"
+              ]
+            },
+            {
+              "id": "ch5_file4",
+              "title": "窗口记录 5008",
+              "extension": "msg",
+              "content": "Forewall: 所以现在算什么\nMessin: 你问得也太直白了\nForewall: 不然呢\nMessin: 你想算什么\nForewall: 我想听你说\nMessin: 你真的很会逼人\nForewall: 只逼这一回\nMessin: 那就\nMessin: 从今天开始\nMessin: 你可以把我当成你正在喜欢的人\nForewall: 正在喜欢？\nMessin: 这样比较稳妥\nForewall: 不够\nMessin: 那你说\nForewall: 女朋友\nMessin: 你这两个字发过来我都不敢看第二遍\nForewall: 现在呢\nMessin: 现在有一点想笑\nMessin: 还有一点想把手机盖上\nMessin: 但还是想答应你\nMessin: 好",
+              "unlockConditions": [
+                "36"
+              ]
+            },
+            {
+              "id": "ch5_file5",
+              "title": "便笺 5011",
+              "extension": "memo",
+              "content": "恋爱第一天。\n\n其实也没发生什么大事。\n只是他说那句“那就从今天开始吧”的时候，我隔着屏幕安静了很久，久到他开始问我是不是后悔了。\n\n没有后悔。\n只是一下子不知道手该放哪，话该先说哪句。",
+              "unlockConditions": [
+                "37"
+              ]
+            },
+            {
+              "id": "ch5_file6",
+              "title": "存页 5015",
+              "extension": "txt",
+              "content": "在一起之后，很多感受会一下子变得更具体。\n\n以前只是会想她，现在会想她是不是又忘了吃早饭。以前只是等消息，现在会在她迟了十分钟没回时下意识点开对话框两次。以前觉得见面是以后再说的事，现在却连她到时候会不会因为紧张不敢抬头都开始想了。\n\n喜欢一旦被承认，就像有了形状。\n\n它不再只是模糊地浮在心里，而是会变成很多实实在在的小动作。会在买饮料时顺手挑她不讨厌的口味，会在走到文具店门口时想给她拍那排新的挂件，会在看到一句笨拙的英文时，第一反应不再是好笑，而是她会不会喜欢。\n\n原来牵挂长出来的时候，是看得见的。",
+              "unlockConditions": [
+                "38"
+              ]
+            },
+            {
+              "id": "ch5_file7",
+              "title": "聊天摘录 5018",
+              "extension": "msg",
+              "content": "Messin: 我给你看今天的天\nForewall: 你这拍照技术有待提高\nMessin: 重点不是技术\nMessin: 是云很好看\nForewall: 行 云好看\nForewall: 但你是不是拍歪了\nMessin: 我故意的\nForewall: 为什么\nMessin: 因为右下角本来拍到我的鞋了\nMessin: 我又裁掉了\nForewall: 你这么神秘\nMessin: 不是神秘\nMessin: 就是突然觉得\nMessin: 有些东西还是等你以后自己看到比较好\nForewall: 比如\nMessin: 比如我今天穿的是哪双鞋\nForewall: 这也算惊喜？\nMessin: 算\nMessin: 至少是留给见面的",
+              "unlockConditions": [
+                "39"
+              ]
+            },
+            {
+              "id": "ch5_file8",
+              "title": "正文 5022",
+              "extension": "txt",
+              "content": "谈到以后这件事的时候，他们都还很小心。\n\n不敢一口气说太远，好像说得太远了，反而会把眼前这点来之不易的安稳惊散。\n\n所以他们只说一点点以后。\n\n比如天再热一点的时候，也许可以见面。比如下一个假期，想一起去一个不用太远的地方。比如等某场考试结束，终于能不用看时间地聊一整个晚上。比如总有一天，要把耳机真的一人一边。\n\n这些以后都很小，小得像摊在掌心里的几枚硬币。\n\n可正因为小，才显得真实。\n\n不是空空地说永远，而是认真地把几步之内的路先想好。\n\n那已经足够让人高兴很久了。",
+              "unlockConditions": [
+                "40"
+              ]
+            },
+            {
+              "id": "ch5_file9",
+              "title": "未寄信 5027",
+              "extension": "letter",
+              "content": "写给以后如果真的见面的我们：\n\n到时候别把场面想得太像电影。\n不用一见面就说很好听的话。\n也不用特地准备很厉害的表情。\n\n能一起走一段路，买瓶水，看看天黑下来，就已经很好了。",
+              "unlockConditions": [
+                "41"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch6",
+          "title": "见面之前",
+          "levels": [
+            {
+              "id": "42",
+              "title": "第 42 关",
+              "targetFunction": "e^{\\operatorname{arsinh}\\left(x + 2\\right)} + 1.5 - 2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "43",
+              "title": "第 43 关",
+              "targetFunction": "\\frac{-3}{\\tan\\left(x\\right) + \\frac{0.5}{x}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "44",
+              "title": "第 44 关",
+              "targetFunction": "\\sin\\left(x + 3 + 4\\right) + \\frac{-0.5}{x}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "45",
+              "title": "第 45 关",
+              "targetFunction": "\\sin\\left(x - 0.5\\right) + 0.5x^2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "46",
+              "title": "第 46 关",
+              "targetFunction": "\\left(\\left|\\operatorname{artanh}\\left(2x\\right)\\right| - 0.5\\right) \\cdot \\left(x + 3\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "47",
+              "title": "第 47 关",
+              "targetFunction": "\\frac{x^3}{x - 3} + 1.5x + \\frac{-1}{x}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch6_file1",
+              "title": "正文 6001",
+              "extension": "txt",
+              "content": "确定关系之后，见面这件事就不再只是模模糊糊的以后。\n\n它开始有日期，有天气，有路线，有谁先到、谁会不会紧张这种细枝末节。Forewall 以前也想过，但没有想得这么认真。现在不同了，Messin 只要提一句哪天也许可以，他就会下意识在脑子里把那一天的样子先过一遍。\n\n可奇怪的是，越临近，Messin 反而越安静。\n\n不是冷下来了，而是像在用力压着什么。她还是会和以前一样说笑，会把课间听来的无聊事发给他，也会在晚上催他别熬太晚。只是每次聊到见面，她总会先停一下，像那两个字比别的词更沉。\n\nForewall 没戳破，只是也跟着放轻了语气。\n\n有些紧张不用讲出来，彼此都知道。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch6_file2",
+              "title": "消息存档 6003",
+              "extension": "msg",
+              "content": "Messin: 我提前说一件事\nForewall: 什么\nMessin: 你到时候别笑我\nForewall: 你先说我再决定笑不笑\nMessin: 如果见面的时候我特别安静\nMessin: 你别觉得我是失望了\nForewall: 那是为什么\nMessin: 可能就是太紧张\nForewall: 你不是平时挺能说的吗\nMessin: 那是隔着屏幕\nMessin: 现实里不一定\nForewall: 行\nForewall: 那如果我也很安静呢\nMessin: 那我就不笑你\nForewall: 这么公平\nMessin: 我一向讲道理\nForewall: 你最好是\nMessin: 还有\nMessin: 如果我第一眼没反应过来\nMessin: 你也别走太快",
+              "unlockConditions": [
+                "42"
+              ]
+            },
+            {
+              "id": "ch6_file3",
+              "title": "片段 6006",
+              "extension": "txt",
+              "content": "Messin 开始认真挑日子之后，Forewall 才意识到她不是随口说说。\n\n她会看天气，会看两边谁哪天补课，甚至会连车程和人多不多都一起考虑进去。消息里偶尔会跳出一句这个周末可能不行，或者下周六好像更合适。语气很平常，可就是这种平常，反而把见面这件事慢慢推成了真的。\n\nForewall 有时候会故意逗她，说你怎么比考试报名还认真。\n\n她回，因为这件事不能随便。\n\n那句不能随便让他安静了好几秒。\n\n原来对她来说，这也不是一个轻飘飘的浪漫想象，而是某种要小心托住的东西。像手心里那颗透明挂件，看上去不值钱，摔下去却也会裂。",
+              "unlockConditions": [
+                "43"
+              ]
+            },
+            {
+              "id": "ch6_file4",
+              "title": "便笺 6008",
+              "extension": "memo",
+              "content": "醒来先别慌。\n\n今天只是去见他，不是去考试。\n口罩、钥匙、纸巾、挂件。\n早饭记得吃，不然路上会手抖。\n如果第一眼没那么自然，也不用逼自己立刻笑。\n\n先走过去就行。",
+              "unlockConditions": [
+                "44"
+              ]
+            },
+            {
+              "id": "ch6_file5",
+              "title": "对话记录 6011",
+              "extension": "msg",
+              "content": "Messin: 我又想了一下\nForewall: 你最近很会想\nMessin: 如果我第一眼没认出来你怎么办\nForewall: 这也能提前担心\nMessin: 当然能\nForewall: 那我就站在原地等你看第二眼\nMessin: 万一第二眼还没认出来呢\nForewall: 那我叫你\nMessin: 叫我什么\nForewall: Messin\nMessin: 太普通了\nForewall: 那叫什么\nMessin: 叫那个挂件上的英文\nForewall: 你认真的？\nMessin: 你叫一声我就知道是你\nForewall: 这么神\nMessin: 因为别人不会这么叫\nForewall: 行\nForewall: 到时候我就说 Charm You Tomorrow\nMessin: 嗯\nMessin: 那我就朝你走过去",
+              "unlockConditions": [
+                "45"
+              ]
+            },
+            {
+              "id": "ch6_file6",
+              "title": "段落稿 6015",
+              "extension": "txt",
+              "content": "越是快到见面的日子，Forewall 越容易在很普通的时刻突然走神。\n\n比如放学出校门时，看见门口那棵总也修不整齐的树。比如排队买饭时，听见前面的人讨论周末去哪。比如晚上刷牙刷到一半，忽然想起她说过见面可能会紧张得不太敢抬头。\n\n他不是没有想过最坏的情况。\n\n比如人太多，比如天突然下雨，比如双方都紧张得把原本想说的话忘了。\n\n可这些念头到最后都没能压过另一种更实在的期待。\n\n他是真的想见她。\n\n不是为了验证什么，也不是为了把关系往前推得更快一点。只是走到这一步之后，好像谁都已经没办法再满足于隔着屏幕说晚安了。",
+              "unlockConditions": [
+                "46"
+              ]
+            },
+            {
+              "id": "ch6_file7",
+              "title": "正文 6018",
+              "extension": "txt",
+              "content": "临近那一天的时候，气氛反而比想象中安静。\n\n他们没再像之前那样反复讨论见面后先去哪、说什么、会不会尴尬。像是前面那些紧张和兴奋已经说得差不多了，真正快到的时候，剩下的反而只有一点细细的静。\n\nMessin 还是照常发早安，还是会提醒他晚上早点睡。Forewall 也照常回她一些琐事，好像谁都在努力把日子过得和平时一样。\n\n可平时怎么会一样。\n\n平时的晚风不会让人走到窗边多站一会儿，平时的书包也不会被整理第二遍，平时发一句晚安时，也不会忍不住想，下一次说这两个字，也许就已经是在见过面之后了。\n\n越真的事情，越容易安静下来。\n\n像雨前的空气，明明什么都还没落下，却已经让人知道，快到了。",
+              "unlockConditions": [
+                "47"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch7",
+          "title": "穿过人群的那一眼",
+          "levels": [
+            {
+              "id": "48",
+              "title": "第 48 关",
+              "targetFunction": "-1.5\\left(\\sin\\left(\\sqrt{1-x^2} - 2\\right)\\right) + 3e^{-x}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "49",
+              "title": "第 49 关",
+              "targetFunction": "\\sin\\left(\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x - 1.5\\right) + 0.5\\right) + \\frac{4}{x}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "50",
+              "title": "第 50 关",
+              "targetFunction": "\\sinh\\left(x\\right) - 1.5e^{-x} + 2 + x^2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "51",
+              "title": "第 51 关",
+              "targetFunction": "e^{\\left|\\frac{-2}{\\frac{1}{x^2+1}}\\right| - 2x} - 2",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "52",
+              "title": "第 52 关",
+              "targetFunction": "\\left|\\cos\\left(-2x\\right) + \\frac{0.5}{-2x}\\right| + 0.5 - 0.5-2x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "53",
+              "title": "第 53 关",
+              "targetFunction": "\\sin\\left(\\left|\\left(0.5x\\right)^3\\right| + 4 + 1\\right) + 0.50.5x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "54",
+              "title": "第 54 关",
+              "targetFunction": "\\sin\\left(\\frac{\\cos\\left(x\\right)}{x - 3} - 2e^{-x} - 1\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "55",
+              "title": "第 55 关",
+              "targetFunction": "\\ln\\left(\\left|\\sqrt{1-x^2} + 2 + 4\\sin\\left(x\\right)\\right| + 0.5\\right) + 1.5x",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "56",
+              "title": "第 56 关",
+              "targetFunction": "\\sqrt{\\left|x - 2\\right| + x^2 + 1.5}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "57",
+              "title": "第 57 关",
+              "targetFunction": "\\frac{1}{\\frac{\\left(\\arctan\\left(x\\right)\\right) \\cdot \\left(x + 0.5\\right)}{x - 2}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "58",
+              "title": "第 58 关",
+              "targetFunction": "\\frac{-3}{x^3 + 0.5e^{-x} + \\frac{2}{x}}",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "59",
+              "title": "第 59 关",
+              "targetFunction": "\\frac{4}{\\left(e^{x}\\right) \\cdot \\left(x - 1.5\\right)} - 0.5\\sin\\left(x\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "60",
+              "title": "第 60 关",
+              "targetFunction": "\\ln\\left(\\left|\\frac{3}{\\sin\\left(x\\right) + \\frac{-1}{x}}\\right| + 3\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "61",
+              "title": "第 61 关",
+              "targetFunction": "\\sin\\left(-2\\left(\\sin\\left(2x\\right)\\right) \\cdot \\left(2x + 0.5\\right) + 1\\right)",
+              "params": null,
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch7_file1",
+              "title": "页稿 7001",
+              "extension": "txt",
+              "content": "见面前的那几天，很多事情都还停在准备阶段。\n\n时间敲定了，大概的地方也说好了，可车票还没买，路线图也还在聊天记录里滚来滚去。说到底，一切都还悬在那里，像只要谁临时改一句主意，这件事就还能退回到以后再说。\n\n可他们谁都没有退。\n\nForewall 晚上躺在床上翻聊天记录，看到最早那句 Charm You Tomorrow，忽然觉得时间过得很怪。明明只是从一个廉价挂件开始，怎么就一点一点走到了快要见面的地方。\n\n窗外路灯照进来，把书桌边缘照得很白。那一刻他突然很清楚地知道，自己是真的在等这一天。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch7_file2",
+              "title": "窗口记录 7003",
+              "extension": "msg",
+              "content": "Forewall: 到时候你穿什么颜色\nMessin: 你问这个干什么\nForewall: 方便认人\nMessin: 你不是说叫一声就行\nForewall: 双重保险\nMessin: 那我为什么要提前告诉你\nForewall: 因为我怕认错\nMessin: 认错了会怎样\nForewall: 会很丢人\nMessin: 那我尽量让你别太丢人\nMessin: 我应该会穿浅色\nForewall: 这范围也太大了\nMessin: 已经很有诚意了\nForewall: 行吧\nForewall: 我穿黑的\nMessin: 你怎么一点惊喜都不留\nForewall: 我怕你比我还紧张\nMessin: 你少自作聪明\nMessin: 不过这样也好\nMessin: 我比较容易一眼看见你",
+              "unlockConditions": [
+                "48"
+              ]
+            },
+            {
+              "id": "ch7_file3",
+              "title": "记录稿 7006",
+              "extension": "txt",
+              "content": "天气预报在见面前一天又开始乱说话。\n\n上午还写着有雨，下午忽然变成多云，到了傍晚又改口说也许会放晴。Forewall 把截图发给 Messin，说这软件比人还善变。Messin 看完之后只回了一句，没事，会放晴的。\n\n他说你怎么这么肯定。\n\n她回，因为我希望是晴天。\n\n这种回答听起来一点依据都没有，可他偏偏就信了。\n\n也许不是因为天气，更多是因为说这句话的人。好像只要她认真地希望什么，那件事就会更容易发生一点。\n\n哪怕只是心里发生。",
+              "unlockConditions": [
+                "49"
+              ]
+            },
+            {
+              "id": "ch7_file4",
+              "title": "页边记 7008",
+              "extension": "note",
+              "content": "今天别迟到。\n\n车次已经看过两遍。\n挂件在外侧口袋。\n别临时换鞋。\n如果到站以后很紧张，就先站在原地找他，不要急着低头装忙。",
+              "unlockConditions": [
+                "50"
+              ]
+            },
+            {
+              "id": "ch7_file5",
+              "title": "聊天摘录 7011",
+              "extension": "msg",
+              "content": "Messin: 我现在突然开始想\nMessin: 见面的时候第一句到底要说什么\nForewall: 不是你好？\nMessin: 太普通了\nForewall: 那你想说什么\nMessin: 我不知道\nMessin: 所以才烦\nForewall: 你平时不是挺能说的\nMessin: 这不一样\nForewall: 那如果都不知道说什么\nForewall: 就先笑一下\nMessin: 万一我笑得很傻\nForewall: 没事\nForewall: 反正我也不一定有多聪明\nMessin: 你这安慰方式很一般\nForewall: 但有用吧\nMessin: 有一点\nMessin: 那我先把你好留着\nMessin: 万一实在想不到别的",
+              "unlockConditions": [
+                "51"
+              ]
+            },
+            {
+              "id": "ch7_file6",
+              "title": "正文 7015",
+              "extension": "txt",
+              "content": "Forewall 把见面的第一眼想过很多遍。\n\n想过她会不会真的像自己猜的那样，说话之前习惯先停半拍。想过她是不是会比聊天里显得更安静一点。想过自己要不要先走快一点，又怕那样太明显，显得像个还没见到人就先慌了的人。\n\n这些想象都很碎，连不成一幅完整的画。\n\n可他一点也不觉得烦。\n\n因为喜欢一个人之后，你会很愿意把未来拆成一小块一小块来想。鞋带、袖口、抬眼、第一句招呼，甚至连风吹过来的方向，都能被想进那一天里。\n\n好像只要想得足够认真，那一天就会更稳一点。",
+              "unlockConditions": [
+                "52"
+              ]
+            },
+            {
+              "id": "ch7_file7",
+              "title": "便笺 7018",
+              "extension": "memo",
+              "content": "把今天带过去。\n\n不是带一个最好看的样子。\n是把今天真的发生过的东西带过去。\n早上没喝完的半盒奶，出门前找不到发圈的两分钟，公交车窗上那块擦不干净的雾。\n\n这些也都是见面的一部分。",
+              "unlockConditions": [
+                "53"
+              ]
+            },
+            {
+              "id": "ch7_file8",
+              "title": "对话备份 7022",
+              "extension": "msg",
+              "content": "Forewall: 明天别临时反悔\nMessin: 这话应该我说\nForewall: 我看起来像会跑的人？\nMessin: 有一点\nForewall: 你胡说\nMessin: 因为你紧张的时候会装镇定\nForewall: 那你呢\nMessin: 我紧张的时候会想很多很坏的情况\nForewall: 比如\nMessin: 比如你看见我之后觉得也就这样\nForewall: 不可能\nMessin: 你都还没看见\nForewall: 那也不可能\nMessin: 你怎么这么确定\nForewall: 因为我已经喜欢你很久了\nForewall: 总不能现在才忽然失灵\nMessin: ......\nMessin: 好吧\nMessin: 那你也别临时跑掉",
+              "unlockConditions": [
+                "54"
+              ]
+            },
+            {
+              "id": "ch7_file9",
+              "title": "记录稿 7027",
+              "extension": "txt",
+              "content": "真正到了那天早上，反而没谁再说太多。\n\nMessin 发来一句早，后面跟着一个看起来很正常的表情。Forewall 回她早，问她吃饭没有。她说吃了，但他说不准那是不是实话，因为紧张的时候谁都容易随口应一句。\n\n出门前他把书桌上的东西又看了一遍，明明只是去见一个人，不是出远门，却还是检查了两次手机电量。窗外天色很亮，没有下雨。楼下卖早点的人在收摊，油烟味被风吹得很散。\n\n他背上包的那一刻，忽然意识到，很多原本只存在于聊天框里的东西，今天真的要落到路上了。",
+              "unlockConditions": [
+                "55"
+              ]
+            },
+            {
+              "id": "ch7_file10",
+              "title": "聊天摘录 7031",
+              "extension": "msg",
+              "content": "Messin: 你出门了吗\nForewall: 出了\nMessin: 我也是\nForewall: 你现在紧张吗\nMessin: 还行\nForewall: 你这个还行一般都不太行\nMessin: 那你呢\nForewall: 比你稍微好一点\nMessin: 我不信\nForewall: 行吧\nForewall: 其实也挺紧张的\nMessin: 那刚好\nMessin: 一人一半\nForewall: 这个也能平分？\nMessin: 可以\nMessin: 你快到了跟我说一声\nForewall: 好\nMessin: 我也会说\nMessin: 别让我一个人乱想太久",
+              "unlockConditions": [
+                "56"
+              ]
+            },
+            {
+              "id": "ch7_file11",
+              "title": "段落稿 7034",
+              "extension": "txt",
+              "content": "约好的地方并不特别，只是一个很普通的站牌，旁边有家小店，门口摆着一排矿泉水箱。地上的白漆线被来来回回的人踩得有点旧，站牌顶上还贴着不知道什么时候留下来的小广告。\n\n可就是这样一个地方，因为有人在等，忽然就显得很不一样。\n\nForewall 提前到了几分钟。他站在站牌下面，手心里全是细细的汗，明明什么都还没发生，却已经觉得周围每一点声音都被放大了。公交进站的刹车声，小店老板拉塑料门帘的声响，连鞋底蹭过地面的声音都听得清清楚楚。\n\n他低头看手机，消息正好弹出来。\n\nMessin 说：我快到了。",
+              "unlockConditions": [
+                "57"
+              ]
+            },
+            {
+              "id": "ch7_file12",
+              "title": "窗口记录 7038",
+              "extension": "msg",
+              "content": "Messin: 我看到你了\nForewall: 哪\nMessin: 你先别动\nForewall: 我本来也没动\nMessin: 黑衣服\nForewall: 浅色衣服的是你？\nMessin: 应该是\nForewall: 什么叫应该是\nMessin: 因为我现在脑子有点空\nForewall: 那我叫你\nMessin: 嗯\nForewall: Charm You Tomorrow\nMessin: ......\nMessin: 我听到了\nMessin: 那我过来了",
+              "unlockConditions": [
+                "58"
+              ]
+            },
+            {
+              "id": "ch7_file13",
+              "title": "页稿 7043",
+              "extension": "txt",
+              "content": "他们真正站到彼此面前的时候，准备过的那些开场几乎全都没用上。\n\nForewall 原本想说你好，又觉得太普通。想说总算见到了，又觉得太刻意。最后脱口而出的竟然是，你比我想的还高一点。\n\n说完他自己先想把话收回去。\n\nMessin 却低头笑了。她耳边有一缕头发被风吹得乱了点，手里真的攥着那个透明挂件，塑料边角在太阳底下闪一下，很轻。\n\n她回他的第一句也没有多高明。\n\n她说，你比聊天的时候更不会说话。\n\n两个人都愣了一下，然后一起笑了出来。那点紧张就是在这个时候松掉的，像鞋带终于被重新系好，不再总担心下一步会不会踩散。",
+              "unlockConditions": [
+                "59"
+              ]
+            },
+            {
+              "id": "ch7_file14",
+              "title": "片段 7047",
+              "extension": "txt",
+              "content": "后来真正留在 Forewall 手里的，不是河边的风，也不是准备过的开场。\n\n是回家以后从外套口袋里摸出来的一张皱小票，背面被他无意识按出一道指印。那瓶水只喝了一半，瓶盖拧得很紧，搁在书桌角上一直没动。\n\nMessin 到家后发来一句：我刚把鞋换掉。\n\nForewall 盯着那句话看了半天，回她：你今天走路比我想的慢。\n\n她回：你今天比聊天的时候安静。\n\n这两句都很普通。\n\n可他把手机扣到桌上以后，还是忍不住低头笑了一下。原来见过面之后，一个人连打错字都更像真的。",
+              "unlockConditions": [
+                "60"
+              ]
+            },
+            {
+              "id": "ch7_file15",
+              "title": "记录稿 7052",
+              "extension": "txt",
+              "content": "那天后来的时间，过得又慢又快。\n\n他们先去站牌旁边那家小店买水。Messin 站在冷柜前看了两眼，说不要柠檬，太酸，最后还是拿了白桃味的那瓶。Forewall 把冰凉的瓶身接过来，顺手替她拧开一点，瓶盖发出很轻的一声响。\n\n走出店门以后，他们沿着河边慢慢往前。天还没全暗，水面上晃着一层发白的亮，风吹过来的时候不算冷，只把校服衣角贴到腿边。谁都没有急着把话说得很满，更多时候只是走几步，停一会儿，再接上一句刚才没说完的废话。\n\nMessin 现实里比聊天时安静一点，可不是那种让人难受的安静。她会在过马路前先看他一眼，会在自行车从后面冲过来时下意识往他这边靠半步。Forewall 也没比她从容到哪去，明明脑子里准备过很多句像样的话，真到了这时候，能说出口的还是“你走慢点”“看车”“白桃是不是太甜了”这种零碎东西。\n\n可就是这些零碎，让这一天越来越像真的。\n\n他们后来在河边的栏杆旁停了一会儿。Messin 把那个透明挂件从包上摘下来，在指尖转了半圈，忽然问他，你第一次看到这个的时候，是不是也觉得很傻。Forewall 说有一点。她就笑，说我现在觉得它挺好的。\n\n他说，为什么。\n\nMessin 低头看了眼挂件里的那颗小星星，声音很轻：因为它真的把今天带到明天了。\n\n这句话说完以后，谁都没立刻接。\n\n天色一点点暗下去，路灯沿着河边次第亮起来，地上被拉出细长的影子。Forewall 站在她旁边，忽然觉得前面那些等消息、闹别扭、猜来猜去、明明喜欢却不太敢说的日子，好像都在这时候慢慢落了地。\n\n后来走到要分别的地方，Messin 先停下来。她看着他，像是本来想说一句更像结束的话，最后却只笑着问：你今天是不是一直都挺紧张。\n\nForewall 说，还行。\n\nMessin 立刻说，你这个还行一般都不太行。\n\n两个人都笑了。\n\n笑完以后，她把挂件重新扣回书包上，手指在边角蹭了一下，才轻声说：你真的来了。\n\nForewall 看着她，说，不然呢。\n\n那天晚上回到家，Forewall 把没喝完的那瓶白桃水放在书桌角上，半天都没舍得扔。过了一会儿，Messin 发来一张拍得有点歪的照片，只有她的鞋尖、路边一块碎掉的地砖，还有垂下来一点的挂件链子。\n\n她说：我到家了。\n\nForewall 回她：好。\n\n停了几秒，他又补了一句：今天很好。\n\nMessin 回得很快：我也是。\n\n窗外的天已经彻底黑了，楼下有人收摊，拉卷帘门的声音哗啦响了一下。Forewall 低头看着那两句很普通的话，忽然觉得这一路走到这里，好像已经够像一个结尾了。\n\n不是因为以后都不会再变。\n\n只是至少今天，他们真的一起把这天过完了。",
+              "unlockConditions": [
+                "61"
+              ]
+            },
+            {
+              "id": "ch7_file16",
+              "title": "今天很好",
+              "extension": "anim",
+              "content": "fakeEnding",
+              "unlockConditions": [
+                "61"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch8",
+          "title": "那张小票还在",
+          "levels": [
+            {
+              "id": "62",
+              "title": "第 62 关",
+              "targetFunction": "\\left(x^3\\right) \\cdot \\left(x + a\\right)",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "63",
+              "title": "第 63 关",
+              "targetFunction": "\\frac{\\left|x^3\\right| + x}{x + a}",
+              "params": {
+                "a": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "64",
+              "title": "第 64 关",
+              "targetFunction": "3x \\cdot \\left(x + a\\right)",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "65",
+              "title": "第 65 关",
+              "targetFunction": "\\left(2x + a\\right)^2 + 22x",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "66",
+              "title": "第 66 关",
+              "targetFunction": "2\\left(\\left|\\frac{x^3}{x - 1} + a\\right| - 1\\right)",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch8_file1",
+              "title": "片段 8001",
+              "extension": "txt",
+              "content": "见面后的第二天，很多东西都还带着昨天的实感。\n\nForewall 早读时低头翻书，书页里掉出一张揉过又展平的小票，是他们前一天买水时顺手塞进去的。他愣了两秒，还是把它重新夹回去，连折角都没动。\n\nMessin 上午照常发来一句老师今天又拖堂。中午又补一张拍糊的食堂照片，说阿姨今天手更重。\n\n这些话和以前差不多。\n可因为已经见过面，连她拍歪的桌角、指尖压住餐盘边的样子，都忽然有了位置。\n\nForewall 那时还没觉得哪儿不对，只觉得这段关系终于从屏幕里落到了地上。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch8_file2",
+              "title": "对话备份 8003",
+              "extension": "msg",
+              "content": "Forewall: 到家了吗\nMessin: 到了\nForewall: 真快\nMessin: 你也没慢到哪去\nForewall: 我刚进门\nMessin: 那就好\nForewall: 你今天回去会不会又睡不着\nMessin: 可能会\nForewall: 紧张过头了？\nMessin: 也不全是\nMessin: 就是觉得今天很像真的\nForewall: 什么叫很像真的\nMessin: 就是\nMessin: 你真的站在那里\nMessin: 不是我想出来的\nForewall: 我本来就是真的\nMessin: 我知道\nMessin: 所以才有点不习惯\nForewall: 那你慢慢习惯\nForewall: 反正以后也不是只见这一次\nMessin: 嗯\nMessin: 你回去记得把挂件放好",
+              "unlockConditions": [
+                "62"
+              ]
+            },
+            {
+              "id": "ch8_file3",
+              "title": "存页 8006",
+              "extension": "txt",
+              "content": "裂缝是从很小的地方开始的。\n\n第二天晚上，他们随口聊起在便利店买的那瓶水。Messin 说那种柠檬味其实没有她想的那么酸，Forewall 看着那句话愣了一下，因为他们那天拿的明明是白桃。\n\n他起初以为是自己记岔了，还特地去想冷柜前那一幕。玻璃门上的白雾，手里发凉的瓶身，Messin 说不要桃子味太甜——这些细节都还很清楚。\n\n可他没有立刻反驳，只回了一句你是不是记混了。\n\nMessin 过了好一会儿才说，也许吧。\n\n那句也许很轻，轻得像什么都没发生。可 Forewall 心里还是像被细针碰了一下。\n\n不是因为一瓶水有多重要。\n\n而是因为那一天对他来说太珍贵了，珍贵到任何一个细节的偏差，都会让人下意识想把它重新扶正。",
+              "unlockConditions": [
+                "63"
+              ]
+            },
+            {
+              "id": "ch8_file4",
+              "title": "短笺 8008",
+              "extension": "note",
+              "content": "06.21\n\n她站近了比聊天里安静。\n走路比我想的慢一点。\n把挂件放回包上前，会先用指腹蹭一下边角。\n\n这些别过两天就写成别的样子。",
+              "unlockConditions": [
+                "64"
+              ]
+            },
+            {
+              "id": "ch8_file5",
+              "title": "消息存档 8011",
+              "extension": "msg",
+              "content": "Forewall: 我突然想到一件事\nMessin: 什么\nForewall: 你还记得我们见面之后第一句各自说了什么吗\nMessin: 记得啊\nMessin: 你先说的是你好\nForewall: 不是\nMessin: 那是什么\nForewall: 我说你比我想的还高一点\nMessin: ......\nMessin: 对\nMessin: 是这个\nForewall: 你刚刚为什么会说成你好\nMessin: 因为我脑子里一直觉得第一句应该是你好\nForewall: 应该？\nMessin: 就是\nMessin: 很正常吧\nMessin: 谁见面第一句不是这个\nForewall: 但我们不是\nMessin: 嗯\nMessin: 对不起",
+              "unlockConditions": [
+                "65"
+              ]
+            },
+            {
+              "id": "ch8_file6",
+              "title": "页稿 8015",
+              "extension": "txt",
+              "content": "Forewall 没再追着问。\n\n只是把那张小票压进了数学书最前面。\n\n之后几天，Messin 还是会提起那天。她记得站牌旁边那家店门口堆着水箱，记得他黑色衣角被风掀起来一点，记得自己回家以后半天没把书包放下。可说到先后顺序时，总会慢半拍。\n\n有次她发来一句：你当时先把水递给我。\n\nForewall 看着屏幕，指尖在“不是”上停了很久，最后只发过去一张拍歪的作业纸。\n\n那晚他翻书时又看见那张小票，纸边已经被压软了。\n\n他突然不想再把那天扶正了。\n\n可也正因为舍不得，心里那点硌人的地方一直没下去。",
+              "unlockConditions": [
+                "66"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch9",
+          "title": "晚安晚了十六分钟",
+          "levels": [
+            {
+              "id": "67",
+              "title": "第 67 关",
+              "targetFunction": "\\left(\\left(x - 0.5\\right)^2\\right) \\cdot \\left(\\left(x - 0.5\\right) + a\\right)",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "68",
+              "title": "第 68 关",
+              "targetFunction": "\\left|\\left(\\left(x + 1\\right) + a\\right)^3\\right| + b",
+              "params": {
+                "a": 0.5,
+                "b": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "69",
+              "title": "第 69 关",
+              "targetFunction": "a\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x + 3\\right)",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "70",
+              "title": "第 70 关",
+              "targetFunction": "\\left|b\\left(\\frac{x^3}{x + a}\\right)\\right| - 3x",
+              "params": {
+                "a": 0.5,
+                "b": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "71",
+              "title": "第 71 关",
+              "targetFunction": "a\\left(x^2\\right) - 0.5x^2",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "72",
+              "title": "第 72 关",
+              "targetFunction": "\\left(a\\left(x^3\\right)\\right) \\cdot \\left(x + 2\\right) + 2",
+              "params": {
+                "a": -1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "73",
+              "title": "第 73 关",
+              "targetFunction": "\\frac{-3}{a\\left(\\frac{1}{\\left(x + 1\\right)^2+1}\\right)}",
+              "params": {
+                "a": -1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "74",
+              "title": "第 74 关",
+              "targetFunction": "\\frac{-2}{\\left|a\\left(x\\right)\\right| + 0.5x}",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch9_file1",
+              "title": "记录稿 9001",
+              "extension": "txt",
+              "content": "见面之后的第三个晚上，Forewall 开始有意无意地等她先开口。\n\n不是赌气，只是想看看，如果自己不主动把话题扶起来，Messin 会不会像以前那样自然地接住。结果她还是会来，会发一句刚写完作业，或者问他今天是不是又拖到很晚才洗澡。看上去一切都和平时差不多。\n\n可 Forewall 已经没法再像前几章那样毫无防备地接住这些平常了。\n\n因为他在意的那件事还悬在那里。\n\n见面本来该是他们关系里最落地的一段记忆，现在却反而成了最容易松掉的一块。越是这样，他就越会在她每一句不经意的话里听出细小的犹豫，像在听一段快要接不上的电流。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch9_file2",
+              "title": "对话记录 9003",
+              "extension": "msg",
+              "content": "Forewall: 你这两天是不是没睡好\nMessin: 还行\nForewall: 你这个还行越来越没说服力了\nMessin: 真的没事\nForewall: 那你怎么总把顺序说反\nMessin: 有吗\nForewall: 有\nForewall: 昨天你又把河边和便利店前后说反了\nMessin: 我可能就是记性差\nForewall: 你以前不是这样的\nMessin: 人又不会一直一样\nForewall: 我不是在跟你抬杠\nMessin: 我知道\nMessin: 但我现在真的不太想聊这个\nForewall: 为什么\nMessin: 因为越聊越容易乱",
+              "unlockConditions": [
+                "67"
+              ]
+            },
+            {
+              "id": "ch9_file3",
+              "title": "段落稿 9006",
+              "extension": "txt",
+              "content": "第三次对不上，是在一件更小的事上。\n\nMessin 说回去那天她先上了车，所以才让他记得到家给自己发消息。Forewall 看着屏幕，心里忽然空了一下，因为那天明明是他先坐上车，隔着车窗朝她摆了一下手，她才转身往站台另一头走。\n\n那一幕他记得很清楚，清楚到连车窗边那块有点花掉的贴膜都还在。\n\n于是他第一次生出一种几乎带着委屈的念头。\n\n如果那一天对她也那么重要，为什么她总是留不住这些细节？\n\n而更伤人的地方在于，她不是无所谓。她看起来比谁都想记住，只是怎么都抓不牢。\n\n这让他的受伤没地方放。\n\n怀疑太重，体谅又太疼。",
+              "unlockConditions": [
+                "68"
+              ]
+            },
+            {
+              "id": "ch9_file4",
+              "title": "备忘 9008",
+              "extension": "memo",
+              "content": "给明天的我。\n\n如果一醒来又想先去翻那天的记录，先别急。\n先承认你其实是在怕看见他那种受伤的表情。\n\n他不是在查错。\n他说慢一点也可以。\n如果还是接不上，就先把今天说完。",
+              "unlockConditions": [
+                "69"
+              ]
+            },
+            {
+              "id": "ch9_file5",
+              "title": "窗口记录 9011",
+              "extension": "msg",
+              "content": "Forewall: 我不是故意抓着这个不放\nForewall: 但我真的会在意\nMessin: 我知道\nForewall: 那你能不能告诉我到底怎么了\nMessin: 现在不能\nForewall: 为什么又是现在不能\nMessin: 因为我说不清\nForewall: 还是你根本不想说\nMessin: 不是不想\nMessin: 是很多话一说出口就会变得更糟\nForewall: 你总这样\nForewall: 每次我以为自己已经走近一点\nForewall: 你第二天又像退回去了\nMessin: 对不起\nForewall: 我现在不想要对不起\nMessin: 那这件事先别问了\nMessin: 求你",
+              "unlockConditions": [
+                "70"
+              ]
+            },
+            {
+              "id": "ch9_file6",
+              "title": "片段 9015",
+              "extension": "txt",
+              "content": "那晚之后，他们的消息第一次停得那么久。\n\n不是彻底断掉，还是会有早安，会有晚睡提醒，会有作业写完没有这种勉强维持表面的问句。可那些原本流动得很自然的话题，好像忽然都需要刻意去接了。\n\nForewall 盯着聊天框的时候，开始明白一种更具体的伤心。\n\n不是她不喜欢自己。\n\n恰恰相反，他越来越能感觉到她是在喜欢他的前提下，拼命挡着某件事。而被挡在外面的感觉，比被冷落还难受。因为你知道门里有人，你也知道她不是故意要关，可你还是进不去。\n\n屏幕最下方的输入框亮了又灭，灭了又亮。最后什么都没发出来。",
+              "unlockConditions": [
+                "71"
+              ]
+            },
+            {
+              "id": "ch9_file7",
+              "title": "对话记录 9018",
+              "extension": "msg",
+              "content": "Forewall: 我想了很久还是想问\nForewall: 你到底在躲什么\nMessin: 我没躲你\nForewall: 那你就是在躲这件事\nMessin: 差不多吧\nForewall: 为什么\nMessin: 因为我怕你知道以后会后悔喜欢我\nForewall: 你别替我决定这个\nMessin: 可我已经见过太多因为知道太多变掉的样子了\nForewall: 你又在说我听不懂的话\nMessin: 那就先别懂\nForewall: 你觉得这样对我公平吗\nMessin: 不公平\nMessin: 但我现在只能这样",
+              "unlockConditions": [
+                "72"
+              ]
+            },
+            {
+              "id": "ch9_file8",
+              "title": "笔记 9022",
+              "extension": "note",
+              "content": "删掉前一版。\n\n前一版把语气写得太像解释。\n他看到会更难过。\n也别总写“我没有骗你”。\n这句写多了，连自己看着都像在躲。",
+              "unlockConditions": [
+                "73"
+              ]
+            },
+            {
+              "id": "ch9_file9",
+              "title": "段落稿 9027",
+              "extension": "txt",
+              "content": "那天的晚安比平时晚了十六分钟。\n\nForewall 不是当时就去数，是后来回看时间才看见的。可就是这十六分钟，让那句“晚安”看起来比平常薄一点。\n\n消息发来之前，输入框亮过两次，又灭了。\n\n他盯着那句熟悉的话，忽然想象不出她刚才在屏幕那头做了什么。是在删字，还是在发呆，还是先把别的东西收拾好了，才轮到这句照常送出来。\n\n窗外有人拖着椅子走，声音很尖。\n\nForewall 没再回第二句，只把手机翻过来扣在桌上。\n那种不安直到熄灯都没散。",
+              "unlockConditions": [
+                "74"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch10",
+          "title": "写给明天的我",
+          "levels": [
+            {
+              "id": "75",
+              "title": "第 75 关",
+              "targetFunction": "\\frac{\\sqrt{x^2 + a}}{x + b}",
+              "params": {
+                "a": 4,
+                "b": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "76",
+              "title": "第 76 关",
+              "targetFunction": "\\frac{\\sqrt{\\left|x\\right| + a}}{x - 2}",
+              "params": {
+                "a": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "77",
+              "title": "第 77 关",
+              "targetFunction": "\\frac{b}{\\sqrt{1-\\left(x + a\\right)^2}}",
+              "params": {
+                "a": -1,
+                "b": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "78",
+              "title": "第 78 关",
+              "targetFunction": "\\left|\\frac{\\left|x\\right|}{x + 2} + a\\right| + 4x",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "79",
+              "title": "第 79 关",
+              "targetFunction": "\\left|b\\left(\\left|x + 2\\right| + a\\right)\\right| + c",
+              "params": {
+                "a": -3,
+                "b": -2,
+                "c": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "80",
+              "title": "第 80 关",
+              "targetFunction": "\\left|\\frac{\\frac{1}{\\left(x + a\\right)}}{x + b}\\right| - 3x",
+              "params": {
+                "a": 3,
+                "b": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "81",
+              "title": "第 81 关",
+              "targetFunction": "1.5\\left(\\left|\\frac{1}{x^2+1} + \\frac{4}{x}\\right| + a\\right)",
+              "params": {
+                "a": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "82",
+              "title": "第 82 关",
+              "targetFunction": "\\sqrt{\\frac{1}{\\left(\\left(x + b\\right) - 2\\right)^2+1} + a}",
+              "params": {
+                "a": 4,
+                "b": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "83",
+              "title": "第 83 关",
+              "targetFunction": "\\sqrt{a\\left(\\frac{1}{x}\\right) + \\frac{-3}{x} + 1.5}",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "84",
+              "title": "第 84 关",
+              "targetFunction": "\\sqrt{\\left(x^3\\right) \\cdot \\left(x + a\\right) + 1.5} - 3",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch10_file1",
+              "title": "存页 10001",
+              "extension": "txt",
+              "content": "真正把事情往前推了一步的，不是一次大吵，也不是某个戏剧化的崩溃。\n\n只是一个再普通不过的傍晚。Messin 回消息回得很慢，Forewall 原本想像以前一样压着情绪等一等，最后还是没忍住，顺着她提过一次的地方去翻了那只旧书包侧袋。\n\n里面没有什么像秘密的东西。\n\n只有折得很整齐的几张纸，一支快没墨的黑色签字笔，还有一张写得很急的便条。便条最上面只有一句话：先看抽屉最下面。\n\nForewall 盯着那行字的时候，心里先是发凉，随后才意识到自己为什么会凉。\n\n那不是写给别人的提醒。\n\n更像写给某个会在之后醒来的自己。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch10_file2",
+              "title": "留存便条 10003",
+              "extension": "memo",
+              "content": "先看抽屉最下面。\n\n上面那些都比较像表面。\n最下面那一叠才是真的接续记录。\n如果是他看到这里，别再往回塞了。\n事情已经到这一步，装没发生没用了。",
+              "unlockConditions": [
+                "75"
+              ]
+            },
+            {
+              "id": "ch10_file3",
+              "title": "消息存档 10006",
+              "extension": "msg",
+              "content": "Messin: 你在哪\nForewall: 你先回答我一个问题\nMessin: 你看了什么\nForewall: 你为什么先问这个\nMessin: 因为我知道你看到了\nForewall: 那张纸是谁写给谁的\nMessin: 写给明天的我\nForewall: 这不是比喻？\nMessin: 不是\nForewall: 你什么意思\nMessin: 就是字面意思\nForewall: Messin\nForewall: 你别这样跟我说话\nMessin: 我已经没有更轻一点的说法了",
+              "unlockConditions": [
+                "76"
+              ]
+            },
+            {
+              "id": "ch10_file4",
+              "title": "页稿 10008",
+              "extension": "txt",
+              "content": "Forewall 把那张“先看抽屉最下面”翻过来又翻回去，纸角很硬，像已经被人捏过很多次。\n\n抽屉最底下那叠记录按日期排得整整齐齐，最旧的几张字迹还没有现在这么稳。第一页写着零点前把闹钟关掉，第二页写她昨天有点短，第三页提醒别把那句晚安当成客套。\n\n这些话以前都像小毛病。\n\n现在它们摊开来放在桌上，忽然全有了同一个方向。\n\nForewall 坐在椅子上，连抽屉都没推回去。窗外有人骑车过去，车铃很短地响了一下，他却还是盯着那句“写给明天的我”。\n\n那不是说重了。\n\n她是真的把明天当成另一个要交接的人。",
+              "unlockConditions": [
+                "77"
+              ]
+            },
+            {
+              "id": "ch10_file5",
+              "title": "索引页 10011-P",
+              "extension": "dat",
+              "content": "[keep]\ntarget = tomorrow_self\nmust_remain = 他叫 Forewall\nmust_remain = 见过面，不是只聊过天\nmust_remain = 那枚透明挂件别丢\nwarn = 不要只背事实，要把语气一起留一点\nwarn = 如果看见这里心里发空，先承认空，不要硬装自然",
+              "unlockConditions": [
+                "78"
+              ]
+            },
+            {
+              "id": "ch10_file6",
+              "title": "对话记录 10015",
+              "extension": "msg",
+              "content": "Forewall: 你每天都这样？\nMessin: 不是完全一样\nForewall: 什么叫不是完全一样\nMessin: 有时候好一点\nMessin: 有时候差一点\nForewall: 你为什么一直不告诉我\nMessin: 因为我想先像个正常人一样喜欢你\nForewall: 你现在也还是\nMessin: 不是的\nMessin: 你别用那种眼神看我\nForewall: 我什么眼神\nMessin: 好像我随时会碎掉\nForewall: 可你本来就在一个人撑这些\nMessin: 所以我更不想被你这样看",
+              "unlockConditions": [
+                "79"
+              ]
+            },
+            {
+              "id": "ch10_file7",
+              "title": "存页 10018",
+              "extension": "txt",
+              "content": "Forewall 一页页看下去，最难受的不是那些需要解释的词。\n\n是有些地方根本没有解释，只有很小的提醒。\n\n“他今天月考考砸了，别一上来问分数。”\n“如果他发白桃味那张照片，先笑，不然他会以为你没认出来。”\n“他说晚点再聊，通常不是敷衍，可能是在被家里催洗澡。”\n\n纸上的字有快有慢，像是写的人也在赶着把今天往明天塞。\n\nForewall 看到第三张的时候，把手背压在眼睛上停了很久。\n\n原来她不是在门后面藏着什么。\n\n她是在每天都可能松掉的地方，一点点把他留进去。",
+              "unlockConditions": [
+                "80"
+              ]
+            },
+            {
+              "id": "ch10_file8",
+              "title": "观测日志 10022",
+              "extension": "log",
+              "content": "[2025-06-28 23:58:14] RETENTION.WARN daily merge delay increased\n[2025-06-28 23:58:21] RETENTION.INFO manual note count +1\n[2025-06-28 23:59:03] RETENTION.WARN emotional carryover unstable\n[2025-06-29 00:00:07] RETENTION.INFO identity shell maintained\n[2025-06-29 00:00:12] RETENTION.WARN subject remained awake past boundary",
+              "unlockConditions": [
+                "81"
+              ]
+            },
+            {
+              "id": "ch10_file9",
+              "title": "页边记 10027",
+              "extension": "note",
+              "content": "今天先别来找我。\n\n不是因为不想见他。\n是因为现在这个状态太狼狈了，狼狈到我自己都不想照镜子。\n\n如果他已经看见那些，就让他先看完。\n不要试图抢在他理解之前把事情说圆。\n圆不起来的。",
+              "unlockConditions": [
+                "82"
+              ]
+            },
+            {
+              "id": "ch10_file10",
+              "title": "页稿 10031",
+              "extension": "txt",
+              "content": "夹在那些索引和日志中间的，还有很多更轻的纸。\n\n有一张只写了三行：\n今天他说“那你慢慢习惯”。\n这句别写得像安慰。\n看见的时候会想再看一遍。\n\n另一张更乱，像是写到一半又改了两次：\n如果明天看见这里心里先空一下，也别急着说自己是不是装的。\n今天是真的高兴过。\n\nForewall 把那两页并在一起放，纸面上都是被指尖磨出来的细毛边。\n\n他忽然一句话都说不出来。\n\n前几天他最委屈的地方，在这些字面前显得很轻。\n\n她不是没把那天当回事。\n\n她是连高兴都要提前替明天保住。",
+              "unlockConditions": [
+                "83"
+              ]
+            },
+            {
+              "id": "ch10_file11",
+              "title": "对话记录 10034",
+              "extension": "msg",
+              "content": "Messin: 你现在是不是很难接受\nForewall: 我不知道\nMessin: 你可以怪我\nMessin: 但我没有拿这些骗你\nForewall: 我知道\nForewall: 我现在只是很乱\nMessin: 我也乱了很久\nForewall: 你一直一个人吗\nMessin: 差不多\nForewall: 为什么不早点告诉我\nMessin: 因为我想先被当成一个人去喜欢\nMessin: 不是一个问题，不是一个设定\nMessin: 就只是我\nForewall: 可你为什么觉得告诉我之后你就不是了\nMessin: 因为很多人一知道这个\nMessin: 第一反应就不是看我\nMessin: 是看我的异常",
+              "unlockConditions": [
+                "84"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch11",
+          "title": "有些话一说出口",
+          "levels": [
+            {
+              "id": "85",
+              "title": "第 85 关",
+              "targetFunction": "\\sqrt{e^{x} + a + 1.5}",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "86",
+              "title": "第 86 关",
+              "targetFunction": "a\\left(\\sqrt{1-x^2}\\right) - 3x^2",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "87",
+              "title": "第 87 关",
+              "targetFunction": "\\sqrt{a\\left(3x\\right) + 3}",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "88",
+              "title": "第 88 关",
+              "targetFunction": "\\ln\\left(\\left|e^{\\sqrt{1-x^2}} + a\\right| + 0.5\\right)",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "89",
+              "title": "第 89 关",
+              "targetFunction": "\\frac{e^{\\left(x - 2\\right)} + \\frac{a}{\\left(x - 2\\right)}}{\\left(x - 2\\right) + b}",
+              "params": {
+                "a": -3,
+                "b": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "90",
+              "title": "第 90 关",
+              "targetFunction": "\\left|\\frac{1}{x}\\right| + a + 2x + 0.5e^{-x}",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "91",
+              "title": "第 91 关",
+              "targetFunction": "\\ln\\left(\\left|x^3 + a\\right| + 2\\right) + \\frac{4}{x}",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch11_file1",
+              "title": "段落稿 11001",
+              "extension": "txt",
+              "content": "知道真相后的第二天，Forewall 在课间把水杯拧开又拧上了三次。\n\nMessin 就坐在前面一排，背影和平时没什么两样。她低头翻书时，耳后的碎发还是会滑下来一点。可他看着那点熟悉，胸口反而更乱。\n\n他不是不心疼她。\n只是以前那些顺手就能接住的东西，忽然都变得要先想一下。\n\n铃响以后，前桌把椅子往后一撞，他才发现自己一直没把那句早说出口。\n\n有些害怕不是懂了就能立刻过去。它会先卡在人最舍不得的地方。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch11_file2",
+              "title": "消息存档 11003",
+              "extension": "msg",
+              "content": "Forewall: 你让我当没事一样吗\nMessin: 我没说要你装\nForewall: 可我现在一开口就觉得哪里都不对\nMessin: 那就先别急着说对\nForewall: 我只是有点接不住\nMessin: 我知道\nForewall: 那之前那些呢\nMessin: 你别拿它们跟今天打架\nForewall: 我没有想这样\nMessin: 可你已经在问了\nForewall: ...\nMessin: 先停一下吧",
+              "unlockConditions": [
+                "85"
+              ]
+            },
+            {
+              "id": "ch11_file3",
+              "title": "页稿 11006",
+              "extension": "txt",
+              "content": "那句难听的话发出去以后，聊天框安静得像断了网。\n\nForewall 盯着自己最后一行，想撤回，又知道已经晚了。窗外篮球砸地的声音一下一下传上来，宿舍楼下还有人在笑，他却只觉得手心发空。\n\n他本来不是想把她逼到墙角。\n他只是慌。\n\n可慌这种东西一旦顺着键盘出去，落到对面就只剩伤人。\n\n他坐了很久，最后也没等到那边再发来什么。",
+              "unlockConditions": [
+                "86"
+              ]
+            },
+            {
+              "id": "ch11_file4",
+              "title": "草笺 11008",
+              "extension": "letter",
+              "content": "这封也没寄出去。\n\n我知道你最疼的不是“我不是普通人”这件事。\n是你终于发现，原来你抱了那么久的那些确定感，我从一开始就给不了。\n\n可我也真的不是故意把你骗到这里来的。\n我只是太想先被你当成一个人。",
+              "unlockConditions": [
+                "87"
+              ]
+            },
+            {
+              "id": "ch11_file5",
+              "title": "对话记录 11011",
+              "extension": "msg",
+              "content": "Messin: 这几天先不要联系了\nForewall: Messin\nMessin: 我现在真的不想再解释\nForewall: 我不是那个意思\nMessin: 可我已经听到了\nForewall: 我只是太乱了\nMessin: 我知道\nMessin: 所以那就先到这里吧\nForewall: 你这是要跟我分开吗\nMessin: 我不知道该怎么定义\nMessin: 但现在继续说下去只会更糟\nForewall: 你就这么决定了\nMessin: 不是我一个人决定的\nMessin: 是我们已经走到这里了",
+              "unlockConditions": [
+                "88"
+              ]
+            },
+            {
+              "id": "ch11_file6",
+              "title": "存页 11015",
+              "extension": "txt",
+              "content": "关系断掉后的第一天，放学铃还是照常响。\n\n前桌的人一边收卷子一边抱怨老师又拖堂，后门有人推推搡搡往外挤。Forewall 把手机从桌肚里摸出来，屏幕刚亮，又按灭了。\n\n他本来想发一句很普通的话。\n比如今天热得要命，或者楼下那家面包店又在打折。\n\n手指停在输入框上半天，最后一个字都没打出来。\n\n走到校门口时，便利店的灯白得刺眼。他站在门外看了几秒，还是没进去。\n\n以前这种时候，她多半已经先发消息过来了。",
+              "unlockConditions": [
+                "89"
+              ]
+            },
+            {
+              "id": "ch11_file7",
+              "title": "便笺 11018",
+              "extension": "memo",
+              "content": "不要去找他。\n\n现在去只会像求他原谅。\n也别删记录，删了明天还是会想回去找。\n先把今天撑过去。\n如果半夜还是很想他，就只准看，不准发。",
+              "unlockConditions": [
+                "90"
+              ]
+            },
+            {
+              "id": "ch11_file8",
+              "title": "正文 11022",
+              "extension": "txt",
+              "content": "半夜一点多，Forewall 还是没睡。\n\n桌上的台灯只开了一格，光落在那叠纸边上，照得最上面那张有点发白。他本来只是想随便翻一页，看两眼就收起来，结果一张接一张地看了下去。\n\n“他月考后别先问分。”\n“如果他回得慢，先别往坏处想。”\n“今天那句玩笑记得接，不然他会以为你没认出来。”\n\n有几页写得很急，最后一行都快挤到纸外面了。\n\nForewall 盯着那些字，手指一直压在纸角上，压到指节发白。\n\n窗外很安静，连车声都少。\n\n他到这时才慢慢感觉到，前面那些被自己当成平常的小事，她原来都是这样一点点护过来的。",
+              "unlockConditions": [
+                "91"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch12",
+          "title": "剩下的我陪你接",
+          "levels": [
+            {
+              "id": "92",
+              "title": "第 92 关",
+              "targetFunction": "\\left|\\frac{\\sqrt{1-x^2}}{x + a}\\right| + b + 0.5\\sin\\left(x\\right)",
+              "params": {
+                "a": 0.5,
+                "b": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "93",
+              "title": "第 93 关",
+              "targetFunction": "\\sqrt{x^3 + a} - 1.5e^{-x}",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "94",
+              "title": "第 94 关",
+              "targetFunction": "\\sin\\left(\\ln\\left(\\left|x^2\\right| + a\\right) + b\\right)",
+              "params": {
+                "a": 1,
+                "b": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "95",
+              "title": "第 95 关",
+              "targetFunction": "\\sin\\left(\\frac{\\ln\\left(-1.5x\\right)}{-1.5x + a} + b\\right)",
+              "params": {
+                "a": -2,
+                "b": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "96",
+              "title": "第 96 关",
+              "targetFunction": "\\left(a\\left(\\left|\\frac{1}{x}\\right| - 0.5\\right)\\right) \\cdot \\left(x - 2\\right)",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "97",
+              "title": "第 97 关",
+              "targetFunction": "a\\left(\\cos\\left(x\\right)\\right) - 2 + 4\\sin\\left(x\\right) - 3",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "98",
+              "title": "第 98 关",
+              "targetFunction": "\\frac{a}{\\sin\\left(\\cos\\left(x\\right) - 1\\right)}",
+              "params": {
+                "a": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "99",
+              "title": "第 99 关",
+              "targetFunction": "\\frac{\\sqrt{1-x^2} + \\frac{a}{x}}{x - 1} - 0.5x",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "100",
+              "title": "第 100 关",
+              "targetFunction": "\\sin\\left(\\frac{1}{\\left(x + 1\\right)} + a\\right) + b\\sin\\left(x + 1\\right)",
+              "params": {
+                "a": -1,
+                "b": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "101",
+              "title": "第 101 关",
+              "targetFunction": "\\left|\\sin\\left(\\sin\\left(x\\right) + a\\right) + b\\sin\\left(x\\right)\\right| - 3",
+              "params": {
+                "a": -2,
+                "b": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "102",
+              "title": "第 102 关",
+              "targetFunction": "c\\left(\\left|\\sqrt{1-x^2}\\right) \\cdot \\left(x + a\\right| + b\\right)",
+              "params": {
+                "a": 3,
+                "b": -1,
+                "c": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "103",
+              "title": "第 103 关",
+              "targetFunction": "\\sin\\left(\\tan\\left(x + b\\right) + \\frac{a}{\\left(x + b\\right)} + 0.5\\right)",
+              "params": {
+                "a": 3,
+                "b": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch12_file1",
+              "title": "正文 12001",
+              "extension": "txt",
+              "content": "分开的那几天，Forewall 把 Messin 留下的东西一页页摊在桌上。\n\n有些纸写得很整，像上课前赶着抄好的重点；有些只是一小条，边上还沾着被擦开的墨。最上面那张提醒他月考后别追着问分，下面一张写着那首歌其实一般，但副歌前那一小段可以陪他多听一遍。\n\n再往下翻，连挂件边缘磨白了别再压书底这种事都在。\n\n房间里安静得只剩翻纸声。\n\nForewall 看到一半，忽然把最乱的那几页单独抽出来，重新压平。\n\n他这才慢慢明白，这些东西不是拿来证明她没忘。\n\n是她怕明天一松手，连今天的自己也掉下去。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch12_file2",
+              "title": "归档片段 12003-O",
+              "extension": "dat",
+              "content": "[continuity]\nday = 22\nfactual_retention = high\naffective_retention = unstable\nexternal_anchor = text / object / routine\nnote = 对象不是突然不爱，只是越来越难确认那份心意还能不能顺着今天自然长出来",
+              "unlockConditions": [
+                "92"
+              ]
+            },
+            {
+              "id": "ch12_file3",
+              "title": "片段 12006",
+              "extension": "txt",
+              "content": "Forewall 把那些记录按日期重新排了一遍。\n\n同一天里常常有两种字迹速度。前半页还算稳，写谁说了什么、几点回的消息；后半页就开始急，像怕时间不够，连标点都顾不上补。最常出现的一类不是事实，而是提醒。\n\n“别用道歉开头，他会更难受。”\n“今天说到一半停住，不是故意。”\n“如果一醒来先空，不要拿这个怀疑自己。”\n\nForewall 看着那些被划掉又补上的字，第一次没有急着把自己放回受伤的位置。\n\n那些伤还在。\n\n只是摊开这叠纸以后，他终于看见了她每天要先对付的东西。",
+              "unlockConditions": [
+                "93"
+              ]
+            },
+            {
+              "id": "ch12_file4",
+              "title": "对话记录 12008",
+              "extension": "msg",
+              "content": "Forewall: 今晚下雨了\nMessin: 我知道\nForewall: 你那边也在下？\nMessin: 嗯\nForewall: 记得关窗\nMessin: 好\nForewall: 还有\nForewall: 前几天那句话\nForewall: 对不起\nMessin: 我看到了\nForewall: 不是随便说的那种对不起\nMessin: 我知道\nForewall: 我后来把那些都看完了\nMessin: ......\nMessin: 那你现在应该更不知道怎么面对我了\nForewall: 不是\nForewall: 我只是更知道你之前有多难",
+              "unlockConditions": [
+                "94"
+              ]
+            },
+            {
+              "id": "ch12_file5",
+              "title": "备忘 12011",
+              "extension": "memo",
+              "content": "今天如果见到他，先别急着说“我想起来了”。\n\n想起来和接得上不是一回事。\n先把真实状态告诉他。\n说慢一点也没关系。\n他现在比以前更怕你勉强。",
+              "unlockConditions": [
+                "95"
+              ]
+            },
+            {
+              "id": "ch12_file6",
+              "title": "段落稿 12015",
+              "extension": "txt",
+              "content": "那天晚上，Forewall 把聊天记录往前翻。\n\n翻到很早以前，屏幕上还全是他们没在一起时的废话。谁先洗澡，谁又被广播吓一跳，谁在食堂买到难吃的菜团子。再往上，是她第一次提耳机一人一边，第一次说下个假期也许可以见面，第一次把“以后”两个字打出来又隔了好几秒才补地点。\n\n他盯着那几秒的空白看了很久。\n\n后面跟上的总是一些很小的话：要不要带伞，坐哪班车，人多的话就往里站一点。\n\n那些细节当时看着只像她认真。\n\n现在再翻，才会发现她每次提以后，都像得先把脚下那块地踩实一点。",
+              "unlockConditions": [
+                "96"
+              ]
+            },
+            {
+              "id": "ch12_file7",
+              "title": "窗口记录 12018",
+              "extension": "msg",
+              "content": "Messin: 我有时候还是不知道该怎么跟你说话\nForewall: 那就先说一点\nMessin: 万一我今天又卡住\nForewall: 卡住就换题\nMessin: 你现在怎么总这么会绕\nForewall: 因为我也在学\nMessin: 学什么\nForewall: 学着别一上来就问最难的\nMessin: ......\nForewall: 你先告诉我今天午饭难不难吃\nMessin: 很难吃\nMessin: 青椒还是生的\nForewall: 那这句就先算今天的开头",
+              "unlockConditions": [
+                "97"
+              ]
+            },
+            {
+              "id": "ch12_file8",
+              "title": "页稿 12022",
+              "extension": "txt",
+              "content": "他们重新开始说话以后，聊天框里多了很多停顿。\n\n不是没话说。\n\n是两边都在等，等对方把那句话想好一点，再发出来。\n\n有天晚上 Messin 发来一张拍糊的草稿纸，问他第二步是不是又算错了。Forewall 打了句“你今天状态怎么样”，看了两秒，又删掉，换成“你把上一行也拍我看看”。\n\nMessin 过了一会儿才回，好。\n\n那晚他们就这样一行一行对着题往下看，谁都没提前几天的事。\n\n可等到最后一道题也讲完，Forewall 还是坐在床边盯着那个“好”字看了很久。\n\n有些靠近变慢了，反而更像真的。",
+              "unlockConditions": [
+                "98"
+              ]
+            },
+            {
+              "id": "ch12_file9",
+              "title": "笔记 12027",
+              "extension": "note",
+              "content": "现在还能接得上的几样东西：\n\n纸杯太烫的时候，会记得提醒他换边拿。\n便利店门帘一响，脑子里会先冒出那天的风。\n看见透明挂件，心口会先轻一下。\n他低头写题太久，会想让他先抬眼。",
+              "unlockConditions": [
+                "99"
+              ]
+            },
+            {
+              "id": "ch12_file10",
+              "title": "聊天摘录 12031",
+              "extension": "msg",
+              "content": "Forewall: 你还记得那首歌吗\nMessin: 哪首\nForewall: 你明明只给我分过一首\nMessin: 那个啊\nMessin: 我其实一直没觉得它多好听\nForewall: 我就知道\nMessin: 但副歌前那一小段还行\nForewall: 你以前也是这么说的\nMessin: 那说明有些东西还没坏掉\nForewall: 嗯\nForewall: 我们明天一起从头听一遍吧\nMessin: 好\nMessin: 要是我中途走神了你提醒我",
+              "unlockConditions": [
+                "100"
+              ]
+            },
+            {
+              "id": "ch12_file11",
+              "title": "存页 12034",
+              "extension": "txt",
+              "content": "Forewall 后来还是会忍不住打那句“你今天接得上吗”。\n\n只是每次打完，他都要停一会儿。\n\n有一次停得太久，屏幕自己暗了下去。他在黑掉的屏幕里看见自己，低头把那行字全删了，重新打成：你中午吃了没有。\n\n发出去以后，Messin 很快回了张餐盘照片，青椒切得乱七八糟，边上还有一块她没碰的胡萝卜。\n\nForewall 对着那张图笑了一下。\n\n后面那些更难问的话，还在。\n\n只是他先把它们按住了。",
+              "unlockConditions": [
+                "101"
+              ]
+            },
+            {
+              "id": "ch12_file12",
+              "title": "窗口记录 12038",
+              "extension": "msg",
+              "content": "Messin: 我今天状态一般\nForewall: 那就一般地聊\nMessin: 你现在怎么什么都能说得这么平静\nForewall: 装的\nMessin: 我差点信了\nForewall: 但有一句是真的\nMessin: 什么\nForewall: 今天也算数\nMessin: 就算我明天又接不好？\nForewall: 也算\nMessin: 你这样会让我更舍不得\nForewall: 我本来就没想让你轻易舍得",
+              "unlockConditions": [
+                "102"
+              ]
+            },
+            {
+              "id": "ch12_file13",
+              "title": "正文 12043",
+              "extension": "txt",
+              "content": "重新开始说话以后，他们第一次一起改卷子，是在晚自习后半段。\n\nMessin 把本子推过来，说这题我卡住了。Forewall 接过去，看见她在第二步旁边画了个很小的问号，墨迹还没干。\n\n他没有先提前几天，也没有问她今天状态怎么样，只把草稿纸横过来，给她空出一半位置。\n\nMessin 低头跟着写，写到一半停了两秒，说这里我刚才其实算过一次。\n\nForewall 嗯了一声，说那你再算一遍，我等你。\n\n走廊外有人拖椅子，声音很响。她把那一步重新写完的时候，手背不小心碰到他的笔。\n\n谁都没躲。",
+              "unlockConditions": [
+                "103"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch13",
+          "title": "她一直这样活着",
+          "levels": [
+            {
+              "id": "104",
+              "title": "第 104 关",
+              "targetFunction": "\\frac{-0.5\\left(\\left|\\ln\\left(x\\right)\\right| - 2\\right)}{x + a}",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "105",
+              "title": "第 105 关",
+              "targetFunction": "\\left|\\arcsin\\left(x + a\\right)\\right| + 1 + 4\\sin\\left(x\\right)",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "106",
+              "title": "第 106 关",
+              "targetFunction": "\\arccos\\left(\\left(-1.5x + b\\right) + 3\\right) + a",
+              "params": {
+                "a": 1,
+                "b": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "107",
+              "title": "第 107 关",
+              "targetFunction": "\\left|\\left|\\sin\\left(\\sqrt{1-x^2} + 4\\right)\\right| + x\\right| + a",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "108",
+              "title": "第 108 关",
+              "targetFunction": "\\frac{a}{\\ln\\left(x\\right) + \\frac{-0.5}{x}} + 3",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "109",
+              "title": "第 109 关",
+              "targetFunction": "\\frac{a}{x^2} + 3 + 0.5e^{-x}",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch13_file1",
+              "title": "页稿 13001",
+              "extension": "txt",
+              "content": "越往后翻，纸的颜色就越杂。\n\n有的发黄一点，有的边角被水汽洇开过，像是洗完脸才急着补上。最早那几张甚至没有现在这么会分段，只是一口气往下写：先看第二页，别忘拿钥匙，昨天晚上那个男生叫 Forewall。\n\n再晚一点的记录开始学会压缩，学会把最要紧的放在前面，连措辞都像练熟了。\n\nForewall 把那些页码按顺序排开，桌面很快就占满了一半。\n\n他这才知道，这套交接不是最近才变重的。\n\n她早就靠这个过日子了。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch13_file2",
+              "title": "索引页 13003-P",
+              "extension": "dat",
+              "content": "[archive]\nrecord_03 = 对象很早开始使用纸质记录补足次日空缺\nrecord_07 = 曾主动修正“昨天”和“今天”的边界表述\nrecord_11 = 明确拒绝由外部人员单方面定义后续处理方案\nappendix = “请先把我当一个人看”",
+              "unlockConditions": [
+                "104"
+              ]
+            },
+            {
+              "id": "ch13_file3",
+              "title": "记录稿 13006",
+              "extension": "txt",
+              "content": "看到“多数同类记录”那行字时，Forewall 先去翻最旧的那一摞。\n\n最上面夹着一张被订书钉扎过的便条，字很小：今天的作业在蓝夹子里，别把“昨天”说成“刚刚”。再下面还有一张，提醒明天的自己洗完脸再看第二页，不然会更慌。\n\n这些纸没有一张写得像故事。\n\n它们都很急，很实用，像每天晚上临睡前必须交出去的值日表。\n\nForewall 看着那些年份更早的日期，忽然连呼吸都放轻了。\n\n原来她不是最近才学会跟明天说话。\n\n她已经这样很久了。",
+              "unlockConditions": [
+                "105"
+              ]
+            },
+            {
+              "id": "ch13_file4",
+              "title": "维护日志 13008",
+              "extension": "log",
+              "content": "[2025-07-01 00:02:09] CORE.INFO carry module resumed\n[2025-07-01 00:02:13] CORE.WARN affect drift above routine range\n[2025-07-01 00:02:20] CORE.INFO handwritten fallback kept active\n[2025-07-01 00:02:29] CORE.WARN subject requested no forced correction",
+              "unlockConditions": [
+                "106"
+              ]
+            },
+            {
+              "id": "ch13_file5",
+              "title": "段落稿 13011",
+              "extension": "txt",
+              "content": "Forewall 关掉那几份冷冰冰的日志以后，桌上只剩一封信和一叠纸。\n\n信里还是那句：我想先像普通人一样喜欢你。\n\n他盯着“普通人”三个字看了很久，最后把信折回去，没有马上塞进袋子里。\n\n那些术语能说明很多事，却说明不了她为什么一直把自己收得那么紧，也说明不了她为什么宁可每天跟明天交接，也想先用最普通的样子和他说晚安。\n\n窗外的光落在纸边上，薄薄一层。\n\nForewall 直到这时候才真正碰到那句话的重量。",
+              "unlockConditions": [
+                "107"
+              ]
+            },
+            {
+              "id": "ch13_file6",
+              "title": "信件 13015",
+              "extension": "letter",
+              "content": "如果你看到这封说明，事情大概已经没法继续只用“记性差”来解释了。\n\n我不是突然坏掉。\n我一直就是这样活下来的。\n\n以前不让你看，不是因为觉得你不配知道。\n是因为我想在你先喜欢上我之前，别急着把我缩成一个设定。",
+              "unlockConditions": [
+                "108"
+              ]
+            },
+            {
+              "id": "ch13_file7",
+              "title": "页稿 13018",
+              "extension": "txt",
+              "content": "追到这里以后，Forewall 反而不急着给她找一个利落的名字了。\n\n他把那堆资料分成两边，一边是能说明现在的，一边是以后可能用得上的。放到最后，手边留下的不是定义，而是几页关于处理方案的旧表格、几张没写完的便条，还有她那句别替我先想完。\n\n他盯着桌上那几样东西看了很久。\n\n接下来的难处已经不在“她到底是什么”。\n\n而在他们要怎么把明天继续往外过。",
+              "unlockConditions": [
+                "109"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch14",
+          "title": "今天先认出今天",
+          "levels": [
+            {
+              "id": "110",
+              "title": "第 110 关",
+              "targetFunction": "\\frac{-2}{\\left|\\cos\\left(x\\right)\\right| + a + 2}",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "111",
+              "title": "第 111 关",
+              "targetFunction": "\\sin\\left(\\arcsin\\left(x\\right) + a\\right) + 0.5e^{-x}",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "112",
+              "title": "第 112 关",
+              "targetFunction": "\\frac{\\cosh\\left(x + a\\right)}{x - 3} + 0.5x",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "113",
+              "title": "第 113 关",
+              "targetFunction": "\\frac{3}{\\operatorname{artanh}\\left(x\\right)} + \\frac{a}{x} - 2",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "114",
+              "title": "第 114 关",
+              "targetFunction": "\\frac{\\left|x + a\\right| - 0.5e^{-x}}{x - 0.5}",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "115",
+              "title": "第 115 关",
+              "targetFunction": "\\left(\\ln\\left(\\left|\\arccos\\left(x\\right)\\right| + a\\right) + 3\\right) \\cdot \\left(x - 1.5\\right)",
+              "params": {
+                "a": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "116",
+              "title": "第 116 关",
+              "targetFunction": "\\sqrt{\\sin\\left(\\cos\\left(x\\right) + a\\right) + b\\sin\\left(x\\right) + 4}",
+              "params": {
+                "a": -1,
+                "b": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch14_file1",
+              "title": "片段 14001",
+              "extension": "txt",
+              "content": "后来他们真的试了几个固定的小习惯。\n\n早上的第一句不用长，谁先醒谁发。晚一点如果都忙，就在中午补一个吃了没。晚上作业写到头大时，再丢一句今天数学是不是也有病。\n\n听上去一点都不浪漫，像两个人拿着铅笔在日历边上慢慢描线。\n\n可有天 Forewall 晚了十分钟才回，Messin 还是把那句“你是不是又被拖堂了”发来了。\n\n他看着屏幕，心里忽然松了一下。\n\n原来有些东西不用说得很重，也能把一天先接住。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch14_file2",
+              "title": "对话记录 14003",
+              "extension": "msg",
+              "content": "Forewall: 早\nMessin: 早\nForewall: 今天先认出今天\nMessin: 你怎么把这句弄得像口令\nForewall: 口令也行\nForewall: 反正你一看到就知道是我\nMessin: 我本来也知道是你\nForewall: 那就双重确认\nMessin: 好吧\nMessin: 今天先认出今天\nForewall: 嗯\nForewall: 晚点我再来找你",
+              "unlockConditions": [
+                "110"
+              ]
+            },
+            {
+              "id": "ch14_file3",
+              "title": "笔记 14006",
+              "extension": "note",
+              "content": "现在能用的固定点：\n\n见面先看手，不先看脸。\n他说“我在这”的时候，先回一句“我知道”。\n不对着旧文件表演旧语气。\n如果今天接不上，就直接说，不要拖到晚上。",
+              "unlockConditions": [
+                "111"
+              ]
+            },
+            {
+              "id": "ch14_file4",
+              "title": "段落稿 14008",
+              "extension": "txt",
+              "content": "有一小段时间，他们过得几乎像真的平静下来了。\n\nMessin 状态好的时候，会在聊天里自己接上昨天提过的话。Forewall 也慢慢学会不被每一次细小的卡顿吓到。他们甚至还能像以前那样为一首歌到底好不好听争几句，争到最后谁也说服不了谁，气氛却很轻。\n\n那几天像从很长的雨季里借来的一点晴。\n\n珍贵得让人不敢太大声。",
+              "unlockConditions": [
+                "112"
+              ]
+            },
+            {
+              "id": "ch14_file5",
+              "title": "窗口记录 14011",
+              "extension": "msg",
+              "content": "Messin: 我今天下午有一段又空掉了\nForewall: 空在什么时候\nMessin: 打扫完卫生以后\nMessin: 我明明记得拿了桶\nForewall: 那后来呢\nMessin: 后来就看见你在门口等\nForewall: 那也不算太坏\nMessin: 你现在安慰人都好像在写值日总结\nForewall: 我本来想说得更像人一点\nMessin: 失败了\nForewall: 但我还在门口\nMessin: 这个我知道",
+              "unlockConditions": [
+                "113"
+              ]
+            },
+            {
+              "id": "ch14_file6",
+              "title": "页稿 14015",
+              "extension": "txt",
+              "content": "晚自习收卷的时候，Messin 把卷子递出去，又在半空里停了一下。\n\n她明明知道前桌是谁，也知道自己刚才算到哪一步，可那一下停顿还是像有人把线头压住了。等她重新把手伸出去，监考老师已经在催下一排。\n\nForewall 坐在斜后面，看见她低头把笔帽扣了两次才扣上。\n\n下课以后她走得很慢，像在等心里什么东西自己回位。\n\n这种失手不吵，也不大。\n\n可越轻，越让人没地方躲。",
+              "unlockConditions": [
+                "114"
+              ]
+            },
+            {
+              "id": "ch14_file7",
+              "title": "备忘 14018",
+              "extension": "memo",
+              "content": "给明天。\n\n今天如果还是空一截，也别装。\n直接告诉他：我今天有点晚才认出来。\n他会难受，但比你硬撑着演以前的样子好多了。\n另外，糖在书包侧袋，别忘。",
+              "unlockConditions": [
+                "115"
+              ]
+            },
+            {
+              "id": "ch14_file8",
+              "title": "记录稿 14022",
+              "extension": "txt",
+              "content": "那天夜里没有风，窗帘垂着，窗外连树影都不怎么动。\n\nMessin 很久没发消息。\n\nForewall 盯着对话框，看见上面那行“对方正在输入”亮了又灭，灭了又亮，最后只等来一句：我有点怕。\n\n他把“别怕”打出来，又删掉。\n\n过了会儿，才回：我也是。\n\nMessin 没立刻接。\n\n直到两分钟后，才又发来一条：那你先别关手机。\n\nForewall 回了个好，之后谁都没再说别的。\n\n可那晚他们都知道，有些事已经快走到门口了。",
+              "unlockConditions": [
+                "116"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch15",
+          "title": "在灯灭以前",
+          "levels": [
+            {
+              "id": "117",
+              "title": "第 117 关",
+              "targetFunction": "a\\left(\\sin\\left(2x\\right)\\right)",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "118",
+              "title": "第 118 关",
+              "targetFunction": "\\left(\\cos\\left(x\\right)\\right) \\cdot \\left(x + a\\right)",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "119",
+              "title": "第 119 关",
+              "targetFunction": "\\frac{a\\left(\\tan\\left(x\\right)\\right)}{x + 4}",
+              "params": {
+                "a": -1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "120",
+              "title": "第 120 关",
+              "targetFunction": "\\left|a\\left(\\sin\\left(x\\right)\\right)\\right| + x",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "121",
+              "title": "第 121 关",
+              "targetFunction": "\\left(\\sinh\\left(x\\right)\\right) \\cdot \\left(x + a\\right)",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "122",
+              "title": "第 122 关",
+              "targetFunction": "e^{x} + 0.5 + a",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "123",
+              "title": "第 123 关",
+              "targetFunction": "\\frac{a\\left(\\sinh\\left(x\\right)\\right)}{x + b}",
+              "params": {
+                "a": 1.5,
+                "b": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "124",
+              "title": "第 124 关",
+              "targetFunction": "\\left|\\sqrt{1-\\left(x - 1\\right)^2} + a\\right| + 0.5\\left(x - 1\\right)",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "125",
+              "title": "第 125 关",
+              "targetFunction": "\\ln\\left(\\left|\\frac{1}{x} + a\\right| + 1\\right)",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "126",
+              "title": "第 126 关",
+              "targetFunction": "\\left|\\frac{1}{x^2+1}\\right| + a - 2x",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "127",
+              "title": "第 127 关",
+              "targetFunction": "\\sqrt{\\tanh\\left(x\\right) + a\\sin\\left(x\\right) + 4}",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "128",
+              "title": "第 128 关",
+              "targetFunction": "\\sqrt{\\left|x\\right| + 1 + a}",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "129",
+              "title": "第 129 关",
+              "targetFunction": "\\sin\\left(\\ln\\left(x\\right) + \\frac{a}{x} + b\\right)",
+              "params": {
+                "a": -2,
+                "b": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "130",
+              "title": "第 130 关",
+              "targetFunction": "\\frac{-2}{a\\left(\\tan\\left(x\\right)\\right)}",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "131",
+              "title": "第 131 关",
+              "targetFunction": "0.5\\left(\\sinh\\left(x\\right) - 0.5x\\right) + a",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "132",
+              "title": "第 132 关",
+              "targetFunction": "\\frac{b}{e^{x} + a\\sin\\left(x\\right)}",
+              "params": {
+                "a": -1,
+                "b": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "133",
+              "title": "第 133 关",
+              "targetFunction": "e^{\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x - 0.5\\right)} + a",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "134",
+              "title": "第 134 关",
+              "targetFunction": "b\\left(\\sin\\left(\\left|\\ln\\left(x\\right)\\right| + 2 + a\\right)\\right)",
+              "params": {
+                "a": -1,
+                "b": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "135",
+              "title": "第 135 关",
+              "targetFunction": "\\frac{b}{\\sin\\left(e^{x} + a\\right)}",
+              "params": {
+                "a": -1,
+                "b": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "136",
+              "title": "第 136 关",
+              "targetFunction": "\\sin\\left(\\left(\\left|x\\right|\\right) \\cdot \\left(x + a\\right) - 3\\right)",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "137",
+              "title": "第 137 关",
+              "targetFunction": "\\ln\\left(\\left|\\sqrt{\\operatorname{arsinh}\\left(x\\right) + a}\\right| + 0.5\\right)",
+              "params": {
+                "a": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "138",
+              "title": "第 138 关",
+              "targetFunction": "\\left|\\sin\\left(\\frac{x^2}{x + a} - 3\\right)\\right| + 3",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "139",
+              "title": "第 139 关",
+              "targetFunction": "e^{3\\left(\\sqrt{1-x^2} + a\\sin\\left(x\\right)\\right)} + 3",
+              "params": {
+                "a": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "140",
+              "title": "第 140 关",
+              "targetFunction": "\\sqrt{\\ln\\left(x\\right) + \\frac{-3}{x} + 2 + a}",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "141",
+              "title": "第 141 关",
+              "targetFunction": "\\ln\\left(\\left|\\frac{x^2}{x + a}\\right| + b\\right) + c",
+              "params": {
+                "a": 0.5,
+                "b": 0.5,
+                "c": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "142",
+              "title": "第 142 关",
+              "targetFunction": "\\frac{1}{x} + a - 2e^{-x} + 0.5x",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "143",
+              "title": "第 143 关",
+              "targetFunction": "\\left|\\ln\\left(\\left|\\cosh\\left(x\\right) + 0.5x\\right| + 0.5\\right)\\right| + a",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "144",
+              "title": "第 144 关",
+              "targetFunction": "\\left|\\ln\\left(\\left|e^{x}\\right| + a\\right)\\right| + b + \\frac{-1}{x}",
+              "params": {
+                "a": 3,
+                "b": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "145",
+              "title": "第 145 关",
+              "targetFunction": "\\left|\\ln\\left(\\left|\\arctan\\left(x\\right)\\right| + a\\right) + \\frac{3}{x}\\right| + 2",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "146",
+              "title": "第 146 关",
+              "targetFunction": "\\left|x + 1\\right| - 2\\left(x + 1\\right) + a - 0.5\\sin\\left(x\\right)",
+              "params": {
+                "a": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "147",
+              "title": "第 147 关",
+              "targetFunction": "\\left|\\arctan\\left(\\left(x + 1\\right) + a\\right)\\right| - 2 + 3x",
+              "params": {
+                "a": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "148",
+              "title": "第 148 关",
+              "targetFunction": "\\left|\\ln\\left(\\left|\\left|\\frac{1}{x^2+1}\\right| - 2x\\right| + a\\right)\\right| + b + 1",
+              "params": {
+                "a": 1.5,
+                "b": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "149",
+              "title": "第 149 关",
+              "targetFunction": "\\frac{e^{\\operatorname{arsinh}\\left(x\\right)} + a}{x + b} + 0.5e^{-x}",
+              "params": {
+                "a": 2,
+                "b": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "150",
+              "title": "第 150 关",
+              "targetFunction": "\\sqrt{\\frac{a}{\\left|1.5x\\right|} + 0.5} + b",
+              "params": {
+                "a": -1,
+                "b": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "151",
+              "title": "第 151 关",
+              "targetFunction": "\\left(\\frac{x^2 + \\frac{a}{x}}{x - 0.5}\\right) \\cdot \\left(x - 0.5\\right)",
+              "params": {
+                "a": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "152",
+              "title": "第 152 关",
+              "targetFunction": "\\left(e^{\\arctan\\left(x\\right) + \\frac{4}{x}} + a\\right) \\cdot \\left(x - 0.5\\right)",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "153",
+              "title": "第 153 关",
+              "targetFunction": "a\\left(\\ln\\left(x\\right)\\right) + \\frac{3}{x} - 0.5\\sin\\left(x\\right) + 0.5x",
+              "params": {
+                "a": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "154",
+              "title": "第 154 关",
+              "targetFunction": "e^{\\ln\\left(\\left|\\left|\\frac{1}{x^2+1}\\right| + a\\right| + 3\\right) + b} + c",
+              "params": {
+                "a": 4,
+                "b": 2,
+                "c": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "155",
+              "title": "第 155 关",
+              "targetFunction": "\\ln\\left(\\left|\\frac{b}{\\frac{\\tan\\left(x\\right)}{x + a}}\\right| + 1.5\\right)",
+              "params": {
+                "a": -1,
+                "b": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "156",
+              "title": "第 156 关",
+              "targetFunction": "\\left|e^{-1.5x} + a\\right| - -1.5x - 1.5e^{--1.5x} + 4",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "157",
+              "title": "第 157 关",
+              "targetFunction": "\\sqrt{\\left|e^{\\left(x + b\\right)} + \\frac{a}{\\left(x + b\\right)}\\right| - 3\\left(x + b\\right) + 2}",
+              "params": {
+                "a": -1,
+                "b": -3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "158",
+              "title": "第 158 关",
+              "targetFunction": "\\frac{e^{\\sin\\left(\\arccos\\left(x\\right) + a\\right)} + 2}{x + 0.5} + 0.5x",
+              "params": {
+                "a": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "159",
+              "title": "第 159 关",
+              "targetFunction": "\\sqrt{\\ln\\left(\\left|e^{x} - 1\\right| + a\\right) + b} + 0.5x",
+              "params": {
+                "a": 3,
+                "b": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "160",
+              "title": "第 160 关",
+              "targetFunction": "\\left|\\operatorname{artanh}\\left(\\left(x + b\\right) + a\\right) + 3e^{-\\left(\\left(x + b\\right) + a\\right)} + 0.5\\right| + 2\\left(x + b\\right)",
+              "params": {
+                "a": 1,
+                "b": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "161",
+              "title": "第 161 关",
+              "targetFunction": "\\ln\\left(\\left|\\cos\\left(x + 3\\right) - 2\\left(x + 3\\right)^2\\right| + a\\right) + b",
+              "params": {
+                "a": 2,
+                "b": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "162",
+              "title": "第 162 关",
+              "targetFunction": "-0.5\\left(\\sqrt{\\sin\\left(x\\right) + 3} - 3 + 1.5x + a\\sin\\left(x\\right)\\right)",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "163",
+              "title": "第 163 关",
+              "targetFunction": "\\frac{-1}{e^{\\frac{1}{x^2+1} + 2\\sin\\left(x\\right) - 1.5x} + a}",
+              "params": {
+                "a": 1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "164",
+              "title": "第 164 关",
+              "targetFunction": "-0.5\\left(\\frac{\\ln\\left(\\left|\\operatorname{artanh}\\left(0.5\\left(x + 3\\right)\\right)\\right| + a\\right)}{\\left(x + 3\\right) - 1}\\right)",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "165",
+              "title": "第 165 关",
+              "targetFunction": "\\ln\\left(\\left|\\sqrt{1-\\left(x + 1\\right)^2} + \\frac{a}{\\left(x + 1\\right)} + 0.5x\\right| + b\\right)",
+              "params": {
+                "a": -0.5,
+                "b": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "166",
+              "title": "第 166 关",
+              "targetFunction": "\\sqrt{\\sin\\left(e^{\\left(\\left(x - 3\\right) + a\\right)} + 1\\sin\\left(x\\right) - 2\\right) + 4}",
+              "params": {
+                "a": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "167",
+              "title": "第 167 关",
+              "targetFunction": "\\frac{b}{\\operatorname{artanh}\\left(x\\right) + \\frac{a}{x}} - 2 + 3e^{-x}",
+              "params": {
+                "a": 0.5,
+                "b": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "168",
+              "title": "第 168 关",
+              "targetFunction": "\\left|\\ln\\left(\\left|-2\\left(\\left|\\left(x + c\\right) + a\\right|\\right)\\right| + b\\right)\\right| + 2",
+              "params": {
+                "a": 2,
+                "b": 1.5,
+                "c": 0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "ch15_file1",
+              "title": "记录稿 15001",
+              "extension": "txt",
+              "content": "进入终章以后，先变的不是答案，是呼吸。\n\nMessin 说话还是轻，回消息还是会先顾着别人，可有些瞬间已经能明显感觉到她慢半拍。不是没认出来，是像心里那条原本会自己接上的线，要先摸一会儿才能碰到。",
+              "unlockConditions": []
+            },
+            {
+              "id": "ch15_file2",
+              "title": "聊天摘录 15003",
+              "extension": "msg",
+              "content": "Messin: 你今天叫我的时候\nForewall: 嗯\nMessin: 我知道是你\nMessin: 但还是空了一下\nForewall: 很久吗\nMessin: 也没有\nMessin: 就那一下最吓人",
+              "unlockConditions": [
+                "117"
+              ]
+            },
+            {
+              "id": "ch15_file3",
+              "title": "手记 15006",
+              "extension": "note",
+              "content": "她刚才先看了我胸前校牌，才抬头。\n\n以前不是这样的。\n以前她会先看眼睛，然后笑。\n我不该记这种细节。\n可还是记住了。",
+              "unlockConditions": [
+                "118"
+              ]
+            },
+            {
+              "id": "ch15_file4",
+              "title": "正文 15008",
+              "extension": "txt",
+              "content": "Messin 开始不太敢翻旧文件。\n\n她不是不相信里面写的东西。她只是越来越常有一种很坏的感觉：那些字都认得，连当时发生的场景也大致能拼出来，可真正属于那个时刻的心跳，好像隔着一层玻璃。",
+              "unlockConditions": [
+                "119"
+              ]
+            },
+            {
+              "id": "ch15_file5",
+              "title": "留存便条 15011",
+              "extension": "memo",
+              "content": "今天不要照着旧文件演。\n\n如果没接上，就承认。\n如果只是知道，不要假装那就是喜欢。\n他现在最怕的不是空白，是看见我装得很像。",
+              "unlockConditions": [
+                "120"
+              ]
+            },
+            {
+              "id": "ch15_file6",
+              "title": "观测日志 15015",
+              "extension": "log",
+              "content": "[2025-07-03 23:58:41] OVERRIDE.WARN affective mismatch increased\n[2025-07-03 23:58:52] OVERRIDE.INFO factual continuity preserved\n[2025-07-04 00:00:02] OVERRIDE.WARN anchor response unstable",
+              "unlockConditions": [
+                "121"
+              ]
+            },
+            {
+              "id": "ch15_file7",
+              "title": "记录稿 15018",
+              "extension": "txt",
+              "content": "他们在走廊尽头碰面的时候，Messin 先是像往常一样想笑，笑意却在嘴角停了一下。\n\n那一下很短，短得旁人根本不会注意。可 Forewall 看见了。他突然明白，真正可怕的不是忘记，而是连靠近都开始要预备动作。",
+              "unlockConditions": [
+                "122"
+              ]
+            },
+            {
+              "id": "ch15_file8",
+              "title": "消息存档 15022",
+              "extension": "msg",
+              "content": "Forewall: 我把以前那些都整理出来了\nMessin: 你先别拿给我看\nForewall: 好\nMessin: 不是不想看\nMessin: 是我怕看完只剩下知道",
+              "unlockConditions": [
+                "123"
+              ]
+            },
+            {
+              "id": "ch15_file9",
+              "title": "短笺 15027",
+              "extension": "note",
+              "content": "她把那天的细节说得很全。\n\n哪家店门口堆着水箱，谁先把瓶盖拧开，站牌顶上那张小广告歪向哪边。说到一半，Messin 还抬手比了一下那天水瓶拿在手里的高度。\n\nForewall 一直听着，没有打断。\n\n等她说完，她自己也安静了两秒，像是在等某个本该顺着这些细节一起回来的东西。\n\n可什么都没跟上来。\n\n她最后只把手放下，低声说了一句：我知道是那天。\n\nForewall 嗯了一声，喉咙却有点发紧。",
+              "unlockConditions": [
+                "124"
+              ]
+            },
+            {
+              "id": "ch15_file10",
+              "title": "正文 15031",
+              "extension": "txt",
+              "content": "那天晚上，Forewall 把聊天框往前翻了很久。\n\n翻到见面那天时，他看见自己发过去的那句“你回家慢点”，也看见她回的“我刚把鞋换掉”。这些字都还在，时间也对，表情符号都没少。\n\n可他盯着屏幕看了一会儿，忽然明白 Messin 说的“只剩知道”是什么意思。\n\n所有东西都摆得出来。\n\n只是摆出来以后，房间里还是太安静了。",
+              "unlockConditions": [
+                "125"
+              ]
+            },
+            {
+              "id": "ch15_file11",
+              "title": "归档片段 15034-A",
+              "extension": "dat",
+              "content": "[snapshot]\n桌面左侧 = 透明挂件\n抽屉第二层 = 纸质接续记录 43 份\n当前状态 = 事实保留高 / 体感接续下降\n备注 = 对象明确拒绝被单方决定后续处理",
+              "unlockConditions": [
+                "126"
+              ]
+            },
+            {
+              "id": "ch15_file12",
+              "title": "片段 15038",
+              "extension": "txt",
+              "content": "那份处理方案摊在桌上，纸边压着半杯早就凉掉的水。\n\nMessin 用笔帽点了两下“近期脆弱层可能无法完整继承”，没有再往下念。Forewall 坐在她对面，手还扶着那张纸，像怕一松开它就会自己滑走。\n\n窗外有人在走廊跑过去，声音很快就散了。\n\n他们谁都没有先说“怎么办”。\n\n可房间里已经只剩这一个问题了。",
+              "unlockConditions": [
+                "127"
+              ]
+            },
+            {
+              "id": "ch15_file13",
+              "title": "消息存档 15043",
+              "extension": "msg",
+              "content": "Messin: 你看过那个方案了吗\nForewall: 看了\nMessin: 你是不是觉得应该做\nForewall: 我还在想\nMessin: 我最怕的就是别人替我先想完",
+              "unlockConditions": [
+                "128"
+              ]
+            },
+            {
+              "id": "ch15_file14",
+              "title": "数据页 15047-D",
+              "extension": "dat",
+              "content": "[candidate]\n方案 = 深层修复与重建\n目标 = 提高连续性，降低日间损耗\n风险 = 近期脆弱层可能无法完整继承\n说明 = 稳定性提升，不保证保留最近共同经历的情感权重",
+              "unlockConditions": [
+                "129"
+              ]
+            },
+            {
+              "id": "ch15_file15",
+              "title": "段落稿 15052",
+              "extension": "txt",
+              "content": "她问那句“如果修好了那还是我吗”的时候，房间里只开了一盏小台灯。\n\n桌上水杯边缘有一道白印，像放久了的圈。Forewall 看着那道印子，半天没能把“会”或者“不会”说出口。因为他第一次发现，这道题根本没有哪边像正确答案。",
+              "unlockConditions": [
+                "130"
+              ]
+            },
+            {
+              "id": "ch15_file16",
+              "title": "对话记录 15058",
+              "extension": "msg",
+              "content": "Forewall: 我只是不想看着你继续变差\nMessin: 我知道\nMessin: 但你别替我决定\nForewall: 我没有想替你做完\nMessin: 你有一点",
+              "unlockConditions": [
+                "131"
+              ]
+            },
+            {
+              "id": "ch15_file17",
+              "title": "短笺 15063",
+              "extension": "note",
+              "content": "划掉。\n\n“修好”\n“留下”\n“更稳”\n\n这些词写在纸上都很好听。\n真落到她身上的时候，一个比一个难看。",
+              "unlockConditions": [
+                "132"
+              ]
+            },
+            {
+              "id": "ch15_file18",
+              "title": "片段 15067",
+              "extension": "txt",
+              "content": "做决定前那几天，他们不怎么争了。\n\n晚自习结束以后，Messin 会把椅子慢慢推进去，Forewall 在一边替她按住翘起来的课本角。两个人都知道有话没说完，却谁也没再把声音提起来。\n\n有一次她把橡皮落在桌缝里，Forewall 伸手替她抠出来，手背蹭了一层粉。\n\nMessin 看着那点灰，说你先别擦。\n\n他问为什么。\n\n她说，不然我又会觉得刚才这一下像没发生过。",
+              "unlockConditions": [
+                "133"
+              ]
+            },
+            {
+              "id": "ch15_file19",
+              "title": "便笺 15072",
+              "extension": "memo",
+              "content": "给现在的自己。\n\n你可以怕。\n也可以舍不得。\n不用装得很体面。\n这不是在输，这是事情本来就疼。",
+              "unlockConditions": [
+                "134"
+              ]
+            },
+            {
+              "id": "ch15_file20",
+              "title": "存页 15079",
+              "extension": "txt",
+              "content": "知道方案不是空话以后，他们反而把很多普通事做得很慢。\n\n一张卷子改两节课，一杯热水放凉了也没急着换，Messin 写错一个公式会自己停下来改两遍，Forewall 就坐在旁边等。\n\n有天晚上教室快熄灯了，谁都没收书。\n\n楼下广播在放明天的值日安排，声音断断续续飘上来。Messin 低头把笔帽扣好，又打开，过了一会儿才说：我们今天居然还坐到现在。\n\nForewall 说，嗯。\n\n他没有接别的。\n\n可那一句里已经有很多舍不得了。",
+              "unlockConditions": [
+                "135"
+              ]
+            },
+            {
+              "id": "ch15_file21",
+              "title": "对话记录 15084",
+              "extension": "msg",
+              "content": "Messin: 今天不装正常了\nForewall: 好\nMessin: 我很怕\nForewall: 我知道\nMessin: 也很舍不得\nForewall: 我也是",
+              "unlockConditions": [
+                "136"
+              ]
+            },
+            {
+              "id": "ch15_file22",
+              "title": "正文 15088",
+              "extension": "txt",
+              "content": "做决定前，他们又去了一趟学校外面的文具店。\n\n本来也没想买什么，只是 Messin 说黑笔快没墨了。柜台旁边挂着一排圆规和胶带，塑料包装碰在一起，会发出很轻的脆声。\n\nMessin 低头挑了很久，最后只拿了一盒 0.38 的笔芯。Forewall 替她把零钱摊平，她接回去的时候指尖还是凉的。\n\n店员找零慢，他们就并排站在那儿等。玻璃门一开一合，门上的铃铛总是晚半拍才响。\n\n谁都没提方案。\n\n可临出门时，Messin 还是把那盒笔芯塞进他手里，让他先替自己拿着。",
+              "unlockConditions": [
+                "137"
+              ]
+            },
+            {
+              "id": "ch15_file23",
+              "title": "消费小票 18:42",
+              "extension": "note",
+              "content": "小票上写着 18:42。\n常温水一瓶，薄荷糖一条。\n她把零钱收回去的时候，动作和以前一模一样。\n我看了很久，差点就以为一切都还来得及。",
+              "unlockConditions": [
+                "138"
+              ]
+            },
+            {
+              "id": "ch15_file24",
+              "title": "临时备忘 15099",
+              "extension": "memo",
+              "content": "给可能存在的明天。\n\n如果你看见这个，说明我们没有跳过这段路。\n是我和他一起走完的。\n挂件留下。\n不用替我抱歉。",
+              "unlockConditions": [
+                "139"
+              ]
+            },
+            {
+              "id": "ch15_file25",
+              "title": "对话备份 15104",
+              "extension": "msg",
+              "content": "Forewall: 你如果想改主意也可以\nMessin: 我知道\nMessin: 但别把这段省掉\nForewall: 哪段\nMessin: 就是我们现在一起面对的这段",
+              "unlockConditions": [
+                "140"
+              ]
+            },
+            {
+              "id": "ch15_file26",
+              "title": "存页 15109",
+              "extension": "txt",
+              "content": "真正把选择往前推的，不是哪一句很重的话。\n\n而是有天 Messin 写题写到一半，忽然把笔放下，说等一下。\n\n她盯着草稿纸看了很久，像在认上面自己的字。Forewall 没催，只把桌上的台灯往她那边拧了一点。\n\n过了一会儿，Messin 把那页草稿折起来，说我不想以后每天都这样认。\n\nForewall 的手停在书页边上，没有立刻接话。\n\n她抬头看他，又补了一句：也不想最后只剩你在替我认。\n\n房间里很安静。\n\n这次轮到他先点头。",
+              "unlockConditions": [
+                "141"
+              ]
+            },
+            {
+              "id": "ch15_file27",
+              "title": "通话转写 15115",
+              "extension": "trans",
+              "content": "Messin: 你再问我一次吧。\nForewall: 现在停下也还来得及。\nMessin: 我知道。\nMessin: 但我还是想选这个。\nForewall: 那这次是我们一起选的。\nMessin: 嗯，一起。",
+              "unlockConditions": [
+                "142"
+              ]
+            },
+            {
+              "id": "ch15_file28",
+              "title": "正文 15121",
+              "extension": "txt",
+              "content": "开始处理之前，房间里安静得只剩风扇声。\n\nMessin 没有再硬撑着笑，Forewall 也没说什么“会好的”。那种话到了这里都太轻了。他只是坐在她旁边，把她冰凉的手握住了一会儿，谁都没先松。",
+              "unlockConditions": [
+                "143"
+              ]
+            },
+            {
+              "id": "ch15_file29",
+              "title": "维护日志 15126",
+              "extension": "log",
+              "content": "[2025-07-12 20:11:03] REPAIR.INIT authorized by shared confirmation\n[2025-07-12 20:11:09] REPAIR.INFO continuity rebuild started\n[2025-07-12 20:11:32] REPAIR.WARN recent fragile-layer inheritance not guaranteed\n[2025-07-12 20:13:44] REPAIR.END core reconstruction complete",
+              "unlockConditions": [
+                "144"
+              ]
+            },
+            {
+              "id": "ch15_file30",
+              "title": "片段 15132",
+              "extension": "txt",
+              "content": "门慢慢合上的时候，Messin 没有立刻躺好，只是隔着那点缝看着他。\n\n灯光从门里漏出来，把她半边睫毛照得很清。她像是本来想说长一点的话，开口时却只剩一句：之后要是有哪里不一样，你先别急着难过。\n\nForewall 站在门外，手还扶着门框。\n\n他喉咙发紧，最后只嗯了一声。\n\n门完全合上前，Messin 还是先朝他笑了一下。",
+              "unlockConditions": [
+                "145"
+              ]
+            },
+            {
+              "id": "ch15_file31",
+              "title": "归档片段 15139-U",
+              "extension": "dat",
+              "content": "[rebuild_result]\nbasic_continuity = stable\nidentity_recognition = stable\nrecent_fragile_layer = partial\nanchor_object = transparent_charm retained\naffect_mapping = reconstructed_with_loss",
+              "unlockConditions": [
+                "146"
+              ]
+            },
+            {
+              "id": "ch15_file32",
+              "title": "存页 15145",
+              "extension": "txt",
+              "content": "处理结束后，房间里先响起来的是风扇声。\n\nMessin 睁眼的时候，视线从天花板慢慢滑到桌边那杯没动过的水，又停在 Forewall 握着门卡的手上。她看了那只手两秒，像是在认。\n\nForewall 没敢先说太多，只叫了一声她的名字。\n\nMessin 抬起眼，答得很轻，像刚醒的人在试自己的声音。\n\n那一瞬间他就知道，有些东西回来了，有些没有。\n\n不是靠想明白。\n\n是她看向自己的那一下，已经和之前不一样。",
+              "unlockConditions": [
+                "147"
+              ]
+            },
+            {
+              "id": "ch15_file33",
+              "title": "短笺 15150",
+              "extension": "note",
+              "content": "她先看见了我。\n但没有先看挂件。\n\n以前她不会这样的。\n以前那个东西总要先被她拿来嫌一句。",
+              "unlockConditions": [
+                "148"
+              ]
+            },
+            {
+              "id": "ch15_file34",
+              "title": "正文 15156",
+              "extension": "txt",
+              "content": "聊天框里那句“你还记不记得那天我先说了什么”停了很久。\n\nForewall 把光标移到句尾，又退回去，把“那天”删成“今天”，最后整句清空。\n\nMessin 那边正好发来一张作业纸角落，拍糊了，只看得清一道划掉的选择题。\n\n他最后回的是：你回家路上慢点。",
+              "unlockConditions": [
+                "149"
+              ]
+            },
+            {
+              "id": "ch15_file35",
+              "title": "对话备份 15163",
+              "extension": "msg",
+              "content": "Forewall: 到家了吗\nMessin: 还没\nForewall: 那我先练习一下\nMessin: 练什么\nForewall: 今天开场别太像陌生人\nMessin: 那你先来\nForewall: 你作业是不是又塞最下面\nMessin: ...你怎么知道\nForewall: 猜的\nMessin: 比“你好”强一点",
+              "unlockConditions": [
+                "150"
+              ]
+            },
+            {
+              "id": "ch15_file36",
+              "title": "片段 15169",
+              "extension": "txt",
+              "content": "他们后来第一回在食堂门口站住的时候，两个人都多等了半秒。\n\nMessin 先问他要不要买热的，声音很轻，像在试这个距离会不会太近。Forewall 说都行，她又改口，说那还是你挑。\n\n排队的人一直往前拱，他听见她把书包肩带往上提了一下。那动作和以前一样，可接下来的安静不一样。\n\n以前她会顺着往下说，嫌学校热饮太甜，嫌纸杯薄得烫手。现在她只是站在旁边，认真等他选完。",
+              "unlockConditions": [
+                "151"
+              ]
+            },
+            {
+              "id": "ch15_file37",
+              "title": "留存便条 15174",
+              "extension": "memo",
+              "content": "醒来先看一眼房间右边。\n\n窗边那盆快死的绿萝还在。\n校服外套挂在椅背。\n桌角压着公交卡。\nForewall 说话之前会先看我一眼。\n\n不用急着接全部。先把门打开。",
+              "unlockConditions": [
+                "152"
+              ]
+            },
+            {
+              "id": "ch15_file38",
+              "title": "存页 15181",
+              "extension": "txt",
+              "content": "图书馆还书口前面总有人排歪队。\n\n那天下午轮到 Messin 的时候，她把书、借阅单、校园卡一股脑递给了管理员，递完才发现校园卡还攥在自己手里，反倒把借阅单塞到了 Forewall 手上。\n\n她看着那张薄纸愣了半秒，才伸手来拿，说我又弄乱了。\n\nForewall 没说没关系，只把借阅单边角替她抹平，等她重新夹回书里。\n\n排到后面的人轻轻咳了一声，他们才一前一后往旁边让开。",
+              "unlockConditions": [
+                "153"
+              ]
+            },
+            {
+              "id": "ch15_file39",
+              "title": "窗口记录 15187",
+              "extension": "msg",
+              "content": "Forewall: 那首歌我翻出来了\nMessin: 你还留着\nForewall: 你以前嫌前奏拖\nMessin: 现在也嫌\nForewall: 那还听不听\nMessin: 听\nMessin: 到副歌第二遍再提醒我一下\nForewall: 你这句很像早就排练过\nMessin: 也可能只是耳朵比我先到",
+              "unlockConditions": [
+                "154"
+              ]
+            },
+            {
+              "id": "ch15_file40",
+              "title": "正文 15194",
+              "extension": "txt",
+              "content": "值日结束得晚，教室后门卡着一把没收好的扫把。\n\nForewall 把窗扣上，顺手说再磨蹭真要和保安一起锁门了。Messin 抬头笑了一下，笑完自己也停了停，像是在分辨这句话刚才为什么会让她想笑。\n\n她没分辨太久，还是把笑意留了下来，还顺手把讲台上那半截粉笔朝他弹过去。\n\n没打中。\n\n两个人却都因为这一下轻了点。",
+              "unlockConditions": [
+                "155"
+              ]
+            },
+            {
+              "id": "ch15_file41",
+              "title": "留存便条 15201",
+              "extension": "memo",
+              "content": "放学前先记：\n\n问她今天值日排到哪。\n数学卷最后一题别上来就讲。\n她要是自己提以前，再跟着往下说。\n如果她只是困，就先陪她走到车棚。",
+              "unlockConditions": [
+                "156"
+              ]
+            },
+            {
+              "id": "ch15_file42",
+              "title": "片段 15207",
+              "extension": "txt",
+              "content": "自动贩卖机前的吸管总是不好抽。\n\nMessin 低头弄了半天，终于把牛奶插开，手腕一转就递到了 Forewall 面前。\n\n递到一半她自己先笑了，像这才发现手里只买了一盒。\n\nForewall 没把牛奶接走，只替她扶了一下快掉的书，说你先喝。\n\n她哦了一声，耳朵莫名有点红。",
+              "unlockConditions": [
+                "157"
+              ]
+            },
+            {
+              "id": "ch15_file43",
+              "title": "手记 15214",
+              "extension": "note",
+              "content": "周三要买：\n黑笔芯\n订书钉\n纸巾\n常温牛奶两盒\n第二盒先别划掉\n要是他说不渴，也先拿着",
+              "unlockConditions": [
+                "158"
+              ]
+            },
+            {
+              "id": "ch15_file44",
+              "title": "存页 15221",
+              "extension": "txt",
+              "content": "周二放学以后，他们一起去办公室交作业本。\n\n老师还在里头训人，门口站了好几个等签字的。Messin 靠在墙边看名单，看到 Forewall 名字的时候，小声念了一遍，像先替自己认准。\n\n等得太久，她开始用指甲抠作业本封面的塑料膜，抠起一点白边。\n\nForewall 伸手把那块白边按平，她就安静下来了。",
+              "unlockConditions": [
+                "159"
+              ]
+            },
+            {
+              "id": "ch15_file45",
+              "title": "对话备份 15229",
+              "extension": "msg",
+              "content": "Messin: 下雨了\nForewall: 你鞋又进水没\nMessin: 进了一点\nForewall: 回家先把鞋垫抽出来\nMessin: 你怎么连这个都管\nForewall: 上次你踩一路都不说\nMessin: 好吧\nMessin: 那你等我到家再提醒第二遍",
+              "unlockConditions": [
+                "160"
+              ]
+            },
+            {
+              "id": "ch15_file46",
+              "title": "正文 15236",
+              "extension": "txt",
+              "content": "她有时候会把旧话顺手带回来。\n\n那天晚修下课，Forewall 只是把窗关上，Messin 就很顺地来了一句“你怎么什么都想管”。\n\n语气跟以前像，尾音却更轻。\n\nForewall 先是一怔，随后也只笑了一下，说那你别嫌。\n\nMessin 低头笑了笑，却没把后半句接上，只把校服袖口往手背上拉了拉。\n\n楼道里很吵，这点空一下去得很快，却还是被他听见了。",
+              "unlockConditions": [
+                "161"
+              ]
+            },
+            {
+              "id": "ch15_file47",
+              "title": "便笺 15244",
+              "extension": "memo",
+              "content": "口袋里的纸条：\n\n借伞。\n看讲义。\n问她中午是不是又只买了面包。\n如果她走得慢，就陪她一起慢。",
+              "unlockConditions": [
+                "162"
+              ]
+            },
+            {
+              "id": "ch15_file48",
+              "title": "片段 15251",
+              "extension": "txt",
+              "content": "发下来的讲义边角卷起来了。\n\nMessin 接过去以后，先用掌心把那一角压平，压到纸面一点褶都看不出来，才往书里夹。\n\nForewall 在旁边看着，没有出声。\n\n这个动作太旧了，旧得像教室灯一亮就会自己回来的习惯。\n\n她做完才发现他在看，问怎么了。\n\n他说没什么，只是这张别再弄皱了。",
+              "unlockConditions": [
+                "163"
+              ]
+            },
+            {
+              "id": "ch15_file49",
+              "title": "转录 15259",
+              "extension": "trans",
+              "content": "Forewall: 到家没？\nMessin: 刚换鞋。\nForewall: 鞋底还湿？\nMessin: 有一点。\nForewall: 吹风机别开太近。\nMessin: 知道。\nMessin: 你现在很像说明书。\nForewall: 也行，你照着做。",
+              "unlockConditions": [
+                "164"
+              ]
+            },
+            {
+              "id": "ch15_file50",
+              "title": "存页 15268",
+              "extension": "txt",
+              "content": "体育馆外那条过道一到傍晚就会积一点风。\n\nMessin 低头找校园卡，找了两遍都没摸到。Forewall 本来已经伸手去帮她翻侧袋，看见她皱了一下眉，又把手收了回来，只把自己的卡先递过去让门禁响了一声。\n\n她抬头看他，有点意外。\n\n进去以后她才小声说，谢谢。\n\nForewall 说下次你慢慢找，我先占着门。",
+              "unlockConditions": [
+                "165"
+              ]
+            },
+            {
+              "id": "ch15_file51",
+              "title": "票据背面 19:07",
+              "extension": "note",
+              "content": "19:07 的小票背面：\n创可贴。\n常温牛奶。\n打印费两元。\n她找零时碰掉了一枚硬币。\n我蹲下去捡，她站在门边替我拎纸袋。",
+              "unlockConditions": [
+                "166"
+              ]
+            },
+            {
+              "id": "ch15_file52",
+              "title": "正文 15285",
+              "extension": "txt",
+              "content": "那条语音只有三秒。\n\nMessin 先是很轻地叫了他一声，后面像把什么话咽回去了。背景里有塑料袋摩擦的声音，还有门外一阵很远的喇叭。\n\nForewall 听完没追问，只回：你是不是又边走边发。\n\n过了两分钟，她回文字：刚才在给鸡蛋灌饼找零钱。\n\n他盯着那句看了一会儿，才慢慢笑出来。",
+              "unlockConditions": [
+                "167"
+              ]
+            },
+            {
+              "id": "ch15_file53",
+              "title": "页稿 15293",
+              "extension": "txt",
+              "content": "走廊尽头的窗户没关严，风从缝里钻进来。\n\nMessin 抱着作业本站在那儿，看见 Forewall 走过来，先抬眼，又很快把目光落回他手里的圆规盒。\n\nForewall 站到她旁边，说借我看看你最后一题。\n\n她把本子递过去的时候，手指碰了他一下，没有缩回。\n\n他看了两行，顺手把自己的圆规盒压到她作业本上，免得纸角再被风吹起来。\n\nMessin 低头看着那只圆规盒，过了一会儿才继续把题讲完。",
+              "unlockConditions": [
+                "168"
+              ]
+            },
+            {
+              "id": "ch15_file54",
+              "title": "片段 15301",
+              "extension": "txt",
+              "content": "草稿箱里本来打的是：你今天是不是又有哪一段没接上。\n\n停了会儿，Forewall 把“哪一段”删掉，又把整句全删了。\n\n最后发出去的是：明天早上要不要我给你带笔芯。\n\nMessin 回得很快：要，0.38 的。\n\nForewall 对着那行字坐了一会儿，还是把手机放回了口袋。",
+              "unlockConditions": [
+                "124"
+              ]
+            },
+            {
+              "id": "ch15_file55",
+              "title": "对话备份 15310",
+              "extension": "msg",
+              "content": "Forewall: 你要是难受就别硬说完整句\nMessin: 我今天一长就乱\nForewall: 那就说半句\nMessin: 我刚才其实想\nMessin: 算了\nForewall: 行\nMessin: 你别老是行\nForewall: 那我换一个\nForewall: 你先缓一下",
+              "unlockConditions": [
+                "132"
+              ]
+            },
+            {
+              "id": "ch15_file56",
+              "title": "页边记 15319",
+              "extension": "note",
+              "content": "书桌右边那张课程表先别换新的。\n\n边上卷了一点，星期三那格还有笔道。\n每天一抬眼就能看见。\n屋里会比较像昨天。",
+              "unlockConditions": [
+                "139"
+              ]
+            },
+            {
+              "id": "ch15_file57",
+              "title": "通话转写 15327",
+              "extension": "trans",
+              "content": "Messin: 你手怎么这么凉。\nForewall: 我刚才一直攥着门卡。\nMessin: 我还以为你在紧张。\nForewall: 也有一点。\nMessin: 那就先别松开。",
+              "unlockConditions": [
+                "143"
+              ]
+            },
+            {
+              "id": "ch15_file58",
+              "title": "笔记 15338",
+              "extension": "note",
+              "content": "洗手池边记一下：\n\n她刚刚隔着两个人叫我去看窗台那只猫。\n没先叫名字。\n但第一眼还是在找我。\n这事今天先不提。",
+              "unlockConditions": [
+                "149"
+              ]
+            },
+            {
+              "id": "ch15_file59",
+              "title": "手记 15347",
+              "extension": "note",
+              "content": "书包侧袋里有一包葡萄味湿巾。\n\n不是我会买的那种。\n拿出来的时候先想到他打球回来总嫌手上有粉。\n后面怎么想都接不上，只好先塞回去。",
+              "unlockConditions": [
+                "157"
+              ]
+            },
+            {
+              "id": "ch15_file60",
+              "title": "片段 15498",
+              "extension": "txt",
+              "content": "红灯等得有点久。\n\nMessin 站在斑马线前面数对面广告牌灭了几格，数到一半自己忘了刚才数到哪。Forewall 就从一重新陪她数。\n\n灯亮的时候，她先往前走，又回头看了他一眼。\n\n那一下不是从前那种很熟的回头。\n可她确实在等他跟上。",
+              "unlockConditions": [
+                "165"
+              ]
+            },
+            {
+              "id": "ch15_file61",
+              "title": "记录稿 15532",
+              "extension": "txt",
+              "content": "周一照常要交作业，早读还是吵得像有人把整层楼都拧在一起。\n\nMessin 把本子递给组长时，夹在里面的一张小纸条滑了出来。Forewall 弯腰替她捡，看到上面写的是：\n中午记得吃饭。\n放学别走太快。\n\n他没问这两句本来是想递给谁，只把纸条塞回去。\n\n午休铃响以后，Messin 还是抱着水杯坐到了他前一排，回头问他借不借红笔。",
+              "unlockConditions": [
+                "168"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cho",
+          "title": "余音",
+          "levels": [
+            {
+              "id": "169",
+              "title": "第 169 关",
+              "targetFunction": "\\sin\\left(\\frac{1}{x} + a\\right) + 1.5e^{-x}",
+              "params": {
+                "a": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "170",
+              "title": "第 170 关",
+              "targetFunction": "\\ln\\left(\\left|\\sin\\left(\\tanh\\left(x\\right) + a\\right)\\right| + 3\\right)",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "171",
+              "title": "第 171 关",
+              "targetFunction": "\\left(\\operatorname{artanh}\\left(x\\right)\\right) \\cdot \\left(x + a\\right) - 3",
+              "params": {
+                "a": -1.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "172",
+              "title": "第 172 关",
+              "targetFunction": "\\left|x\\right| + \\frac{a}{x}",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "173",
+              "title": "第 173 关",
+              "targetFunction": "\\sqrt{\\cosh\\left(x\\right) + a}",
+              "params": {
+                "a": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "174",
+              "title": "第 174 关",
+              "targetFunction": "\\left(x + a\\right)^2",
+              "params": {
+                "a": -0.5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "175",
+              "title": "第 175 关",
+              "targetFunction": "a\\left(\\cosh\\left(x\\right)\\right)",
+              "params": {
+                "a": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            }
+          ],
+          "files": [
+            {
+              "id": "cho_file1",
+              "title": "正文 90001",
+              "extension": "txt",
+              "content": "周一早上，Messin 又把校服领口翻错了一边。\n\nForewall 站在楼梯口提醒她，她低头扯正，顺手把书包往上提了一下，说我今天起晚了。\n\n后面有人催着上楼，谁都没有多停。\n\n可到了第一节下课，她还是从前门探头问他，要不要一起去接水。",
+              "unlockConditions": []
+            },
+            {
+              "id": "cho_file2",
+              "title": "桌角",
+              "extension": "note",
+              "content": "桌角：\n尺子缺了一小块。\n挂件压在作业本边上。\n今天擦桌子的时候，还是先把它挪开了。",
+              "unlockConditions": [
+                "169"
+              ]
+            },
+            {
+              "id": "cho_file3",
+              "title": "片段 90006",
+              "extension": "txt",
+              "content": "有天放学，Forewall 没走平时那条近路。\n\n他绕去操场后面那面贴满社团海报的墙，是因为 Messin 早上说有一张摄影社的海报把人脸印得像证件照。\n\n等他过去时，最外面那张边角已经翘起来了，订书钉旁边还粘着一点旧胶。\n\n他拍了一张发过去。\n\nMessin 回：这也值得专门绕一下？\nForewall: 你不是说它丑得很努力。",
+              "unlockConditions": [
+                "170"
+              ]
+            },
+            {
+              "id": "cho_file4",
+              "title": "窗口记录 90008",
+              "extension": "msg",
+              "content": "Forewall: 数学卷发了吗\nMessin: 发了\nForewall: 最后一题做出来没\nMessin: 没\nMessin: 我把辅助线画歪了\nForewall: 晚点我给你看\nMessin: 好\nMessin: 你放学别先跑",
+              "unlockConditions": [
+                "171"
+              ]
+            },
+            {
+              "id": "cho_file5",
+              "title": "存页 90011",
+              "extension": "txt",
+              "content": "值日表背面空着一半。\n\nForewall 拿红笔在最下面补了两行：\n周三她扫窗边。\n周五我去倒垃圾。\n\nMessin 看见以后问，你记这么细干什么。\n\n他说，省得你又把抹布落讲台底下。\n\n她先是愣了一下，像在想自己是不是真干过这种事，随后才把值日表折起来，说那你周三早点来。",
+              "unlockConditions": [
+                "172"
+              ]
+            },
+            {
+              "id": "cho_file6",
+              "title": "短笺 90015",
+              "extension": "note",
+              "content": "纸盒牛奶的吸管又插错边了。\n\n我看见的时候想笑。\n因为她递给我之前，自己也愣了一下。",
+              "unlockConditions": [
+                "172"
+              ]
+            },
+            {
+              "id": "cho_file7",
+              "title": "正文 90018",
+              "extension": "txt",
+              "content": "他们在文具区挑胶带的时候，Messin 先拿了一卷窄的，又放下，最后去摸透明的。\n\nForewall 说你不是嫌这种最难找头。\n\n她低头把那卷胶带转了半圈，指甲在边上刮了一下，没找到开口。\n\n过了会儿她自己也笑了，说那可能是以前的我比较会挑。\n\nForewall 没接这句，只把旁边那卷带小锯齿的递给她。",
+              "unlockConditions": [
+                "173"
+              ]
+            },
+            {
+              "id": "cho_file8",
+              "title": "便笺 90022",
+              "extension": "memo",
+              "content": "备忘录里那行没删：\n\n明天带圆规。\n回她那句歌名。\n雨大就走有棚子的那边。",
+              "unlockConditions": [
+                "173"
+              ]
+            },
+            {
+              "id": "cho_file9",
+              "title": "片段 90027",
+              "extension": "txt",
+              "content": "周四晚上自习结束得晚。\n\nMessin 把窗户扣好，手还按在插销上，好像刚想起什么。Forewall 以为她要问前一天那道题，站在门口等了一会儿。\n\n她却只说：你今天还是那班车吗。\n\nForewall 说是，怎么了。\n\nMessin 摇摇头，把手收回来：没事，我刚才听见楼道里有人跑，还以为你已经下去了。",
+              "unlockConditions": [
+                "174"
+              ]
+            },
+            {
+              "id": "cho_file10",
+              "title": "对话备份 90031",
+              "extension": "msg",
+              "content": "Messin: 外面降温了\nForewall: 你带外套没\nMessin: 带了\nForewall: 那就好\nMessin: 你怎么还是先问这个",
+              "unlockConditions": [
+                "174"
+              ]
+            },
+            {
+              "id": "cho_file11",
+              "title": "存页 90034",
+              "extension": "txt",
+              "content": "错题纸右下角有一道水印。\n\nMessin 把 Forewall 的名字写成半个，又停住，拿橡皮轻轻擦掉，换成完整的。\n\n这种纸以前第二天就会被她塞进回收箱。\n\n这次却还夹在书里，折痕都没压平。\n\nForewall 翻到那页时没把它抽出来，只顺手把书合轻了一点。",
+              "unlockConditions": [
+                "175"
+              ]
+            },
+            {
+              "id": "cho_file12",
+              "title": "手记 90038",
+              "extension": "note",
+              "content": "排队的时候，她会先回头看我在不在。\n\n这个习惯还没掉。\n别提醒她。",
+              "unlockConditions": [
+                "175"
+              ]
+            },
+            {
+              "id": "cho_file13",
+              "title": "正文 90043",
+              "extension": "txt",
+              "content": "校门口新装的闸机老是扫不出来。\n\nMessin 连刷了两次都没响，第三次前先回头看了 Forewall 一眼。后面有人催，她把卡往后一收，说你先走。\n\nForewall 没动，只站在黄线外等。\n\n闸机终于亮绿灯的时候，她快步出来，第一句不是抱怨机器慢，而是：我刚才差点又以为你先进去了。",
+              "unlockConditions": [
+                "170"
+              ]
+            },
+            {
+              "id": "cho_file14",
+              "title": "窗口记录 90047",
+              "extension": "msg",
+              "content": "Forewall: 晚点要不要一起听歌\nMessin: 可以\nMessin: 还是那首前奏很拖的？\nForewall: 你这回说对了\nMessin: 我刚才本来想打“前半段一般”\nMessin: 觉得太耳熟就改了\nForewall: 不改也行\nMessin: 那你别笑我",
+              "unlockConditions": [
+                "171"
+              ]
+            },
+            {
+              "id": "cho_file15",
+              "title": "片段 90052",
+              "extension": "txt",
+              "content": "晚修结束以后，他们一起往楼梯口走。\n\nMessin 走到一半忽然停下来，侧身给后面抱作业本的人让了一点位置。Forewall 正蹲下系松开的鞋带，抬头时看见她一只手扶着栏杆，另一只手还替他拎着圆规盒。\n\n楼道里人很多，脚步声一阵阵往下涌。\n\n等他系好站起来，她才把圆规盒递回来，继续和他并肩往下走。",
+              "unlockConditions": [
+                "175"
+              ]
+            },
+            {
+              "id": "cho_file16",
+              "title": "明天见",
+              "extension": "anim",
+              "content": "trueEnding",
+              "unlockConditions": [
+                "175"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -111,8 +111,36 @@ export const StoryEditorPage: React.FC = () => {
       reader.onload = (event) => {
         try {
           const json = JSON.parse(event.target?.result as string);
-          setStoryData(json);
-          setViewState({ routeIndex: 0, chapterIndex: null });
+          
+          if (window.confirm(t('tools.storyEditor.confirmMerge', 'Do you want to merge the imported data with the existing story? Cancel will overwrite it.'))) {
+            const newRoutes = [...storyData.routes];
+            json.routes.forEach((importedRoute: RouteData) => {
+              const existingRouteIndex = newRoutes.findIndex(r => r.id === importedRoute.id);
+              if (existingRouteIndex !== -1) {
+                const existingRoute = newRoutes[existingRouteIndex];
+                importedRoute.chapters.forEach(importedChapter => {
+                  const existingChapterIndex = existingRoute.chapters.findIndex(
+                    c => c.id === importedChapter.id && c.title === importedChapter.title
+                  );
+                  if (existingChapterIndex !== -1) {
+                    const existingChapter = existingRoute.chapters[existingChapterIndex];
+                    existingChapter.levels = [...existingChapter.levels, ...importedChapter.levels];
+                    if (importedChapter.files) {
+                      existingChapter.files = [...(existingChapter.files || []), ...importedChapter.files];
+                    }
+                  } else {
+                    existingRoute.chapters.push(importedChapter);
+                  }
+                });
+              } else {
+                newRoutes.push(importedRoute);
+              }
+            });
+            setStoryData({ ...storyData, routes: newRoutes });
+          } else {
+            setStoryData(json);
+            setViewState({ routeIndex: 0, chapterIndex: null });
+          }
         } catch (err: unknown) {
           alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
           console.error(err);
@@ -121,6 +149,20 @@ export const StoryEditorPage: React.FC = () => {
       reader.readAsText(file);
     }
     e.target.value = '';
+  };
+
+  const addRoute = () => {
+    const newRoutes = [...storyData.routes];
+    const newRouteId = `route_${newRoutes.length + 1}`;
+    newRoutes.push({
+      id: newRouteId,
+      title: t('tools.storyEditor.newRoute', 'New Route'),
+      description: t('tools.storyEditor.newRouteDesc', 'Route description...'),
+      showToBeContinued: true,
+      chapters: []
+    });
+    setStoryData({ ...storyData, routes: newRoutes });
+    setViewState({ routeIndex: newRoutes.length - 1, chapterIndex: null });
   };
 
   const addChapter = () => {
@@ -137,7 +179,19 @@ export const StoryEditorPage: React.FC = () => {
 
   const handleGenerateChapters = (generatedChapters: ChapterData[]) => {
     const newRoutes = [...storyData.routes];
-    newRoutes[viewState.routeIndex].chapters.push(...generatedChapters);
+    const targetRoute = newRoutes[viewState.routeIndex];
+    
+    generatedChapters.forEach(generatedChapter => {
+      const existingChapterIndex = targetRoute.chapters.findIndex(
+        c => c.id === generatedChapter.id && c.title === generatedChapter.title
+      );
+      if (existingChapterIndex !== -1) {
+        targetRoute.chapters[existingChapterIndex].levels.push(...generatedChapter.levels);
+      } else {
+        targetRoute.chapters.push(generatedChapter);
+      }
+    });
+    
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
@@ -204,6 +258,26 @@ export const StoryEditorPage: React.FC = () => {
     setStoryData({ ...storyData, routes: newRoutes });
   };
 
+  const deleteRoute = (index: number) => {
+    const newRoutes = [...storyData.routes];
+    newRoutes.splice(index, 1);
+    if (newRoutes.length === 0) {
+      newRoutes.push({
+        id: 'newRoute',
+        title: t('tools.storyEditor.newRoute', 'New Route'),
+        description: t('tools.storyEditor.newRouteDesc', 'Route description...'),
+        showToBeContinued: true,
+        chapters: []
+      });
+    }
+    setStoryData({ ...storyData, routes: newRoutes });
+    if (viewState.routeIndex === index) {
+      setViewState({ routeIndex: Math.max(0, index - 1), chapterIndex: null });
+    } else if (viewState.routeIndex > index) {
+      setViewState({ ...viewState, routeIndex: viewState.routeIndex - 1 });
+    }
+  };
+
   const deleteChapter = (index: number) => {
     const newRoutes = [...storyData.routes];
     newRoutes[viewState.routeIndex].chapters.splice(index, 1);
@@ -252,7 +326,11 @@ export const StoryEditorPage: React.FC = () => {
           viewState={{ routeIndex: viewState.routeIndex, chapterIndex: viewState.chapterIndex }}
           setViewState={handleSetViewState}
           updateRoute={updateRoute}
+          addRoute={addRoute}
+          deleteRoute={deleteRoute}
           addChapter={addChapter}
+          deleteChapter={deleteChapter}
+          routes={storyData.routes}
         />
 
         <div className={`

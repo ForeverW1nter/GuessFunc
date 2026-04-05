@@ -11,6 +11,8 @@ import {
   MessageViewer,
   DocViewer,
   EndingAnimationViewer,
+  FakeEndingAnimationViewer,
+  TrueEndingAnimationViewer,
   DefaultViewer
 } from './viewers';
 
@@ -49,6 +51,11 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
       case 'rcpt':
         return <DocViewer content={file.content} title={file.title} extension={file.extension} />;
       case 'anim':
+        if (file.content === 'fakeEnding') {
+          return <FakeEndingAnimationViewer content={file.content} onClose={onClose} />;
+        } else if (file.content === 'trueEnding') {
+          return <TrueEndingAnimationViewer content={file.content} onClose={onClose} />;
+        }
         return <EndingAnimationViewer content={file.content} onClose={onClose} />;
       default:
         return <DefaultViewer content={file.content} />;

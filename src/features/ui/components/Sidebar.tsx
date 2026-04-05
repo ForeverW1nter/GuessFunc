@@ -90,7 +90,7 @@ export const Sidebar: React.FC = () => {
     // 强制每次点击都检查状态机，并主动同步一次路由，避免灰屏
     const { gameMode, currentRoute, currentChapter, currentLevel } = useGameStore.getState();
     if (gameMode !== 'story' || !currentRoute || !currentChapter || !currentLevel) {
-      navigate('/game/seeYouTomorrow/ch0/1', { replace: true });
+      navigate('/game/charmYouTomorrow/ch0/1', { replace: true });
     } else {
       // 即使在故事模式，也要确保路由和状态机一致
       navigate(`/game/${currentRoute}/${currentChapter}/${currentLevel}`, { replace: true });

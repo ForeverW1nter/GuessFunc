@@ -14,12 +14,12 @@ export const CreateModePage: React.FC = () => {
   const [descInput, setDescInput] = useState(t('create.defaultDesc'));
   const [copied, setCopied] = useState(false);
 
-    const levelData = { 
-      t: funcInput,
-      p: extractUsedParams(funcInput, {}) // We can pass empty object for playerParams, but ideally we'd pass any active custom params if supported in UI
-    };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(levelData))));
-    const generatedUrl = `${window.location.origin}${window.location.pathname}#/game/custom/1/${encoded}?title=${encodeURIComponent(titleInput)}`;
+  const levelData = { 
+    t: funcInput,
+    p: extractUsedParams(funcInput, {}) // We can pass empty object for playerParams, but ideally we'd pass any active custom params if supported in UI
+  };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(levelData))));
+  const generatedUrl = `${window.location.origin}${window.location.pathname}#/game/custom/1/${encoded}?title=${encodeURIComponent(titleInput)}`;
 
   const handleCopy = async () => {
     try {

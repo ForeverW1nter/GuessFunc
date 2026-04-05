@@ -33,8 +33,8 @@ interface GameState {
   evaluateInput: () => { isMatch: boolean; reason?: string };
   loadLevel: (routeId: string, chapterId: string, levelId: string) => void;
   nextLevel: () => void;
-  markChapterSeen: (chapterId: string) => void;
-  markFileRead: (fileId: string) => void;
+  markChapterSeen: (routeId: string, chapterId: string) => void;
+  markFileRead: (routeId: string, chapterId: string, fileId: string) => void;
   isLevelCompleted: (routeId: string, chapterId: string, levelId: string) => boolean;
   setRandomConfig: (difficulty: number, withParams: boolean) => void;
 }
@@ -67,7 +67,8 @@ export const useGameStore = create<GameState>()(
       
       setDomain: (domain: [number, number]) => set({ domain }),
 
-      setRandomConfig: (difficulty: number, withParams: boolean) => set({ randomDifficulty: difficulty, randomWithParams: withParams }),
+      setRandomConfig: (difficulty: number, withParams: boolean) => 
+        set({ randomDifficulty: difficulty, randomWithParams: withParams }),
 
       evaluateInput: () => {
         const state = get();
@@ -123,17 +124,19 @@ export const useGameStore = create<GameState>()(
         set({ isLevelCleared: false, playerInput: '' });
       },
 
-      markChapterSeen: (chapterId: string) => {
+      markChapterSeen: (routeId: string, chapterId: string) => {
         const currentSeen = get().seenChapters;
-        if (!currentSeen.includes(chapterId)) {
-          set({ seenChapters: [...currentSeen, chapterId] });
+        const globalChapterId = `${routeId}/${chapterId}`;
+        if (!currentSeen.includes(globalChapterId)) {
+          set({ seenChapters: [...currentSeen, globalChapterId] });
         }
       },
 
-      markFileRead: (fileId: string) => {
+      markFileRead: (routeId: string, chapterId: string, fileId: string) => {
         const currentRead = get().readFiles || [];
-        if (!currentRead.includes(fileId)) {
-          set({ readFiles: [...currentRead, fileId] });
+        const globalFileId = `${routeId}/${chapterId}/${fileId}`;
+        if (!currentRead.includes(globalFileId)) {
+          set({ readFiles: [...currentRead, globalFileId] });
         }
       },
 

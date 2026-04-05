@@ -69,7 +69,7 @@ export const Topbar: React.FC = () => {
 
     if (gameMode === 'random') {
       import('../../../utils/mathEngine/generator').then(({ generateFunctionByDifficulty }) => {
-        const result = generateFunctionByDifficulty(randomDifficulty, randomWithParams);
+        const result = generateFunctionByDifficulty({ targetDifficulty: randomDifficulty, withParams: randomWithParams });
         setTargetFunction(result.target, result.params, 'random');
         setRandomConfig(randomDifficulty, randomWithParams);
         
@@ -77,7 +77,7 @@ export const Topbar: React.FC = () => {
           t: result.target, 
           p: result.params, 
           d: randomDifficulty, 
-          wp: randomWithParams 
+          wp: randomWithParams
         }))));
         navigate(`/game/random/1/${encodedLevel}`);
       });
