@@ -120,7 +120,14 @@ export const Sidebar: React.FC = () => {
     // 使用提取后的有效参数
     useGameStore.getState().setTargetFunction(createPreview.latex, createPreview.params, 'custom');
     useUIStore.getState().addToast(t('sidebar.createSuccess'), 'success');
-    navigate(`/game/custom/1/1`);
+    
+    const levelData = { 
+      t: createPreview.latex,
+      p: Object.keys(createPreview.params).length > 0 ? createPreview.params : undefined
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(levelData))));
+    navigate(`/game/custom/1/${encoded}`);
+    
     setIsCreateModalOpen(false);
     setSidebarOpen(false);
   };
@@ -149,7 +156,7 @@ export const Sidebar: React.FC = () => {
       p: Object.keys(playerParams).length > 0 ? playerParams : undefined
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(levelData))));
-    const generatedUrl = `${window.location.origin}${window.location.pathname}#/share/${encoded}`;
+    const generatedUrl = `${window.location.origin}${window.location.pathname}#/game/share/1/${encoded}`;
     
     navigator.clipboard.writeText(generatedUrl).then(() => {
       useUIStore.getState().addToast(t('sidebar.copySuccess'), 'success');
@@ -204,7 +211,7 @@ export const Sidebar: React.FC = () => {
               <Activity size={20} strokeWidth={2.5} className="text-white" />
             </div>
             <h1 className="m-0 text-[1.25rem] font-bold text-app-text tracking-[0.5px] whitespace-nowrap transition-opacity duration-200">
-              {t('sidebar.title', 'GuessFunc')}
+              {t('sidebar.title')}
             </h1>
           </div>
           

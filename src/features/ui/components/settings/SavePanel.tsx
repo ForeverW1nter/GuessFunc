@@ -3,8 +3,9 @@ import { useUIStore } from '../../../../store/useUIStore';
 import { useGameStore } from '../../../../store/useGameStore';
 import { useTranslation } from 'react-i18next';
 import { ConfirmModal } from '../ConfirmModal';
+import { ToggleSwitch } from '../ToggleSwitch';
+import { Download, Upload, Trash2, Unlock, Zap } from 'lucide-react';
 
-const DownloadIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>;
 const SettingsOption = ({ icon: Icon, label, onClick, isDanger, isFile, rightContent }: { icon: React.ElementType, label: string, onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.ChangeEvent<HTMLInputElement>) => void, isDanger?: boolean, isFile?: boolean, rightContent?: React.ReactNode }) => {
   const baseClasses = `group relative overflow-hidden flex items-center justify-between px-[20px] py-[16px] text-[1.05rem] font-medium bg-option-bg text-option-text border border-card-border rounded-[10px] transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-[2px] w-full cursor-pointer`;
   
@@ -41,10 +42,6 @@ const SettingsOption = ({ icon: Icon, label, onClick, isDanger, isFile, rightCon
     </button>
   );
 };
-const UploadIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>;
-const Trash2Icon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>;
-const UnlockIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>;
-const ZapIcon = ({ className }: { className?: string }) => <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
 
 export const SavePanel: React.FC = () => {
   const { isAssistMode, toggleAssistMode, isSpeedrunMode, toggleSpeedrunMode } = useUIStore();
@@ -113,7 +110,7 @@ export const SavePanel: React.FC = () => {
     a.download = `guessfunc_save_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    useUIStore.getState().addToast(t('settings.save.exportSuccess', '存档已导出'), 'success');
+    useUIStore.getState().addToast(t('settings.save.exportSuccess'), 'success');
   };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement>) => {
@@ -134,10 +131,10 @@ export const SavePanel: React.FC = () => {
         if (data.isSpeedrunMode !== undefined) {
           useUIStore.setState({ isSpeedrunMode: data.isSpeedrunMode });
         }
-     useUIStore.getState().addToast(t('settings.save.importSuccess', '存档导入成功！'), 'success');
+     useUIStore.getState().addToast(t('settings.save.importSuccess'), 'success');
         } catch (err: unknown) {
           console.error(err);
-          useUIStore.getState().addToast(t('settings.save.importFormatError', '存档格式错误'), 'error');
+          useUIStore.getState().addToast(t('settings.save.importFormatError'), 'error');
         }
       };
      reader.readAsText(file);
@@ -179,14 +176,14 @@ export const SavePanel: React.FC = () => {
       });
     });
 
-    useUIStore.getState().addToast(t('settings.save.clearSuccess', '当前存档已清空'), 'success');
+    useUIStore.getState().addToast(t('settings.save.clearSuccess'), 'success');
     setIsClearModalOpen(false);
   };
 
   return (
     <div className="space-y-5">
       <div className="space-y-3">
-        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.slotsTitle', '存档槽位')}</h3>
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.slotsTitle')}</h3>
         <div className="flex flex-col gap-2">
           {[1, 2, 3, 4, 5].map((num) => {
             const slotStr = String(num);
@@ -206,7 +203,7 @@ export const SavePanel: React.FC = () => {
                   {isCurrent ? t('settings.save.slotCurrent', { num }) : t('settings.save.slot', { num })}
                 </span>
                 <span className={`text-sm ${hasData ? 'opacity-80' : 'opacity-40'}`}>
-                  {hasData ? t('settings.save.hasSave', '有存档') : t('settings.save.emptySave', '空存档')}
+                  {hasData ? t('settings.save.hasSave') : t('settings.save.emptySave')}
                 </span>
               </button>
             );
@@ -215,49 +212,45 @@ export const SavePanel: React.FC = () => {
       </div>
 
       <div className="space-y-3 pt-4">
-        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.operationsTitle', '存档操作')}</h3>
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.operationsTitle')}</h3>
         
-        <SettingsOption icon={DownloadIcon} label={t('settings.save.export', '导出当前存档')} onClick={handleExport} />
-        <SettingsOption icon={UploadIcon} label={t('settings.save.import', '导入存档到当前')} onClick={handleImport} isFile />
-        <SettingsOption icon={Trash2Icon} label={t('settings.save.clear', '清空当前存档')} onClick={handleClearClick} isDanger />
+        <SettingsOption icon={Download} label={t('settings.save.export')} onClick={handleExport} />
+        <SettingsOption icon={Upload} label={t('settings.save.import')} onClick={handleImport} isFile />
+        <SettingsOption icon={Trash2} label={t('settings.save.clear')} onClick={handleClearClick} isDanger />
       </div>
 
       <div className="space-y-3 pt-4">
-        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.assistTitle', '辅助功能')}</h3>
+        <h3 className="m-0 font-bold text-lg border-b border-card-border pb-2 text-app-text">{t('settings.save.assistTitle')}</h3>
         <SettingsOption 
-          icon={UnlockIcon} 
-          label={`${t('settings.save.previewMode', '剧情预览模式')}: ${isAssistMode ? t('common.on', '开') : t('common.off', '关')}`}
+          icon={Unlock} 
+          label={`${t('settings.save.previewMode')}: ${isAssistMode ? t('common.on') : t('common.off')}`}
           onClick={toggleAssistMode}
           rightContent={
-            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isAssistMode ? 'bg-app-primary' : 'bg-card-border'}`}>
-              <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform ${isAssistMode ? 'translate-x-6' : 'translate-x-1'}`} />
-            </div>
+            <ToggleSwitch checked={isAssistMode} />
           }
         />
         <div className="text-sm opacity-80 px-2.5 text-app-text mb-4">
-          {t('settings.save.previewModeDesc', '开启后可以直接游玩所有关卡（即使前置关卡未完成）。')}
+          {t('settings.save.previewModeDesc')}
         </div>
 
         <SettingsOption 
-          icon={ZapIcon} 
-          label={`${t('settings.main.speedrun', '速通模式')}: ${isSpeedrunMode ? t('common.on', '开') : t('common.off', '关')}`}
+          icon={Zap} 
+          label={`${t('settings.main.speedrun')}: ${isSpeedrunMode ? t('common.on') : t('common.off')}`}
           onClick={toggleSpeedrunMode}
           rightContent={
-            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isSpeedrunMode ? 'bg-app-primary' : 'bg-card-border'}`}>
-              <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform ${isSpeedrunMode ? 'translate-x-6' : 'translate-x-1'}`} />
-            </div>
+            <ToggleSwitch checked={isSpeedrunMode} />
           }
         />
         <div className="text-sm opacity-80 px-2.5 text-app-text">
-          {t('settings.save.speedrunModeDesc', '开启后跳过剧情，直接进入关卡。')}
+          {t('settings.save.speedrunModeDesc')}
         </div>
       </div>
 
       <ConfirmModal 
         isOpen={isClearModalOpen}
-        title={t('settings.save.clearWarningTitle', '警告：清空存档')}
-        message={t('settings.save.clearWarningMsg', '您确定要清空当前槽位的存档吗？此操作不可逆！')}
-        confirmText={t('settings.save.clearConfirm', '清空存档')}
+        title={t('settings.save.clearWarningTitle')}
+        message={t('settings.save.clearWarningMsg')}
+        confirmText={t('settings.save.clearConfirm')}
         requireInput="Say Goodbye to Shirloy"
         onConfirm={handleConfirmClear}
         onCancel={() => setIsClearModalOpen(false)}

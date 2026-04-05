@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { useUIStore } from '../../../../store/useUIStore';
 import { Info, Cpu, X, Settings2, MessageSquare } from 'lucide-react';
+import { ToggleSwitch } from '../ToggleSwitch';
 
 export const ApiPanel: React.FC = () => {
   const { t } = useTranslation();
@@ -64,7 +65,7 @@ export const ApiPanel: React.FC = () => {
       <div className="space-y-4">
         <div className="flex flex-col gap-2">
           <label className="flex items-center gap-1.5 font-semibold text-app-text">
-            <Cpu size={18} /> {t('settings.api.keyLabel', 'API Key')}
+            <Cpu size={18} /> {t('settings.api.keyLabel')}
           </label>
           <div className="relative">
             <input 
@@ -92,12 +93,7 @@ export const ApiPanel: React.FC = () => {
 
         <div className="flex items-center justify-between mb-2">
           <span className="font-medium text-app-text">{t('settings.api.useProxy')} <span className="text-sm opacity-60">{t('settings.api.useProxySub')}</span></span>
-          <div 
-            onClick={() => setUseProxy(!useProxy)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${useProxy ? 'bg-app-primary' : 'bg-card-border'}`}
-          >
-            <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform ${useProxy ? 'translate-x-6' : 'translate-x-1'}`} />
-          </div>
+          <ToggleSwitch checked={useProxy} onChange={setUseProxy} />
         </div>
 
         <button 
@@ -148,7 +144,7 @@ export const ApiPanel: React.FC = () => {
             onClick={handleResetPrompt}
             className="flex-1 bg-transparent border-2 border-card-border text-app-text font-semibold py-[12px] rounded-lg hover:border-app-primary hover:text-app-primary hover:bg-app-primary/5 transition-all hover:-translate-y-[2px]"
           >
-            {t('settings.api.resetPromptBtn', '恢复默认')}
+            {t('settings.api.resetPromptBtn')}
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -26,6 +27,17 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   const confirmText = propConfirmText ?? t('common.confirm');
   const cancelText = propCancelText ?? t('common.cancel');
   const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -60,8 +72,8 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     e.stopPropagation();
   };
 
-  return (
-    <div className="fixed top-0 left-0 w-full h-full z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in px-4">
+  return createPortal(
+    <div className="fixed top-0 left-0 w-full h-full z-[2000] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in px-4" onClick={onCancel}>
       <div 
         className="bg-modal-bg text-modal-text w-full max-w-md rounded-2xl shadow-modal overflow-hidden animate-zoom-in"
         onClick={handleClick}
@@ -72,14 +84,18 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           
           {requireInput && (
             <div className="mb-6">
-              <p className="text-sm opacity-70 mb-2">{t('common.confirmInputTip', '请输入以下文本以确认：')}<span className="font-mono font-bold text-app-danger select-all">{requireInput}</span></p>
+              <p className="text-sm opacity-70 mb-2">{t('common.confirmInputTip')}<span className="font-mono font-bold text-app-danger select-all">{requireInput}</span></p>
               <input 
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
                 className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-app-text focus:outline-none focus:border-app-primary transition-colors"
-                placeholder={t('common.confirmInputPlaceholder', '在此输入确认文本...')}
+                placeholder={t('common.confirmInputPlaceholder')}
               />
             </div>
           )}
@@ -107,6 +123,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -98,9 +98,9 @@ export function generateFunctionByDifficulty(
   targetDifficulty: number, 
   withParams: boolean = false
 ): GeneratedFunction {
-  // 难度映射：难度1 (基础流形+0次变换) -> 难度7 (基础流形+4~5次高阶变换)
-  const diff = Math.max(1, Math.min(7, targetDifficulty));
-  const targetWeight = (diff - 1) * 0.8; // 难度1时为0，难度7时为4.8
+  // 难度映射：难度0 (基础流形+0次变换) -> 难度7 (基础流形+高阶变换)
+  const diff = Math.max(0, Math.min(7, targetDifficulty));
+  const targetWeight = diff * (4.8 / 7); // 难度0时为0，难度7时为4.8
 
   const maxAttempts = 100;
   let bestResult = { target: 'x', params: {} as Record<string, number> };

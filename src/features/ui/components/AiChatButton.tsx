@@ -90,7 +90,7 @@ export const AiChatButton: React.FC = () => {
             setCurrentTip(levelData.tip);
             setIsTipsOpen(true);
           } else {
-            useUIStore.getState().addToast(t('ai.noTips', '本关卡暂无提示。'), 'info');
+            useUIStore.getState().addToast(t('ai.noTips'), 'info');
           }
         }
       } else {
@@ -127,7 +127,7 @@ export const AiChatButton: React.FC = () => {
           top: `${position.y}px`
         }}
         className={`fixed w-[50px] h-[50px] rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(var(--primary-color-rgb),0.3)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(var(--primary-color-rgb),0.3)] transition-transform duration-200 z-[1000] select-none touch-none bg-app-primary text-white hover:brightness-110 ${isDragging ? 'cursor-grabbing scale-110' : 'cursor-pointer'}`}
-        title={isStoryMode ? t('ai.levelTips', "关卡提示") : t('ai.title', "AI 对话助手")}
+        title={isStoryMode ? t('ai.levelTips') : t('ai.title')}
       >
         {isStoryMode ? (
           <Lightbulb size={24} strokeWidth={2} />

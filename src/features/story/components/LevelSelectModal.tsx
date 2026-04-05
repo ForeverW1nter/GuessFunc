@@ -79,7 +79,7 @@ export const LevelSelectModal: React.FC = () => {
   // 计算章节解锁状态 (Memoized)
   const unlockedChapters = useMemo(() => {
     if (!currentRoute) return [];
-    const status: Record<string, unknown>[] = [];
+    const status: typeof currentRoute.chapters = [];
     currentRoute.chapters.forEach((chapter, chapterIndex) => {
       const previousChapter = chapterIndex > 0 ? currentRoute.chapters[chapterIndex - 1] : null;
       let isChapterUnlocked = true;
@@ -90,7 +90,7 @@ export const LevelSelectModal: React.FC = () => {
         isChapterUnlocked = prevCompletedCount >= requiredCount;
       }
       if (isChapterUnlocked || isAssistMode) {
-        status.push(chapter as unknown as Record<string, unknown>);
+        status.push(chapter);
       }
     });
     return status;
@@ -102,7 +102,7 @@ export const LevelSelectModal: React.FC = () => {
   useEffect(() => {
     if (!isMobile && isLevelSelectOpen && !selectedChapterId && unlockedChapters.length > 0) {
       setTimeout(() => {
-        setSelectedChapterId((unlockedChapters[unlockedChapters.length - 1] as unknown as { id: string }).id);
+        setSelectedChapterId(unlockedChapters[unlockedChapters.length - 1].id);
       }, 0);
     }
   }, [isMobile, isLevelSelectOpen, unlockedChapters, selectedChapterId]);
@@ -117,7 +117,7 @@ export const LevelSelectModal: React.FC = () => {
 
   const handleLevelClick = (chapterId: string, levelId: string, isLocked: boolean) => {
     if (isLocked && !isAssistMode) {
-      useUIStore.getState().addToast(t('story.accessDenied', 'Access Denied: Level is locked'), 'error');
+      useUIStore.getState().addToast(t('story.accessDenied'), 'error');
       return;
     }
     navigate(`/game/${selectedRouteId}/${chapterId}/${levelId}`);
@@ -127,7 +127,7 @@ export const LevelSelectModal: React.FC = () => {
 
   const handleFileClick = (file: FileData, isLocked: boolean) => {
     if (isLocked && !isAssistMode) {
-      useUIStore.getState().addToast(t('story.fileLocked', 'Access Denied: File is locked'), 'error');
+      useUIStore.getState().addToast(t('story.fileLocked'), 'error');
       return;
     }
     if (selectedChapterId) {
@@ -227,7 +227,7 @@ export const LevelSelectModal: React.FC = () => {
           ) : selectedChapterData && selectedRouteId ? (
             <ChapterFiles 
               routeId={selectedRouteId}
-              chapter={selectedChapterData as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+              chapter={selectedChapterData}
               completedLevels={completedLevels}
               readFiles={readFiles}
               isAssistMode={isAssistMode}
@@ -240,7 +240,7 @@ export const LevelSelectModal: React.FC = () => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-[#606065] text-[0.85rem] uppercase tracking-widest">
-              {t('tools.storyEditor.emptySelect', 'No directory selected')}
+              {t('tools.storyEditor.emptySelect')}
             </div>
           )}
         </div>

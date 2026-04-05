@@ -32,12 +32,12 @@ export const Topbar: React.FC = () => {
   const handleVerify = () => {
     logger.log(t('game.verifyTrigger'));
     const result = evaluateInput();
-    if (!result.isMatch && result.reason) {
+    if (!result.isMatch) {
       logger.warn(t('game.verifyFailed', { reason: result.reason }));
-      addToast(result.reason, 'error');
+      addToast(t('game.wrongAnswer'), 'error');
     } else if (result.isMatch) {
-      logger.log(t('game.verifyPassedLog', '验证通过'));
-      addToast(t('game.verifyPassedToast', '验证通过！'), 'success');
+      logger.log(t('game.verifyPassedLog'));
+      addToast(t('game.verifyPassedToast'), 'success');
       
       // 撒花特效
       const count = 200;
@@ -65,6 +65,25 @@ export const Topbar: React.FC = () => {
   const handleNextLevel = () => {
     nextLevel();
     
+    const { gameMode, randomDifficulty, randomWithParams, setTargetFunction, setRandomConfig } = useGameStore.getState();
+
+    if (gameMode === 'random') {
+      import('../../../utils/mathEngine/generator').then(({ generateFunctionByDifficulty }) => {
+        const result = generateFunctionByDifficulty(randomDifficulty, randomWithParams);
+        setTargetFunction(result.target, result.params, 'random');
+        setRandomConfig(randomDifficulty, randomWithParams);
+        
+        const encodedLevel = btoa(unescape(encodeURIComponent(JSON.stringify({ 
+          t: result.target, 
+          p: result.params, 
+          d: randomDifficulty, 
+          wp: randomWithParams 
+        }))));
+        navigate(`/game/random/1/${encodedLevel}`);
+      });
+      return;
+    }
+
     if (!currentRoute || !currentChapter || !currentLevel) {
       navigate('/');
       return;
@@ -126,7 +145,7 @@ export const Topbar: React.FC = () => {
         {isLevelCleared ? (
           <button 
             onClick={handleNextLevel}
-            className="inline-flex items-center justify-center gap-[8px] px-[20px] py-[10px] rounded-[8px] font-semibold text-[1rem] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
+            className="inline-flex items-center justify-center gap-[6px] sm:gap-[8px] px-[16px] sm:px-[20px] py-[8px] sm:py-[10px] rounded-[12px] font-semibold text-[0.9rem] sm:text-[0.95rem] tracking-[0.5px] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
             <span className="hidden sm:inline">{t('game.nextLevelBtn')}</span>
             <SkipForward size={16} strokeWidth={2} />
@@ -134,7 +153,7 @@ export const Topbar: React.FC = () => {
         ) : (
           <button 
             onClick={handleVerify}
-            className="inline-flex items-center justify-center gap-[8px] px-[20px] py-[8px] rounded-[20px] font-semibold text-[0.95rem] tracking-[0.5px] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
+            className="inline-flex items-center justify-center gap-[6px] sm:gap-[8px] px-[16px] sm:px-[20px] py-[8px] sm:py-[10px] rounded-[12px] font-semibold text-[0.9rem] sm:text-[0.95rem] tracking-[0.5px] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
             <Check size={16} strokeWidth={2} />
             <span className="hidden sm:inline">{t('game.verifyBtn')}</span>

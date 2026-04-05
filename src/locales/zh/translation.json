@@ -21,6 +21,7 @@
     "noTarget": "未设置目标函数",
     "verifySuccess": "验证成功！",
     "verifyFailed": "验证失败",
+    "wrongAnswer": "回答错误",
     "syntaxError": "语法错误",
     "domainError": "定义域不匹配",
     "toleranceError": "超出容差范围",
@@ -39,7 +40,8 @@
       "noValidPoints": "在此范围内无法找到有效的对比采样点",
       "parseError": "表达式解析失败: 格式可能不支持",
       "emptyInput": "请输入函数表达式"
-    }
+    },
+    "verifyTrigger": "触发验证"
   },
   "sidebar": {
     "title": "GuessFunc",
@@ -119,7 +121,6 @@
       "endpointPlaceholder": "例如: https://api.deepseek.com/v1",
       "keyLabel": "API Key",
       "keyPlaceholder": "sk-...",
-
       "keyWarning": "（注意：如果清空此项，将尝试使用内置代理接口）",
       "promptLabel": "系统提示词",
       "promptDesc": "配置 AI 助手的行为设定。必须告诉 AI 它不能直接泄露函数表达式。",
@@ -142,6 +143,7 @@
       "testFailed": "连接失败，请检查配置。错误信息：{{error}}"
     },
     "font": {
+      "menuTitle": "字体设置",
       "title": "字体大小设置",
       "desc": "调整全局文本与剧情的显示大小：",
       "resetBtn": "恢复默认大小",
@@ -163,7 +165,9 @@
     },
     "language": {
       "title": "语言设置",
-      "tip": "语言更改将立即生效。"
+      "tip": "语言更改将立即生效。",
+      "zh": "简体中文",
+      "en": "English"
     },
     "main": {
       "title": "游戏设置",
@@ -317,7 +321,10 @@
       "emptySelect": "请选择一个目录以查看内容",
       "preview": "预览",
       "systemExit": "SYSTEM.EXIT",
-      "noDirs": "未找到任何目录。"
+      "noDirs": "未找到任何目录。",
+      "sysCritical": "SYS.CRITICAL",
+      "encrypted": "ENCRYPTED",
+      "executable": "EXECUTABLE"
     },
     "levelTester": {
       "name": "Level Sandbox",
@@ -328,5 +335,6 @@
       "light": "切换至亮色模式",
       "dark": "切换至深色模式"
     }
-  }
+  },
+  "\\n": "\\n"
 }

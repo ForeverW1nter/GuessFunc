@@ -58,7 +58,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({
           className="flex items-center gap-[8px] text-[#A0A0A5] hover:text-white transition-colors"
         >
           <ArrowLeft size={16} strokeWidth={2} />
-          <span className="text-[0.85rem] uppercase tracking-wider">{isMobile && selectedChapterId ? t('tools.storyEditor.back', 'BACK') : t('tools.storyEditor.systemExit', 'SYSTEM.EXIT')}</span>
+          <span className="text-[0.85rem] uppercase tracking-wider">{isMobile && selectedChapterId ? t('tools.storyEditor.back') : t('tools.storyEditor.systemExit')}</span>
         </button>
       </div>
       
@@ -74,7 +74,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({
             onTouchStart={onBgmPressStart}
             onTouchEnd={onBgmPressEnd}
             className="bg-transparent border-none cursor-pointer flex items-center justify-center outline-none shrink-0 md:mr-[16px]"
-            title={isMuted ? t('story.unmute', "开启音乐") : t('story.mute', "关闭音乐")}
+            title={isMuted ? t('story.unmute') : t('story.mute')}
           >
             <div className="relative w-[28px] h-[28px] rounded-full flex items-center justify-center bg-[#1A1A1D] border border-[#2A2A2E] shadow-sm transition-all duration-300">
               <div className={`absolute inset-0 rounded-full border-[2px] border-[#333] box-border transition-opacity duration-300 ${

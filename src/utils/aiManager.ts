@@ -56,7 +56,7 @@ class AIManager {
 
   async fetchChatResponse(userMessage: string, targetFunction: string): Promise<string> {
     if (!this.hasValidKey()) {
-      throw new Error(i18n.t('ai.noKeyError', '未配置 API Key 且未启用代理'));
+      throw new Error(i18n.t('ai.noKeyError'));
     }
 
     this.abortCurrentRequest();
@@ -100,7 +100,7 @@ class AIManager {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`${i18n.t('ai.apiError', 'API 请求失败')}: ${response.status}`);
+        throw new Error(`${i18n.t('ai.apiError')}: ${response.status}`);
       }
 
       const data = await response.json();
@@ -117,7 +117,7 @@ class AIManager {
     } catch (error: unknown) {
       const e = error as Error;
       if (e.name === 'AbortError') {
-        throw new Error(i18n.t('ai.timeoutError', '请求超时，请重试'));
+        throw new Error(i18n.t('ai.timeoutError'));
       }
       throw e;
     } finally {
@@ -166,7 +166,7 @@ class AIManager {
       headers['Authorization'] = `Bearer ${apiKey}`;
     }
 
-    const userPrompt = i18n.t('ai.generatePrompt', '生成一个难度系数为 {{diff}} 的题目。', { diff: difficulty.toFixed(2) });
+    const userPrompt = i18n.t('ai.generatePrompt', { diff: difficulty.toFixed(2) });
 
     const messages = [
       { role: "system", content: this.getSystemPrompt() },

@@ -4,6 +4,7 @@ import { useUIStore } from '../../../store/useUIStore';
 import { useGameStore } from '../../../store/useGameStore';
 import { useNavigate } from 'react-router-dom';
 import { generateFunctionByDifficulty } from '../../../utils/mathEngine/generator';
+import { X } from 'lucide-react';
 
 export const RandomChallengeModal: React.FC = () => {
   const { t } = useTranslation();
@@ -11,9 +12,19 @@ export const RandomChallengeModal: React.FC = () => {
   const { setTargetFunction } = useGameStore();
   const navigate = useNavigate();
 
-  const [difficulty, setDifficulty] = useState<number>(1);
-  const [withParams, setWithParams] = useState<boolean>(false);
+  const [difficulty, setDifficulty] = useState<number>(useGameStore.getState().randomDifficulty || 0);
+  const [withParams, setWithParams] = useState<boolean>(useGameStore.getState().randomWithParams || false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+
+  const getDifficultyLabel = (val: number) => {
+    if (val < 1) return { en: 'Beginner', zh: '初级' };
+    if (val < 2) return { en: 'Intermediate', zh: '中级' };
+    if (val < 3) return { en: 'Advance', zh: '高级' };
+    if (val < 4) return { en: 'Expert', zh: '专家' };
+    if (val < 5) return { en: 'Grandmaster', zh: '大师' };
+    if (val < 6) return { en: 'Astral', zh: '星辉' };
+    return { en: 'Celestial', zh: '天极' };
+  };
 
   if (!isRandomChallengeOpen) return null;
 
@@ -30,9 +41,14 @@ export const RandomChallengeModal: React.FC = () => {
     setIsGenerating(false);
     
     setTargetFunction(result.target, result.params, 'random');
-    navigate('/game/random/1/1');
+    useGameStore.getState().setRandomConfig(difficulty, withParams);
+    
+    // 将生成的函数信息编码到 URL 中，避免刷新丢失
+    const encodedLevel = btoa(unescape(encodeURIComponent(JSON.stringify({ t: result.target, p: result.params, d: difficulty, wp: withParams }))));
+    navigate(`/game/random/1/${encodedLevel}`);
+    
     setRandomChallengeOpen(false);
-    useUIStore.getState().addToast(t('random.generatedSuccess', '已生成难度为 {{diff}} 的挑战！', { diff: difficulty.toFixed(2) }), 'success');
+    useUIStore.getState().addToast(t('random.generatedSuccess', { diff: difficulty.toFixed(2) }), 'success');
   };
 
   return (
@@ -52,7 +68,7 @@ export const RandomChallengeModal: React.FC = () => {
             onClick={handleClose}
             className="w-[40px] h-[40px] flex items-center justify-center text-app-text opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] hover:rotate-90 rounded-full transition-all"
           >
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <X size={24} strokeWidth={2} />
           </button>
         </div>
 
@@ -60,19 +76,26 @@ export const RandomChallengeModal: React.FC = () => {
         <div className="flex-1 overflow-y-auto p-[32px] bg-app-bg custom-scrollbar flex flex-col gap-8">
           <div className="flex flex-col items-center gap-6">
             <div className="w-full bg-card-bg border border-card-border p-[24px] rounded-[16px] shadow-sm flex flex-col items-center gap-6">
-              <label className="text-[1.1rem] font-bold text-app-text flex items-center gap-2">
-                {t('random.difficulty', '难度系数')} <span className="text-app-primary text-[1.4rem] ml-1 font-mono">{difficulty.toFixed(2)}</span>
-              </label>
+              <div className="flex flex-col items-center gap-1">
+                <label className="text-[1.1rem] font-bold text-app-text flex items-center gap-2">
+                  {t('random.difficulty')} <span className="text-app-primary text-[1.4rem] ml-1 font-mono">{difficulty.toFixed(2)}</span>
+                </label>
+                <div className="text-[0.9rem] font-bold text-app-primary/80 uppercase tracking-widest flex items-center gap-2">
+                  <span>{getDifficultyLabel(difficulty).en}</span>
+                  <span className="opacity-50">|</span>
+                  <span>{getDifficultyLabel(difficulty).zh}</span>
+                </div>
+              </div>
               <div className="w-full px-2">
                 <input 
                   type="range" 
-                  min="1" 
+                  min="0" 
                   max="7" 
                   step="0.01" 
                   value={difficulty}
                   onChange={(e) => setDifficulty(parseFloat(e.target.value))}
                   className="unified-slider"
-                  style={{ background: `linear-gradient(to right, var(--primary-color) ${((difficulty - 1) / 6) * 100}%, var(--card-border) ${((difficulty - 1) / 6) * 100}%)` }}
+                  style={{ background: `linear-gradient(to right, var(--primary-color) ${(difficulty / 7) * 100}%, var(--card-border) ${(difficulty / 7) * 100}%)` }}
                 />
               </div>
             </div>
@@ -89,10 +112,10 @@ export const RandomChallengeModal: React.FC = () => {
                   onChange={(e) => setWithParams(e.target.checked)}
                   className="hidden"
                 />
-                <span className="font-bold text-app-text text-[1.05rem]">{t('random.withParams', '启用带参数的函数')}</span>
+                <span className="font-bold text-app-text text-[1.05rem]">{t('random.withParams')}</span>
               </label>
               <div className="text-[0.85rem] text-center opacity-70">
-                {withParams ? t('random.paramsDescOn', '将生成带参数 a, b 的函数，支持滑动解构') : t('random.paramsDescOff', '生成不带参数的基础挑战')}
+                {withParams ? t('random.paramsDescOn') : t('random.paramsDescOff')}
               </div>
             </div>
           </div>
@@ -109,12 +132,12 @@ export const RandomChallengeModal: React.FC = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  {t('random.generating', 'AI 生成中...')}
+                  {t('random.generating')}
                 </>
               ) : (
                 <>
                   <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                  {t('random.startBtn', '立即开始挑战')}
+                  {t('random.startBtn')}
                 </>
               )}
             </button>

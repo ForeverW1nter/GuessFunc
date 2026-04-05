@@ -64,7 +64,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
             className="flex items-center gap-[8px] text-[#A0A0A5] hover:text-app-primary transition-colors shrink-0 bg-transparent border-none cursor-pointer outline-none"
           >
             <ArrowLeft size={18} strokeWidth={2} />
-            <span className="text-[0.9rem] font-medium tracking-wider">{t('tools.storyEditor.back', 'BACK')}</span>
+            <span className="text-[0.9rem] font-medium tracking-wider">{t('tools.storyEditor.back')}</span>
           </button>
           <div className="w-px h-6 bg-card-border mx-2" />
           <div className="flex items-center gap-3 truncate">

@@ -11,6 +11,13 @@ export const DesmosFunctionEditor = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const calculatorRef = React.useRef<Desmos.Calculator | null>(null);
   const isUpdatingRef = React.useRef(false);
+  const onChangeRef = React.useRef(onChange);
+  const initialFunctionRef = React.useRef(initialFunction);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+    initialFunctionRef.current = initialFunction;
+  }, [onChange, initialFunction]);
 
   useEffect(() => {
     let isMounted = true;
@@ -34,7 +41,7 @@ export const DesmosFunctionEditor = ({
           
           calc.setExpression({
             id: 'target-function',
-            latex: initialFunction || '',
+            latex: initialFunctionRef.current || '',
             color: '#2563eb' // 替换硬编码的 window.Desmos.Colors.BLUE
           });
 
@@ -44,7 +51,7 @@ export const DesmosFunctionEditor = ({
             if (exprs.length > 0) {
               const firstExpr = exprs[0];
               if (firstExpr && firstExpr.latex !== undefined) {
-                onChange(firstExpr.latex);
+                onChangeRef.current(firstExpr.latex);
               }
             }
           });
@@ -62,7 +69,7 @@ export const DesmosFunctionEditor = ({
         calculatorRef.current = null;
       }
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const calc = calculatorRef.current;

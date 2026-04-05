@@ -54,7 +54,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
                 ? 'text-app-text opacity-70 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]' 
                 : 'text-app-text opacity-30 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]'
             }`}
-            title={isMuted ? t('story.unmute', "开启音乐") : t('story.mute', "关闭音乐")}
+            title={isMuted ? t('story.unmute') : t('story.mute')}
           >
             {isMuted ? <VolumeX size={20} strokeWidth={2} /> : <Volume2 size={20} strokeWidth={2} />}
           </button>
@@ -82,7 +82,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
             remarkPlugins={[remarkMath, remarkGfm]}
             rehypePlugins={[rehypeKatex, rehypeHighlight]}
           >
-            {t('story.archivedFilesTip', '该章节的剧情已归档为碎片文件，请在关卡选择界面的右侧面板中查看。')}
+            {t('story.archivedFilesTip')}
           </ReactMarkdown>
         </div>
 
@@ -91,7 +91,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
             onClick={handleComplete}
             className="inline-flex items-center justify-center gap-[8px] px-[20px] py-[10px] rounded-[8px] font-semibold text-[1rem] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
-            {t('story.startChallenge', '开始挑战')}
+            {t('story.startChallenge')}
           </button>
         </div>
       </div>

@@ -37,7 +37,7 @@ export const TipsModal: React.FC<TipsModalProps> = ({ isOpen, onClose, tipConten
             <MarkdownPanel mdText={tipContent} />
           ) : (
             <div className="text-center text-[#606065] py-[40px]">
-              {t('tips.empty', '本关卡暂无提示。')}
+              {t('tips.empty')}
             </div>
           )}
         </div>

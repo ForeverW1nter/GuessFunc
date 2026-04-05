@@ -7,8 +7,8 @@ export const LanguagePanel: React.FC = () => {
   const { t, i18n } = useTranslation();
 
   const languages = [
-    { code: 'zh', name: t('settings.language.zh', '简体中文') },
-    { code: 'en', name: t('settings.language.en', 'English') }
+    { code: 'zh', name: t('settings.language.zh') },
+    { code: 'en', name: t('settings.language.en') }
   ];
 
   const handleLanguageChange = (code: string) => {
@@ -51,7 +51,7 @@ export const LanguagePanel: React.FC = () => {
       </div>
       <div className="mt-4 p-4 rounded-lg bg-[rgba(var(--primary-color-rgb),0.05)] border border-[rgba(var(--primary-color-rgb),0.1)]">
         <p className="text-[0.9rem] text-app-text opacity-80 leading-relaxed m-0">
-          {t('settings.language.tip', 'Language changes will be applied immediately.')}
+          {t('settings.language.tip')}
         </p>
       </div>
     </div>

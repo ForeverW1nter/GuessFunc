@@ -18,6 +18,8 @@ interface GameState {
   playerParams: Record<string, number>;
   isLevelCleared: boolean;
   domain: [number, number];
+  randomDifficulty: number;
+  randomWithParams: boolean;
   
   // 持久化存储的数据：已通关关卡和已观看剧情
   completedLevels: string[];
@@ -34,6 +36,7 @@ interface GameState {
   markChapterSeen: (chapterId: string) => void;
   markFileRead: (fileId: string) => void;
   isLevelCompleted: (levelId: string) => boolean;
+  setRandomConfig: (difficulty: number, withParams: boolean) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -49,6 +52,8 @@ export const useGameStore = create<GameState>()(
       playerParams: {},
       isLevelCleared: false,
       domain: GAME_CONSTANTS.DEFAULT_DOMAIN,
+      randomDifficulty: 0,
+      randomWithParams: false,
       
       completedLevels: [],
       seenChapters: [],
@@ -62,13 +67,17 @@ export const useGameStore = create<GameState>()(
       
       setDomain: (domain: [number, number]) => set({ domain }),
 
+      setRandomConfig: (difficulty: number, withParams: boolean) => set({ randomDifficulty: difficulty, randomWithParams: withParams }),
+
       evaluateInput: () => {
         const state = get();
         if (!state.targetFunction || !state.playerInput) {
-          return { isMatch: false, reason: i18n.t('game.mathEngine.emptyInput', '请输入函数表达式') };
+          return { isMatch: false, reason: i18n.t('game.mathEngine.emptyInput') };
         }
 
-        const result = evaluateEquivalence(state.targetFunction, state.playerInput, state.playerParams);
+        // 合并 levelParams 和 playerParams，确保目标函数和玩家函数的所有可能参数都被提取并随机化
+        const allParams = { ...state.levelParams, ...state.playerParams };
+        const result = evaluateEquivalence(state.targetFunction, state.playerInput, allParams);
         
         if (result.isMatch) {
           // 如果是剧情模式通关，记录通关状态

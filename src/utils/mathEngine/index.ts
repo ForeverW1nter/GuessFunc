@@ -152,9 +152,20 @@ export function evaluateEquivalence(
     let validPointsCount = 0;
     let domainMismatchCount = 0;
 
+    const paramKeys = Object.keys(params);
+
     for (const xVal of testPoints) {
-      const testContext: Record<string, number> = { ...params };
+      const testContext: Record<string, number> = {};
       testContext['x'] = xVal;
+
+      // 核心修改：针对带有参数的函数，使用随机采样的参数值进行验证
+      // 保证玩家的解析式必须在任意参数下都与目标解析式等效，而不是依赖于某个特定的滑块值
+      for (const p of paramKeys) {
+        // 生成与 x 类似的随机范围 [-5, 5]
+        let pVal = (Math.random() * 10) - 5;
+        if (Math.abs(pVal) < 0.05) pVal = 0.5;
+        testContext[p] = pVal;
+      }
 
       // 评估目标和玩家的表达式
       const targetValBox = targetBox.subs(testContext).N();
@@ -200,7 +211,7 @@ export function evaluateEquivalence(
 
           return { 
             isMatch: false, 
-            reason: i18n.t('game.mathEngine.domainMismatch', '存在大段定义域不匹配')
+            reason: i18n.t('game.mathEngine.domainMismatch')
           };
         }
         continue;
@@ -261,7 +272,7 @@ export function evaluateEquivalence(
           }
           return { 
             isMatch: false, 
-            reason: i18n.t('game.mathEngine.valueMismatch', '数值不匹配: x ≈ {{x}} 时差异过大', { x: xVal.toFixed(2) })
+            reason: i18n.t('game.mathEngine.valueMismatch', { x: xVal.toFixed(2) })
           };
         }
         validPointsCount++;
@@ -275,7 +286,7 @@ export function evaluateEquivalence(
     } else {
       return { 
         isMatch: false, 
-        reason: i18n.t('game.mathEngine.noValidPoints', '在此范围内无法找到有效的对比采样点')
+        reason: i18n.t('game.mathEngine.noValidPoints')
       };
     }
 
@@ -283,7 +294,7 @@ export function evaluateEquivalence(
     logger.error("验证引擎异常:", error);
     return {
       isMatch: false,
-      reason: i18n.t('game.mathEngine.parseError', '表达式解析失败: 格式可能不支持')
+      reason: i18n.t('game.mathEngine.parseError')
     };
   }
 }

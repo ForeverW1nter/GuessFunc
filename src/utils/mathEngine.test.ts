@@ -39,4 +39,25 @@ describe('mathEngine evaluateEquivalence', () => {
     const result = evaluateEquivalence('e^{\\sin\\left(x\\right)}', 'e^{\\sin\\left(x\\right)}');
     expect(result.isMatch).toBe(true);
   });
+
+  it('Parametric function matches exact same parameters', () => {
+    const result = evaluateEquivalence('\\sin(x+a)', '\\sin(x+a)', { a: 2 });
+    expect(result.isMatch).toBe(true);
+  });
+
+  it('Parametric function fails when parameter is hardcoded to specific value', () => {
+    const result = evaluateEquivalence('\\sin(x+a)', '\\sin(x+2)', { a: 2 });
+    expect(result.isMatch).toBe(false);
+  });
+
+  it('Fails when undefined parameter makes both evaluate to symbolic expressions', () => {
+    // In the real game, the target function's parameters are ALWAYS included in `params` because we merge `levelParams`.
+    const result = evaluateEquivalence('\\sin(x+a)', '\\cos(x+b)', { a: 2 });
+    expect(result.isMatch).toBe(false);
+  });
+
+  it('Fails when player uses a different parameter name even if it is in params', () => {
+    const result = evaluateEquivalence('\\sin(x+a)', '\\sin(x+b)', { a: 2, b: 2 });
+    expect(result.isMatch).toBe(false);
+  });
 });

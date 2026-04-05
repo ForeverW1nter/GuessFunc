@@ -15,5 +15,8 @@ export default defineConfig({
         tools: resolve(__dirname, 'tools/index.html')
       }
     }
+  },
+  test: {
+    environment: 'jsdom',
   }
-})
+} as import('vite').UserConfig)

@@ -42,13 +42,13 @@ export const CreateLevelConfirmModal: React.FC<CreateLevelConfirmModalProps> = (
                 ))}
               </div>
               <p className="text-sm text-app-text/60 mt-2">
-                {t('sidebar.paramsNote1', '（注：以上数值为参数默认数值，未在函数中使用的游离参数已被自动过滤。）')}
+                {t('sidebar.paramsNote1')}
               </p>
             </>
           )}
           {Object.keys(createPreview.params).length === 0 && (
             <p className="text-sm text-app-text/60 mt-2">
-              {t('sidebar.paramsNote2', '注：未在函数中使用的游离参数已被自动过滤。')}
+              {t('sidebar.paramsNote2')}
             </p>
           )}
         </div>

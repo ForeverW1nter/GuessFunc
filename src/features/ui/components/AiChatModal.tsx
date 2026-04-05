@@ -58,7 +58,7 @@ export const AiChatModal: React.FC = () => {
           aiManager.setAiWelcomeMessage(response);
           setMessages([{ role: 'ai', content: response }]);
         } catch (error: unknown) {
-          const errorMsg = error instanceof Error ? error.message : t('ai.initError', '初始化失败');
+          const errorMsg = error instanceof Error ? error.message : t('ai.initError');
           setMessages([{ role: 'ai', content: t('ai.welcomeError', { error: errorMsg }), isError: true } as unknown as { role: 'ai', content: string }]);
         } finally {
           setIsLoading(false);

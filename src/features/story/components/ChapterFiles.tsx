@@ -50,15 +50,15 @@ export const ChapterFiles: React.FC<ChapterFilesProps> = ({
           {chapter.title}
         </h2>
         <div className="text-[0.8rem] text-[#606065] font-mono">
-          {t('tools.storyEditor.path', 'Path:')} ~/{routeId}/{chapter.id}
+          {t('tools.storyEditor.path')} ~/{routeId}/{chapter.id}
         </div>
       </div>
 
       {/* Table Header */}
       <div className="grid grid-cols-[32px_1fr_auto] gap-[16px] px-[24px] md:px-[40px] py-[12px] border-b border-[#2A2A2E] text-[0.7rem] text-[#606065] uppercase tracking-widest sticky top-0 bg-[#121214] z-10">
-        <div className="w-[32px] text-center">{t('tools.storyEditor.sts', 'STS')}</div>
-        <div>{t('tools.storyEditor.nameCol', 'Name')}</div>
-        <div className="text-right">{t('tools.storyEditor.typeCol', 'Type')}</div>
+        <div className="w-[32px] text-center">{t('tools.storyEditor.sts')}</div>
+        <div>{t('tools.storyEditor.nameCol')}</div>
+        <div className="text-right">{t('tools.storyEditor.typeCol')}</div>
       </div>
 
       {/* Files */}
@@ -107,10 +107,10 @@ export const ChapterFiles: React.FC<ChapterFilesProps> = ({
               <div className="flex items-center gap-[8px] justify-end">
                 {level.type === 'boss' && (
                   <span className="px-[6px] py-[2px] bg-[rgba(239,68,68,0.1)] text-[#ef4444] text-[0.65rem] border border-[rgba(239,68,68,0.2)] rounded-[2px]">
-                    {t('tools.storyEditor.sysCritical', 'SYS.CRITICAL')}
+                    {t('tools.storyEditor.sysCritical')}
                   </span>
                 )}
-                <span className="text-[0.75rem] text-[#606065] flex items-center justify-center" title={isLocked ? t('tools.storyEditor.encrypted', 'ENCRYPTED') : t('tools.storyEditor.executable', 'EXECUTABLE')}>
+                <span className="text-[0.75rem] text-[#606065] flex items-center justify-center" title={isLocked ? t('tools.storyEditor.encrypted') : t('tools.storyEditor.executable')}>
                   <Gamepad2 size={16} strokeWidth={2} />
                 </span>
               </div>

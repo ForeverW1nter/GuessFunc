@@ -108,7 +108,7 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
         setSkipProgress(0);
         skipProgressRef.current = 0;
         onCloseRef.current();
-        addToast(t('story.ending.musicTip', '音乐已解锁，你可以长按界面上的音符图标自由切换。'), 'info');
+        addToast(t('story.ending.musicTip'), 'info');
         return;
       }
       
@@ -200,13 +200,13 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
           style={{ opacity: stage >= 2 && stage < 5 ? 1 : 0, pointerEvents: stage >= 2 && stage < 5 ? 'auto' : 'none' }}
         >
           <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/70 transition-opacity duration-[2000ms]" style={{ opacity: stage >= 2 ? 1 : 0 }}>
-            {t('story.ending.line1', '如果你在找结局，这里没有。')}
+            {t('story.ending.line1')}
           </p>
           <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/80 transition-opacity duration-[2000ms]" style={{ opacity: stage >= 3 ? 1 : 0 }}>
-            {t('story.ending.line2', '但如果你打开文档，开始写第一行……')}
+            {t('story.ending.line2')}
           </p>
           <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/90 transition-opacity duration-[2000ms]" style={{ opacity: stage >= 4 ? 1 : 0 }}>
-            {t('story.ending.line3', '那么 Forewall 就会在白色旷野上转过身来。')}
+            {t('story.ending.line3')}
           </p>
         </div>
 
@@ -215,13 +215,13 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
             className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/90 transition-opacity duration-[2000ms] absolute"
             style={{ opacity: stage >= 6 && stage < 7 ? 1 : 0 }}
           >
-            {t('story.ending.core', '他一直在等。')}
+            {t('story.ending.core')}
           </p>
           <p 
             className="text-xl md:text-2xl font-light tracking-[0.2em] text-white/90 transition-opacity duration-[2000ms] absolute"
             style={{ opacity: stage >= 8 && stage < 9 ? 1 : 0 }}
           >
-            {t('story.ending.sub', '故事没有结束，只是换了一个人继续写。')}
+            {t('story.ending.sub')}
           </p>
         </div>
       </div>
@@ -249,7 +249,7 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
                 setStage(11); // Trigger Fade Out
                 setTimeout(() => {
                   onCloseRef.current();
-                  addToast(t('story.ending.musicTip', '音乐已解锁，你可以长按界面上的音符图标自由切换。'), 'info');
+                  addToast(t('story.ending.musicTip'), 'info');
                 }, 3000); // 3s for the fade out to complete
               }
             }}
@@ -280,7 +280,7 @@ export const EndingAnimationViewer: React.FC<{ content: string, onClose: () => v
       {/* Skip Hint */}
       {stage >= 10 && stage < 11 && (
         <div className="absolute bottom-12 right-12 z-30 flex items-center gap-4 animate-fade-in opacity-50">
-          <span className="text-xs tracking-widest font-mono text-white/50">{t('story.ending.skip', '长按任意位置跳过')}</span>
+          <span className="text-xs tracking-widest font-mono text-white/50">{t('story.ending.skip')}</span>
           <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
             <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
             <circle 

@@ -2,11 +2,13 @@ import React from 'react';
 import { Folder, FolderOpen, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import type { ChapterData } from '../../../types/story';
+
 interface ChapterListProps {
   isMobile: boolean;
   selectedChapterId: string | null;
   currentRouteId: string | undefined;
-  unlockedChapters: Record<string, unknown>[];
+  unlockedChapters: ChapterData[];
   completedLevels: string[];
   onSelectChapter: (id: string) => void;
 }
@@ -27,16 +29,15 @@ export const ChapterList: React.FC<ChapterListProps> = ({
       flex flex-col h-full bg-[#0A0A0B] overflow-y-auto custom-scrollbar shrink-0
     `}>
       <div className="px-[16px] py-[12px] text-[0.7rem] text-[#606065] tracking-[0.2em] uppercase sticky top-0 bg-[#0A0A0B]/90 backdrop-blur z-10">
-        {t('tools.storyEditor.explorer', 'Explorer')} / {currentRouteId}
+        {t('tools.storyEditor.explorer')} / {currentRouteId}
       </div>
       
       <div className="flex flex-col py-[8px]">
         {unlockedChapters.length === 0 && (
-          <div className="px-[16px] py-[20px] text-[#606065] text-[0.8rem]">{t('tools.storyEditor.noDirs', 'No directories found.')}</div>
+          <div className="px-[16px] py-[20px] text-[#606065] text-[0.8rem]">{t('tools.storyEditor.noDirs')}</div>
         )}
         
-        {unlockedChapters.map((chapterObj) => {
-          const chapter = chapterObj as unknown as { id: string; title: string; levels: { id: string }[] };
+        {unlockedChapters.map((chapter) => {
           const chapterLevelIds = chapter.levels.map(l => l.id);
           const completedCount = chapterLevelIds.filter((id: string) => completedLevels.includes(id)).length;
           const totalCount = chapterLevelIds.length;

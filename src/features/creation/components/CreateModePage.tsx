@@ -3,32 +3,38 @@ import React, { useState } from 'react';
 import { useUIStore } from '../../../store/useUIStore';
 import { Share2, PenTool, Copy, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { extractUsedParams } from '../../../utils/mathEngine';
 
 export const CreateModePage: React.FC = () => {
   const { t } = useTranslation();
   const { addToast } = useUIStore();
   const navigate = useNavigate();
   const [funcInput, setFuncInput] = useState('x^2 + 2x + 1');
-  const [titleInput, setTitleInput] = useState(t('create.defaultTitle', '我的自定义关卡'));
-  const [descInput, setDescInput] = useState(t('create.defaultDesc', '来看看你能否猜出这个函数！'));
+  const [titleInput, setTitleInput] = useState(t('create.defaultTitle'));
+  const [descInput, setDescInput] = useState(t('create.defaultDesc'));
   const [copied, setCopied] = useState(false);
 
-  const generatedUrl = `${window.location.origin}${window.location.pathname}#/game/custom/1/1?target=${encodeURIComponent(funcInput)}&title=${encodeURIComponent(titleInput)}`;
+    const levelData = { 
+      t: funcInput,
+      p: extractUsedParams(funcInput, {}) // We can pass empty object for playerParams, but ideally we'd pass any active custom params if supported in UI
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(levelData))));
+    const generatedUrl = `${window.location.origin}${window.location.pathname}#/game/custom/1/${encoded}?title=${encodeURIComponent(titleInput)}`;
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(generatedUrl);
       setCopied(true);
-      addToast(t('create.copySuccess', '复制成功！'), 'success');
+      addToast(t('create.copySuccess'), 'success');
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error(error);
-      addToast(t('create.copyError', '复制失败'), 'error');
+      addToast(t('create.copyError'), 'error');
     }
   };
 
   const handleTestPlay = () => {
-    navigate(`/game/custom/1/1?target=${encodeURIComponent(funcInput)}`);
+    navigate(`/game/custom/1/${encoded}?title=${encodeURIComponent(titleInput)}`);
   };
 
   return (
@@ -36,23 +42,23 @@ export const CreateModePage: React.FC = () => {
       <div className="max-w-3xl w-full mx-auto space-y-6">
         <div className="flex items-center gap-3 mb-8">
           <PenTool size={32} className="text-app-primary" />
-          <h1 className="m-0 text-3xl font-bold text-app-text">{t('sidebar.freeCreateMode', '自由创作')}</h1>
+          <h1 className="m-0 text-3xl font-bold text-app-text">{t('sidebar.freeCreateMode')}</h1>
         </div>
 
         <div className="bg-card-bg border border-card-border rounded-2xl p-6 shadow-sm space-y-5">
           <div className="space-y-2">
-            <label className="font-semibold text-app-text text-lg">{t('create.targetFuncLabel', '目标函数表达式 (LaTeX 或纯文本)')}</label>
+            <label className="font-semibold text-app-text text-lg">{t('create.targetFuncLabel')}</label>
             <input 
               type="text" 
               value={funcInput}
               onChange={(e) => setFuncInput(e.target.value)}
               className="w-full bg-app-bg border-2 border-card-border text-app-text px-4 py-3 rounded-xl focus:border-app-primary outline-none transition-colors text-lg font-mono"
-              placeholder={t('create.targetFuncPlaceholder', '例如: \\sin(x) * x^2')}
+              placeholder={t('create.targetFuncPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="font-semibold text-app-text text-lg">{t('create.levelTitleLabel', '关卡标题')}</label>
+            <label className="font-semibold text-app-text text-lg">{t('create.levelTitleLabel')}</label>
             <input 
               type="text" 
               value={titleInput}
@@ -62,7 +68,7 @@ export const CreateModePage: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="font-semibold text-app-text text-lg">{t('create.levelDescLabel', '关卡描述')}</label>
+            <label className="font-semibold text-app-text text-lg">{t('create.levelDescLabel')}</label>
             <textarea 
               value={descInput}
               onChange={(e) => setDescInput(e.target.value)}
@@ -76,7 +82,7 @@ export const CreateModePage: React.FC = () => {
               onClick={handleTestPlay}
               className="flex-1 bg-transparent border-2 border-app-primary text-app-primary font-bold py-3 rounded-xl hover:bg-app-primary/10 transition-all flex items-center justify-center gap-2"
             >
-              {t('create.testPlayBtn', '试玩此关卡')}
+              {t('create.testPlayBtn')}
             </button>
           </div>
         </div>
@@ -84,10 +90,10 @@ export const CreateModePage: React.FC = () => {
         <div className="bg-card-bg border border-card-border rounded-2xl p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-3">
             <Share2 size={24} className="text-app-success" />
-            <h2 className="m-0 text-2xl font-bold text-app-text">{t('create.shareTitle', '分享你的关卡')}</h2>
+            <h2 className="m-0 text-2xl font-bold text-app-text">{t('create.shareTitle')}</h2>
           </div>
           <p className="text-base opacity-80 text-app-text m-0">
-            {t('create.shareDesc', '复制下方链接发送给你的朋友，他们就可以直接挑战你设计的函数了！')}
+            {t('create.shareDesc')}
           </p>
           
           <div className="flex items-center gap-3 bg-app-bg p-4 rounded-xl border-2 border-card-border">

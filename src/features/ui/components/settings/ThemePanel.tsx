@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useUIStore } from '../../../../store/useUIStore';
 import { useTranslation } from 'react-i18next';
+import { ToggleSwitch } from '../ToggleSwitch';
 
 // 辅助函数：HEX转RGB
 const hexToRgb = (hex: string) => {
@@ -58,7 +59,7 @@ export const ThemePanel: React.FC = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between px-4 py-3.5 border border-card-border bg-card-bg text-app-text rounded-xl cursor-pointer hover:border-app-primary transition-all" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
         <div className="flex items-center gap-2">
-          <span className="font-medium text-base">{t('settings.theme.darkMode', '深色模式')}</span>
+          <span className="font-medium text-base">{t('settings.theme.darkMode')}</span>
           <span className="theme-icon text-lg flex items-center justify-center opacity-80">
             {theme === 'dark' ? (
               <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -67,15 +68,13 @@ export const ThemePanel: React.FC = () => {
             )}
           </span>
         </div>
-        <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${theme === 'dark' ? 'bg-app-primary' : 'bg-card-border'}`}>
-          <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform ${theme === 'dark' ? 'translate-x-6' : 'translate-x-1'}`} />
-        </div>
+        <ToggleSwitch checked={theme === 'dark'} />
       </div>
 
       <div className="h-px bg-card-border w-full my-4" />
 
       <div className="space-y-4">
-        <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.theme.primaryColor', '主题色')}</h3>
+        <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.theme.primaryColor')}</h3>
         
         <div className="pt-2 space-y-5">
           <div className="flex flex-col gap-3">
@@ -94,7 +93,7 @@ export const ThemePanel: React.FC = () => {
                   placeholder="#00BCD4"
                   maxLength={7}
                 />
-                <span className="text-xs opacity-50 mt-1 px-1">{t('settings.theme.hexCode', 'HEX 颜色码')}</span>
+                <span className="text-xs opacity-50 mt-1 px-1">{t('settings.theme.hexCode')}</span>
               </div>
             </div>
           </div>

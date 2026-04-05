@@ -21,6 +21,7 @@
     "noTarget": "No Target Function",
     "verifySuccess": "Verification Success!",
     "verifyFailed": "Verification Failed",
+    "wrongAnswer": "Wrong Answer",
     "syntaxError": "Syntax Error",
     "domainError": "Domain Mismatch",
     "toleranceError": "Exceeds Tolerance",
@@ -39,7 +40,8 @@
       "noValidPoints": "No valid sample points found in this range",
       "parseError": "Expression parsing failed: format may not be supported",
       "emptyInput": "Please enter a function expression"
-    }
+    },
+    "verifyTrigger": "Verify Trigger"
   },
   "sidebar": {
     "createEmptyError": "Please enter the function you want to create in the first line of the graph panel!",
@@ -62,7 +64,8 @@
     "validParams": "Valid Parameters:",
     "paramsNote1": "(Note: These are default parameter values. Unused parameters have been automatically filtered out.)",
     "paramsNote2": "Note: Unused parameters have been automatically filtered out.",
-    "confirmCreateBtn": "Confirm Create"
+    "confirmCreateBtn": "Confirm Create",
+    "title": "Title"
   },
   "ai": {
     "initError": "Initialization failed",
@@ -140,6 +143,7 @@
       "testFailed": "Connection failed, please check your config. Error: {{error}}"
     },
     "font": {
+      "menuTitle": "Font Settings",
       "title": "Font Size Settings",
       "desc": "Adjust the display size for global text and story:",
       "resetBtn": "Reset to Default Size",
@@ -161,7 +165,9 @@
     },
     "language": {
       "title": "Language Settings",
-      "tip": "Language changes will be applied immediately."
+      "tip": "Language changes will take effect immediately.",
+      "zh": "简体中文",
+      "en": "English"
     },
     "save": {
       "loadSuccess": "Loaded successfully!",
@@ -315,7 +321,10 @@
       "emptySelect": "Please select a directory to view its contents",
       "preview": "Preview",
       "systemExit": "SYSTEM.EXIT",
-      "noDirs": "No directories found."
+      "noDirs": "No directories found.",
+      "sysCritical": "SYS.CRITICAL",
+      "encrypted": "ENCRYPTED",
+      "executable": "EXECUTABLE"
     },
     "levelTester": {
       "name": "Level Sandbox",
@@ -326,5 +335,6 @@
       "light": "Switch to Light Mode",
       "dark": "Switch to Dark Mode"
     }
-  }
+  },
+  "\\n": "\\n"
 }
