@@ -69,8 +69,10 @@ export const ChapterFiles: React.FC<ChapterFilesProps> = ({
       >
         {/* 渲染关卡 (.exe) */}
         {chapter.levels.map((level, originalIdx) => {
-          const isCompleted = completedLevels.includes(level.id);
-          const chapterLevelIds = chapter.levels.map(l => l.id);
+          const globalLevelId = `${routeId}/${chapter.id}/${level.id}`;
+          const isCompleted = completedLevels.includes(globalLevelId);
+          
+          const chapterLevelIds = chapter.levels.map(l => `${routeId}/${chapter.id}/${l.id}`);
           const chapterCompletedCount = chapterLevelIds.filter(id => completedLevels.includes(id)).length;
           const isLocked = !isAssistMode && originalIdx >= chapterCompletedCount + 3;
           const isHidden = !isAssistMode && originalIdx > chapterCompletedCount + 3;
@@ -120,7 +122,9 @@ export const ChapterFiles: React.FC<ChapterFilesProps> = ({
 
         {/* 渲染掉落文件 */}
         {chapter.files?.map((file) => {
-          const isLocked = file.unlockConditions ? !file.unlockConditions.every(id => completedLevels.includes(id)) : false;
+          // 检查所有前置条件是否都包含在 completedLevels 中
+          // 这里假设 unlockConditions 存储的是 levelId，我们在检查时转换为 globalId
+          const isLocked = file.unlockConditions ? !file.unlockConditions.every(id => completedLevels.includes(`${routeId}/${chapter.id}/${id}`)) : false;
           
           if (isLocked && !isAssistMode) return null; // 不显示未解锁文件
           

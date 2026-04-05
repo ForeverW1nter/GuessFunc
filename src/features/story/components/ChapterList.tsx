@@ -38,7 +38,7 @@ export const ChapterList: React.FC<ChapterListProps> = ({
         )}
         
         {unlockedChapters.map((chapter) => {
-          const chapterLevelIds = chapter.levels.map(l => l.id);
+          const chapterLevelIds = chapter.levels.map(l => `${currentRouteId}/${chapter.id}/${l.id}`);
           const completedCount = chapterLevelIds.filter((id: string) => completedLevels.includes(id)).length;
           const totalCount = chapterLevelIds.length;
           const isAllCompleted = completedCount === totalCount && totalCount > 0;

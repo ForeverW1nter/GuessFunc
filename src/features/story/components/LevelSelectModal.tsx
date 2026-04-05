@@ -84,7 +84,7 @@ export const LevelSelectModal: React.FC = () => {
       const previousChapter = chapterIndex > 0 ? currentRoute.chapters[chapterIndex - 1] : null;
       let isChapterUnlocked = true;
       if (previousChapter && !isAssistMode) {
-        const prevChapterLevelIds = previousChapter.levels.map(l => l.id);
+        const prevChapterLevelIds = previousChapter.levels.map(l => `${selectedRouteId}/${previousChapter.id}/${l.id}`);
         const prevCompletedCount = prevChapterLevelIds.filter(id => completedLevels.includes(id)).length;
         const requiredCount = Math.ceil(prevChapterLevelIds.length * 0.8);
         isChapterUnlocked = prevCompletedCount >= requiredCount;
@@ -94,7 +94,7 @@ export const LevelSelectModal: React.FC = () => {
       }
     });
     return status;
-  }, [currentRoute, isAssistMode, completedLevels]);
+  }, [currentRoute, isAssistMode, completedLevels, selectedRouteId]);
 
   const currentFile = selectedChapterId ? openFiles[selectedChapterId] : null;
 

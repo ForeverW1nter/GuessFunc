@@ -110,7 +110,7 @@ const LevelRoute = () => {
             const previousChapter = chapterIndex > 0 ? route.chapters[chapterIndex - 1] : null;
             let isChapterUnlocked = true;
             if (previousChapter && !isAssistMode) {
-              const prevChapterLevelIds = previousChapter.levels.map(l => l.id);
+              const prevChapterLevelIds = previousChapter.levels.map(l => `${routeId}/${previousChapter.id}/${l.id}`);
               const prevCompletedCount = prevChapterLevelIds.filter(id => completedLevels.includes(id)).length;
               const requiredCount = Math.ceil(prevChapterLevelIds.length * 0.8);
               isChapterUnlocked = prevCompletedCount >= requiredCount;
@@ -122,7 +122,7 @@ const LevelRoute = () => {
             }
 
             // Check level lock status
-            const chapterCompletedCount = chapter.levels.filter(l => completedLevels.includes(l.id)).length;
+            const chapterCompletedCount = chapter.levels.filter(l => completedLevels.includes(`${routeId}/${chapterId}/${l.id}`)).length;
             const isLocked = !isAssistMode && levelIndex >= chapterCompletedCount + 3;
 
             if (isLocked) {

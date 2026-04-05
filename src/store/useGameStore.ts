@@ -35,7 +35,7 @@ interface GameState {
   nextLevel: () => void;
   markChapterSeen: (chapterId: string) => void;
   markFileRead: (fileId: string) => void;
-  isLevelCompleted: (levelId: string) => boolean;
+  isLevelCompleted: (routeId: string, chapterId: string, levelId: string) => boolean;
   setRandomConfig: (difficulty: number, withParams: boolean) => void;
 }
 
@@ -81,12 +81,13 @@ export const useGameStore = create<GameState>()(
         
         if (result.isMatch) {
           // 如果是剧情模式通关，记录通关状态
-          if (state.gameMode === 'story' && state.currentLevel) {
+          if (state.gameMode === 'story' && state.currentLevel && state.currentChapter && state.currentRoute) {
             const currentCompleted = state.completedLevels;
-            if (!currentCompleted.includes(state.currentLevel)) {
+            const globalLevelId = `${state.currentRoute}/${state.currentChapter}/${state.currentLevel}`;
+            if (!currentCompleted.includes(globalLevelId)) {
               set({ 
                 isLevelCleared: true,
-                completedLevels: [...currentCompleted, state.currentLevel]
+                completedLevels: [...currentCompleted, globalLevelId]
               });
             } else {
               set({ isLevelCleared: true });
@@ -136,8 +137,8 @@ export const useGameStore = create<GameState>()(
         }
       },
 
-      isLevelCompleted: (levelId: string) => {
-        return get().completedLevels.includes(levelId);
+      isLevelCompleted: (routeId: string, chapterId: string, levelId: string) => {
+        return get().completedLevels.includes(`${routeId}/${chapterId}/${levelId}`);
       }
     }),
     {
