@@ -94,7 +94,10 @@
     "startBtn": "立即开始挑战",
     "noApiKey": "未配置 AI API Key，请在设置中配置后再使用 AI 生成",
     "aiFailedFallback": "AI 生成失败，已回退到本地生成算法",
-    "generatedSuccess": "已生成难度为 {{diff}} 的挑战！"
+    "generatedSuccess": "已生成难度为 {{diff}} 的挑战！",
+    "withParams": "启用带参数的函数",
+    "paramsDescOn": "将生成带参数 a, b 的函数，支持滑动解构",
+    "paramsDescOff": "生成不带参数的基础挑战"
   },
   "levelSelect": {
     "title": "选择关卡",

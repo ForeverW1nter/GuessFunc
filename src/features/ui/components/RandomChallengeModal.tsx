@@ -4,7 +4,6 @@ import { useUIStore } from '../../../store/useUIStore';
 import { useGameStore } from '../../../store/useGameStore';
 import { useNavigate } from 'react-router-dom';
 import { generateFunctionByDifficulty } from '../../../utils/mathEngine/generator';
-import { aiManager } from '../../../utils/aiManager';
 
 export const RandomChallengeModal: React.FC = () => {
   const { t } = useTranslation();
@@ -12,8 +11,8 @@ export const RandomChallengeModal: React.FC = () => {
   const { setTargetFunction } = useGameStore();
   const navigate = useNavigate();
 
-  const [difficulty, setDifficulty] = useState<number>(1.5);
-  const useAI = false; // 默认不使用AI (UI已隐藏)
+  const [difficulty, setDifficulty] = useState<number>(1);
+  const [withParams, setWithParams] = useState<boolean>(false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   if (!isRandomChallengeOpen) return null;
@@ -25,29 +24,12 @@ export const RandomChallengeModal: React.FC = () => {
   };
 
   const handleStart = async () => {
-    let targetFunc = '';
+    setIsGenerating(true);
+    // 使用本地拓扑变换算法生成
+    const result = generateFunctionByDifficulty(difficulty, withParams);
+    setIsGenerating(false);
     
-    if (useAI) {
-      if (!aiManager.hasValidKey()) {
-        useUIStore.getState().addToast(t('random.noApiKey', '未配置 AI API Key，请在设置中配置后再使用 AI 生成'), 'error');
-        return;
-      }
-      setIsGenerating(true);
-      const aiResult = await aiManager.fetchFunction(difficulty);
-      setIsGenerating(false);
-      
-      if (aiResult) {
-        targetFunc = aiResult;
-      } else {
-        useUIStore.getState().addToast(t('random.aiFailedFallback', 'AI 生成失败，已回退到本地生成算法'), 'error');
-        targetFunc = generateFunctionByDifficulty(difficulty);
-      }
-    } else {
-      // 使用本地算法生成基于难度系数的函数
-      targetFunc = generateFunctionByDifficulty(difficulty);
-    }
-    
-    setTargetFunction(targetFunc, {}, 'random');
+    setTargetFunction(result.target, result.params, 'random');
     navigate('/game/random/1/1');
     setRandomChallengeOpen(false);
     useUIStore.getState().addToast(t('random.generatedSuccess', '已生成难度为 {{diff}} 的挑战！', { diff: difficulty.toFixed(2) }), 'success');
@@ -84,37 +66,35 @@ export const RandomChallengeModal: React.FC = () => {
               <div className="w-full px-2">
                 <input 
                   type="range" 
-                  min="0" 
-                  max="5" 
+                  min="1" 
+                  max="7" 
                   step="0.01" 
                   value={difficulty}
                   onChange={(e) => setDifficulty(parseFloat(e.target.value))}
                   className="unified-slider"
-                  style={{ background: `linear-gradient(to right, var(--primary-color) ${(difficulty / 5) * 100}%, var(--card-border) ${(difficulty / 5) * 100}%)` }}
+                  style={{ background: `linear-gradient(to right, var(--primary-color) ${((difficulty - 1) / 6) * 100}%, var(--card-border) ${((difficulty - 1) / 6) * 100}%)` }}
                 />
               </div>
             </div>
 
-            {/* AI Toggle temporarily hidden
             <div className="w-full bg-card-bg border border-card-border p-[20px] rounded-[16px] shadow-sm flex flex-col items-center gap-4 hover:border-app-primary/50 transition-colors">
               <label className="flex items-center gap-4 cursor-pointer group w-full justify-center">
                 <div className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 bg-card-border group-hover:opacity-80">
-                  {useAI && <div className="absolute inset-0 rounded-full bg-app-primary" />}
-                  <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform z-10 ${useAI ? 'translate-x-6' : 'translate-x-1'}`} />
+                  {withParams && <div className="absolute inset-0 rounded-full bg-app-primary" />}
+                  <span className={`inline-block h-4 w-4 rounded-full bg-white transition transform z-10 ${withParams ? 'translate-x-6' : 'translate-x-1'}`} />
                 </div>
                 <input 
                   type="checkbox" 
-                  checked={useAI}
-                  onChange={(e) => setUseAI(e.target.checked)}
+                  checked={withParams}
+                  onChange={(e) => setWithParams(e.target.checked)}
                   className="hidden"
                 />
-                <span className="font-bold text-app-text text-[1.05rem]">{t('random.useAI', '启用 AI 生成高质量题目')}</span>
+                <span className="font-bold text-app-text text-[1.05rem]">{t('random.withParams', '启用带参数的函数')}</span>
               </label>
               <div className="text-[0.85rem] text-center opacity-70">
-                {useAI ? t('random.aiDescOn', 'AI 将根据难度系数生成更合理的函数') : t('random.aiDescOff', '将使用本地算法生成不同难度的函数')}
+                {withParams ? t('random.paramsDescOn', '将生成带参数 a, b 的函数，支持滑动解构') : t('random.paramsDescOff', '生成不带参数的基础挑战')}
               </div>
             </div>
-            */}
           </div>
 
           <div className="text-center mt-2">

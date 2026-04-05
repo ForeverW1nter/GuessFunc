@@ -72,6 +72,16 @@ export const GraphRenderer = () => {
             lineWidth: 4, // 原版是 4
           });
 
+          // 4. 如果有关卡参数，注入到面板中，使得参数滑块显示在目标函数下方
+          if (levelParams && Object.keys(levelParams).length > 0) {
+            const exprs = Object.entries(levelParams).map(([key, val]) => ({
+              id: `param-${key}`,
+              latex: `${key}=${val}`,
+              sliderBounds: { min: "-10", max: "10", step: "0.1" }
+            }));
+            calc.setExpressions(exprs);
+          }
+
           // 监听表达式变化
           calc.observeEvent('change', () => {
             const expressions = calc.getExpressions();
@@ -123,7 +133,7 @@ export const GraphRenderer = () => {
         calculatorRef.current = null;
       }
     };
-  }, [setPlayerInput, targetFunction, i18n.language]); // 仅在初始化时运行一次，补充了 lint 依赖
+  }, [setPlayerInput, targetFunction, levelParams, i18n.language]); // 仅在初始化时运行一次，补充了 lint 依赖
 
   useEffect(() => {
     // 当容器大小改变时（例如移动端地址栏收起导致的高度变化），通知 Desmos 重新计算尺寸
@@ -167,7 +177,8 @@ export const GraphRenderer = () => {
     if (levelParams && Object.keys(levelParams).length > 0) {
       const exprs = Object.entries(levelParams).map(([key, val]) => ({
         id: `param-${key}`,
-        latex: `${key}=${val}`
+        latex: `${key}=${val}`,
+        sliderBounds: { min: "-10", max: "10", step: "0.1" }
       }));
       calc.setExpressions(exprs);
     }

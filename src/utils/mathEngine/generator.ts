@@ -1,278 +1,183 @@
-// src/utils/mathEngine/generator.ts
-// Math engine generator
-
-// Remove unused evaluateEquivalence if present
-
-import { GAME_CONSTANTS } from '../constants';
-
-type NodeType = 'var' | 'const' | 'unary' | 'binary';
-
-export abstract class ASTNode {
-  abstract type: NodeType;
-  abstract toString(): string;
-  abstract evaluate(x: number): number;
-  abstract getComplexity(): number;
-  
-  // 添加一个方法来判断该节点是否为纯常数树（不包含变量 x）
-  abstract isConstant(): boolean;
-  // 添加一个方法来计算如果该节点是纯常数，它的值是多少
-  abstract getConstantValue(): number;
+export interface GeneratedFunction {
+  target: string;
+  params: Record<string, number>;
 }
 
-class VarNode extends ASTNode {
-  type: NodeType = 'var';
-  name: string;
-  constructor(name: string = 'x') {
-    super();
-    this.name = name;
-  }
-  override toString() { return this.name; }
-  override evaluate(x: number) { return x; }
-  override getComplexity() { return 0; }
-  override isConstant() { return false; }
-  override getConstantValue(): number { throw new Error('Not a constant'); }
-}
+// ----------------------------------------------------------------------------------
+// 核心思想：代数与几何同胚构造
+// 我们不再随机拼凑算子，而是将函数生成看作是对某个“基础几何流形”的拓扑变换。
+// 每一次变换都有明确的解析几何意义（对称破缺、渐近线旋转、定义域撕裂等）。
+// ----------------------------------------------------------------------------------
 
-class ConstNode extends ASTNode {
-  type: NodeType = 'const';
-  public value: number;
-  constructor(value: number) { 
-    super(); 
-    this.value = value;
-  }
-  override toString() { return this.value.toString(); }
-  override evaluate() { return this.value; }
-  override getComplexity() { return 0.1; }
-  override isConstant() { return true; }
-  override getConstantValue() { return this.value; }
-}
+// 1. 基础流形 (Base Manifolds) - 拥有极强解析特征的函数
+const BASE_MANIFOLDS = [
+  'x', // 线性
+  'x^2', // 抛物线（下凸偶函数）
+  '\\left|x\\right|', // 绝对值（尖点）
+  '\\frac{1}{x}', // 双曲线（垂直渐近线）
+  '\\frac{1}{x^2+1}', // 阿涅西之箕（有界钟形）
+  '\\sqrt{1-x^2}', // 半圆（有限闭区间定义域）
+  '\\sin(x)', // 周期波
+  'e^x', // 单侧爆炸增长，单侧渐近线
+  '\\ln(x)', // 单侧垂直渐近线
+  '\\cos(x)',
+  'x^3',
+  '\\arctan(x)', // 经典的水平渐近线
+  '\\arcsin(x)'
+];
 
-type UnaryOp = 'exp' | 'ln' | 'sin' | 'cos' | 'tan' | 'arcsin' | 'arccos' | 'arctan' | 'sinh' | 'cosh' | 'tanh';
-
-const UNARY_WEIGHTS: Record<UnaryOp, number> = {
-  'sin': 0.2, 'cos': 0.2, 'tan': 0.5,
-  'exp': 0.4, 'ln': 0.5,
-  'arcsin': 0.8, 'arccos': 0.8, 'arctan': 0.6,
-  'sinh': 0.7, 'cosh': 0.7, 'tanh': 0.8
-};
-
-class UnaryNode extends ASTNode {
-  type: NodeType = 'unary';
-  public op: UnaryOp;
-  public child: ASTNode;
-  
-  constructor(op: UnaryOp, child: ASTNode) { 
-    super(); 
-    this.op = op;
-    this.child = child;
-  }
-  
-  override toString() {
-    const inner = this.child.toString();
-    if (this.op === 'exp') return `e^{${inner}}`;
-    return `\\${this.op}\\left(${inner}\\right)`;
-  }
-  
-  override evaluate(x: number) {
-    const val = this.child.evaluate(x);
-    switch (this.op) {
-      case 'sin': return Math.sin(val);
-      case 'cos': return Math.cos(val);
-      case 'tan': return Math.tan(val);
-      case 'exp': return Math.exp(val);
-      case 'ln': return Math.log(val);
-      case 'arcsin': return Math.asin(val);
-      case 'arccos': return Math.acos(val);
-      case 'arctan': return Math.atan(val);
-      case 'sinh': return Math.sinh(val);
-      case 'cosh': return Math.cosh(val);
-      case 'tanh': return Math.tanh(val);
-      default: return NaN;
-    }
-  }
-
-  override getComplexity(): number {
-    // 如果子节点是常数，当前节点其实也是常数（比如 sin(1)），复杂度极低
-    if (this.child.isConstant()) {
-      return 0.1;
-    }
-    // 嵌套惩罚：如果子节点不是简单的变量或常数，增加额外复杂度
-    const childComp = this.child.getComplexity();
-    const penalty = (this.child.type === 'var' || this.child.type === 'const') ? 0 : 0.5;
-    return UNARY_WEIGHTS[this.op] + childComp * 1.2 + penalty;
-  }
-
-  override isConstant() { return this.child.isConstant(); }
-  override getConstantValue() { return this.evaluate(0); }
-}
-
-type BinaryOp = '+' | '-' | '*' | '/' | '^';
-
-const BINARY_WEIGHTS: Record<BinaryOp, number> = {
-  '+': 0.2, '-': 0.2, '*': 0.4, '/': 0.6, '^': 0.8
-};
-
-class BinaryNode extends ASTNode {
-  type: NodeType = 'binary';
-  public op: BinaryOp;
-  public left: ASTNode;
-  public right: ASTNode;
-
-  constructor(op: BinaryOp, left: ASTNode, right: ASTNode) { 
-    super(); 
-    this.op = op;
-    this.left = left;
-    this.right = right;
-  }
-  
-  override toString() {
-    const l = this.left.toString();
-    const r = this.right.toString();
-    
-    const isLeftAddSub = this.left.type === 'binary' && ((this.left as BinaryNode).op === '+' || (this.left as BinaryNode).op === '-');
-    const isRightAddSub = this.right.type === 'binary' && ((this.right as BinaryNode).op === '+' || (this.right as BinaryNode).op === '-');
-    const isRightMulDiv = this.right.type === 'binary' && ((this.right as BinaryNode).op === '*' || (this.right as BinaryNode).op === '/');
-
-    const wrapLeft = isLeftAddSub && (this.op === '*' || this.op === '^');
-    const wrapRight = (isRightAddSub && (this.op === '*' || this.op === '-')) || (isRightMulDiv && this.op === '*');
-
-    const lStr = wrapLeft ? `\\left(${l}\\right)` : l;
-    const rStr = wrapRight ? `\\left(${r}\\right)` : r;
-
-    if (this.op === '/') return `\\frac{${l}}{${r}}`;
-    if (this.op === '^') return `{${lStr}}^{${r}}`;
-    if (this.op === '*') return `${lStr} \\cdot ${rStr}`;
-    return `${lStr} ${this.op} ${rStr}`;
-  }
-  
-  override evaluate(x: number) {
-    const lVal = this.left.evaluate(x);
-    const rVal = this.right.evaluate(x);
-    switch (this.op) {
-      case '+': return lVal + rVal;
-      case '-': return lVal - rVal;
-      case '*': return lVal * rVal;
-      case '/': return lVal / rVal;
-      case '^': return Math.pow(lVal, rVal);
-    }
-  }
-
-  override getComplexity(): number {
-    // 如果左右都是常数，当前节点其实也是常数（比如 2+3），复杂度极低
-    if (this.left.isConstant() && this.right.isConstant()) {
-      return 0.1;
-    }
-    // 特殊情况化简：0 乘以任何数、任何数乘以 0 都是 0
-    if (this.op === '*' && ((this.left.isConstant() && this.left.getConstantValue() === 0) || (this.right.isConstant() && this.right.getConstantValue() === 0))) {
-      return 0.1;
-    }
-    // 特殊情况化简：任何数的 0 次方都是 1
-    if (this.op === '^' && this.right.isConstant() && this.right.getConstantValue() === 0) {
-      return 0.1;
-    }
-    return BINARY_WEIGHTS[this.op] + this.left.getComplexity() + this.right.getComplexity();
-  }
-
-  override isConstant() { return this.left.isConstant() && this.right.isConstant(); }
-  override getConstantValue() { return this.evaluate(0); }
-}
-
-// ---------------------------------------------------------
-// 生成器逻辑
-// ---------------------------------------------------------
-
-function getRandomElement<T>(arr: T[]): T {
+// 获取随机元素
+function getRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function generateRandomNode(currentDepth: number, maxDepth: number): ASTNode {
-  // 叶子节点
-  if (currentDepth >= maxDepth || Math.random() < 0.3 / (currentDepth + 1)) {
-    if (Math.random() < 0.6) {
-      return new VarNode();
-    } else {
-      const val = Math.floor(Math.random() * 5) + 1; // 1~5
-      return new ConstNode(val);
-    }
+// 获取友好的随机常数 (避免过于复杂的浮点数，保证解析美感)
+function getFriendlyConst(allowNegative: boolean = true): string {
+  const vals = ['2', '3', '4', '0.5', '1.5'];
+  let v = getRandom(vals);
+  if (allowNegative && Math.random() < 0.5) {
+    v = '-' + v;
   }
-
-  // 内部节点
-  if (Math.random() < 0.5) {
-    // Unary
-    const ops: UnaryOp[] = ['sin', 'cos', 'tan', 'exp', 'ln', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh'];
-    const op = getRandomElement(ops);
-    return new UnaryNode(op, generateRandomNode(currentDepth + 1, maxDepth));
-  } else {
-    // Binary
-    const ops: BinaryOp[] = ['+', '-', '*', '/', '^'];
-    const op = getRandomElement(ops);
-    return new BinaryNode(op, generateRandomNode(currentDepth + 1, maxDepth), generateRandomNode(currentDepth + 1, maxDepth));
-  }
+  return v;
 }
 
-// 检查在 [-10, 10] 范围内是否有合理图像
-function hasValidGraph(node: ASTNode): boolean {
-  let validPoints = 0;
-  let tooLargePoints = 0;
-  
-  for (let i = 0; i < GAME_CONSTANTS.GENERATOR.VALIDATION_SAMPLES; i++) {
-    const x = (Math.random() * 20) - 10; // [-10, 10]
-    const y = node.evaluate(x);
-    
-    if (Number.isFinite(y)) {
-      if (Math.abs(y) <= GAME_CONSTANTS.GENERATOR.MAX_Y_VALUE) {
-        validPoints++;
-      } else {
-        tooLargePoints++;
-      }
-    }
-  }
-  
-  // 至少要有足够的有效点，且有效点比例不能太低
-  return validPoints >= GAME_CONSTANTS.GENERATOR.MIN_VALID_POINTS && (validPoints >= tooLargePoints * 0.5);
+// ----------------------------------------------------------------------------------
+// 2. 拓扑相变算子 (Topological Operators)
+// 每个算子代表一种高阶的解析几何变换，而不是低级的语法树拼接。
+// ----------------------------------------------------------------------------------
+interface TopologicalOperator {
+  id: string;
+  weight: number;
+  // 算子作用函数。p 代表传入的常数或参数。
+  apply: (expr: string, p: string) => string;
 }
 
-// 后处理化简一下多余的常数计算或者无意义的节点，不过为了简单起见，可以依靠难度筛选机制
-export function generateFunctionByDifficulty(targetDifficulty: number): string {
-  // 如果难度很低，直接返回预设
-  if (targetDifficulty <= 0.5) {
-    const basics = ['x', 'x^2', '\\sin(x)', '\\cos(x)', '\\ln(x)', 'e^x'];
-    return getRandomElement(basics);
+const TOPOLOGICAL_OPERATORS: TopologicalOperator[] = [
+  // 【定义域撕裂/挤压类】
+  { id: 'domain_log', weight: 1.5, apply: (expr, p) => `\\ln\\left(\\left|${expr}\\right| + ${p}\\right)` }, // 取对数挤压，+p防止全域无定义，当p接近0时产生深渊
+  { id: 'domain_sqrt', weight: 1.2, apply: (expr, p) => `\\sqrt{${expr} + ${p}}` }, // 强行砍掉一半定义域
+
+  // 【渐近线伪装类】
+  { id: 'camou_slant', weight: 1.0, apply: (expr, p) => `${expr} + ${p}x` }, // 叠加斜渐近线
+  { id: 'camou_inv', weight: 1.2, apply: (expr, p) => `${expr} + \\frac{${p}}{x}` }, // 在原点强行撕开一条垂直渐近线
+  { id: 'camou_exp', weight: 1.5, apply: (expr, p) => `${expr} + ${p}e^{-x}` }, // 叠加单侧无穷大伪装（只在负半轴发威）
+
+  // 【对称性破缺类】
+  { id: 'sym_break_sin', weight: 1.0, apply: (expr, p) => `${expr} + ${p}\\sin(x)` }, // 叠加周期性扰动
+  { id: 'sym_break_mul', weight: 1.0, apply: (expr, p) => `\\left(${expr}\\right) \\cdot \\left(x + ${p}\\right)` }, // 强行增加一个零点，破坏原有对称性
+  { id: 'sym_break_abs', weight: 1.0, apply: (expr, p) => `\\left|${expr}\\right| + ${p}x` }, // 绝对值外加斜线，产生不对称折点
+
+  // 【频率/尺度扭曲类】
+  { id: 'scale_x', weight: 0.8, apply: (expr, p) => expr.replace(/x/g, `\\left(${p}x\\right)`) }, // 横向挤压
+  { id: 'shift_x', weight: 0.8, apply: (expr, p) => expr.replace(/x/g, `\\left(x - ${p}\\right)`) }, // 平移隐藏原点特征
+  { id: 'shift_y', weight: 0.5, apply: (expr, p) => `${expr} + ${p}` }, // 简单的纵向平移
+
+  // 【复合包裹类】
+  { id: 'wrap_exp', weight: 1.2, apply: (expr, p) => `e^{${expr}} + ${p}` }, // 指数包裹
+  { id: 'wrap_frac', weight: 1.5, apply: (expr, p) => `\\frac{${p}}{${expr}}` } // 倒数包裹，将零点变为渐近线
+];
+
+// 简单验证函数是否有意义的评估点 (避免全量空集或常数)
+function hasValidDomain(exprStr: string): boolean {
+  // 避免过度空集，比如被多重根号包围，或者对数里面出现非正
+  // 这里做启发式阻断，避免类似 \sqrt{-x^2 - 2} 的情况
+  if (exprStr.includes('\\sqrt{-(x^2') || exprStr.includes('\\sqrt{-\\left(x^2')) {
+    return false;
   }
+  if (exprStr.includes('\\ln\\left(-\\left|')) {
+    return false;
+  }
+  // 防止最后简化为无x的纯参数表达式
+  if (!exprStr.includes('x')) {
+    return false;
+  }
+  return true; 
+}
 
-  // 用户难度系数 (0~5) 映射到内部复杂度
-  // 参考：sin(x)+e^x 用户为 1.2，内部为 0.8 -> 比例约 1.5
-  const internalTarget = targetDifficulty / 1.5;
+export function generateFunctionByDifficulty(
+  targetDifficulty: number, 
+  withParams: boolean = false
+): GeneratedFunction {
+  // 难度映射：难度1 (基础流形+0次变换) -> 难度7 (基础流形+4~5次高阶变换)
+  const diff = Math.max(1, Math.min(7, targetDifficulty));
+  const targetWeight = (diff - 1) * 0.8; // 难度1时为0，难度7时为4.8
 
-  const maxAttempts = GAME_CONSTANTS.GENERATOR.MAX_ATTEMPTS;
-  let bestNode: ASTNode | null = null;
+  const maxAttempts = 100;
+  let bestResult = { target: 'x', params: {} as Record<string, number> };
   let minDiffError = Infinity;
 
-  // 根据目标难度动态调整最大深度
-  const maxDepth = Math.min(5, Math.ceil(targetDifficulty * 1.5));
-
   for (let i = 0; i < maxAttempts; i++) {
-    // 强制根节点至少包含 x，避免生成全是常数的式子
-    const node = generateRandomNode(0, maxDepth);
+    let currentWeight = 0;
+    let expr = getRandom(BASE_MANIFOLDS);
     
-    // 确保生成的式子包含 x
-    const str = node.toString();
-    if (!str.includes('x')) continue;
+    const usedParams: Record<string, number> = {};
+    const availableParams = ['a', 'b', 'c'];
+    
+    // 如果带参数，随机决定使用 1 到 3 个参数
+    const paramCount = withParams ? Math.floor(Math.random() * 3) + 1 : 0;
+    const targetParams = availableParams.slice(0, paramCount);
 
-    const comp = node.getComplexity();
-    const diffError = Math.abs(comp - internalTarget);
+    let steps = 0;
+    // 强制使用完分配的参数，或者达到目标难度
+    while ((currentWeight < targetWeight || targetParams.length > 0) && steps < 6) {
+      const op = getRandom(TOPOLOGICAL_OPERATORS);
+      
+      let pStr = '';
+      if (targetParams.length > 0 && (Math.random() < 0.6 || steps > 3)) {
+        // 消耗一个参数
+        const pName = targetParams.shift()!;
+        pStr = pName;
+        // 给参数一个初始值，确保一开始图形可见且不退化
+        usedParams[pName] = parseFloat(getFriendlyConst(true));
+      } else {
+        // 使用常数
+        pStr = getFriendlyConst(true);
+      }
 
-    if (diffError < 0.3 && hasValidGraph(node)) {
-      // 进一步优化：不要太模板化，结构好
-      return node.toString();
+      expr = op.apply(expr, pStr);
+      currentWeight += op.weight;
+      steps++;
     }
 
-    if (diffError < minDiffError && hasValidGraph(node)) {
+    // 清理多余的加减号
+    expr = expr.replace(/\+\s*-/g, '- ');
+
+    // 简单验证有效性
+    if (!hasValidDomain(expr)) continue;
+
+    // 检查参数是否被成功吃掉，并且是否实际出现在了表达式中
+    if (withParams) {
+      let paramMissing = false;
+      for (const p in usedParams) {
+        // 使用正则确保匹配的是独立的参数变量，而不是如 \arcsin 里的 a
+        const paramRegex = new RegExp(`\\b${p}\\b`);
+        if (!paramRegex.test(expr)) {
+          paramMissing = true;
+          break;
+        }
+      }
+      if (paramMissing) continue;
+      
+      // 如果要求带参数但最终没带上，废弃
+      if (Object.keys(usedParams).length === 0) continue;
+    }
+
+    const diffError = Math.abs(currentWeight - targetWeight);
+    if (diffError < minDiffError) {
       minDiffError = diffError;
-      bestNode = node;
+      bestResult = { target: expr, params: usedParams };
+    }
+
+    if (diffError < 0.3 && targetParams.length === 0) {
+      break;
     }
   }
 
-  // 如果找不到非常贴合的，返回最接近的
-  return bestNode ? bestNode.toString() : 'x^2';
+  // 最终安全兜底：如果 withParams 为 true 却依然没生成出来（极罕见），强行附带一个最优雅的参数
+  if (withParams && Object.keys(bestResult.params).length === 0) {
+    bestResult.target = `\\left(${bestResult.target}\\right) + a`;
+    bestResult.params = { a: 2 };
+  }
+
+  return bestResult;
 }

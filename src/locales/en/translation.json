@@ -93,7 +93,10 @@
     "startBtn": "Start Challenge Now",
     "noApiKey": "AI API Key not configured. Please configure it in settings before using AI generation.",
     "aiFailedFallback": "AI generation failed, falling back to local generation algorithm.",
-    "generatedSuccess": "Challenge generated with difficulty {{diff}}!"
+    "generatedSuccess": "Challenge generated with difficulty {{diff}}!",
+    "withParams": "Enable functions with parameters",
+    "paramsDescOn": "Generates functions with parameters a, b to support sliding deconstruction",
+    "paramsDescOff": "Generates basic challenges without parameters"
   },
   "levelSelect": {
     "title": "Select Level",
