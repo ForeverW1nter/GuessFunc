@@ -35,8 +35,8 @@ const BASE_MANIFOLDS: { expr: string; type: FunctionType }[] = [
   { expr: '\\sinh(x)', type: 'hyperbolic' },
   { expr: '\\cosh(x)', type: 'hyperbolic' },
   { expr: '\\tanh(x)', type: 'hyperbolic' },
-  { expr: '\\text{arsinh}(x)', type: 'inverse_hyperbolic' },
-  { expr: '\\text{artanh}(x)', type: 'inverse_hyperbolic' },
+  { expr: '\\operatorname{arsinh}(x)', type: 'inverse_hyperbolic' },
+  { expr: '\\operatorname{artanh}(x)', type: 'inverse_hyperbolic' },
   { expr: 'e^x', type: 'exponential' },
   { expr: '\\ln(x)', type: 'exponential' }
 ];
@@ -46,14 +46,21 @@ function getRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// 获取友好的随机常数 (避免过于复杂的浮点数，保证解析美感)
-function getFriendlyConst(allowNegative: boolean = true): string {
-  const vals = ['2', '3', '4', '0.5', '1.5'];
-  let v = getRandom(vals);
-  if (allowNegative && Math.random() < 0.5) {
-    v = '-' + v;
+// 获取更友好的常数，根据算子类型进行智能约束，避免生成极其丑陋或无意义的图象
+function getFriendlyConst(opId: string): string {
+  const isMultiplier = opId === 'scale_x' || opId.includes('mul') || opId.includes('slant') || opId.includes('exp');
+  const isDomainLogSqrt = opId === 'domain_log' || opId === 'domain_sqrt';
+
+  if (isDomainLogSqrt) {
+    // 对于撕裂定义域的 log 或 sqrt，优先使用正数偏移，避免大面积无定义
+    return getRandom(['1', '2', '3', '4', '0.5', '1.5']);
   }
-  return v;
+  if (isMultiplier) {
+    // 作为乘数时，避免使用 1（无意义）和 0，使用适中的数值
+    return getRandom(['2', '3', '0.5', '-2', '-0.5', '1.5', '-1.5']);
+  }
+  // 普通加减常数
+  return getRandom(['1', '2', '3', '4', '-1', '-2', '-3', '0.5', '-0.5']);
 }
 
 // ----------------------------------------------------------------------------------
@@ -64,43 +71,52 @@ interface TopologicalOperator {
   id: string;
   weight: number;
   type: FunctionType | 'general'; // 如果涉及到特定类型（如sin），则标记类型
+  maxUses: number; // 增加最大使用次数限制，防止无限套娃
   // 算子作用函数。p 代表传入的常数或参数。
   apply: (expr: string, p: string) => string;
 }
 
 const TOPOLOGICAL_OPERATORS: TopologicalOperator[] = [
   // 【定义域撕裂/挤压类】
-  { id: 'domain_log', weight: 1.5, type: 'exponential', apply: (expr, p) => `\\ln\\left(\\left|${expr}\\right| + ${p}\\right)` },
-  { id: 'domain_sqrt', weight: 1.2, type: 'radical', apply: (expr, p) => `\\sqrt{${expr} + ${p}}` },
+  { id: 'domain_log', weight: 1.5, type: 'exponential', maxUses: 1, apply: (expr, p) => `\\ln\\left(\\left|${expr}\\right| + ${p}\\right)` },
+  { id: 'domain_sqrt', weight: 1.2, type: 'radical', maxUses: 1, apply: (expr, p) => `\\sqrt{${expr} + ${p}}` },
+  { id: 'domain_inv', weight: 1.5, type: 'rational', maxUses: 1, apply: (expr, p) => `\\frac{${p}}{${expr}}` },
 
   // 【渐近线伪装类】
-  { id: 'camou_slant', weight: 1.0, type: 'general', apply: (expr, p) => `${expr} + ${p}x` },
-  { id: 'camou_inv', weight: 1.2, type: 'rational', apply: (expr, p) => `${expr} + \\frac{${p}}{x}` },
-  { id: 'camou_exp', weight: 1.5, type: 'exponential', apply: (expr, p) => `${expr} + ${p}e^{-x}` },
+  { id: 'camou_slant', weight: 1.0, type: 'general', maxUses: 1, apply: (expr, p) => `${expr} + ${p}x` },
+  { id: 'camou_inv', weight: 1.2, type: 'rational', maxUses: 1, apply: (expr, p) => `${expr} + \\frac{${p}}{x}` },
+  { id: 'camou_exp', weight: 1.5, type: 'exponential', maxUses: 1, apply: (expr, p) => `${expr} + ${p}e^{-x}` },
+  { id: 'camou_quad', weight: 1.8, type: 'general', maxUses: 1, apply: (expr, p) => `${expr} + ${p}x^2` },
 
   // 【对称性破缺类】
-  { id: 'sym_break_sin', weight: 1.0, type: 'trigonometric', apply: (expr, p) => `${expr} + ${p}\\sin(x)` },
-  { id: 'sym_break_mul', weight: 1.0, type: 'general', apply: (expr, p) => `\\left(${expr}\\right) \\cdot \\left(x + ${p}\\right)` },
-  { id: 'sym_break_abs', weight: 1.0, type: 'absolute', apply: (expr, p) => `\\left|${expr}\\right| + ${p}x` },
+  { id: 'sym_break_sin', weight: 1.0, type: 'trigonometric', maxUses: 1, apply: (expr, p) => `${expr} + ${p}\\sin(x)` },
+  { id: 'sym_break_mul', weight: 1.5, type: 'general', maxUses: 1, apply: (expr, p) => `\\left(${expr}\\right) \\cdot \\left(x + ${p}\\right)` },
+  { id: 'sym_break_abs', weight: 1.0, type: 'absolute', maxUses: 1, apply: (expr, p) => `\\left|${expr}\\right| + ${p}x` },
+  { id: 'sym_break_sign', weight: 1.0, type: 'general', maxUses: 1, apply: (expr, p) => `\\frac{${expr}}{x + ${p}}` },
 
   // 【频率/尺度扭曲类】
-  { id: 'scale_x', weight: 0.8, type: 'general', apply: (expr, p) => expr.replace(/x/g, `\\left(${p}x\\right)`) },
-  { id: 'shift_x', weight: 0.8, type: 'general', apply: (expr, p) => expr.replace(/x/g, `\\left(x - ${p}\\right)`) },
-  { id: 'shift_y', weight: 0.5, type: 'general', apply: (expr, p) => `${expr} + ${p}` },
+  { id: 'scale_x', weight: 0.8, type: 'general', maxUses: 2, apply: (expr, p) => expr.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, `\\left(${p}x\\right)`) },
+  { id: 'shift_x', weight: 0.8, type: 'general', maxUses: 2, apply: (expr, p) => expr.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, `\\left(x + ${p}\\right)`) },
+  { id: 'scale_y', weight: 0.8, type: 'general', maxUses: 1, apply: (expr, p) => `${p}\\left(${expr}\\right)` },
+  { id: 'shift_y', weight: 0.5, type: 'general', maxUses: 2, apply: (expr, p) => `${expr} + ${p}` },
 
   // 【复合包裹类】
-  { id: 'wrap_exp', weight: 1.2, type: 'exponential', apply: (expr, p) => `e^{${expr}} + ${p}` },
-  { id: 'wrap_frac', weight: 1.5, type: 'rational', apply: (expr, p) => `\\frac{${p}}{${expr}}` }
+  { id: 'wrap_exp', weight: 1.2, type: 'exponential', maxUses: 1, apply: (expr, p) => `e^{${expr}} + ${p}` },
+  { id: 'wrap_sin', weight: 1.2, type: 'trigonometric', maxUses: 1, apply: (expr, p) => `\\sin\\left(${expr} + ${p}\\right)` },
+  { id: 'wrap_abs', weight: 0.8, type: 'absolute', maxUses: 1, apply: (expr, p) => `\\left|${expr}\\right| + ${p}` }
 ];
 
 // 简单验证函数是否有意义的评估点 (避免全量空集或常数)
 function hasValidDomain(exprStr: string): boolean {
   // 避免过度空集，比如被多重根号包围，或者对数里面出现非正
-  // 这里做启发式阻断，避免类似 \sqrt{-x^2 - 2} 的情况
   if (exprStr.includes('\\sqrt{-(x^2') || exprStr.includes('\\sqrt{-\\left(x^2')) {
     return false;
   }
   if (exprStr.includes('\\ln\\left(-\\left|')) {
+    return false;
+  }
+  // 避免出现套娃式无意义分数
+  if (exprStr.includes('\\frac{') && (exprStr.match(/\\frac{/g) || []).length > 2) {
     return false;
   }
   // 防止最后简化为无x的纯参数表达式
@@ -108,6 +124,38 @@ function hasValidDomain(exprStr: string): boolean {
     return false;
   }
   return true; 
+}
+
+// 后处理 LaTeX 表达式，去除臃肿的多余括号和符号，提升美感
+function postCleanLatex(expr: string): string {
+  let s = expr;
+  
+  // 0. 特殊处理：将类似 2\left(...\right) 提取出来，避免冗余的加括号
+  s = s.replace(/\+\s*-\s*/g, '- ');
+  s = s.replace(/-\s*-\s*/g, '+ ');
+  
+  // 1. 清理多重冗余括号，例如 \sin(\left(2x\right)) -> \sin(2x)
+  s = s.replace(/\\left\(\\left\((.*?)\\right\)\\right\)/g, '\\left($1\\right)');
+  s = s.replace(/\(\\left\((.*?)\\right\)\)/g, '($1)');
+  s = s.replace(/\\left\|\\left\((.*?)\\right\)\\right\|/g, '\\left|$1\\right|');
+  
+  // 2. 对于简单的数字加减 x 的括号进行解除，例如 \left(x + 2\right) 如果在最外层或加减法中可以不带 left right
+  // 但为了保守起见，我们主要清理乘法前面的 1x
+  s = s.replace(/(?<![\d.])\b1x(?![a-zA-Z])/g, 'x');
+  s = s.replace(/(?<![\d.])\b-1x(?![a-zA-Z])/g, '-x');
+  s = s.replace(/(?<![\d.])\b1\\left\(/g, '\\left(');
+  s = s.replace(/(?<![\d.])\b-1\\left\(/g, '-\\left(');
+  
+  // 3. 清理类似 \left(x\right) -> x 的极度简单括号 (只有当内部是单纯的 x 或者数字x 时)
+  s = s.replace(/\\left\((-?[\d.]*x)\\right\)/g, '$1');
+  
+  // 4. 清除开头的多余 + 号
+  s = s.replace(/^\s*\+\s*/, '');
+  
+  // 5. 替换掉加负数的写法，比如 x + -2 变成 x - 2
+  s = s.replace(/\+\s*-([\d.]+)/g, '- $1');
+  
+  return s;
 }
 
 export function generateFunctionByDifficulty(
@@ -157,9 +205,16 @@ export function generateFunctionByDifficulty(
     const targetParams = availableParams.slice(0, paramCount);
 
     let steps = 0;
+    const usedOps = new Map<string, number>();
+
     // 强制使用完分配的参数，或者达到目标难度
     while ((currentWeight < targetWeight || targetParams.length > 0) && steps < 6) {
-      const op = getRandom(opsToUse);
+      // 根据 maxUses 过滤可用的算子
+      const validOps = opsToUse.filter(op => (usedOps.get(op.id) || 0) < op.maxUses);
+      if (validOps.length === 0) break;
+
+      const op = getRandom(validOps);
+      usedOps.set(op.id, (usedOps.get(op.id) || 0) + 1);
       
       let pStr = '';
       if (targetParams.length > 0 && (Math.random() < 0.6 || steps > 3)) {
@@ -167,10 +222,10 @@ export function generateFunctionByDifficulty(
         const pName = targetParams.shift()!;
         pStr = pName;
         // 给参数一个初始值，确保一开始图形可见且不退化
-        usedParams[pName] = parseFloat(getFriendlyConst(true));
+        usedParams[pName] = parseFloat(getFriendlyConst(op.id));
       } else {
         // 使用常数
-        pStr = getFriendlyConst(true);
+        pStr = getFriendlyConst(op.id);
       }
 
       expr = op.apply(expr, pStr);
@@ -178,8 +233,8 @@ export function generateFunctionByDifficulty(
       steps++;
     }
 
-    // 清理多余的加减号
-    expr = expr.replace(/\+\s*-/g, '- ');
+    // 后处理净化 LaTeX 表达式
+    expr = postCleanLatex(expr);
 
     // 简单验证有效性
     if (!hasValidDomain(expr)) continue;
@@ -214,7 +269,7 @@ export function generateFunctionByDifficulty(
 
   // 最终安全兜底：如果 withParams 为 true 却依然没生成出来（极罕见），强行附带一个最优雅的参数
   if (withParams && Object.keys(bestResult.params).length === 0) {
-    bestResult.target = `\\left(${bestResult.target}\\right) + a`;
+    bestResult.target = postCleanLatex(`\\left(${bestResult.target}\\right) + a`);
     bestResult.params = { a: 2 };
   }
 

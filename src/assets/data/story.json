@@ -2131,7 +2131,7 @@
             {
               "id": "5",
               "title": "第 5 关",
-              "targetFunction": "\\left|\\te\\left(x - 2\\right)t{arsinh}(\\left(x - 2\\right)) + 4\\sin(\\left(x - 2\\right))\\right| - 4\\left(x - 2\\right) + \\frac{-4}{x}",
+              "targetFunction": "\\left|\\operatorname{arsinh}(\\left(x - 2\\right)) + 4\\sin(\\left(x - 2\\right))\\right| - 4\\left(x - 2\\right) + \\frac{-4}{x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -2251,7 +2251,7 @@
             {
               "id": "17",
               "title": "第 17 关",
-              "targetFunction": "\\frac{1.5}{\\sqrt{\\left(\\te\\left(x - 2\\right)t{arsinh}(\\left(x - 2\\right))\\right) \\cdot \\left(\\left(x - 2\\right) + 0.5\\right) - 2}}",
+              "targetFunction": "\\frac{1.5}{\\sqrt{\\left(\\operatorname{arsinh}(\\left(x - 2\\right))\\right) \\cdot \\left(\\left(x - 2\\right) + 0.5\\right) - 2}}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -2261,7 +2261,7 @@
             {
               "id": "18",
               "title": "第 18 关",
-              "targetFunction": "\\sqrt{\\sqrt{\\te\\left(x - 1.5\\right)t{arsinh}(\\left(x - 1.5\\right)) + \\frac{-4}{\\left(x - 1.5\\right)} - 0.5} + 4 - 2}",
+              "targetFunction": "\\sqrt{\\sqrt{\\operatorname{arsinh}(\\left(x - 1.5\\right)) + \\frac{-4}{\\left(x - 1.5\\right)} - 0.5} + 4 - 2}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -2514,7 +2514,7 @@
             {
               "id": "1",
               "title": "第 1 关",
-              "targetFunction": "\\left|e^{\\text{artanh}(x)} + a - 2\\right| - 4x",
+              "targetFunction": "\\left|e^{\\operatorname{artanh}(x)} + a - 2\\right| - 4x",
               "params": {
                 "a": 4
               },
@@ -2574,7 +2574,7 @@
             {
               "id": "6",
               "title": "第 6 关",
-              "targetFunction": "\\ln\\left(\\left|\\ln\\left(\\left|\\text{arsinh}(x)\\right| + a\\right)\\right| + 4\\right)",
+              "targetFunction": "\\ln\\left(\\left|\\ln\\left(\\left|\\operatorname{arsinh}(x)\\right| + a\\right)\\right| + 4\\right)",
               "params": {
                 "a": -4
               },
@@ -2623,7 +2623,7 @@
             {
               "id": "10",
               "title": "第 10 关",
-              "targetFunction": "\\left(\\sqrt{\\text{arsinh}(x) + 1.5} + \\frac{a}{x}\\right) \\cdot \\left(x + b\\right)",
+              "targetFunction": "\\left(\\sqrt{\\operatorname{arsinh}(x) + 1.5} + \\frac{a}{x}\\right) \\cdot \\left(x + b\\right)",
               "params": {
                 "a": 4,
                 "b": -1.5
@@ -2636,7 +2636,7 @@
             {
               "id": "11",
               "title": "第 11 关",
-              "targetFunction": "\\te\\left(\\left(\\left(2x\\right) - b\\right) - a\\right)t{arsinh}(\\left(\\left(\\left(2x\\right) - b\\right) - a\\right)) + 3\\left(2x\\right)",
+              "targetFunction": "\\operatorname{arsinh}(\\left(\\left(\\left(2x\\right) - b\\right) - a\\right)) + 3\\left(2x\\right)",
               "params": {
                 "a": 3,
                 "b": -4
@@ -2956,7 +2956,7 @@
             {
               "id": "18",
               "title": "第 18 关",
-              "targetFunction": "\\te\\left(a\\left(0.5x\\right)\\right)t{artanh}(\\left(a\\left(0.5x\\right)\\right)) + \\frac{b}{\\left(0.5x\\right)} - 0.5e^{-\\left(0.5x\\right)}",
+              "targetFunction": "\\operatorname{artanh}(\\left(a\\left(0.5x\\right)\\right)) + \\frac{b}{\\left(0.5x\\right)} - 0.5e^{-\\left(0.5x\\right)}",
               "params": {
                 "a": 3,
                 "b": 3
@@ -2983,7 +2983,7 @@
             {
               "id": "20",
               "title": "第 20 关",
-              "targetFunction": "\\frac{a}{\\text{arsinh}(x)} + 2\\sin(x) - 4\\sin(x) + 0.5\\sin(x)",
+              "targetFunction": "\\frac{a}{\\operatorname{arsinh}(x)} + 2\\sin(x) - 4\\sin(x) + 0.5\\sin(x)",
               "params": {
                 "a": 3
               },
@@ -3057,7 +3057,7 @@
             {
               "id": "26",
               "title": "第 26 关",
-              "targetFunction": "\\frac{3}{\\left(\\te\\left(\\left(x - 4\\right) - 4\\right)t{arsinh}(\\left(\\left(x - 4\\right) - 4\\right))\\right) \\cdot \\left(\\left(x - 4\\right) - 1.5\\right) + a}",
+              "targetFunction": "\\frac{3}{\\left(\\operatorname{arsinh}(\\left(\\left(x - 4\\right) - 4\\right))\\right) \\cdot \\left(\\left(x - 4\\right) - 1.5\\right) + a}",
               "params": {
                 "a": 3
               },
@@ -3069,7 +3069,7 @@
             {
               "id": "27",
               "title": "第 27 关",
-              "targetFunction": "\\frac{b}{\\te\\left(-3x\\right)t{arsinh}(\\left(-3x\\right)) - 3\\left(-3x\\right) + \\frac{a}{\\left(-3x\\right)}} + c",
+              "targetFunction": "\\frac{b}{\\operatorname{arsinh}(\\left(-3x\\right)) - 3\\left(-3x\\right) + \\frac{a}{\\left(-3x\\right)}} + c",
               "params": {
                 "a": -3,
                 "b": 2,
@@ -3095,7 +3095,7 @@
             {
               "id": "29",
               "title": "第 29 关",
-              "targetFunction": "\\left(\\left|\\sqrt{\\te\\left(3x\\right)t{arsinh}(\\left(3x\\right)) + a} + b\\sin(x)\\right| + 0.5x\\right) \\cdot \\left(x + 1.5\\right)",
+              "targetFunction": "\\left(\\left|\\sqrt{\\operatorname{arsinh}(\\left(3x\\right)) + a} + b\\sin(x)\\right| + 0.5x\\right) \\cdot \\left(x + 1.5\\right)",
               "params": {
                 "a": -3,
                 "b": 1.5
