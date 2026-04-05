@@ -1,5 +1,5 @@
 import React from 'react';
-import { Info, FileText, Palette, Type, Cpu, Save, Languages } from 'lucide-react';
+import { Info, FileText, Palette, Type, Save, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'stats' | 'save' | 'api' | 'font';

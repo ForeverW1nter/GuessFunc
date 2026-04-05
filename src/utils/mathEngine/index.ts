@@ -37,6 +37,7 @@ function cleanDesmosLatex(latex: string): string {
   // 特殊处理 floor 函数 (CortexJS Compute Engine 支持 \lfloor 和 \rfloor，或者 Floor()，这里转成标准的 \lfloor 和 \rfloor 形式或者保留为 operator)
   // Desmos 产出的 floor 形式为 \operatorname{floor}\left(x\right)
   s = s.replace(/\\operatorname{floor}\\left\((.*?)\\right\)/g, '\\lfloor $1 \\rfloor');
+  s = s.replace(/\\operatorname{ceil}\\left\((.*?)\\right\)/g, '\\lceil $1 \\rceil');
   s = s.replace(/\\operatorname{([^{}]+)}/g, '$1');
   s = s.replace(/\\mathrm{([^{}]+)}/g, '$1');
   
@@ -221,7 +222,12 @@ export function evaluateEquivalence(
         const isClose = diff < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE || (maxVal > GAME_CONSTANTS.MATH_ENGINE.TOLERANCE && diff / maxVal < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE);
         
         // 如果是因为离散函数(floor, ceil)等引起的跳跃点误差，再给一次微调机会
-        if (!isClose && (cleanTarget.includes('\\lfloor') || cleanTarget.includes('floor') || cleanPlayer.includes('\\lfloor') || cleanPlayer.includes('floor'))) {
+        if (!isClose && (
+            cleanTarget.includes('\\lfloor') || cleanTarget.includes('floor') || 
+            cleanPlayer.includes('\\lfloor') || cleanPlayer.includes('floor') ||
+            cleanTarget.includes('\\lceil') || cleanTarget.includes('ceil') || 
+            cleanPlayer.includes('\\lceil') || cleanPlayer.includes('ceil')
+        )) {
            // 由于浮点数精度，x 接近整数时，floor(x) 可能会由于浮点误差跳变
            // 检查加上或减去一个极小值是否能匹配
            const tValUp = targetBox.subs({ ...testContext, x: xVal + 1e-12 }).N().valueOf();
@@ -234,10 +240,14 @@ export function evaluateEquivalence(
            const pUpNum = typeof pValUp === 'number' ? pValUp : NaN;
            const pDownNum = typeof pValDown === 'number' ? pValDown : NaN;
            
-           const isCloseUp = Math.abs(tUpNum - pUpNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
-           const isCloseDown = Math.abs(tDownNum - pDownNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
+           // 交叉对比微调后的结果：只要目标函数的微调（上或下）和玩家函数的微调（上或下）有任意组合匹配，就算过
+           // 因为像 floor(x) 和 ceil(x-1) 在 x=1 时的跳变方向和临界点归属是相反的，但在图像上它们是完全等效的
+           const isMatch1 = Math.abs(tUpNum - pUpNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
+           const isMatch2 = Math.abs(tDownNum - pDownNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
+           const isMatch3 = Math.abs(tUpNum - pDownNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
+           const isMatch4 = Math.abs(tDownNum - pUpNum) < GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
            
-           if (isCloseUp || isCloseDown) {
+           if (isMatch1 || isMatch2 || isMatch3 || isMatch4) {
              validPointsCount++;
              continue;
            }

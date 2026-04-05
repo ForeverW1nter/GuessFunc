@@ -13,7 +13,7 @@ export const RandomChallengeModal: React.FC = () => {
   const navigate = useNavigate();
 
   const [difficulty, setDifficulty] = useState<number>(1.5);
-  const [useAI, setUseAI] = useState<boolean>(false); // 默认不使用AI
+  const useAI = false; // 默认不使用AI (UI已隐藏)
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   if (!isRandomChallengeOpen) return null;
