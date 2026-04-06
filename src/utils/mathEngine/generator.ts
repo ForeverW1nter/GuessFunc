@@ -137,7 +137,7 @@ function hasValidDomain(exprStr: string): boolean {
 function isComplexitySufficient(exprStr: string, currentWeight: number, paramsCount: number): boolean {
   try {
     // 替换小数为分数，以规避 ComputeEngine 在带小数的有理多项式化简时的死循环 bug
-    const safeExprStr = exprStr.replace(/(\d+)\.(\d+)/g, (match, p1, p2) => {
+    const safeExprStr = exprStr.replace(/(\d+)\.(\d+)/g, (_match, p1, p2) => {
       const num = parseInt(p1 + p2, 10);
       const den = Math.pow(10, p2.length);
       return `\\frac{${num}}{${den}}`;

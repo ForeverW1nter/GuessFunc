@@ -51,7 +51,7 @@ function cleanDesmosLatex(latex: string): string {
   s = s.replace(/≥/g, '\\ge');
 
   // 将小数转换为分数，以防 ComputeEngine 的 bug 导致死循环
-  s = s.replace(/(\d+)\.(\d+)/g, (match, p1, p2) => {
+  s = s.replace(/(\d+)\.(\d+)/g, (_match, p1, p2) => {
     const num = parseInt(p1 + p2, 10);
     const den = Math.pow(10, p2.length);
     return `\\frac{${num}}{${den}}`;
