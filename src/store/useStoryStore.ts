@@ -25,7 +25,7 @@ for (const path in dataFiles) {
 }
 
 const combinedStoryData: StoryJSON = {
-  routes: combinedRoutes
+  routes: combinedRoutes.filter(route => route.id !== 'charmYouTomorrow' && route.id !== 'poemOfTheBorder')
 };
 
 interface StoryState {
