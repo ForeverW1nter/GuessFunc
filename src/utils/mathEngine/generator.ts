@@ -1,3 +1,5 @@
+import { ComputeEngine } from '@cortex-js/compute-engine';
+
 export interface GeneratedFunction {
   target: string;
   params: Record<string, number>;
@@ -16,6 +18,9 @@ export interface GeneratorOptions {
 // 我们不再随机拼凑算子，而是将函数生成看作是对某个“基础几何流形”的拓扑变换。
 // 每一次变换都有明确的解析几何意义（对称破缺、渐近线旋转、定义域撕裂等）。
 // ----------------------------------------------------------------------------------
+
+const ce = new ComputeEngine();
+ce.declare('x', 'number');
 
 // 1. 基础流形 (Base Manifolds) - 拥有极强解析特征的函数
 const BASE_MANIFOLDS: { expr: string; type: FunctionType }[] = [
@@ -53,14 +58,14 @@ function getFriendlyConst(opId: string): string {
 
   if (isDomainLogSqrt) {
     // 对于撕裂定义域的 log 或 sqrt，优先使用正数偏移，避免大面积无定义
-    return getRandom(['1', '2', '3', '4', '0.5', '1.5']);
+    return getRandom(['1', '2', '3', '4', '5']);
   }
   if (isMultiplier) {
-    // 作为乘数时，避免使用 1（无意义）和 0，使用适中的数值
-    return getRandom(['2', '3', '0.5', '-2', '-0.5', '1.5', '-1.5']);
+    // 作为乘数时，避免使用 1（无意义）和 0，使用适中的数值，并且不使用太大数字避免化简后产生非常大的常数
+    return getRandom(['2', '3', '-2', '-3']);
   }
   // 普通加减常数
-  return getRandom(['1', '2', '3', '4', '-1', '-2', '-3', '0.5', '-0.5']);
+  return getRandom(['1', '2', '3', '4', '5', '-1', '-2', '-3', '-4', '-5']);
 }
 
 // ----------------------------------------------------------------------------------
@@ -97,10 +102,10 @@ const TOPOLOGICAL_OPERATORS: TopologicalOperator[] = [
   { id: 'sym_break_sign', weight: 1.0, type: 'general', maxUses: 1, apply: (expr, p) => `\\frac{${expr}}{x + ${p}}` },
 
   // 【频率/尺度扭曲类】
-  { id: 'scale_x', weight: 0.8, type: 'general', maxUses: 2, apply: (expr, p) => expr.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, `\\left(${p}x\\right)`) },
-  { id: 'shift_x', weight: 0.8, type: 'general', maxUses: 2, apply: (expr, p) => expr.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, `\\left(x + ${p}\\right)`) },
+  { id: 'scale_x', weight: 0.8, type: 'general', maxUses: 1, apply: (expr, p) => expr.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, `\\left(${p}x\\right)`) },
+  { id: 'shift_x', weight: 0.8, type: 'general', maxUses: 1, apply: (expr, p) => expr.replace(/(?<![a-zA-Z\\])x(?![a-zA-Z])/g, `\\left(x + ${p}\\right)`) },
   { id: 'scale_y', weight: 0.8, type: 'general', maxUses: 1, apply: (expr, p) => `${p}\\left(${expr}\\right)` },
-  { id: 'shift_y', weight: 0.5, type: 'general', maxUses: 2, apply: (expr, p) => `${expr} + ${p}` },
+  { id: 'shift_y', weight: 0.5, type: 'general', maxUses: 1, apply: (expr, p) => `${expr} + ${p}` },
 
   // 【复合包裹类】
   { id: 'wrap_exp', weight: 1.2, type: 'exponential', maxUses: 1, apply: (expr, p) => `e^{${expr}} + ${p}` },
@@ -128,51 +133,53 @@ function hasValidDomain(exprStr: string): boolean {
   return true; 
 }
 
-// 后处理 LaTeX 表达式，去除臃肿的多余括号和符号，提升美感
-function postCleanLatex(expr: string): string {
-  let s = expr;
-  
-  // 0. 特殊处理：将类似 2\left(...\right) 提取出来，避免冗余的加括号
-  s = s.replace(/\+\s*-\s*/g, '- ');
-  s = s.replace(/-\s*-\s*/g, '+ ');
-  
-  // 1. 清理多重冗余括号，例如 \sin(\left(2x\right)) -> \sin(2x)
-  s = s.replace(/\\left\(\\left\((.*?)\\right\)\\right\)/g, '\\left($1\\right)');
-  s = s.replace(/\(\\left\((.*?)\\right\)\)/g, '\\left($1\\right)');
-  s = s.replace(/\\left\|\\left\((.*?)\\right\)\\right\|/g, '\\left|$1\\right|');
-  
-  // 2. 将普通括号替换为 \left( \right)，保证渲染时的高度自适应
-  // 注意不要替换已经是 \left( 和 \right) 的括号，也不要替换不支持 \left \right 的地方
-  s = s.replace(/(?<!\\left)\(/g, '\\left(');
-  s = s.replace(/(?<!\\right)\)/g, '\\right)');
+// 检查生成的表达式在化简后是否依然保持了足够的复杂度，避免 e^lnx 或 1/(1/x) 这种退化情况
+function isComplexitySufficient(exprStr: string, currentWeight: number, paramsCount: number): boolean {
+  try {
+    // 替换小数为分数，以规避 ComputeEngine 在带小数的有理多项式化简时的死循环 bug
+    const safeExprStr = exprStr.replace(/(\d+)\.(\d+)/g, (match, p1, p2) => {
+      const num = parseInt(p1 + p2, 10);
+      const den = Math.pow(10, p2.length);
+      return `\\frac{${num}}{${den}}`;
+    });
+    
+    const box = ce.parse(safeExprStr);
+    const simplified = box.simplify();
+    const simplifiedLatex = simplified.latex;
+    
+    // 如果化简后没有 x，说明退化为常数了
+    if (!simplifiedLatex.includes('x')) {
+      return false;
+    }
+    
+    // 粗略判断复杂度：化简后的 LaTeX 长度不应过短
+    if (currentWeight >= 1.0 && simplifiedLatex.length < 5 && paramsCount === 0) {
+      return false;
+    }
 
-  // 2.5 将普通绝对值替换为 \left| \right|
-  // 使用简单的状态机或者多次替换来配对 |
-  // 这里必须非常小心不要把 \left| 或 \right| 中的 | 误判
-  // 我们使用一个安全替换逻辑：如果连续找到两个孤立的 |
-  while (s.match(/(?<!\\(?:left|right))\|([^|]+?)(?<!\\(?:left|right))\|/)) {
-    s = s.replace(/(?<!\\(?:left|right))\|([^|]+?)(?<!\\(?:left|right))\|/g, '\\left|$1\\right|');
+    // 如果化简后的长度大幅度缩水
+    if (currentWeight >= 1.0 && simplifiedLatex.length < exprStr.length * 0.6) {
+      return false;
+    }
+    
+    return true;
+  } catch {
+    return true; // 如果解析失败，保守认为它足够复杂
   }
+}
 
-  // 3. 对于简单的数字加减 x 的括号进行解除，例如 \left(x + 2\right) 如果在最外层或加减法中可以不带 left right
-  // 但为了保守起见，我们主要清理乘法前面的 1x
-  s = s.replace(/(?<![\d.])\b1x(?![a-zA-Z])/g, 'x');
-  s = s.replace(/(?<![\d.])\b-1x(?![a-zA-Z])/g, '-x');
-  s = s.replace(/(?<![\d.])\b1\\left\(/g, '\\left(');
-  s = s.replace(/(?<![\d.])\b-1\\left\(/g, '-\\left(');
-  
-  // 4. 清理类似 \left(x\right) -> x 的极度简单括号 (只有当内部是单纯的 x 或者数字x 时)
-  // 且前面不能是字母或 }（防止 \sinx, \operatorname{arsinh}x 变成非法或丑陋指令）
-  // 并且不能紧跟 ^，以防止 \left(-0.5x\right)^2 变成 -0.5x^2 (后者数学意义不同)
-  s = s.replace(/(?<![a-zA-Z}])\\left\((-?[\d.]*x)\\right\)(?!\^)/g, '$1');
-  
-  // 5. 清除开头的多余 + 号
-  s = s.replace(/^\s*\+\s*/, '');
-  
-  // 6. 替换掉加负数的写法，比如 x + -2 变成 x - 2
-  s = s.replace(/\+\s*-([\d.]+)/g, '- $1');
-  
-  return s;
+// 后处理 LaTeX 表达式，使用 ComputeEngine 序列化以自动移除多余括号和整理符号
+function postCleanLatex(expr: string): string {
+  try {
+    const parsed = ce.parse(expr);
+    // ce 序列化会整理掉大部分的冗余括号和双重符号
+    let s = parsed.latex;
+    // 将 \vert 替换回更易读的 | 符号，适配 Desmos
+    s = s.replace(/\\vert/g, '|');
+    return s;
+  } catch {
+    return expr;
+  }
 }
 
 export function generateFunctionByDifficulty(
@@ -257,6 +264,9 @@ export function generateFunctionByDifficulty(
 
     // 简单验证有效性
     if (!hasValidDomain(expr)) continue;
+
+    // 检查复杂度是否在化简后崩塌
+    if (!isComplexitySufficient(expr, currentWeight, targetParams.length)) continue;
 
     // 检查参数是否被成功吃掉，并且是否实际出现在了表达式中
     if (withParams) {

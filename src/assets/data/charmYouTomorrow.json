@@ -13,7 +13,7 @@
             {
               "id": "1",
               "title": "第 1 关",
-              "targetFunction": "\\left|x^2\\right| - 2x",
+              "targetFunction": "\\left|-3x\\right| + 1",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -23,7 +23,7 @@
             {
               "id": "2",
               "title": "第 2 关",
-              "targetFunction": "1.5\\left(\\frac{x}{x - 2}\\right)",
+              "targetFunction": "x^3 - 4x^2",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -33,7 +33,7 @@
             {
               "id": "3",
               "title": "第 3 关",
-              "targetFunction": "2\\left(\\left|x^2\\right| + 3\\right) + 4",
+              "targetFunction": "\\left|x\\right| + 4 - x^2",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -85,7 +85,7 @@
             {
               "id": "4",
               "title": "第 4 关",
-              "targetFunction": "\\left(x^2\\right) \\cdot \\left(x - 1.5\\right)",
+              "targetFunction": "\\frac{-5}{x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -95,7 +95,7 @@
             {
               "id": "5",
               "title": "第 5 关",
-              "targetFunction": "2\\left(\\left|\\frac{1}{x^2+1}\\right| - 2\\right)",
+              "targetFunction": "\\frac{\\left|x^3\\right| - 1}{x + 1}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -105,7 +105,7 @@
             {
               "id": "6",
               "title": "第 6 关",
-              "targetFunction": "\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x + 0.5\\right) + 3",
+              "targetFunction": "\\frac{1}{\\left(-3x\\right)^2+1} + \\frac{-2}{x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -115,7 +115,7 @@
             {
               "id": "7",
               "title": "第 7 关",
-              "targetFunction": "\\left|\\left|x\\right| + \\frac{-2}{x}\\right| + 4x",
+              "targetFunction": "x^3 + \\frac{-3}{x} - 2x",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -125,7 +125,7 @@
             {
               "id": "8",
               "title": "第 8 关",
-              "targetFunction": "\\frac{\\frac{1}{x} + 4}{x + 2} - 2x",
+              "targetFunction": "\\left|\\frac{1}{x}\\right| + 5 + \\frac{3}{x} - 3",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -195,7 +195,7 @@
             {
               "id": "9",
               "title": "第 9 关",
-              "targetFunction": "\\sqrt{1-\\left(1.5x - 2\\right)^2}",
+              "targetFunction": "\\left|\\frac{\\left|x\\right|}{x - 3}\\right| + 4",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -205,7 +205,7 @@
             {
               "id": "10",
               "title": "第 10 关",
-              "targetFunction": "\\frac{-0.5}{x^2 - 1}",
+              "targetFunction": "\\left|\\frac{\\frac{1}{x^2+1}}{x - 3}\\right| + 2x",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -215,7 +215,7 @@
             {
               "id": "11",
               "title": "第 11 关",
-              "targetFunction": "\\frac{\\sqrt{\\left|x\\right| + 1.5}}{x + 1}",
+              "targetFunction": "\\sqrt{1-x^2} - 2x^2 - 5",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -225,7 +225,7 @@
             {
               "id": "12",
               "title": "第 12 关",
-              "targetFunction": "\\left(x + 1\\right)^2 + 0.5\\left(x + 1\\right)^2",
+              "targetFunction": "\\left|\\frac{\\left|x\\right| + 5}{x - 3}\\right| + 3",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -235,7 +235,7 @@
             {
               "id": "13",
               "title": "第 13 关",
-              "targetFunction": "\\left(\\frac{x^2}{x - 2}\\right) \\cdot \\left(x - 2\\right)",
+              "targetFunction": "\\frac{\\frac{1}{x} + 2x}{x + 3} - 2",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -245,7 +245,7 @@
             {
               "id": "14",
               "title": "第 14 关",
-              "targetFunction": "x \\cdot \\left(x - 0.5\\right) + 0.5x",
+              "targetFunction": "\\frac{3}{\\left|x^2\\right| - 2x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -255,7 +255,7 @@
             {
               "id": "15",
               "title": "第 15 关",
-              "targetFunction": "\\left(\\frac{1}{\\frac{1}{x}}\\right) \\cdot \\left(x + 3\\right)",
+              "targetFunction": "\\frac{x}{x + 3} - x^2",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -343,7 +343,7 @@
             {
               "id": "16",
               "title": "第 16 关",
-              "targetFunction": "e^{\\frac{1}{x} - 0.5x} + 1.5",
+              "targetFunction": "\\left|e^{x^3} - 2\\right| + 3x",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -353,7 +353,7 @@
             {
               "id": "17",
               "title": "第 17 关",
-              "targetFunction": "\\sqrt{1-x^2} + 3e^{-x} + 3x",
+              "targetFunction": "\\left|e^{x^3} - 2\\right| - 5x",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -363,7 +363,7 @@
             {
               "id": "18",
               "title": "第 18 关",
-              "targetFunction": "0.5\\left(\\ln\\left(\\left|x\\right| + 1\\right)\\right)",
+              "targetFunction": "3\\left(\\frac{-1}{\\sqrt{1-x^2}}\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -373,7 +373,7 @@
             {
               "id": "19",
               "title": "第 19 关",
-              "targetFunction": "\\frac{-0.5}{\\sqrt{x + 1.5}}",
+              "targetFunction": "\\left|x\\right| + \\frac{2}{x} - 2e^{-x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -383,7 +383,7 @@
             {
               "id": "20",
               "title": "第 20 关",
-              "targetFunction": "e^{\\left|\\left(x + 4\\right)^2\\right| - 3} + 0.5",
+              "targetFunction": "2\\left(\\frac{-5}{\\frac{1}{x^2+1} - 2}\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -393,7 +393,7 @@
             {
               "id": "21",
               "title": "第 21 关",
-              "targetFunction": "\\frac{-1}{\\frac{1}{x}} + 2e^{-x}",
+              "targetFunction": "\\sqrt{\\frac{\\sqrt{1-x^2}}{x - 3} + 4 + 3}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -403,7 +403,7 @@
             {
               "id": "22",
               "title": "第 22 关",
-              "targetFunction": "\\left|\\frac{1}{x^2+1}\\right| - 0.5x + 0.5x^2",
+              "targetFunction": "-2\\left(\\left|\\frac{\\left|x\\right|}{x + 1}\\right| - 4x\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -413,7 +413,7 @@
             {
               "id": "23",
               "title": "第 23 关",
-              "targetFunction": "\\sqrt{\\frac{1}{\\left(x + 1\\right)} - 0.5x + 1}",
+              "targetFunction": "\\frac{\\left|x^3 - 2x\\right| - x}{x + 1}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -423,7 +423,7 @@
             {
               "id": "24",
               "title": "第 24 关",
-              "targetFunction": "e^{\\ln\\left(x\\right)} + 0.5 + 2x^2",
+              "targetFunction": "e^{2\\left(x^2\\right) + \\frac{-2}{x}} + 3",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -529,7 +529,7 @@
             {
               "id": "25",
               "title": "第 25 关",
-              "targetFunction": "x^2 + 3x^2",
+              "targetFunction": "\\left|x\\right| - 3e^{-x} - 5",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -539,7 +539,7 @@
             {
               "id": "26",
               "title": "第 26 关",
-              "targetFunction": "e^{\\frac{\\cos\\left(x\\right)}{x + 1}} - 0.5",
+              "targetFunction": "\\left|\\frac{1}{x}\\right| + 5 + \\frac{-4}{x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -549,7 +549,7 @@
             {
               "id": "27",
               "title": "第 27 关",
-              "targetFunction": "\\sqrt{\\left|\\left|x\\right|\\right| + 4x + 0.5}",
+              "targetFunction": "\\sqrt{1-x^2} + \\frac{-5}{x} - 2\\sin\\left(x\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -559,7 +559,7 @@
             {
               "id": "28",
               "title": "第 28 关",
-              "targetFunction": "\\frac{-0.5}{\\left|\\tan\\left(x\\right)\\right| + 0.5}",
+              "targetFunction": "\\sin\\left(\\left|x\\right| - 2x + 4\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -569,7 +569,7 @@
             {
               "id": "29",
               "title": "第 29 关",
-              "targetFunction": "\\sqrt{\\left(x + 2\\right)^2 + 0.5} + 2",
+              "targetFunction": "\\tan\\left(3x\\right) - 3e^{-x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -579,7 +579,7 @@
             {
               "id": "30",
               "title": "第 30 关",
-              "targetFunction": "\\sin\\left(\\tan\\left(x\\right) + 2x - 0.5\\right)",
+              "targetFunction": "\\frac{x^2}{x + 2} - 3e^{-x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -589,7 +589,7 @@
             {
               "id": "31",
               "title": "第 31 关",
-              "targetFunction": "\\left|\\left|\\ln\\left(x + 2\\right)\\right| - 3\\right| - 0.5x",
+              "targetFunction": "\\ln\\left(\\left|\\frac{\\sqrt{1-x^2}}{x - 5}\\right| + 3\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -599,7 +599,7 @@
             {
               "id": "32",
               "title": "第 32 关",
-              "targetFunction": "\\cos\\left(x\\right) - 1.5x - 0.5x^2",
+              "targetFunction": "\\sin\\left(e^{x} - 3 + 1\\right) + 5\\sin\\left(x\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -609,7 +609,7 @@
             {
               "id": "33",
               "title": "第 33 关",
-              "targetFunction": "\\frac{\\tan\\left(x\\right)}{x - 2} + 2\\sin\\left(x\\right) - 1.5x",
+              "targetFunction": "\\sqrt{\\frac{3}{\\tan\\left(x\\right)} + 3}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -715,7 +715,7 @@
             {
               "id": "34",
               "title": "第 34 关",
-              "targetFunction": "\\left(\\arctan\\left(x\\right)\\right) \\cdot \\left(x + 2\\right) - 2\\sin\\left(x\\right)",
+              "targetFunction": "\\left|x + 5\\right| - 3e^{-x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -725,7 +725,7 @@
             {
               "id": "35",
               "title": "第 35 关",
-              "targetFunction": "\\frac{-2}{\\sqrt{x^3 + 2}}",
+              "targetFunction": "\\frac{-2}{\\left|\\tan\\left(x\\right)\\right| + 4x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -735,7 +735,7 @@
             {
               "id": "36",
               "title": "第 36 关",
-              "targetFunction": "\\sqrt{\\left(e^{x}\\right) \\cdot \\left(x + 1.5\\right) + 3}",
+              "targetFunction": "e^{\\ln\\left(x\\right)} + 3 - 2e^{-x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -745,7 +745,7 @@
             {
               "id": "37",
               "title": "第 37 关",
-              "targetFunction": "\\ln\\left(\\left|\\sin\\left(x\\right)\\right| + 2\\right) + 1.5x + 1",
+              "targetFunction": "x^2 + \\frac{-4}{x} + 3e^{-x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -755,7 +755,7 @@
             {
               "id": "38",
               "title": "第 38 关",
-              "targetFunction": "-1.5\\left(\\tan\\left(3x\\right) + \\frac{3}{x}\\right)",
+              "targetFunction": "\\frac{x^3 - 4x^2}{x - 3}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -765,7 +765,7 @@
             {
               "id": "39",
               "title": "第 39 关",
-              "targetFunction": "\\frac{\\frac{1}{\\left(x + 3\\right)^2+1} - 0.5e^{-\\left(x + 3\\right)}}{x - 2}",
+              "targetFunction": "\\left|x^2 - 5\\sin\\left(x\\right)\\right| + 5 + \\frac{5}{x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -775,7 +775,7 @@
             {
               "id": "40",
               "title": "第 40 关",
-              "targetFunction": "\\left|\\ln\\left(\\left|-0.5x\\right)^2\\right| + 1\\right| + 4x",
+              "targetFunction": "\\left|\\sin\\left(x^3 + \\frac{2}{x} + 2\\right)\\right| + 1",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -785,7 +785,7 @@
             {
               "id": "41",
               "title": "第 41 关",
-              "targetFunction": "e^{\\left|\\ln\\left(\\left|\\frac{1}{x^2+1}\\right| + 0.5\\right)\\right| + 0.5} + 1.5",
+              "targetFunction": "\\frac{\\sin\\left(e^{x} - 3\\right) + 5\\sin\\left(x\\right)}{x + 4}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -882,7 +882,7 @@
             {
               "id": "42",
               "title": "第 42 关",
-              "targetFunction": "e^{\\operatorname{arsinh}\\left(x + 2\\right)} + 1.5 - 2",
+              "targetFunction": "\\frac{\\frac{1}{x^2+1} + 2e^{-x}}{x - 1}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -892,7 +892,7 @@
             {
               "id": "43",
               "title": "第 43 关",
-              "targetFunction": "\\frac{-3}{\\tan\\left(x\\right) + \\frac{0.5}{x}}",
+              "targetFunction": "\\ln\\left(\\left|e^{\\frac{1}{x^2+1}} - 3\\right| + 1\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -902,7 +902,7 @@
             {
               "id": "44",
               "title": "第 44 关",
-              "targetFunction": "\\sin\\left(x + 3 + 4\\right) + \\frac{-0.5}{x}",
+              "targetFunction": "\\frac{1}{\\sin\\left(e^{x} - 5\\right)}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -912,7 +912,7 @@
             {
               "id": "45",
               "title": "第 45 关",
-              "targetFunction": "\\sin\\left(x - 0.5\\right) + 0.5x^2",
+              "targetFunction": "x^2 + \\frac{4}{x} - 5x^2",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -922,7 +922,7 @@
             {
               "id": "46",
               "title": "第 46 关",
-              "targetFunction": "\\left(\\left|\\operatorname{artanh}\\left(2x\\right)\\right| - 0.5\\right) \\cdot \\left(x + 3\\right)",
+              "targetFunction": "e^{\\left|\\cos\\left(x\\right) + 3x\\right| + 2} - 3",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -932,7 +932,7 @@
             {
               "id": "47",
               "title": "第 47 关",
-              "targetFunction": "\\frac{x^3}{x - 3} + 1.5x + \\frac{-1}{x}",
+              "targetFunction": "\\sin\\left(e^{\\left|e^{x}\\right| - 2} + 2 + 4\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1011,7 +1011,7 @@
             {
               "id": "48",
               "title": "第 48 关",
-              "targetFunction": "-1.5\\left(\\sin\\left(\\sqrt{1-x^2} - 2\\right)\\right) + 3e^{-x}",
+              "targetFunction": "\\frac{\\tanh\\left(x\\right) + 3e^{-x} - 3x}{x - 5}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1021,7 +1021,7 @@
             {
               "id": "49",
               "title": "第 49 关",
-              "targetFunction": "\\sin\\left(\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x - 1.5\\right) + 0.5\\right) + \\frac{4}{x}",
+              "targetFunction": "\\left|\\tan\\left(2x\\right) + 2e^{-2x} - 2\\right| - 1",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1031,7 +1031,7 @@
             {
               "id": "50",
               "title": "第 50 关",
-              "targetFunction": "\\sinh\\left(x\\right) - 1.5e^{-x} + 2 + x^2",
+              "targetFunction": "\\left|\\sqrt{\\ln\\left(x\\right) + 3}\\right| + 3 - 3x^2",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1041,7 +1041,7 @@
             {
               "id": "51",
               "title": "第 51 关",
-              "targetFunction": "e^{\\left|\\frac{-2}{\\frac{1}{x^2+1}}\\right| - 2x} - 2",
+              "targetFunction": "\\frac{\\left|\\sqrt{1-x^2}\\right| + 4 + 4x^2}{x + 2}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1051,7 +1051,7 @@
             {
               "id": "52",
               "title": "第 52 关",
-              "targetFunction": "\\left|\\cos\\left(-2x\\right) + \\frac{0.5}{-2x}\\right| + 0.5 - 0.5-2x",
+              "targetFunction": "\\left|\\frac{-3}{e^{\\sin\\left(x\\right)} - 3}\\right| - 4x",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1061,7 +1061,7 @@
             {
               "id": "53",
               "title": "第 53 关",
-              "targetFunction": "\\sin\\left(\\left|\\left(0.5x\\right)^3\\right| + 4 + 1\\right) + 0.50.5x",
+              "targetFunction": "e^{\\frac{2}{\\sqrt{e^{x} + 5}}} - 3",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1071,7 +1071,7 @@
             {
               "id": "54",
               "title": "第 54 关",
-              "targetFunction": "\\sin\\left(\\frac{\\cos\\left(x\\right)}{x - 3} - 2e^{-x} - 1\\right)",
+              "targetFunction": "\\left|\\frac{\\sqrt{\\sqrt{1-\\left(x + 2\\right)^2} + 2}}{x + 1}\\right| + 3",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1081,7 +1081,7 @@
             {
               "id": "55",
               "title": "第 55 关",
-              "targetFunction": "\\ln\\left(\\left|\\sqrt{1-x^2} + 2 + 4\\sin\\left(x\\right)\\right| + 0.5\\right) + 1.5x",
+              "targetFunction": "\\frac{-4}{\\left|\\operatorname{arsinh}\\left(x\\right)\\right| + 3 - 2e^{-x}}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1091,7 +1091,7 @@
             {
               "id": "56",
               "title": "第 56 关",
-              "targetFunction": "\\sqrt{\\left|x - 2\\right| + x^2 + 1.5}",
+              "targetFunction": "\\ln\\left(\\left|\\left|\\tanh\\left(x\\right)\\right| - 4x\\right| + 3\\right) - 2e^{-x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1101,7 +1101,7 @@
             {
               "id": "57",
               "title": "第 57 关",
-              "targetFunction": "\\frac{1}{\\frac{\\left(\\arctan\\left(x\\right)\\right) \\cdot \\left(x + 0.5\\right)}{x - 2}}",
+              "targetFunction": "e^{\\left|\\tan\\left(x\\right) + 2x\\right| - 3} + 3 + \\frac{5}{x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1111,7 +1111,7 @@
             {
               "id": "58",
               "title": "第 58 关",
-              "targetFunction": "\\frac{-3}{x^3 + 0.5e^{-x} + \\frac{2}{x}}",
+              "targetFunction": "\\left|\\sqrt{\\sin\\left(x\\right) - x^2 + 4}\\right| + 2x",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1121,7 +1121,7 @@
             {
               "id": "59",
               "title": "第 59 关",
-              "targetFunction": "\\frac{4}{\\left(e^{x}\\right) \\cdot \\left(x - 1.5\\right)} - 0.5\\sin\\left(x\\right)",
+              "targetFunction": "e^{\\sin\\left(x - 1\\right) - 2x} + 2 + \\frac{2}{x}",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1131,7 +1131,7 @@
             {
               "id": "60",
               "title": "第 60 关",
-              "targetFunction": "\\ln\\left(\\left|\\frac{3}{\\sin\\left(x\\right) + \\frac{-1}{x}}\\right| + 3\\right)",
+              "targetFunction": "\\ln\\left(\\left|\\sqrt{x^2 + 5} + 2e^{-x}\\right| + 1\\right)",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1141,7 +1141,7 @@
             {
               "id": "61",
               "title": "第 61 关",
-              "targetFunction": "\\sin\\left(-2\\left(\\sin\\left(2x\\right)\\right) \\cdot \\left(2x + 0.5\\right) + 1\\right)",
+              "targetFunction": "e^{\\sqrt{\\frac{\\tan\\left(x\\right)}{x + 1} + 1}} + 3 + 2x",
               "params": null,
               "domain": null,
               "type": "normal",
@@ -1301,9 +1301,9 @@
             {
               "id": "62",
               "title": "第 62 关",
-              "targetFunction": "\\left(x^3\\right) \\cdot \\left(x + a\\right)",
+              "targetFunction": "\\frac{x^2 + a}{x + 4}",
               "params": {
-                "a": 0.5
+                "a": -3
               },
               "domain": null,
               "type": "normal",
@@ -1313,9 +1313,9 @@
             {
               "id": "63",
               "title": "第 63 关",
-              "targetFunction": "\\frac{\\left|x^3\\right| + x}{x + a}",
+              "targetFunction": "\\left|\\frac{x^3}{x + a}\\right| - 3x",
               "params": {
-                "a": -2
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -1325,9 +1325,10 @@
             {
               "id": "64",
               "title": "第 64 关",
-              "targetFunction": "3x \\cdot \\left(x + a\\right)",
+              "targetFunction": "\\frac{\\left|x^2\\right| - x + a}{x + b}",
               "params": {
-                "a": 2
+                "a": 4,
+                "b": 2
               },
               "domain": null,
               "type": "normal",
@@ -1337,9 +1338,9 @@
             {
               "id": "65",
               "title": "第 65 关",
-              "targetFunction": "\\left(2x + a\\right)^2 + 22x",
+              "targetFunction": "3\\left(\\frac{\\left|x - 3\\right| - 5}{x + a}\\right)",
               "params": {
-                "a": 0.5
+                "a": -3
               },
               "domain": null,
               "type": "normal",
@@ -1349,9 +1350,11 @@
             {
               "id": "66",
               "title": "第 66 关",
-              "targetFunction": "2\\left(\\left|\\frac{x^3}{x - 1} + a\\right| - 1\\right)",
+              "targetFunction": "\\left|\\frac{\\left|x + a\\right|}{x + b}\\right| + c + 4",
               "params": {
-                "a": 0.5
+                "a": 3,
+                "b": -2,
+                "c": -2
               },
               "domain": null,
               "type": "normal",
@@ -1421,9 +1424,9 @@
             {
               "id": "67",
               "title": "第 67 关",
-              "targetFunction": "\\left(\\left(x - 0.5\\right)^2\\right) \\cdot \\left(\\left(x - 0.5\\right) + a\\right)",
+              "targetFunction": "\\frac{-3}{\\left|\\frac{1}{x}\\right| + a}",
               "params": {
-                "a": -0.5
+                "a": -3
               },
               "domain": null,
               "type": "normal",
@@ -1433,10 +1436,9 @@
             {
               "id": "68",
               "title": "第 68 关",
-              "targetFunction": "\\left|\\left(\\left(x + 1\\right) + a\\right)^3\\right| + b",
+              "targetFunction": "\\left|\\frac{a}{x^2}\\right| + 5",
               "params": {
-                "a": 0.5,
-                "b": -2
+                "a": 5
               },
               "domain": null,
               "type": "normal",
@@ -1446,9 +1448,9 @@
             {
               "id": "69",
               "title": "第 69 关",
-              "targetFunction": "a\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x + 3\\right)",
+              "targetFunction": "\\frac{\\left|x\\right| + \\frac{a}{x} + 1}{x - 2}",
               "params": {
-                "a": -0.5
+                "a": -1
               },
               "domain": null,
               "type": "normal",
@@ -1458,10 +1460,9 @@
             {
               "id": "70",
               "title": "第 70 关",
-              "targetFunction": "\\left|b\\left(\\frac{x^3}{x + a}\\right)\\right| - 3x",
+              "targetFunction": "\\frac{a}{x^2} - 2x",
               "params": {
-                "a": 0.5,
-                "b": 0.5
+                "a": 2
               },
               "domain": null,
               "type": "normal",
@@ -1471,9 +1472,9 @@
             {
               "id": "71",
               "title": "第 71 关",
-              "targetFunction": "a\\left(x^2\\right) - 0.5x^2",
+              "targetFunction": "\\left|\\frac{a}{x^3 + 2}\\right| - 5",
               "params": {
-                "a": 1.5
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -1483,9 +1484,10 @@
             {
               "id": "72",
               "title": "第 72 关",
-              "targetFunction": "\\left(a\\left(x^3\\right)\\right) \\cdot \\left(x + 2\\right) + 2",
+              "targetFunction": "\\frac{3}{\\left|x^2 + a\\right| + b}",
               "params": {
-                "a": -1.5
+                "a": 1,
+                "b": -1
               },
               "domain": null,
               "type": "normal",
@@ -1495,9 +1497,10 @@
             {
               "id": "73",
               "title": "第 73 关",
-              "targetFunction": "\\frac{-3}{a\\left(\\frac{1}{\\left(x + 1\\right)^2+1}\\right)}",
+              "targetFunction": "b\\left(\\left|\\frac{1}{x^2+1} + a\\right| + 2\\right) - 2x",
               "params": {
-                "a": -1.5
+                "a": -4,
+                "b": 2
               },
               "domain": null,
               "type": "normal",
@@ -1507,9 +1510,10 @@
             {
               "id": "74",
               "title": "第 74 关",
-              "targetFunction": "\\frac{-2}{\\left|a\\left(x\\right)\\right| + 0.5x}",
+              "targetFunction": "\\frac{b}{\\left|x + 3\\right| + a}",
               "params": {
-                "a": -0.5
+                "a": -5,
+                "b": 3
               },
               "domain": null,
               "type": "normal",
@@ -1606,10 +1610,9 @@
             {
               "id": "75",
               "title": "第 75 关",
-              "targetFunction": "\\frac{\\sqrt{x^2 + a}}{x + b}",
+              "targetFunction": "\\frac{\\left|x\\right|}{x + a} + \\frac{2}{x}",
               "params": {
-                "a": 4,
-                "b": -0.5
+                "a": -5
               },
               "domain": null,
               "type": "normal",
@@ -1619,9 +1622,9 @@
             {
               "id": "76",
               "title": "第 76 关",
-              "targetFunction": "\\frac{\\sqrt{\\left|x\\right| + a}}{x - 2}",
+              "targetFunction": "\\left|x\\right| + a + 5x^2",
               "params": {
-                "a": 4
+                "a": 1
               },
               "domain": null,
               "type": "normal",
@@ -1631,10 +1634,9 @@
             {
               "id": "77",
               "title": "第 77 关",
-              "targetFunction": "\\frac{b}{\\sqrt{1-\\left(x + a\\right)^2}}",
+              "targetFunction": "\\frac{2}{\\left|\\frac{1}{x}\\right| + a}",
               "params": {
-                "a": -1,
-                "b": 3
+                "a": 2
               },
               "domain": null,
               "type": "normal",
@@ -1644,9 +1646,9 @@
             {
               "id": "78",
               "title": "第 78 关",
-              "targetFunction": "\\left|\\frac{\\left|x\\right|}{x + 2} + a\\right| + 4x",
+              "targetFunction": "\\left|\\frac{a}{\\sqrt{1-x^2}}\\right| + 4x",
               "params": {
-                "a": -1
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -1656,11 +1658,9 @@
             {
               "id": "79",
               "title": "第 79 关",
-              "targetFunction": "\\left|b\\left(\\left|x + 2\\right| + a\\right)\\right| + c",
+              "targetFunction": "\\left|\\sqrt{\\sqrt{1-\\left(x - 5\\right)^2} + 4}\\right| + a",
               "params": {
-                "a": -3,
-                "b": -2,
-                "c": -2
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -1670,10 +1670,10 @@
             {
               "id": "80",
               "title": "第 80 关",
-              "targetFunction": "\\left|\\frac{\\frac{1}{\\left(x + a\\right)}}{x + b}\\right| - 3x",
+              "targetFunction": "\\left|\\frac{\\left(x + b\\right)}{\\left(x + b\\right) + a}\\right| + 2x",
               "params": {
-                "a": 3,
-                "b": 2
+                "a": -2,
+                "b": 5
               },
               "domain": null,
               "type": "normal",
@@ -1683,9 +1683,9 @@
             {
               "id": "81",
               "title": "第 81 关",
-              "targetFunction": "1.5\\left(\\left|\\frac{1}{x^2+1} + \\frac{4}{x}\\right| + a\\right)",
+              "targetFunction": "\\sqrt{\\left|x\\right| + a} - 4x^2",
               "params": {
-                "a": -3
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -1695,10 +1695,10 @@
             {
               "id": "82",
               "title": "第 82 关",
-              "targetFunction": "\\sqrt{\\frac{1}{\\left(\\left(x + b\\right) - 2\\right)^2+1} + a}",
+              "targetFunction": "\\frac{\\sqrt{\\left|\\frac{1}{x}\\right| + 5 + a}}{x + b}",
               "params": {
-                "a": 4,
-                "b": 0.5
+                "a": 2,
+                "b": -4
               },
               "domain": null,
               "type": "normal",
@@ -1708,9 +1708,10 @@
             {
               "id": "83",
               "title": "第 83 关",
-              "targetFunction": "\\sqrt{a\\left(\\frac{1}{x}\\right) + \\frac{-3}{x} + 1.5}",
+              "targetFunction": "\\frac{\\left|\\sqrt{1-\\left(2x\\right)^2} + 3\\right| + a}{2x + b}",
               "params": {
-                "a": 1.5
+                "a": -3,
+                "b": -3
               },
               "domain": null,
               "type": "normal",
@@ -1720,9 +1721,10 @@
             {
               "id": "84",
               "title": "第 84 关",
-              "targetFunction": "\\sqrt{\\left(x^3\\right) \\cdot \\left(x + a\\right) + 1.5} - 3",
+              "targetFunction": "b\\left(\\sqrt{\\frac{1}{x} + a}\\right) + \\frac{1}{x}",
               "params": {
-                "a": 1.5
+                "a": 4,
+                "b": -2
               },
               "domain": null,
               "type": "normal",
@@ -1837,9 +1839,9 @@
             {
               "id": "85",
               "title": "第 85 关",
-              "targetFunction": "\\sqrt{e^{x} + a + 1.5}",
+              "targetFunction": "a\\left(e^{e^{x}} + 3 + 5\\right)",
               "params": {
-                "a": 3
+                "a": -2
               },
               "domain": null,
               "type": "normal",
@@ -1849,9 +1851,10 @@
             {
               "id": "86",
               "title": "第 86 关",
-              "targetFunction": "a\\left(\\sqrt{1-x^2}\\right) - 3x^2",
+              "targetFunction": "\\sqrt{e^{\\frac{1}{x}} + a + b}",
               "params": {
-                "a": 2
+                "a": -2,
+                "b": 1
               },
               "domain": null,
               "type": "normal",
@@ -1861,9 +1864,9 @@
             {
               "id": "87",
               "title": "第 87 关",
-              "targetFunction": "\\sqrt{a\\left(3x\\right) + 3}",
+              "targetFunction": "\\frac{a}{\\sqrt{x^3 + 5}}",
               "params": {
-                "a": 1.5
+                "a": -5
               },
               "domain": null,
               "type": "normal",
@@ -1873,9 +1876,9 @@
             {
               "id": "88",
               "title": "第 88 关",
-              "targetFunction": "\\ln\\left(\\left|e^{\\sqrt{1-x^2}} + a\\right| + 0.5\\right)",
+              "targetFunction": "\\frac{\\left|\\frac{1}{x^2+1}\\right| + a + 2x}{x - 1}",
               "params": {
-                "a": 1.5
+                "a": -1
               },
               "domain": null,
               "type": "normal",
@@ -1885,10 +1888,10 @@
             {
               "id": "89",
               "title": "第 89 关",
-              "targetFunction": "\\frac{e^{\\left(x - 2\\right)} + \\frac{a}{\\left(x - 2\\right)}}{\\left(x - 2\\right) + b}",
+              "targetFunction": "\\frac{e^{e^{\\left(x + b\\right)}} + a}{x + 4}",
               "params": {
                 "a": -3,
-                "b": -0.5
+                "b": 5
               },
               "domain": null,
               "type": "normal",
@@ -1898,9 +1901,9 @@
             {
               "id": "90",
               "title": "第 90 关",
-              "targetFunction": "\\left|\\frac{1}{x}\\right| + a + 2x + 0.5e^{-x}",
+              "targetFunction": "\\sqrt{\\frac{1}{x} + a} + 3x^2",
               "params": {
-                "a": -0.5
+                "a": 2
               },
               "domain": null,
               "type": "normal",
@@ -1910,9 +1913,10 @@
             {
               "id": "91",
               "title": "第 91 关",
-              "targetFunction": "\\ln\\left(\\left|x^3 + a\\right| + 2\\right) + \\frac{4}{x}",
+              "targetFunction": "\\frac{x^3}{x + a} + \\frac{b}{x} - 2x",
               "params": {
-                "a": 2
+                "a": 3,
+                "b": -5
               },
               "domain": null,
               "type": "normal",
@@ -2000,10 +2004,10 @@
             {
               "id": "92",
               "title": "第 92 关",
-              "targetFunction": "\\left|\\frac{\\sqrt{1-x^2}}{x + a}\\right| + b + 0.5\\sin\\left(x\\right)",
+              "targetFunction": "\\sqrt{e^{\\frac{1}{x}} + a + b}",
               "params": {
-                "a": 0.5,
-                "b": 4
+                "a": -2,
+                "b": 3
               },
               "domain": null,
               "type": "normal",
@@ -2013,9 +2017,10 @@
             {
               "id": "93",
               "title": "第 93 关",
-              "targetFunction": "\\sqrt{x^3 + a} - 1.5e^{-x}",
+              "targetFunction": "e^{\\ln\\left(\\left|x\\right| + a\\right)} + b",
               "params": {
-                "a": 3
+                "a": 3,
+                "b": -2
               },
               "domain": null,
               "type": "normal",
@@ -2025,10 +2030,9 @@
             {
               "id": "94",
               "title": "第 94 关",
-              "targetFunction": "\\sin\\left(\\ln\\left(\\left|x^2\\right| + a\\right) + b\\right)",
+              "targetFunction": "\\frac{\\tan\\left(x\\right) + \\frac{a}{x}}{x - 4} - 2",
               "params": {
-                "a": 1,
-                "b": 2
+                "a": 2
               },
               "domain": null,
               "type": "normal",
@@ -2038,10 +2042,9 @@
             {
               "id": "95",
               "title": "第 95 关",
-              "targetFunction": "\\sin\\left(\\frac{\\ln\\left(-1.5x\\right)}{-1.5x + a} + b\\right)",
+              "targetFunction": "\\frac{a}{x^2} + \\frac{1}{x}",
               "params": {
-                "a": -2,
-                "b": -3
+                "a": 1
               },
               "domain": null,
               "type": "normal",
@@ -2051,9 +2054,11 @@
             {
               "id": "96",
               "title": "第 96 关",
-              "targetFunction": "\\left(a\\left(\\left|\\frac{1}{x}\\right| - 0.5\\right)\\right) \\cdot \\left(x - 2\\right)",
+              "targetFunction": "\\ln\\left(\\left|b\\left(x^2 + a\\right)\\right| + c\\right)",
               "params": {
-                "a": 3
+                "a": -1,
+                "b": -3,
+                "c": 4
               },
               "domain": null,
               "type": "normal",
@@ -2063,9 +2068,10 @@
             {
               "id": "97",
               "title": "第 97 关",
-              "targetFunction": "a\\left(\\cos\\left(x\\right)\\right) - 2 + 4\\sin\\left(x\\right) - 3",
+              "targetFunction": "\\frac{b}{x^2 + \\frac{a}{x}}",
               "params": {
-                "a": 3
+                "a": -2,
+                "b": 4
               },
               "domain": null,
               "type": "normal",
@@ -2075,9 +2081,10 @@
             {
               "id": "98",
               "title": "第 98 关",
-              "targetFunction": "\\frac{a}{\\sin\\left(\\cos\\left(x\\right) - 1\\right)}",
+              "targetFunction": "e^{\\left|x\\right| + a + \\frac{b}{x}} + 3",
               "params": {
-                "a": 4
+                "a": 2,
+                "b": 3
               },
               "domain": null,
               "type": "normal",
@@ -2087,9 +2094,10 @@
             {
               "id": "99",
               "title": "第 99 关",
-              "targetFunction": "\\frac{\\sqrt{1-x^2} + \\frac{a}{x}}{x - 1} - 0.5x",
+              "targetFunction": "\\frac{b}{\\ln\\left(\\left|\\frac{1}{x^2+1}\\right| + a\\right)}",
               "params": {
-                "a": 3
+                "a": 5,
+                "b": -2
               },
               "domain": null,
               "type": "normal",
@@ -2099,10 +2107,9 @@
             {
               "id": "100",
               "title": "第 100 关",
-              "targetFunction": "\\sin\\left(\\frac{1}{\\left(x + 1\\right)} + a\\right) + b\\sin\\left(x + 1\\right)",
+              "targetFunction": "\\left|\\frac{a}{-2\\left(x^3\\right)}\\right| - 4",
               "params": {
-                "a": -1,
-                "b": 1
+                "a": 5
               },
               "domain": null,
               "type": "normal",
@@ -2112,10 +2119,10 @@
             {
               "id": "101",
               "title": "第 101 关",
-              "targetFunction": "\\left|\\sin\\left(\\sin\\left(x\\right) + a\\right) + b\\sin\\left(x\\right)\\right| - 3",
+              "targetFunction": "\\left|\\frac{\\frac{1}{\\left(x + 4\\right)} + a}{\\left(x + 4\\right) + b}\\right| + 5",
               "params": {
-                "a": -2,
-                "b": 2
+                "a": 4,
+                "b": 1
               },
               "domain": null,
               "type": "normal",
@@ -2125,11 +2132,9 @@
             {
               "id": "102",
               "title": "第 102 关",
-              "targetFunction": "c\\left(\\left|\\sqrt{1-x^2}\\right) \\cdot \\left(x + a\\right| + b\\right)",
+              "targetFunction": "\\frac{a}{x} - 2e^{-x}",
               "params": {
-                "a": 3,
-                "b": -1,
-                "c": -0.5
+                "a": 3
               },
               "domain": null,
               "type": "normal",
@@ -2139,9 +2144,9 @@
             {
               "id": "103",
               "title": "第 103 关",
-              "targetFunction": "\\sin\\left(\\tan\\left(x + b\\right) + \\frac{a}{\\left(x + b\\right)} + 0.5\\right)",
+              "targetFunction": "\\sqrt{\\frac{e^{x}}{x + a} + b\\sin\\left(x\\right) + 4}",
               "params": {
-                "a": 3,
+                "a": -4,
                 "b": 4
               },
               "domain": null,
@@ -2275,9 +2280,9 @@
             {
               "id": "104",
               "title": "第 104 关",
-              "targetFunction": "\\frac{-0.5\\left(\\left|\\ln\\left(x\\right)\\right| - 2\\right)}{x + a}",
+              "targetFunction": "\\frac{\\frac{a}{x^3}}{x - 2}",
               "params": {
-                "a": -0.5
+                "a": 3
               },
               "domain": null,
               "type": "normal",
@@ -2287,9 +2292,9 @@
             {
               "id": "105",
               "title": "第 105 关",
-              "targetFunction": "\\left|\\arcsin\\left(x + a\\right)\\right| + 1 + 4\\sin\\left(x\\right)",
+              "targetFunction": "\\sin\\left(x\\right) + \\frac{a}{x} + 3e^{-x}",
               "params": {
-                "a": -1
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -2299,10 +2304,9 @@
             {
               "id": "106",
               "title": "第 106 关",
-              "targetFunction": "\\arccos\\left(\\left(-1.5x + b\\right) + 3\\right) + a",
+              "targetFunction": "\\left|\\left|x\\right| - 2x\\right| + a - 5\\sin\\left(x\\right)",
               "params": {
-                "a": 1,
-                "b": -3
+                "a": -4
               },
               "domain": null,
               "type": "normal",
@@ -2312,19 +2316,7 @@
             {
               "id": "107",
               "title": "第 107 关",
-              "targetFunction": "\\left|\\left|\\sin\\left(\\sqrt{1-x^2} + 4\\right)\\right| + x\\right| + a",
-              "params": {
-                "a": -0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "108",
-              "title": "第 108 关",
-              "targetFunction": "\\frac{a}{\\ln\\left(x\\right) + \\frac{-0.5}{x}} + 3",
+              "targetFunction": "\\left|2x\\right| - 2\\sin\\left(2x\\right) + \\frac{a}{2x}",
               "params": {
                 "a": 2
               },
@@ -2334,11 +2326,23 @@
               "tip": null
             },
             {
+              "id": "108",
+              "title": "第 108 关",
+              "targetFunction": "\\sin\\left(\\frac{\\frac{1}{x^2+1} + 3x}{x + a} - 4\\right)",
+              "params": {
+                "a": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
               "id": "109",
               "title": "第 109 关",
-              "targetFunction": "\\frac{a}{x^2} + 3 + 0.5e^{-x}",
+              "targetFunction": "\\left|\\frac{\\tan\\left(x\\right)}{x + a} - 3x + 5\\right| + x",
               "params": {
-                "a": 3
+                "a": -1
               },
               "domain": null,
               "type": "normal",
@@ -2417,9 +2421,9 @@
             {
               "id": "110",
               "title": "第 110 关",
-              "targetFunction": "\\frac{-2}{\\left|\\cos\\left(x\\right)\\right| + a + 2}",
+              "targetFunction": "\\frac{a}{\\cosh\\left(-2x\\right)} - 2",
               "params": {
-                "a": 3
+                "a": -4
               },
               "domain": null,
               "type": "normal",
@@ -2429,55 +2433,7 @@
             {
               "id": "111",
               "title": "第 111 关",
-              "targetFunction": "\\sin\\left(\\arcsin\\left(x\\right) + a\\right) + 0.5e^{-x}",
-              "params": {
-                "a": 2
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "112",
-              "title": "第 112 关",
-              "targetFunction": "\\frac{\\cosh\\left(x + a\\right)}{x - 3} + 0.5x",
-              "params": {
-                "a": 3
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "113",
-              "title": "第 113 关",
-              "targetFunction": "\\frac{3}{\\operatorname{artanh}\\left(x\\right)} + \\frac{a}{x} - 2",
-              "params": {
-                "a": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "114",
-              "title": "第 114 关",
-              "targetFunction": "\\frac{\\left|x + a\\right| - 0.5e^{-x}}{x - 0.5}",
-              "params": {
-                "a": -1
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "115",
-              "title": "第 115 关",
-              "targetFunction": "\\left(\\ln\\left(\\left|\\arccos\\left(x\\right)\\right| + a\\right) + 3\\right) \\cdot \\left(x - 1.5\\right)",
+              "targetFunction": "\\frac{5}{\\sin\\left(\\frac{1}{x^2+1} + a\\right)}",
               "params": {
                 "a": 1
               },
@@ -2487,12 +2443,62 @@
               "tip": null
             },
             {
+              "id": "112",
+              "title": "第 112 关",
+              "targetFunction": "x^3 + \\frac{a}{x} - x^2",
+              "params": {
+                "a": -4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "113",
+              "title": "第 113 关",
+              "targetFunction": "\\frac{-4}{\\frac{e^{x}}{x + a}} + b",
+              "params": {
+                "a": -5,
+                "b": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "114",
+              "title": "第 114 关",
+              "targetFunction": "\\left|\\frac{a}{\\sinh\\left(x + b\\right)}\\right| + x",
+              "params": {
+                "a": 3,
+                "b": 5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "115",
+              "title": "第 115 关",
+              "targetFunction": "\\frac{\\left|e^{\\arccos\\left(x\\right) - 3} + a\\right| - 4}{x + 5}",
+              "params": {
+                "a": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
               "id": "116",
               "title": "第 116 关",
-              "targetFunction": "\\sqrt{\\sin\\left(\\cos\\left(x\\right) + a\\right) + b\\sin\\left(x\\right) + 4}",
+              "targetFunction": "e^{x^3} + a + b + 4x^2",
               "params": {
-                "a": -1,
-                "b": 0.5
+                "a": -2,
+                "b": 4
               },
               "domain": null,
               "type": "normal",
@@ -2580,177 +2586,7 @@
             {
               "id": "117",
               "title": "第 117 关",
-              "targetFunction": "a\\left(\\sin\\left(2x\\right)\\right)",
-              "params": {
-                "a": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "118",
-              "title": "第 118 关",
-              "targetFunction": "\\left(\\cos\\left(x\\right)\\right) \\cdot \\left(x + a\\right)",
-              "params": {
-                "a": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "119",
-              "title": "第 119 关",
-              "targetFunction": "\\frac{a\\left(\\tan\\left(x\\right)\\right)}{x + 4}",
-              "params": {
-                "a": -1.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "120",
-              "title": "第 120 关",
-              "targetFunction": "\\left|a\\left(\\sin\\left(x\\right)\\right)\\right| + x",
-              "params": {
-                "a": 1.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "121",
-              "title": "第 121 关",
-              "targetFunction": "\\left(\\sinh\\left(x\\right)\\right) \\cdot \\left(x + a\\right)",
-              "params": {
-                "a": -0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "122",
-              "title": "第 122 关",
-              "targetFunction": "e^{x} + 0.5 + a",
-              "params": {
-                "a": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "123",
-              "title": "第 123 关",
-              "targetFunction": "\\frac{a\\left(\\sinh\\left(x\\right)\\right)}{x + b}",
-              "params": {
-                "a": 1.5,
-                "b": -1
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "124",
-              "title": "第 124 关",
-              "targetFunction": "\\left|\\sqrt{1-\\left(x - 1\\right)^2} + a\\right| + 0.5\\left(x - 1\\right)",
-              "params": {
-                "a": -1
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "125",
-              "title": "第 125 关",
-              "targetFunction": "\\ln\\left(\\left|\\frac{1}{x} + a\\right| + 1\\right)",
-              "params": {
-                "a": -1
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "126",
-              "title": "第 126 关",
-              "targetFunction": "\\left|\\frac{1}{x^2+1}\\right| + a - 2x",
-              "params": {
-                "a": 2
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "127",
-              "title": "第 127 关",
-              "targetFunction": "\\sqrt{\\tanh\\left(x\\right) + a\\sin\\left(x\\right) + 4}",
-              "params": {
-                "a": -1
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "128",
-              "title": "第 128 关",
-              "targetFunction": "\\sqrt{\\left|x\\right| + 1 + a}",
-              "params": {
-                "a": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "129",
-              "title": "第 129 关",
-              "targetFunction": "\\sin\\left(\\ln\\left(x\\right) + \\frac{a}{x} + b\\right)",
-              "params": {
-                "a": -2,
-                "b": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "130",
-              "title": "第 130 关",
-              "targetFunction": "\\frac{-2}{a\\left(\\tan\\left(x\\right)\\right)}",
-              "params": {
-                "a": 1.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "131",
-              "title": "第 131 关",
-              "targetFunction": "0.5\\left(\\sinh\\left(x\\right) - 0.5x\\right) + a",
+              "targetFunction": "\\frac{a}{\\operatorname{arsinh}\\left(x\\right)}",
               "params": {
                 "a": 3
               },
@@ -2760,12 +2596,11 @@
               "tip": null
             },
             {
-              "id": "132",
-              "title": "第 132 关",
-              "targetFunction": "\\frac{b}{e^{x} + a\\sin\\left(x\\right)}",
+              "id": "118",
+              "title": "第 118 关",
+              "targetFunction": "\\frac{a}{\\arcsin\\left(x\\right)}",
               "params": {
-                "a": -1,
-                "b": 0.5
+                "a": -5
               },
               "domain": null,
               "type": "normal",
@@ -2773,36 +2608,11 @@
               "tip": null
             },
             {
-              "id": "133",
-              "title": "第 133 关",
-              "targetFunction": "e^{\\left(\\frac{1}{x^2+1}\\right) \\cdot \\left(x - 0.5\\right)} + a",
+              "id": "119",
+              "title": "第 119 关",
+              "targetFunction": "e^{\\sqrt{1-x^2}} + a + b",
               "params": {
-                "a": 1.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "134",
-              "title": "第 134 关",
-              "targetFunction": "b\\left(\\sin\\left(\\left|\\ln\\left(x\\right)\\right| + 2 + a\\right)\\right)",
-              "params": {
-                "a": -1,
-                "b": -0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "135",
-              "title": "第 135 关",
-              "targetFunction": "\\frac{b}{\\sin\\left(e^{x} + a\\right)}",
-              "params": {
-                "a": -1,
+                "a": 2,
                 "b": 1
               },
               "domain": null,
@@ -2811,11 +2621,11 @@
               "tip": null
             },
             {
-              "id": "136",
-              "title": "第 136 关",
-              "targetFunction": "\\sin\\left(\\left(\\left|x\\right|\\right) \\cdot \\left(x + a\\right) - 3\\right)",
+              "id": "120",
+              "title": "第 120 关",
+              "targetFunction": "\\left|x^3\\right| + a + 3x",
               "params": {
-                "a": -0.5
+                "a": -4
               },
               "domain": null,
               "type": "normal",
@@ -2823,11 +2633,11 @@
               "tip": null
             },
             {
-              "id": "137",
-              "title": "第 137 关",
-              "targetFunction": "\\ln\\left(\\left|\\sqrt{\\operatorname{arsinh}\\left(x\\right) + a}\\right| + 0.5\\right)",
+              "id": "121",
+              "title": "第 121 关",
+              "targetFunction": "\\frac{\\arccos\\left(-2x\\right)}{-2x + a}",
               "params": {
-                "a": 1
+                "a": -4
               },
               "domain": null,
               "type": "normal",
@@ -2835,11 +2645,11 @@
               "tip": null
             },
             {
-              "id": "138",
-              "title": "第 138 关",
-              "targetFunction": "\\left|\\sin\\left(\\frac{x^2}{x + a} - 3\\right)\\right| + 3",
+              "id": "122",
+              "title": "第 122 关",
+              "targetFunction": "\\left|\\left|\\arcsin\\left(x\\right)\\right| - 3x\\right| + a",
               "params": {
-                "a": -0.5
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -2847,122 +2657,11 @@
               "tip": null
             },
             {
-              "id": "139",
-              "title": "第 139 关",
-              "targetFunction": "e^{3\\left(\\sqrt{1-x^2} + a\\sin\\left(x\\right)\\right)} + 3",
+              "id": "123",
+              "title": "第 123 关",
+              "targetFunction": "b\\left(\\sin\\left(e^{x} + a\\right)\\right)",
               "params": {
-                "a": -3
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "140",
-              "title": "第 140 关",
-              "targetFunction": "\\sqrt{\\ln\\left(x\\right) + \\frac{-3}{x} + 2 + a}",
-              "params": {
-                "a": 2
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "141",
-              "title": "第 141 关",
-              "targetFunction": "\\ln\\left(\\left|\\frac{x^2}{x + a}\\right| + b\\right) + c",
-              "params": {
-                "a": 0.5,
-                "b": 0.5,
-                "c": 3
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "142",
-              "title": "第 142 关",
-              "targetFunction": "\\frac{1}{x} + a - 2e^{-x} + 0.5x",
-              "params": {
-                "a": -0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "143",
-              "title": "第 143 关",
-              "targetFunction": "\\left|\\ln\\left(\\left|\\cosh\\left(x\\right) + 0.5x\\right| + 0.5\\right)\\right| + a",
-              "params": {
-                "a": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "144",
-              "title": "第 144 关",
-              "targetFunction": "\\left|\\ln\\left(\\left|e^{x}\\right| + a\\right)\\right| + b + \\frac{-1}{x}",
-              "params": {
-                "a": 3,
-                "b": -3
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "145",
-              "title": "第 145 关",
-              "targetFunction": "\\left|\\ln\\left(\\left|\\arctan\\left(x\\right)\\right| + a\\right) + \\frac{3}{x}\\right| + 2",
-              "params": {
-                "a": 0.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "146",
-              "title": "第 146 关",
-              "targetFunction": "\\left|x + 1\\right| - 2\\left(x + 1\\right) + a - 0.5\\sin\\left(x\\right)",
-              "params": {
-                "a": -3
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "147",
-              "title": "第 147 关",
-              "targetFunction": "\\left|\\arctan\\left(\\left(x + 1\\right) + a\\right)\\right| - 2 + 3x",
-              "params": {
-                "a": 1
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "148",
-              "title": "第 148 关",
-              "targetFunction": "\\left|\\ln\\left(\\left|\\left|\\frac{1}{x^2+1}\\right| - 2x\\right| + a\\right)\\right| + b + 1",
-              "params": {
-                "a": 1.5,
+                "a": -3,
                 "b": 2
               },
               "domain": null,
@@ -2971,12 +2670,12 @@
               "tip": null
             },
             {
-              "id": "149",
-              "title": "第 149 关",
-              "targetFunction": "\\frac{e^{\\operatorname{arsinh}\\left(x\\right)} + a}{x + b} + 0.5e^{-x}",
+              "id": "124",
+              "title": "第 124 关",
+              "targetFunction": "b\\left(\\frac{a}{\\left|x\\right|}\\right)",
               "params": {
-                "a": 2,
-                "b": -0.5
+                "a": 4,
+                "b": -2
               },
               "domain": null,
               "type": "normal",
@@ -2984,12 +2683,11 @@
               "tip": null
             },
             {
-              "id": "150",
-              "title": "第 150 关",
-              "targetFunction": "\\sqrt{\\frac{a}{\\left|1.5x\\right|} + 0.5} + b",
+              "id": "125",
+              "title": "第 125 关",
+              "targetFunction": "\\frac{\\arcsin\\left(x\\right)}{x + a} + \\frac{5}{x}",
               "params": {
-                "a": -1,
-                "b": -0.5
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -2997,9 +2695,21 @@
               "tip": null
             },
             {
-              "id": "151",
-              "title": "第 151 关",
-              "targetFunction": "\\left(\\frac{x^2 + \\frac{a}{x}}{x - 0.5}\\right) \\cdot \\left(x - 0.5\\right)",
+              "id": "126",
+              "title": "第 126 关",
+              "targetFunction": "\\left|e^{\\arccos\\left(x\\right)} + a\\right| + 3x",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "127",
+              "title": "第 127 关",
+              "targetFunction": "\\frac{\\cosh\\left(x\\right) + \\frac{a}{x}}{x - 1}",
               "params": {
                 "a": -3
               },
@@ -3009,11 +2719,11 @@
               "tip": null
             },
             {
-              "id": "152",
-              "title": "第 152 关",
-              "targetFunction": "\\left(e^{\\arctan\\left(x\\right) + \\frac{4}{x}} + a\\right) \\cdot \\left(x - 0.5\\right)",
+              "id": "128",
+              "title": "第 128 关",
+              "targetFunction": "e^{\\arcsin\\left(x\\right)} - 3 + \\frac{a}{x}",
               "params": {
-                "a": 1.5
+                "a": 1
               },
               "domain": null,
               "type": "normal",
@@ -3021,9 +2731,9 @@
               "tip": null
             },
             {
-              "id": "153",
-              "title": "第 153 关",
-              "targetFunction": "a\\left(\\ln\\left(x\\right)\\right) + \\frac{3}{x} - 0.5\\sin\\left(x\\right) + 0.5x",
+              "id": "129",
+              "title": "第 129 关",
+              "targetFunction": "\\sqrt{e^{\\arccos\\left(x\\right)} + a + 5}",
               "params": {
                 "a": -2
               },
@@ -3033,13 +2743,311 @@
               "tip": null
             },
             {
-              "id": "154",
-              "title": "第 154 关",
-              "targetFunction": "e^{\\ln\\left(\\left|\\left|\\frac{1}{x^2+1}\\right| + a\\right| + 3\\right) + b} + c",
+              "id": "130",
+              "title": "第 130 关",
+              "targetFunction": "\\frac{b}{x^3 + a\\sin\\left(x\\right)}",
+              "params": {
+                "a": -2,
+                "b": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "131",
+              "title": "第 131 关",
+              "targetFunction": "\\left|\\frac{a}{e^{x}}\\right| + 2x",
+              "params": {
+                "a": 1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "132",
+              "title": "第 132 关",
+              "targetFunction": "\\frac{\\operatorname{artanh}\\left(x\\right) + a + 2x}{x + b}",
+              "params": {
+                "a": -4,
+                "b": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "133",
+              "title": "第 133 关",
+              "targetFunction": "e^{\\frac{\\arctan\\left(x\\right)}{x - 1} + a} + 2",
+              "params": {
+                "a": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "134",
+              "title": "第 134 关",
+              "targetFunction": "\\frac{\\left|\\left|x\\right|\\right| + a}{x + b} + 5\\sin\\left(x\\right)",
+              "params": {
+                "a": 1,
+                "b": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "135",
+              "title": "第 135 关",
+              "targetFunction": "\\frac{b}{\\sqrt{\\tan\\left(x\\right) + a}}",
+              "params": {
+                "a": 5,
+                "b": -4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "136",
+              "title": "第 136 关",
+              "targetFunction": "\\frac{x^3}{x + a} + 4x^2",
+              "params": {
+                "a": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "137",
+              "title": "第 137 关",
+              "targetFunction": "\\frac{\\sinh\\left(x\\right)}{x + a} - 5x^2",
+              "params": {
+                "a": -5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "138",
+              "title": "第 138 关",
+              "targetFunction": "\\left|x\\right| + \\frac{a}{x} + x^2",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "139",
+              "title": "第 139 关",
+              "targetFunction": "\\frac{\\left|\\cos\\left(x\\right) + \\frac{a}{x}\\right| - 5}{x - 2}",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "140",
+              "title": "第 140 关",
+              "targetFunction": "e^{e^{2x} + a\\sin\\left(2x\\right)} - 3",
+              "params": {
+                "a": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "141",
+              "title": "第 141 关",
+              "targetFunction": "\\ln\\left(\\left|\\frac{1}{x^2+1}\\right| + a\\right) + 3e^{-x}",
+              "params": {
+                "a": 5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "142",
+              "title": "第 142 关",
+              "targetFunction": "e^{\\tan\\left(x + a\\right) + \\frac{b}{x}} + 3",
+              "params": {
+                "a": 1,
+                "b": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "143",
+              "title": "第 143 关",
+              "targetFunction": "e^{\\frac{x + a\\sin\\left(x\\right)}{x + b}} + c",
+              "params": {
+                "a": -4,
+                "b": 5,
+                "c": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "144",
+              "title": "第 144 关",
+              "targetFunction": "\\left|\\frac{\\sqrt{\\operatorname{arsinh}\\left(x\\right) + a}}{x + b}\\right| - 2x",
               "params": {
                 "a": 4,
-                "b": 2,
-                "c": -0.5
+                "b": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "145",
+              "title": "第 145 关",
+              "targetFunction": "\\left|\\ln\\left(\\left|\\frac{1}{x}\\right| + a\\right)\\right| - 3 - 5\\sin\\left(x\\right)",
+              "params": {
+                "a": 5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "146",
+              "title": "第 146 关",
+              "targetFunction": "\\frac{3}{\\sqrt{3x + a}}",
+              "params": {
+                "a": 4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "147",
+              "title": "第 147 关",
+              "targetFunction": "\\left|\\sqrt{a\\left(e^{x}\\right) + b} + 4\\right| - 2x",
+              "params": {
+                "a": -3,
+                "b": 5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "148",
+              "title": "第 148 关",
+              "targetFunction": "\\left(e^{\\left|x\\right|} + a\\right) \\cdot \\left(x - 3\\right) + b\\sin\\left(x\\right)",
+              "params": {
+                "a": -3,
+                "b": -1
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "149",
+              "title": "第 149 关",
+              "targetFunction": "\\left|\\arccos\\left(x\\right) + \\frac{a}{x} + b\\right| - x - 3x",
+              "params": {
+                "a": -4,
+                "b": 3
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "150",
+              "title": "第 150 关",
+              "targetFunction": "\\frac{3}{\\left|\\left|x\\right|\\right| + 5x + \\frac{a}{x}}",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "151",
+              "title": "第 151 关",
+              "targetFunction": "\\frac{1}{\\ln\\left(\\left|\\left|e^{x}\\right| - 1\\right| + a\\right)}",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "152",
+              "title": "第 152 关",
+              "targetFunction": "e^{\\left|\\ln\\left(x\\right)\\right| + 2} + a - 5x^2",
+              "params": {
+                "a": -2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "153",
+              "title": "第 153 关",
+              "targetFunction": "\\sqrt{\\ln\\left(\\left|\\frac{1}{x}\\right| + 3\\right) + a} + \\frac{b}{x}",
+              "params": {
+                "a": 5,
+                "b": 5
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "154",
+              "title": "第 154 关",
+              "targetFunction": "\\left|\\frac{a}{x} + 4x^2\\right| + 1",
+              "params": {
+                "a": 1
               },
               "domain": null,
               "type": "normal",
@@ -3049,10 +3057,9 @@
             {
               "id": "155",
               "title": "第 155 关",
-              "targetFunction": "\\ln\\left(\\left|\\frac{b}{\\frac{\\tan\\left(x\\right)}{x + a}}\\right| + 1.5\\right)",
+              "targetFunction": "\\sqrt{\\frac{3\\left(\\frac{1}{x^2+1} + a\\sin\\left(x\\right)\\right)}{x + 2} + 1}",
               "params": {
-                "a": -1,
-                "b": 2
+                "a": -1
               },
               "domain": null,
               "type": "normal",
@@ -3062,9 +3069,9 @@
             {
               "id": "156",
               "title": "第 156 关",
-              "targetFunction": "\\left|e^{-1.5x} + a\\right| - -1.5x - 1.5e^{--1.5x} + 4",
+              "targetFunction": "\\left|\\sqrt{\\arctan\\left(-2x\\right) + a}\\right| - 2x + 2\\sin\\left(-2x\\right)",
               "params": {
-                "a": -0.5
+                "a": 1
               },
               "domain": null,
               "type": "normal",
@@ -3074,9 +3081,9 @@
             {
               "id": "157",
               "title": "第 157 关",
-              "targetFunction": "\\sqrt{\\left|e^{\\left(x + b\\right)} + \\frac{a}{\\left(x + b\\right)}\\right| - 3\\left(x + b\\right) + 2}",
+              "targetFunction": "-3\\left(\\frac{a}{\\frac{1}{x} + 3e^{-x}}\\right) + b",
               "params": {
-                "a": -1,
+                "a": 5,
                 "b": -3
               },
               "domain": null,
@@ -3087,9 +3094,9 @@
             {
               "id": "158",
               "title": "第 158 关",
-              "targetFunction": "\\frac{e^{\\sin\\left(\\arccos\\left(x\\right) + a\\right)} + 2}{x + 0.5} + 0.5x",
+              "targetFunction": "\\frac{\\sqrt{\\ln\\left(\\left|\\cos\\left(x\\right) + a\\right| + 3\\right) + 2}}{x + 4}",
               "params": {
-                "a": 1
+                "a": -3
               },
               "domain": null,
               "type": "normal",
@@ -3099,10 +3106,9 @@
             {
               "id": "159",
               "title": "第 159 关",
-              "targetFunction": "\\sqrt{\\ln\\left(\\left|e^{x} - 1\\right| + a\\right) + b} + 0.5x",
+              "targetFunction": "\\ln\\left(\\left|\\frac{x}{x + a} - x^2\\right| + 3\\right)",
               "params": {
-                "a": 3,
-                "b": 0.5
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -3112,10 +3118,9 @@
             {
               "id": "160",
               "title": "第 160 关",
-              "targetFunction": "\\left|\\operatorname{artanh}\\left(\\left(x + b\\right) + a\\right) + 3e^{-\\left(\\left(x + b\\right) + a\\right)} + 0.5\\right| + 2\\left(x + b\\right)",
+              "targetFunction": "3\\left(\\left|\\sin\\left(e^{x} + a\\right)\\right| - 4x + 2 - 3\\sin\\left(x\\right)\\right)",
               "params": {
-                "a": 1,
-                "b": -2
+                "a": -2
               },
               "domain": null,
               "type": "normal",
@@ -3125,10 +3130,11 @@
             {
               "id": "161",
               "title": "第 161 关",
-              "targetFunction": "\\ln\\left(\\left|\\cos\\left(x + 3\\right) - 2\\left(x + 3\\right)^2\\right| + a\\right) + b",
+              "targetFunction": "\\sqrt{e^{\\cosh\\left(x\\right) + \\frac{a}{x}} + b + c} - 3x",
               "params": {
-                "a": 2,
-                "b": 1
+                "a": 1,
+                "b": -3,
+                "c": 4
               },
               "domain": null,
               "type": "normal",
@@ -3138,9 +3144,9 @@
             {
               "id": "162",
               "title": "第 162 关",
-              "targetFunction": "-0.5\\left(\\sqrt{\\sin\\left(x\\right) + 3} - 3 + 1.5x + a\\sin\\left(x\\right)\\right)",
+              "targetFunction": "\\sin\\left(2\\left(e^{e^{x}} + a + \\frac{3}{x}\\right) - 5\\right)",
               "params": {
-                "a": -1
+                "a": -2
               },
               "domain": null,
               "type": "normal",
@@ -3150,9 +3156,9 @@
             {
               "id": "163",
               "title": "第 163 关",
-              "targetFunction": "\\frac{-1}{e^{\\frac{1}{x^2+1} + 2\\sin\\left(x\\right) - 1.5x} + a}",
+              "targetFunction": "\\frac{3}{\\left(e^{x} - 3e^{-x}\\right) \\cdot \\left(x + a\\right)}",
               "params": {
-                "a": 1.5
+                "a": 3
               },
               "domain": null,
               "type": "normal",
@@ -3162,9 +3168,9 @@
             {
               "id": "164",
               "title": "第 164 关",
-              "targetFunction": "-0.5\\left(\\frac{\\ln\\left(\\left|\\operatorname{artanh}\\left(0.5\\left(x + 3\\right)\\right)\\right| + a\\right)}{\\left(x + 3\\right) - 1}\\right)",
+              "targetFunction": "\\left|\\left|\\ln\\left(\\left|\\frac{1}{x^2+1}\\right| + a\\right)\\right| - x - 3e^{-x}\\right| + 5",
               "params": {
-                "a": 2
+                "a": 4
               },
               "domain": null,
               "type": "normal",
@@ -3174,10 +3180,10 @@
             {
               "id": "165",
               "title": "第 165 关",
-              "targetFunction": "\\ln\\left(\\left|\\sqrt{1-\\left(x + 1\\right)^2} + \\frac{a}{\\left(x + 1\\right)} + 0.5x\\right| + b\\right)",
+              "targetFunction": "3\\left(\\left|\\frac{b}{\\ln\\left(\\left|\\sqrt{1-x^2}\\right| + a\\right)}\\right| + 1\\right)",
               "params": {
-                "a": -0.5,
-                "b": 0.5
+                "a": 3,
+                "b": 4
               },
               "domain": null,
               "type": "normal",
@@ -3187,9 +3193,10 @@
             {
               "id": "166",
               "title": "第 166 关",
-              "targetFunction": "\\sqrt{\\sin\\left(e^{\\left(\\left(x - 3\\right) + a\\right)} + 1\\sin\\left(x\\right) - 2\\right) + 4}",
+              "targetFunction": "e^{\\sqrt{\\frac{1}{\\left(x - 1\\right)^2+1} + a}} + b + 4 + \\frac{3}{x}",
               "params": {
-                "a": 0.5
+                "a": 1,
+                "b": 2
               },
               "domain": null,
               "type": "normal",
@@ -3199,10 +3206,9 @@
             {
               "id": "167",
               "title": "第 167 关",
-              "targetFunction": "\\frac{b}{\\operatorname{artanh}\\left(x\\right) + \\frac{a}{x}} - 2 + 3e^{-x}",
+              "targetFunction": "\\left|\\sqrt{\\cosh\\left(x\\right) + 3x + a} - 5x^2\\right| - 1",
               "params": {
-                "a": 0.5,
-                "b": -1
+                "a": 3
               },
               "domain": null,
               "type": "normal",
@@ -3212,11 +3218,9 @@
             {
               "id": "168",
               "title": "第 168 关",
-              "targetFunction": "\\left|\\ln\\left(\\left|-2\\left(\\left|\\left(x + c\\right) + a\\right|\\right)\\right| + b\\right)\\right| + 2",
+              "targetFunction": "-2\\left(\\frac{a}{\\frac{1}{x} + 3x}\\right) + 3x^2",
               "params": {
-                "a": 2,
-                "b": 1.5,
-                "c": 0.5
+                "a": 2
               },
               "domain": null,
               "type": "normal",
@@ -3781,43 +3785,7 @@
             {
               "id": "169",
               "title": "第 169 关",
-              "targetFunction": "\\sin\\left(\\frac{1}{x} + a\\right) + 1.5e^{-x}",
-              "params": {
-                "a": 4
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "170",
-              "title": "第 170 关",
-              "targetFunction": "\\ln\\left(\\left|\\sin\\left(\\tanh\\left(x\\right) + a\\right)\\right| + 3\\right)",
-              "params": {
-                "a": -1
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "171",
-              "title": "第 171 关",
-              "targetFunction": "\\left(\\operatorname{artanh}\\left(x\\right)\\right) \\cdot \\left(x + a\\right) - 3",
-              "params": {
-                "a": -1.5
-              },
-              "domain": null,
-              "type": "normal",
-              "unlockConditions": null,
-              "tip": null
-            },
-            {
-              "id": "172",
-              "title": "第 172 关",
-              "targetFunction": "\\left|x\\right| + \\frac{a}{x}",
+              "targetFunction": "\\ln\\left(\\left|e^{x}\\right| + a\\right) - 3e^{-x}",
               "params": {
                 "a": 2
               },
@@ -3827,11 +3795,49 @@
               "tip": null
             },
             {
+              "id": "170",
+              "title": "第 170 关",
+              "targetFunction": "\\sqrt{e^{\\sinh\\left(x\\right)} + a + b}",
+              "params": {
+                "a": -3,
+                "b": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "171",
+              "title": "第 171 关",
+              "targetFunction": "\\arctan\\left(x + a\\right) + \\frac{1}{x}",
+              "params": {
+                "a": 2
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
+              "id": "172",
+              "title": "第 172 关",
+              "targetFunction": "\\frac{a}{\\left|x\\right|}",
+              "params": {
+                "a": -4
+              },
+              "domain": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": null
+            },
+            {
               "id": "173",
               "title": "第 173 关",
-              "targetFunction": "\\sqrt{\\cosh\\left(x\\right) + a}",
+              "targetFunction": "e^{\\left|\\arccos\\left(x\\right)\\right| + a} + b",
               "params": {
-                "a": 1
+                "a": 3,
+                "b": -2
               },
               "domain": null,
               "type": "normal",
@@ -3841,9 +3847,9 @@
             {
               "id": "174",
               "title": "第 174 关",
-              "targetFunction": "\\left(x + a\\right)^2",
+              "targetFunction": "\\tan\\left(x\\right) + a",
               "params": {
-                "a": -0.5
+                "a": 1
               },
               "domain": null,
               "type": "normal",
@@ -3853,7 +3859,7 @@
             {
               "id": "175",
               "title": "第 175 关",
-              "targetFunction": "a\\left(\\cosh\\left(x\\right)\\right)",
+              "targetFunction": "\\sin\\left(x\\right) + a",
               "params": {
                 "a": -2
               },
