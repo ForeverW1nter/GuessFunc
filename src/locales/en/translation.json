@@ -253,20 +253,20 @@
       "musicTip": "Music unlocked. You can long press the music note icon to switch BGM."
     },
     "fakeEnding": {
-      "line1": "They really made it this far.",
-      "line2": "This is not fake happiness,",
-      "line3": "but a limited, truly happened happiness.",
-      "core1": "If only the story could just end here.",
-      "core2": "[Data fragmentation anomaly...]",
-      "sub": "...System prompt: Undiscovered hidden records detected, unlocking.",
+      "line1": "They really spent that afternoon well.",
+      "line2": "It is not a happiness imagined for each other,",
+      "line3": "but a brief happiness that truly rested in their hands.",
+      "core1": "If only the story could pause here a little longer.",
+      "core2": "[Subsequent record anomaly detected...]",
+      "sub": "...System prompt: Unread hidden files detected, unlocking.",
       "skip": "Hold anywhere to skip"
     },
     "trueEnding": {
-      "line1": "If love cannot preserve a person,",
-      "line2": "then what is the meaning of its existence?",
-      "line3": "He walked towards her again, as if meeting her for the first time.",
-      "core": "Choosing to approach, knowing it will be lost.",
-      "sub": "The story stops here, but the aftershock has just begun.",
+      "line1": "If love cannot keep yesterday whole,",
+      "line2": "then what can it still carry into tomorrow?",
+      "line3": "He still walked towards her, the way he did each time he recognized her at the end of the hallway.",
+      "core": "Knowing it will change, he still reaches out.",
+      "sub": "The story stops here, but its aftereffect keeps moving.",
       "skip": "Hold anywhere to skip"
     }
   },
