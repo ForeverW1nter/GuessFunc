@@ -215,8 +215,8 @@
             {
               "id": "ch0_13",
               "title": "未知号码短信",
-              "extension": "msg",
-              "content": "```\n发件人: +00000000000\n时间: 2029-03-18 02:17:33\n内容: 一旦越界，你将不被允许回来。\n\n状态: 已读。无回复。\n运营商: 无\n```",
+              "extension": "mail",
+              "content": "发件人: +00000000000\n时间: 2029-03-18 02:17:33\n状态: 已读。无回复。\n运营商: 未知\n\n一旦越界，你将不被允许回来。",
               "unlockConditions": [
                 "7"
               ]
@@ -476,7 +476,7 @@
             {
               "id": "ch1_13",
               "title": "系统消息",
-              "extension": "msg",
+              "extension": "mail",
               "content": "收件人: MNT-07\n发件人: 系统管理员\n主题: 最终警告\n\nMNT-07，\n\n你因多次违反关于实体 Shirloy 的协议而被标记。\n\n如果她越过边界，你将承担全部责任。后果将包括身份清除和实体重新分配。\n\n这是你的最后通知。\n\n—— 系统管理员",
               "unlockConditions": [
                 "16"
@@ -969,8 +969,8 @@
             {
               "id": "ch3_8",
               "title": "未发送的消息",
-              "extension": "msg",
-              "content": "草稿箱:\n\n“我突然明白，也许我才是那个写故事的人。\n\n如果我是作者，那我写的所有角色——包括你，包括我自己——都是我的一部分。\n\n所以你不会真的消失。你就在我这里。”\n\n状态: 未发送。",
+              "extension": "mail",
+              "content": "发件人: Shirloy\n收件人: Forewall\n状态: 草稿箱，未发送\n\n“我突然明白，也许我才是那个写故事的人。\n\n如果我是作者，那我写的所有角色——包括你，包括我自己——都是我的一部分。\n\n所以你不会真的消失。你就在我这里。”",
               "unlockConditions": [
                 "32"
               ]
@@ -1238,7 +1238,7 @@
             {
               "id": "ch4_5",
               "title": "论坛私信",
-              "extension": "msg",
+              "extension": "mail",
               "content": "发件人: 匿名读者\n时间: `2034-04-15 22:14`\n\n“所以 Shirloy 和 Forewall 最后在一起了吗？我看完最后一章哭了，但我不确定结局是好是坏。”\n\n回复草稿（未发送）:\n\n“故事已经结束了。但如果你想知道，可以自己继续写下去。”",
               "unlockConditions": [
                 "40"
@@ -1400,7 +1400,7 @@
             {
               "id": "ch4_23",
               "title": "编辑邮件",
-              "extension": "msg",
+              "extension": "mail",
               "content": "发件人: editor@literary.org\n收件人: shirloy@author.me\n主题: 关于《边界之诗》的续作\n\nShirloy，\n很多读者问 Forewall 后来怎么样了。你考虑写续集吗？\n编辑\n回复草稿：\n“他还在边界。我也还在写。续集就是继续写。”",
               "unlockConditions": [
                 "49"

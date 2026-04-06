@@ -1,4 +1,4 @@
-import { ComputeEngine } from '@cortex-js/compute-engine';
+import { ce } from './ce';
 
 export interface GeneratedFunction {
   target: string;
@@ -19,10 +19,7 @@ export interface GeneratorOptions {
 // 每一次变换都有明确的解析几何意义（对称破缺、渐近线旋转、定义域撕裂等）。
 // ----------------------------------------------------------------------------------
 
-const ce = new ComputeEngine();
-ce.declare('x', 'number');
-
-// 1. 基础流形 (Base Manifolds) - 拥有极强解析特征的函数
+// 基础流形 (Base Manifolds) - 拥有极强解析特征的函数
 const BASE_MANIFOLDS: { expr: string; type: FunctionType }[] = [
   { expr: 'x', type: 'polynomial' },
   { expr: 'x^2', type: 'polynomial' },

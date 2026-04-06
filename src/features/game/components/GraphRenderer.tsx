@@ -118,20 +118,15 @@ export const GraphRenderer = () => {
               }
             });
 
-            // 2. 寻找玩家的主猜测函数 (在第一行提取 user-guess 或者其他符合条件的表达式)
-            // 因为 user-guess 的 ID 固定，我们优先使用它的内容
-            let guessExpr = expressions.find(e => e.id === 'user-guess');
-            
-            // 如果玩家清空了 user-guess 或者我们没找到，则使用兜底逻辑
-            if (!guessExpr || !guessExpr.latex || guessExpr.latex.trim() === '') {
-              guessExpr = expressions.find((e) => 
-                e.id !== 'target-function' && 
-                e.id !== 'target-plot' && 
-                (e.type === 'expression' || !e.type) &&
-                e.latex && e.latex.trim() !== '' &&
-                !/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(-?\d+(?:\.\d+)?)$/.test(e.latex)
-              );
-            }
+            // 寻找玩家的主猜测函数：取第一个非系统、非参数、且非空的表达式
+            // 不再绑定特定的 user-guess ID，因为玩家可能会拖动、删除或新建格子
+            const guessExpr = expressions.find((e) => 
+              e.id !== 'target-function' && 
+              e.id !== 'target-plot' && 
+              (e.type === 'expression' || !e.type) &&
+              e.latex && e.latex.trim() !== '' &&
+              !/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(-?\d+(?:\.\d+)?)$/.test(e.latex)
+            );
 
             if (guessExpr && guessExpr.latex) {
               let latex = guessExpr.latex;

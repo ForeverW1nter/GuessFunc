@@ -51,9 +51,13 @@ export const SavePanel: React.FC = () => {
   // We need a force render to show slot status correctly when it changes
   const [, setForceRender] = React.useState(0);
 
-  const getSlotKey = (slot: string) => slot === '1' ? 'guess-func-storage' : `guess-func-storage_slot${slot}`;
+  const getSlotKey = (slot: string) => `guess-func-storage_slot${slot}`;
 
   const hasSaveData = (slot: string) => {
+    if (slot === currentSlot) {
+      const state = useGameStore.getState();
+      return state.completedLevels?.length > 0;
+    }
     const dataStr = localStorage.getItem(getSlotKey(slot));
     if (!dataStr) return false;
     try {
@@ -68,12 +72,18 @@ export const SavePanel: React.FC = () => {
   const handleSlotSelect = (slot: string) => {
     if (slot === currentSlot) return;
     
-    // Save current progress to current slot
+    // Save current progress to current slot's backup key
     const state = useGameStore.getState();
-    const currentDataToSave = { state: { completedLevels: state.completedLevels, seenChapters: state.seenChapters } };
+    const currentDataToSave = { 
+      state: { 
+        completedLevels: state.completedLevels, 
+        seenChapters: state.seenChapters,
+        readFiles: state.readFiles || []
+      } 
+    };
     localStorage.setItem(getSlotKey(currentSlot), JSON.stringify(currentDataToSave));
 
-    // Load new slot data
+    // Load new slot data from its backup key
     const newData = localStorage.getItem(getSlotKey(slot));
     if (newData) {
       try {
@@ -81,7 +91,8 @@ export const SavePanel: React.FC = () => {
         if (parsed.state) {
           useGameStore.setState({ 
             completedLevels: parsed.state.completedLevels || [],
-            seenChapters: parsed.state.seenChapters || []
+            seenChapters: parsed.state.seenChapters || [],
+            readFiles: parsed.state.readFiles || []
           });
         }
       } catch (e: unknown) {
@@ -89,7 +100,7 @@ export const SavePanel: React.FC = () => {
       }
     } else {
       // New slot is empty, clear current state
-      useGameStore.setState({ completedLevels: [], seenChapters: [] });
+      useGameStore.setState({ completedLevels: [], seenChapters: [], readFiles: [] });
     }
 
     setCurrentSlot(slot);
@@ -161,7 +172,7 @@ export const SavePanel: React.FC = () => {
       y = e.clientY;
     }
 
-    useGameStore.setState({ completedLevels: [], seenChapters: [] });
+    useGameStore.setState({ completedLevels: [], seenChapters: [], readFiles: [] });
     localStorage.removeItem(getSlotKey(currentSlot));
     setForceRender(prev => prev + 1);
     

@@ -38,6 +38,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
       case 'letter':
         return <MemoViewer content={file.content} title={file.title} />;
       case 'msg':
+      case 'mail':
         return <MessageViewer content={file.content} title={file.title} />;
       case 'jpg':
       case 'png':
