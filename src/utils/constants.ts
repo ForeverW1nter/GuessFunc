@@ -16,6 +16,14 @@ export const GAME_CONSTANTS = {
     // 允许的定义域不匹配点数量阈值 (相应提高容错阈值，针对像 1/x 这种在 0 处不匹配或 floor() 随机踩在跳跃点上的情况)
     DOMAIN_MISMATCH_THRESHOLD: 6,
   },
+  GAME_PROGRESS: {
+    // 章节解锁完成率阈值
+    CHAPTER_UNLOCK_THRESHOLD: 0.8,
+    // 允许的未完成关卡数量
+    ALLOWED_UNFINISHED_LEVELS: 3,
+    // 允许提前解锁的关节数量
+    MAX_ADVANCE_LEVELS: 3,
+  },
   GENERATOR: {
     // 最大尝试生成次数
     MAX_ATTEMPTS: 1000,
@@ -39,13 +47,21 @@ export const GAME_CONSTANTS = {
     MOD_ORDER: 'guessfunc_mod_order',
   },
   MOD_STORE: {
-    GITEE_OWNER: 'A-T-O-M',
-    GITEE_REPO: 'guess-func',
+    GITEE_OWNER: import.meta.env.VITE_GITEE_OWNER || 'A-T-O-M',
+    GITEE_REPO: import.meta.env.VITE_GITEE_REPO || 'guess-func',
     DB_NAME: 'guessfunc_mod_db',
     STORE_NAME: 'guessfunc_mod_store',
   },
   FONTS: {
     DEFAULT_STORY_FONT: 'JetBrains Mono',
     CUSTOM_FONT_NAME: 'GuessFuncCustomFont',
+  },
+  ROUTES: {
+    DEFAULT_ROUTE: '/game/random/1/1',
+    HOME: '/',
+    CREATE: '/create',
+    RANDOM_MODE: 'random',
+    SHARE_MODE: 'share',
+    CUSTOM_MODE: 'custom',
   }
 };

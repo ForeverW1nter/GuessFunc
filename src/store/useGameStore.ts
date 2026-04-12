@@ -7,6 +7,16 @@ import i18n from '../i18n';
 
 export type GameMode = 'story' | 'random' | 'custom' | 'share' | 'idle';
 
+// Default values for game state
+const DEFAULTS = {
+  GAME_MODE: 'random' as GameMode,
+  TARGET_FUNCTION: 'x^2',
+  PLAYER_INPUT: 'x',
+  DOMAIN: GAME_CONSTANTS.DEFAULT_DOMAIN,
+  RANDOM_DIFFICULTY: 0,
+  RANDOM_WITH_PARAMS: false,
+} as const;
+
 interface GameState {
   currentRoute: string | null;
   currentChapter: string | null;
@@ -45,22 +55,30 @@ export const useGameStore = create<GameState>()(
       currentRoute: null,
       currentChapter: null,
       currentLevel: null,
-      gameMode: 'random',
-      targetFunction: 'x^2',
+      gameMode: DEFAULTS.GAME_MODE,
+      targetFunction: DEFAULTS.TARGET_FUNCTION,
       levelParams: {},
-      playerInput: 'x',
+      playerInput: DEFAULTS.PLAYER_INPUT,
       playerParams: {},
       isLevelCleared: false,
-      domain: GAME_CONSTANTS.DEFAULT_DOMAIN,
-      randomDifficulty: 0,
-      randomWithParams: false,
-      
+      domain: DEFAULTS.DOMAIN,
+      randomDifficulty: DEFAULTS.RANDOM_DIFFICULTY,
+      randomWithParams: DEFAULTS.RANDOM_WITH_PARAMS,
+
       completedLevels: [],
       seenChapters: [],
       readFiles: [],
 
-      setTargetFunction: (func: string, params: Record<string, number> = {}, mode: GameMode = 'idle', levelName: string | null = null) => 
-        set({ targetFunction: func, levelParams: params, isLevelCleared: false, gameMode: mode, playerInput: 'x', playerParams: {}, currentLevel: levelName }),
+      setTargetFunction: (func: string, params: Record<string, number> = {}, mode: GameMode = 'idle', levelName: string | null = null) =>
+        set({
+          targetFunction: func,
+          levelParams: params,
+          isLevelCleared: false,
+          gameMode: mode,
+          playerInput: DEFAULTS.PLAYER_INPUT,
+          playerParams: {},
+          currentLevel: levelName
+        }),
       
       setPlayerInput: (input: string, params: Record<string, number> = {}) => 
         set({ playerInput: input, playerParams: params }),
@@ -104,7 +122,7 @@ export const useGameStore = create<GameState>()(
       loadLevel: (routeId: string, chapterId: string, levelId: string) => {
         const storyStore = useStoryStore.getState();
         const levelData = storyStore.getLevel(routeId, chapterId, levelId);
-        
+
         if (levelData) {
           set({
             currentRoute: routeId,
@@ -112,10 +130,10 @@ export const useGameStore = create<GameState>()(
             currentLevel: levelId,
             targetFunction: levelData.targetFunction || 'x',
             levelParams: levelData.params || {},
-            playerInput: 'x',
+            playerInput: DEFAULTS.PLAYER_INPUT,
             isLevelCleared: false,
             gameMode: 'story',
-            domain: GAME_CONSTANTS.DEFAULT_DOMAIN 
+            domain: DEFAULTS.DOMAIN
           });
         }
       },

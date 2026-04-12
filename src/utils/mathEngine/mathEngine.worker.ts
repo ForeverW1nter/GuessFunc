@@ -1,15 +1,34 @@
 import { evaluateEquivalence } from './evaluate';
 import { generateFunctionByDifficulty } from './generator';
+import type { ValidationResult, GeneratedFunction } from './types';
 
-self.onmessage = (e: MessageEvent) => {
+interface WorkerMessage {
+  id: number;
+  type: 'EVALUATE' | 'GENERATE';
+  payload: {
+    targetLatex?: string;
+    playerLatex?: string;
+    params?: Record<string, number>;
+    options?: number | unknown;
+    legacyWithParams?: boolean;
+  };
+}
+
+interface WorkerResponse {
+  id: number;
+  result?: ValidationResult | GeneratedFunction;
+  error?: string;
+}
+
+self.onmessage = (e: MessageEvent<WorkerMessage>) => {
   const { id, type, payload } = e.data;
-  
+
   try {
     if (type === 'EVALUATE') {
-      const result = evaluateEquivalence(payload.targetLatex, payload.playerLatex, payload.params);
+      const result = evaluateEquivalence(payload.targetLatex!, payload.playerLatex!, payload.params || {});
       self.postMessage({ id, result });
     } else if (type === 'GENERATE') {
-      const result = generateFunctionByDifficulty(payload.options, payload.legacyWithParams);
+      const result = generateFunctionByDifficulty(payload.options!, payload.legacyWithParams);
       self.postMessage({ id, result });
     }
   } catch (error: unknown) {

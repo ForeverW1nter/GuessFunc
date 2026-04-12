@@ -127,9 +127,9 @@ const LevelRoute = () => {
             if (previousChapter && !isAssistMode) {
               const prevChapterLevelIds = previousChapter.levels.map(l => `${routeId}/${previousChapter.id}/${l.id}`);
               const prevCompletedCount = prevChapterLevelIds.filter(id => completedLevels.includes(id)).length;
-              const requiredCount = Math.ceil(prevChapterLevelIds.length * 0.8);
+              const requiredCount = Math.ceil(prevChapterLevelIds.length * GAME_CONSTANTS.GAME_PROGRESS.CHAPTER_UNLOCK_THRESHOLD);
               const prevUnfinishedCount = prevChapterLevelIds.length - prevCompletedCount;
-              isChapterUnlocked = prevCompletedCount >= requiredCount || prevUnfinishedCount <= 3;
+              isChapterUnlocked = prevCompletedCount >= requiredCount || prevUnfinishedCount <= GAME_CONSTANTS.GAME_PROGRESS.ALLOWED_UNFINISHED_LEVELS;
             }
 
             if (!isChapterUnlocked) {
@@ -139,7 +139,7 @@ const LevelRoute = () => {
 
             // Check level lock status
             const chapterCompletedCount = chapter.levels.filter(l => completedLevels.includes(`${routeId}/${chapterId}/${l.id}`)).length;
-            const isLocked = !isAssistMode && levelIndex >= chapterCompletedCount + 3;
+            const isLocked = !isAssistMode && levelIndex >= chapterCompletedCount + GAME_CONSTANTS.GAME_PROGRESS.MAX_ADVANCE_LEVELS;
 
             if (isLocked) {
               navigate(`/game/${routeId}/${chapterId}/${chapter.levels[0].id}`, { replace: true });
@@ -149,7 +149,7 @@ const LevelRoute = () => {
           gameStore.loadLevel(routeId, chapterId, levelId);
         } else {
           // Invalid route or chapter, redirect to fallback
-          navigate('/game/random/1/1', { replace: true });
+          navigate(GAME_CONSTANTS.ROUTES.DEFAULT_ROUTE, { replace: true });
         }
       }
     }
@@ -185,7 +185,7 @@ const router = createHashRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/game/random/1/1" replace />
+        element: <Navigate to={GAME_CONSTANTS.ROUTES.DEFAULT_ROUTE} replace />
       },
       {
         path: "create",
@@ -201,7 +201,7 @@ const router = createHashRouter([
       },
       {
         path: "*",
-        element: <Navigate to="/game/random/1/1" replace />
+        element: <Navigate to={GAME_CONSTANTS.ROUTES.DEFAULT_ROUTE} replace />
       }
     ]
   }

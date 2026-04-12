@@ -22,12 +22,16 @@ if (typeof window !== 'undefined') {
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
       };
-      fetch('https://mock-sentry.endpoint/api/store/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(errorPayload),
-        keepalive: true
-      }).catch(() => {});
+      // TODO: 配置真实的错误上报服务
+      // fetch(ERROR_REPORTING_ENDPOINT, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(errorPayload),
+      //   keepalive: true
+      // }).catch((error) => {
+      //   console.warn('Failed to report error to remote server:', error);
+      // });
+      console.error('Global error captured:', errorPayload);
     } catch (e) {
       console.warn(SYSTEM_LOGS.ERROR_GLOBAL_REPORT_FAILED, e);
     }

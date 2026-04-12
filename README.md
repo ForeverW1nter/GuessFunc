@@ -58,3 +58,19 @@ npm run build
 - `src/store/`：Zustand 全局状态管理。
 - `src/utils/`：工具函数，包括核心的数学验证引擎 (`mathEngine`) 和 Desmos 加载器。
 - `src/locales/`：i18n 国际化文本配置。
+- `scripts/`：开发和维护脚本。
+- `tools/`：独立运行的工具应用。
+- `.trae/rules/`：项目编码规范（供 AI 代码助手使用）。
+
+### 环境变量配置
+
+复制 `.env.example` 为 `.env` 并配置相关变量：
+```bash
+cp .env.example .env
+```
+
+主要环境变量：
+- `VITE_AI_API_URL` - AI 服务地址
+- `VITE_DESMOS_API_KEY` - Desmos API 密钥
+- `VITE_GITEE_OWNER` - Mod Store 仓库所有者
+- `VITE_GITEE_REPO` - Mod Store 仓库名称

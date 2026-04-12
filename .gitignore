@@ -1,4 +1,6 @@
+# ==========================================
 # Logs
+# ==========================================
 logs
 *.log
 npm-debug.log*
@@ -7,15 +9,111 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# ==========================================
 # Dependencies
+# ==========================================
 node_modules/
 .pnp
 .pnp.js
+.pnp.mjs
 
+# ==========================================
 # Build Output
+# ==========================================
 dist/
 dist-ssr/
 build/
 out/
 .vercel/
+.netlify/
 
+# ==========================================
+# Testing
+# ==========================================
+coverage/
+__tests__/coverage/
+__tests__/playwright-report/
+__tests__/test-results/
+playwright-report/
+test-results/
+.nyc_output/
+
+# ==========================================
+# Environment Variables
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.example
+
+# ==========================================
+# IDEs and Editors
+# ==========================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+._*
+
+# ==========================================
+# OS generated files
+# ==========================================
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ==========================================
+# Project specific
+# ==========================================
+public/mods.json
+jscpd_report.txt
+.lighthouseci/
+
+# ==========================================
+# AI Configuration / Cache
+.trae/
+.trae/rules/
+.trae/docs/
+.eslintcache
+.stylelintcache
+.npm
+.yarn
+.cache
+tools/.cache
+tools/dist
+
+# ==========================================
+# Temporary / Backup files
+# ==========================================
+backup_*.ts
+*.diff
+*.patch
+backup_*.json
+*_backup.*
+CODE_ISSUES.md
+REPAIR_SUMMARY.md
+project_structure_and_features.md
+
+# ==========================================
+# Debug and profiling
+# ==========================================
+*.cpuprofile
+*.heapsnapshot
+
+# ==========================================
+# Local development
+# ==========================================
+.DS_Store?
+Thumbs.db

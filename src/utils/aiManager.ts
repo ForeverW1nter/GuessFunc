@@ -4,10 +4,12 @@ import { SYSTEM_LOGS } from './systemLogs';
 import { GAME_CONSTANTS } from './constants';
 
 export const AI_CONFIG = {
-  defaultApiUrl: 'https://vg.v1api.cc/v1/chat/completions', 
-  proxyApiUrl: 'https://guessfunc-proxy.iwantbeyondnow.workers.dev/v1/chat/completions', 
-  model: 'deepseek-chat',
-  maxRetries: 3,
+  defaultApiUrl: import.meta.env.VITE_AI_API_URL || 'https://vg.v1api.cc/v1/chat/completions',
+  proxyApiUrl: import.meta.env.VITE_AI_PROXY_URL || 'https://guessfunc-proxy.iwantbeyondnow.workers.dev/v1/chat/completions',
+  model: import.meta.env.VITE_AI_MODEL || 'deepseek-chat',
+  maxTokens: Number(import.meta.env.VITE_AI_MAX_TOKENS) || 500,
+  temperature: Number(import.meta.env.VITE_AI_TEMPERATURE) || 0.7,
+  maxRetries: Number(import.meta.env.VITE_AI_MAX_RETRIES) || 3,
 };
 
 class AIManager {
@@ -93,8 +95,8 @@ class AIManager {
         body: JSON.stringify({
           model: AI_CONFIG.model,
           messages: messages,
-          max_tokens: 500, // 增加 token 上限，避免欢迎语被截断
-          temperature: 0.7 // 稍微提高温度，让欢迎语更自然
+          max_tokens: AI_CONFIG.maxTokens, // 增加 token 上限，避免欢迎语被截断
+          temperature: AI_CONFIG.temperature // 稍微提高温度，让欢迎语更自然
         }),
         signal: this.currentAbortController.signal
       });
@@ -187,7 +189,10 @@ class AIManager {
     });
 
     if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
+      const errData = await response.json().catch((error) => {
+        logger.warn('Failed to parse error response as JSON:', error);
+        return {};
+      });
       logger.error(SYSTEM_LOGS.AI_API_ERROR, response.status, errData);
       return null;
     }

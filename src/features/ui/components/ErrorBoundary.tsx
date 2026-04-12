@@ -38,19 +38,10 @@ export class ErrorBoundary extends Component<Props, State> {
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
       };
-      
-      // Simulated Sentry or logging endpoint
-      // Ensure the scrubbed log can be delivered 100%
-      await fetch('https://mock-sentry.endpoint/api/store/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(errorPayload),
-        // keepalive ensures the request isn't cancelled if the page unloads
-        keepalive: true 
-      }).catch(e => {
-        console.warn(SYSTEM_LOGS.ERROR_BOUNDARY_REPORT_FAILED, e);
-      });
-      
+
+      // TODO: 配置真实的错误上报服务
+      console.error('ErrorBoundary captured error:', errorPayload);
+
     } catch (e) {
       console.warn(SYSTEM_LOGS.ERROR_GLOBAL_REPORT_FAILED, e);
     }

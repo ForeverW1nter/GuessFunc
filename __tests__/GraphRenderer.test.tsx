@@ -41,20 +41,20 @@ describe('GraphRenderer', () => {
     const { container } = render(<GraphRenderer />)
 
     // The container should have the appropriate class names
-    expect(container.firstChild).toHaveClass('absolute inset-0 w-full h-full touch-none bg-app-bg');
+    expect(container.firstChild).toHaveClass('absolute inset-0 w-full h-full touch-none bg-background');
 
     // Inside it, there should be the Desmos mount point
     const desmosContainer = container.querySelector('.absolute.inset-0')
     expect(desmosContainer).toBeInTheDocument()
     expect(container.firstChild).toMatchInlineSnapshot(`
       <div
-        class="absolute inset-0 w-full h-full touch-none bg-app-bg"
+        class="absolute inset-0 w-full h-full touch-none bg-background"
       >
         <div
           class="absolute inset-0 w-full h-full"
         />
         <div
-          class="absolute inset-0 flex items-center justify-center bg-app-bg text-app-text z-50"
+          class="absolute inset-0 flex items-center justify-center bg-background text-foreground z-50"
         >
           game.loadingEngine
         </div>

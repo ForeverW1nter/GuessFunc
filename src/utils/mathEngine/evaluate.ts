@@ -7,16 +7,13 @@ import i18n from '../../i18n';
 import type { ValidationResult } from './types';
 
 /**
- * 验证两个数学表达式是否等价 (核心验证算法)
- * 
- * 算法分三步，层层递进：
- * 1. 结构化 AST 对比 (如 x+1 和 x+1)
- * 2. 符号代数化简对比 (如 x+x 和 2x)
- * 3. 蒙特卡洛数值采样对比 (如 (x^2-1)/(x-1) 和 x+1 在定义域内等效)
- * 
- * @param targetLatex 目标函数表达式 (LaTeX)
- * @param playerLatex 玩家输入的表达式 (LaTeX)
- * @param params 其他参数变量 (例如 Desmos 滑块产生的 a, b)
+ * 验证两个数学表达式是否等价
+ *
+ * 算法分三步：AST 结构对比 -> 符号代数化简 -> 蒙特卡洛数值采样
+ *
+ * @param targetLatex 目标函数表达式
+ * @param playerLatex 玩家输入的表达式
+ * @param params 参数变量（如 Desmos 滑块产生的 a, b）
  */
 export function evaluateEquivalence(
   targetLatex: string, 
@@ -50,11 +47,11 @@ export function evaluateEquivalence(
       }
 
       // 为了 2D 采样，我们需要解析左右两边
-      try { ce.declare('x', 'number'); } catch { /* ignore */ }
-      try { ce.declare('y', 'number'); } catch { /* ignore */ }
+      try { ce.declare('x', 'number'); } catch (error) { logger.warn('Failed to declare x as number:', error); }
+      try { ce.declare('y', 'number'); } catch (error) { logger.warn('Failed to declare y as number:', error); }
       const paramKeys = Object.keys(params);
       paramKeys.forEach(p => {
-        try { ce.declare(p, 'number'); } catch { /* ignore */ }
+        try { ce.declare(p, 'number'); } catch (error) { logger.warn(`Failed to declare ${p} as number:`, error); }
       });
 
       const tLBox = ce.parse(targetRel.lhs);
@@ -175,8 +172,9 @@ export function evaluateEquivalence(
       try {
         // 在较新的 Compute Engine 中，直接 declare 即可，如果有重复会自动处理或可通过选项覆盖
         ce.declare(v, 'number');
-      } catch {
-        // 忽略重复声明错误
+      } catch (error) {
+        // 忽略重复声明错误，但记录日志
+        logger.warn(`Failed to declare variable ${v}:`, error);
       }
     });
 

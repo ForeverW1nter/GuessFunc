@@ -40,7 +40,8 @@ export const loadDesmos = (): Promise<void> => {
 
     const script = document.createElement('script');
     script.id = 'desmos-script';
-    script.src = 'https://www.desmos.com/api/v1.11/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6&lang=zh-CN';
+    const apiKey = import.meta.env.VITE_DESMOS_API_KEY || 'dcb31709b452b1cf9dc26972add0fda6';
+    script.src = `https://www.desmos.com/api/v1.11/calculator.js?apiKey=${apiKey}&lang=zh-CN`;
     script.async = true;
 
     script.onload = () => resolve();
