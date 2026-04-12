@@ -1,18 +1,6 @@
 import { ce } from './ce';
 import { cleanDesmosLatex } from './utils';
-
-export interface GeneratedFunction {
-  target: string;
-  params: Record<string, number>;
-}
-
-export type FunctionType = 'polynomial' | 'absolute' | 'rational' | 'radical' | 'trigonometric' | 'inverse_trigonometric' | 'hyperbolic' | 'inverse_hyperbolic' | 'exponential';
-
-export interface GeneratorOptions {
-  targetDifficulty: number;
-  withParams?: boolean;
-  allowedTypes?: FunctionType[];
-}
+import type { GeneratedFunction, FunctionType, GeneratorOptions } from './types';
 
 // ----------------------------------------------------------------------------------
 // 核心思想：代数与几何同胚构造

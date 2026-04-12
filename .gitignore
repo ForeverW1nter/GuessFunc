@@ -117,3 +117,6 @@ project_structure_and_features.md
 # ==========================================
 .DS_Store?
 Thumbs.db
+
+__tests__/
+_docs/

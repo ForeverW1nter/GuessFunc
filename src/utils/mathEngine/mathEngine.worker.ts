@@ -1,6 +1,6 @@
 import { evaluateEquivalence } from './evaluate';
 import { generateFunctionByDifficulty } from './generator';
-import type { ValidationResult, GeneratedFunction } from './types';
+import type { ValidationResult, GeneratedFunction, GeneratorOptions } from './types';
 
 interface WorkerMessage {
   id: number;
@@ -9,12 +9,12 @@ interface WorkerMessage {
     targetLatex?: string;
     playerLatex?: string;
     params?: Record<string, number>;
-    options?: number | unknown;
+    options?: number | GeneratorOptions;
     legacyWithParams?: boolean;
   };
 }
 
-interface WorkerResponse {
+export interface WorkerResponse {
   id: number;
   result?: ValidationResult | GeneratedFunction;
   error?: string;
