@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, Wand2, ArrowLeft, ArrowRight, Download, Upload } from 'lucide-react';
-import type { FunctionType } from '../../../src/utils/mathEngine/generator';
-import { generateFunctionByDifficulty } from '../../../src/utils/mathEngine/generator';
+import type { FunctionType } from '../../../src/utils/mathEngine/types';
+import { generateFunctionByDifficulty } from '../../../src/utils/mathEngine/index';
 import { SYSTEM_LOGS } from '../../../src/utils/systemLogs';
 import type { ChapterData, LevelData } from '../../../src/types/story';
 import { ToggleSwitch } from '../../../src/features/ui/components/ToggleSwitch';
@@ -150,7 +150,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
   };
 
   const handleExport = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(configs, null, 2));
+    const dataStr = `data:text/json;charset=utf-8,${  encodeURIComponent(JSON.stringify(configs, null, 2))}`;
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", "batch-config.json");
