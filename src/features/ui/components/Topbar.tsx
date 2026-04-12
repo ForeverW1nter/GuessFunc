@@ -5,8 +5,9 @@ import { useGameStore } from '../../../store/useGameStore';
 import { useStoryStore } from '../../../store/useStoryStore';
 import { useNavigate } from 'react-router-dom';
 import { logger } from '../../../utils/debug/logger';
-import confetti from 'canvas-confetti';
+import { SYSTEM_LOGS } from '../../../utils/systemLogs';
 import { Menu, SkipForward, Check, Terminal } from 'lucide-react';
+import { generateFunctionByDifficulty } from '../../../utils/mathEngine';
 
 export const Topbar: React.FC = () => {
   const { t } = useTranslation();
@@ -29,9 +30,9 @@ export const Topbar: React.FC = () => {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     logger.log(t('game.verifyTrigger'));
-    const result = evaluateInput();
+    const result = await evaluateInput();
     if (!result.isMatch) {
       logger.warn(t('game.verifyFailed', { reason: result.reason }));
       addToast(t('game.wrongAnswer'), 'error');
@@ -40,25 +41,11 @@ export const Topbar: React.FC = () => {
       addToast(t('game.verifyPassedToast'), 'success');
       
       // 撒花特效
-      const count = 200;
-      const defaults = {
-        origin: { y: 0.7 },
-        zIndex: 10000,
-      };
-
-      function fire(particleRatio: number, opts: confetti.Options) {
-        confetti(
-          Object.assign({}, defaults, opts, {
-            particleCount: Math.floor(count * particleRatio),
-          })
-        );
-      }
-
-      fire(0.25, { spread: 26, startVelocity: 55 });
-      fire(0.2, { spread: 60 });
-      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-      fire(0.1, { spread: 120, startVelocity: 45 });
+      import('../../../utils/confettiHelper').then(({ fireConfetti }) => {
+        fireConfetti();
+      }).catch((e) => {
+        logger.warn(SYSTEM_LOGS.ERROR_LOAD_CONFETTI, e);
+      });
     }
   };
 
@@ -68,17 +55,16 @@ export const Topbar: React.FC = () => {
     const { gameMode, randomDifficulty, randomWithParams, setTargetFunction, setRandomConfig } = useGameStore.getState();
 
     if (gameMode === 'random') {
-      import('../../../utils/mathEngine/generator').then(({ generateFunctionByDifficulty }) => {
-        const result = generateFunctionByDifficulty({ targetDifficulty: randomDifficulty, withParams: randomWithParams });
+      generateFunctionByDifficulty({ targetDifficulty: randomDifficulty, withParams: randomWithParams }).then((result) => {
         setTargetFunction(result.target, result.params, 'random');
         setRandomConfig(randomDifficulty, randomWithParams);
         
-        const encodedLevel = btoa(unescape(encodeURIComponent(JSON.stringify({ 
+        const encodedLevel = btoa(encodeURIComponent(JSON.stringify({ 
           t: result.target, 
           p: result.params, 
           d: randomDifficulty, 
           wp: randomWithParams
-        }))));
+        })));
         navigate(`/game/random/1/${encodedLevel}`);
       });
       return;
@@ -122,19 +108,19 @@ export const Topbar: React.FC = () => {
   };
 
   return (
-    <header className="h-[64px] bg-app-bg border-b border-card-border flex justify-between items-center px-[12px] md:px-[24px] shrink-0 z-10 transition-all">
+    <header className="h-[64px] bg-background border-b border-border flex justify-between items-center px-[12px] md:px-[24px] shrink-0 z-10 transition-all">
       <div className="flex items-center gap-[16px]">
         <button 
           onClick={handleMenuClick}
-          className="bg-transparent border-none text-app-text cursor-pointer p-[8px] rounded-[8px] flex items-center justify-center opacity-70 hover:bg-[rgba(128,128,128,0.1)] hover:opacity-100 transition-all duration-200 md:flex"
+          className="bg-transparent border-none text-foreground cursor-pointer p-[8px] rounded-[8px] flex items-center justify-center opacity-70 hover:bg-muted hover:opacity-100 transition-all duration-200 md:flex"
         >
           <Menu size={24} strokeWidth={2} />
         </button>
         
         {levelDisplayTitle && (
-          <div className="flex items-center gap-[8px] bg-card-bg border border-card-border px-[12px] py-[6px] rounded-[6px] opacity-90">
-            <Terminal size={16} className="text-app-primary" />
-            <h2 className="m-0 text-[0.9rem] md:text-[0.95rem] font-mono text-app-text tracking-wider hidden sm:block">
+          <div className="flex items-center gap-[8px] bg-card border border-border px-[12px] py-[6px] rounded-[6px] opacity-90">
+            <Terminal size={16} className="text-primary" />
+            <h2 className="m-0 text-[0.9rem] md:text-[0.95rem] font-mono text-foreground tracking-wider hidden sm:block">
               {levelDisplayTitle}
             </h2>
           </div>
@@ -145,15 +131,16 @@ export const Topbar: React.FC = () => {
         {isLevelCleared ? (
           <button 
             onClick={handleNextLevel}
-            className="inline-flex items-center justify-center gap-[6px] sm:gap-[8px] px-[16px] sm:px-[20px] py-[8px] sm:py-[10px] rounded-[12px] font-semibold text-[0.9rem] sm:text-[0.95rem] tracking-[0.5px] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
+            className="inline-flex items-center justify-center gap-[6px] sm:gap-[8px] px-[16px] sm:px-[20px] py-[8px] sm:py-[10px] rounded-[12px] font-semibold text-[0.9rem] sm:text-[0.95rem] tracking-[0.5px] transition-all bg-primary text-primary-foreground border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
             <span className="hidden sm:inline">{t('game.nextLevelBtn')}</span>
             <SkipForward size={16} strokeWidth={2} />
           </button>
         ) : (
           <button 
+            data-testid="verify-btn"
             onClick={handleVerify}
-            className="inline-flex items-center justify-center gap-[6px] sm:gap-[8px] px-[16px] sm:px-[20px] py-[8px] sm:py-[10px] rounded-[12px] font-semibold text-[0.9rem] sm:text-[0.95rem] tracking-[0.5px] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
+            className="inline-flex items-center justify-center gap-[6px] sm:gap-[8px] px-[16px] sm:px-[20px] py-[8px] sm:py-[10px] rounded-[12px] font-semibold text-[0.9rem] sm:text-[0.95rem] tracking-[0.5px] transition-all bg-primary text-primary-foreground border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
             <Check size={16} strokeWidth={2} />
             <span className="hidden sm:inline">{t('game.verifyBtn')}</span>

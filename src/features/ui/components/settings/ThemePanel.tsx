@@ -57,7 +57,7 @@ export const ThemePanel: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between px-4 py-3.5 border border-card-border bg-card-bg text-app-text rounded-xl cursor-pointer hover:border-app-primary transition-all" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      <div className="flex items-center justify-between px-4 py-3.5 border border-border bg-card text-foreground rounded-xl cursor-pointer hover:border-primary transition-all" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
         <div className="flex items-center gap-2">
           <span className="font-medium text-base">{t('settings.theme.darkMode')}</span>
           <span className="theme-icon text-lg flex items-center justify-center opacity-80">
@@ -71,14 +71,14 @@ export const ThemePanel: React.FC = () => {
         <ToggleSwitch checked={theme === 'dark'} />
       </div>
 
-      <div className="h-px bg-card-border w-full my-4" />
+      <div className="h-px bg-border w-full my-4" />
 
       <div className="space-y-4">
-        <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.theme.primaryColor')}</h3>
+        <h3 className="m-0 font-bold text-lg text-foreground">{t('settings.theme.primaryColor')}</h3>
         
         <div className="pt-2 space-y-5">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-4 w-full bg-card-bg p-4 rounded-xl border border-card-border">
+            <div className="flex items-center gap-4 w-full bg-card p-4 rounded-xl border border-border">
               <div 
                 className="w-16 h-16 rounded-lg shadow-inner shrink-0"
                 style={{ backgroundColor: customPrimaryColor || '#00BCD4' }}
@@ -89,7 +89,7 @@ export const ThemePanel: React.FC = () => {
                   value={customPrimaryColor || '#00BCD4'}
                   onChange={handleColorChange}
                   onBlur={handleColorBlur}
-                  className="bg-transparent border-b border-card-border px-1 py-1 text-app-text font-mono text-xl focus:border-app-primary focus:outline-none transition-colors uppercase tracking-wider w-full"
+                  className="bg-transparent border-b border-border px-1 py-1 text-foreground font-mono text-xl focus:border-primary focus:outline-none transition-colors uppercase tracking-wider w-full"
                   placeholder="#00BCD4"
                   maxLength={7}
                 />
@@ -99,7 +99,7 @@ export const ThemePanel: React.FC = () => {
           </div>
 
           {/* RGB Sliders */}
-          <div className="bg-card-bg p-4 rounded-xl border border-card-border space-y-4">
+          <div className="bg-card p-4 rounded-xl border border-border space-y-4">
             <div className="flex items-center gap-3">
               <span className="w-4 font-mono font-bold text-red-500">R</span>
               <input 
@@ -108,7 +108,7 @@ export const ThemePanel: React.FC = () => {
                 value={rgb.r} 
                 onChange={(e) => handleRgbChange('r', parseInt(e.target.value))}
                 className="flex-1 unified-slider theme-rgb-slider"
-                style={{ '--slider-color': '#ff0000', background: `linear-gradient(to right, #ff0000 ${rgb.r / 255 * 100}%, var(--card-border) ${rgb.r / 255 * 100}%)` } as React.CSSProperties}
+                style={{ '--slider-color': '#ff0000', background: `linear-gradient(to right, #ff0000 ${rgb.r / 255 * 100}%, oklch(var(--border)) ${rgb.r / 255 * 100}%)` } as React.CSSProperties}
               />
               <span className="w-8 text-right font-mono text-sm opacity-70">{rgb.r}</span>
             </div>
@@ -120,7 +120,7 @@ export const ThemePanel: React.FC = () => {
                 value={rgb.g} 
                 onChange={(e) => handleRgbChange('g', parseInt(e.target.value))}
                 className="flex-1 unified-slider theme-rgb-slider"
-                style={{ '--slider-color': '#00ff00', background: `linear-gradient(to right, #00ff00 ${rgb.g / 255 * 100}%, var(--card-border) ${rgb.g / 255 * 100}%)` } as React.CSSProperties}
+                style={{ '--slider-color': '#00ff00', background: `linear-gradient(to right, #00ff00 ${rgb.g / 255 * 100}%, oklch(var(--border)) ${rgb.g / 255 * 100}%)` } as React.CSSProperties}
               />
               <span className="w-8 text-right font-mono text-sm opacity-70">{rgb.g}</span>
             </div>
@@ -132,7 +132,7 @@ export const ThemePanel: React.FC = () => {
                 value={rgb.b} 
                 onChange={(e) => handleRgbChange('b', parseInt(e.target.value))}
                 className="flex-1 unified-slider theme-rgb-slider"
-                style={{ '--slider-color': '#0000ff', background: `linear-gradient(to right, #0000ff ${rgb.b / 255 * 100}%, var(--card-border) ${rgb.b / 255 * 100}%)` } as React.CSSProperties}
+                style={{ '--slider-color': '#0000ff', background: `linear-gradient(to right, #0000ff ${rgb.b / 255 * 100}%, oklch(var(--border)) ${rgb.b / 255 * 100}%)` } as React.CSSProperties}
               />
               <span className="w-8 text-right font-mono text-sm opacity-70">{rgb.b}</span>
             </div>

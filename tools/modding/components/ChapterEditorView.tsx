@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { Plus, Trash2, FolderOpen, FileCode, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { RouteData, ChapterData } from '../../../src/types/story';
+import type { RouteData, ChapterData } from '../../../src/types/story';
 
 interface ChapterEditorViewProps {
   route: RouteData;
@@ -63,20 +63,20 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
               value={chapter.title || ''}
               onChange={(e) => updateChapter('title', e.target.value)}
               className="bg-transparent border-b-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 focus:border-app-primary text-zinc-900 dark:text-zinc-100 outline-none transition-colors w-full pb-1"
-              placeholder={t('tools.storyEditor.untitled', 'Untitled Chapter')}
+              placeholder={t('tools.storyEditor.untitled')}
             />
           </h2>
           <button 
             onClick={() => deleteChapter(chapterIndex)}
             className="p-2 text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer bg-transparent border-none shrink-0"
-            title={t('tools.storyEditor.deleteChapter', 'Delete Chapter')}
+            title={t('tools.storyEditor.deleteChapter')}
           >
             <Trash2 size={20} />
           </button>
         </div>
         <div className="flex items-center justify-between">
           <div className="text-sm text-zinc-500 dark:text-zinc-400 font-mono flex items-center gap-2">
-            <span>{t('tools.storyEditor.path', 'Path:')} ~/{route.id}/</span>
+            <span>{t('tools.storyEditor.path')} ~/{route.id}/</span>
             <input 
               type="text" 
               value={chapter.id}
@@ -89,7 +89,7 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
                 onClick={onClose}
                 className="text-xs text-app-primary dark:text-app-primary font-medium uppercase tracking-wider border border-app-primary/30 dark:border-app-primary/50 px-3 py-1 rounded-md bg-transparent"
               >
-                {t('tools.storyEditor.close', 'Close')}
+                {t('tools.storyEditor.close')}
               </button>
           )}
         </div>
@@ -106,10 +106,10 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
           <div className="flex flex-col flex-1">
             <div className="flex items-center justify-between px-4 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
               <div className="flex items-center gap-4 flex-1 min-w-0">
-                <div className="w-10 text-center shrink-0">{t('tools.storyEditor.sts', 'STS')}</div>
-                <div className="truncate">{t('tools.storyEditor.levelsTitle', 'Levels')}</div>
+                <div className="w-10 text-center shrink-0">{t('tools.storyEditor.sts')}</div>
+                <div className="truncate">{t('tools.storyEditor.levelsTitle')}</div>
               </div>
-              <div className="w-16 text-right shrink-0">{t('tools.storyEditor.typeCol', 'Type')}</div>
+              <div className="w-16 text-right shrink-0">{t('tools.storyEditor.typeCol')}</div>
             </div>
             
             <div className="flex flex-col gap-2">
@@ -139,7 +139,7 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteLevel(index); }}
                       className="opacity-0 group-hover:opacity-100 p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all cursor-pointer bg-transparent border-none"
-                      title={t('tools.storyEditor.deleteLevel', 'Delete Level')}
+                      title={t('tools.storyEditor.deleteLevel')}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -153,7 +153,7 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
                 onClick={addLevel}
                 className="mt-2 py-3 rounded-xl bg-transparent border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-green-400 dark:hover:border-green-600 hover:bg-green-50 dark:hover:bg-green-900/10 text-zinc-500 dark:text-zinc-400 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer flex items-center justify-center gap-2 text-sm font-medium"
               >
-                <Plus size={18} /> {t('tools.storyEditor.addLevel', 'Add Level')}
+                <Plus size={18} /> {t('tools.storyEditor.addLevel')}
               </button>
             </div>
           </div>
@@ -162,10 +162,10 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
           <div className="flex flex-col flex-1">
             <div className="flex items-center justify-between px-4 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
               <div className="flex items-center gap-4 flex-1 min-w-0">
-                <div className="w-10 text-center shrink-0">{t('tools.storyEditor.sts', 'STS')}</div>
-                <div className="truncate">{t('tools.storyEditor.filesTitle', 'Files')}</div>
+                <div className="w-10 text-center shrink-0">{t('tools.storyEditor.sts')}</div>
+                <div className="truncate">{t('tools.storyEditor.filesTitle')}</div>
               </div>
-              <div className="w-16 text-right shrink-0">{t('tools.storyEditor.typeCol', 'Type')}</div>
+              <div className="w-16 text-right shrink-0">{t('tools.storyEditor.typeCol')}</div>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -194,7 +194,7 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteFile(index); }}
                       className="opacity-0 group-hover:opacity-100 p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all cursor-pointer bg-transparent border-none"
-                      title={t('tools.storyEditor.deleteFile', 'Delete File')}
+                      title={t('tools.storyEditor.deleteFile')}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -208,7 +208,7 @@ export const ChapterEditorView: React.FC<ChapterEditorViewProps> = ({
                 onClick={addFile}
                 className="mt-2 py-3 rounded-xl bg-transparent border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-app-primary dark:hover:border-app-primary hover:bg-app-primary/10 dark:hover:bg-app-primary/10 text-zinc-500 dark:text-zinc-400 hover:text-app-primary dark:hover:text-app-primary transition-colors cursor-pointer flex items-center justify-center gap-2 text-sm font-medium"
               >
-                <Plus size={18} /> {t('tools.storyEditor.addFile', 'Add File')}
+                <Plus size={18} /> {t('tools.storyEditor.addFile')}
               </button>
             </div>
           </div>

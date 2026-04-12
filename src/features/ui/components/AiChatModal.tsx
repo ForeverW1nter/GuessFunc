@@ -36,14 +36,7 @@ export const AiChatModal: React.FC = () => {
 
         setIsLoading(true);
         try {
-          const prompt = t('ai.welcomePrompt', `你是《猜函数》游戏中的 AI 助手。现在玩家打开了聊天面板。
-请根据你作为游戏内助手的身份，用友好且带有一点引导性的语气向玩家打个招呼。
-请务必在欢迎语中向玩家说明以下几点（这是你的核心规则，你必须告诉玩家）：
-1. 玩家可以问你关于“当前目标函数”的数学特征问题（例如：“函数是否经过原点？”、“导数是否始终大于0？”等）。
-2. 你是一个非常严格的助手，你只能回答 "是"、"否" 或 "不知道"，绝不会给出其他解释。
-3. 你绝不会直接泄露目标函数的表达式。
-
-请直接输出你的欢迎语，不要包含任何多余的解释，保持语句通顺自然。`);
+          const prompt = t('ai.welcomePrompt');
           
           const response = await aiManager.fetchChatResponse(prompt, targetFunction);
           
@@ -110,42 +103,42 @@ export const AiChatModal: React.FC = () => {
       />
       
       {/* Modal */}
-      <div className="relative w-full md:max-w-[600px] h-full md:h-[90vh] bg-modal-bg text-modal-text md:rounded-[16px] shadow-modal overflow-hidden border-none md:border md:border-card-border flex flex-col animate-zoom-in">
+      <div className="relative w-full md:max-w-[600px] h-full md:h-[90vh] bg-card text-foreground md:rounded-[16px] shadow-modal overflow-hidden border-none md:border md:border-border flex flex-col animate-zoom-in">
         {/* Header */}
-        <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
+        <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-border bg-background shrink-0">
           <div className="flex items-center gap-[12px]">
-            <Bot className="text-app-primary" size={24} strokeWidth={2} />
-            <h2 className="m-0 text-[1.25rem] font-semibold text-app-text">{t('ai.title')}</h2>
+            <Bot className="text-primary" size={24} strokeWidth={2} />
+            <h2 className="m-0 text-[1.25rem] font-semibold text-foreground">{t('ai.title')}</h2>
           </div>
           <button 
             onClick={handleClose}
-            className="w-[40px] h-[40px] flex items-center justify-center text-app-text opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] hover:rotate-90 rounded-full transition-all"
+            className="w-[40px] h-[40px] flex items-center justify-center text-foreground opacity-50 hover:opacity-100 hover:bg-muted hover:rotate-90 rounded-full transition-all"
           >
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-[20px] flex flex-col gap-[16px] bg-app-bg custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-[20px] flex flex-col gap-[16px] bg-background custom-scrollbar">
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`flex items-start max-w-[85%] gap-[8px] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                 {msg.role === 'ai' ? (
-                  <div className="w-[28px] h-[28px] rounded-full bg-app-primary flex items-center justify-center shrink-0 shadow-sm">
-                    <Bot size={16} className="text-white" />
+                  <div className="w-[28px] h-[28px] rounded-full bg-primary flex items-center justify-center shrink-0 shadow-sm">
+                    <Bot size={16} className="text-primary-foreground" />
                   </div>
                 ) : (
-                  <div className="w-[28px] h-[28px] rounded-full bg-[#2A2A2E] flex items-center justify-center shrink-0 shadow-sm border border-[#3A3A3E]">
-                    <User size={16} className="text-[#A0A0A5]" />
+                  <div className="w-[28px] h-[28px] rounded-full bg-secondary flex items-center justify-center shrink-0 shadow-sm border border-border">
+                    <User size={16} className="text-secondary-foreground" />
                   </div>
                 )}
                 <div 
                   className={`px-[16px] py-[10px] rounded-[16px] text-[0.95rem] leading-[1.5] shadow-sm whitespace-pre-wrap break-words
                     ${msg.role === 'user' 
-                        ? 'bg-[#2A2A2E] text-white rounded-tr-[4px] border border-[#3A3A3E]' 
+                        ? 'bg-secondary text-secondary-foreground rounded-tr-[4px] border border-border' 
                         : (msg as unknown as { isError?: boolean }).isError 
-                          ? 'bg-red-500/10 text-red-400 rounded-tl-[4px] border border-red-500/20'
-                          : 'bg-[rgba(var(--primary-color-rgb),0.1)] text-[#D4D4D6] rounded-tl-[4px] border border-[rgba(var(--primary-color-rgb),0.2)]'
+                          ? 'bg-destructive/10 text-destructive rounded-tl-[4px] border border-destructive/20'
+                          : 'bg-primary/10 text-primary rounded-tl-[4px] border border-primary/20'
                       }
                   `}
                 >
@@ -156,14 +149,14 @@ export const AiChatModal: React.FC = () => {
           ))}
           {isLoading && (
             <div className="flex gap-[12px] animate-fade-in">
-              <div className="w-[36px] h-[36px] rounded-full flex items-center justify-center shrink-0 bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary border border-[rgba(var(--primary-color-rgb),0.2)]">
+              <div className="w-[36px] h-[36px] rounded-full flex items-center justify-center shrink-0 bg-primary/10 text-primary border border-primary/20">
                 <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>
               </div>
-              <div className="px-[16px] py-[12px] rounded-[16px] bg-card-bg border border-card-border rounded-tl-[4px] flex items-center">
+              <div className="px-[16px] py-[12px] rounded-[16px] bg-card border border-border rounded-tl-[4px] flex items-center">
                 <div className="flex gap-[6px]">
-                  <div className="w-[8px] h-[8px] rounded-full bg-app-primary/60 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-[8px] h-[8px] rounded-full bg-app-primary/60 animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-[8px] h-[8px] rounded-full bg-app-primary/60 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div className="w-[8px] h-[8px] rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-[8px] h-[8px] rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-[8px] h-[8px] rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             </div>
@@ -172,7 +165,7 @@ export const AiChatModal: React.FC = () => {
         </div>
 
         {/* Input Area */}
-        <div className="p-[16px] border-t border-card-border bg-card-bg shrink-0">
+        <div className="p-[16px] border-t border-border bg-card shrink-0">
           <div className="flex items-center gap-[12px]">
             <input 
               type="text"
@@ -180,12 +173,12 @@ export const AiChatModal: React.FC = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder={t('ai.inputPlaceholder')}
-              className="flex-1 bg-app-bg border-2 border-card-border text-app-text px-[16px] py-[12px] rounded-[12px] focus:border-app-primary outline-none transition-all"
+              className="flex-1 bg-background border-2 border-border text-foreground px-[16px] py-[12px] rounded-[12px] focus:border-primary outline-none transition-all"
             />
             <button 
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
-              className="w-[48px] h-[48px] flex items-center justify-center bg-app-primary text-white rounded-[12px] hover:brightness-110 transition-all shadow-btn hover:shadow-btn-hover hover:-translate-y-[2px] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+              className="w-[48px] h-[48px] flex items-center justify-center bg-primary text-primary-foreground rounded-[12px] hover:brightness-110 transition-all shadow-btn hover:shadow-btn-hover hover:-translate-y-[2px] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={input.trim() && !isLoading ? 'ml-[2px]' : ''}><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
             </button>

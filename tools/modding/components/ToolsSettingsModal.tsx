@@ -30,7 +30,7 @@ export const ToolsSettingsModal: React.FC = () => {
         <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
           <div className="flex items-center gap-[15px]">
             <h2 className="m-0 text-[1.25rem] font-semibold text-app-text transition-opacity duration-200">
-              {t('settings.main.title', 'Settings')}
+              {t('settings.main.title')}
             </h2>
           </div>
           <button 
@@ -48,7 +48,7 @@ export const ToolsSettingsModal: React.FC = () => {
           </div>
           <div className="w-full h-px bg-card-border" />
           <div>
-            <h3 className="text-lg font-medium mb-4 text-app-text">{t('settings.main.language', 'Language')}</h3>
+            <h3 className="text-lg font-medium mb-4 text-app-text">{t('settings.main.language')}</h3>
             <LanguagePanel />
           </div>
         </div>

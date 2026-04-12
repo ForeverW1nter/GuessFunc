@@ -26,7 +26,7 @@ export const CreateLevelConfirmModal: React.FC<CreateLevelConfirmModalProps> = (
         <div className="flex flex-col gap-4">
           <p>{t('sidebar.confirmCreateDesc')}</p>
           <div 
-            className="bg-card-bg border border-card-border p-3 rounded-lg overflow-x-auto font-math text-center text-lg"
+            className="bg-card border border-border p-3 rounded-lg overflow-x-auto font-math text-center text-lg"
             dangerouslySetInnerHTML={{
               __html: katex.renderToString(
                 /[=<>≤≥]|\\le|\\ge/.test(createPreview.latex) 
@@ -41,18 +41,18 @@ export const CreateLevelConfirmModal: React.FC<CreateLevelConfirmModalProps> = (
               <p className="mt-2">{t('sidebar.validParams')}</p>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(createPreview.params).map(([key, val]) => (
-                  <div key={key} className="bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary px-3 py-1 rounded-md font-math flex items-center gap-2 border border-[rgba(var(--primary-color-rgb),0.2)]">
+                  <div key={key} className="bg-[rgba(var(--primary-color-rgb),0.1)] text-primary px-3 py-1 rounded-md font-math flex items-center gap-2 border border-[rgba(var(--primary-color-rgb),0.2)]">
                     <span dangerouslySetInnerHTML={{ __html: katex.renderToString(`${key} = ${val}`, { throwOnError: false }) }} />
                   </div>
                 ))}
               </div>
-              <p className="text-sm text-app-text/60 mt-2">
+              <p className="text-sm text-foreground/60 mt-2">
                 {t('sidebar.paramsNote1')}
               </p>
             </>
           )}
           {Object.keys(createPreview.params).length === 0 && (
-            <p className="text-sm text-app-text/60 mt-2">
+            <p className="text-sm text-foreground/60 mt-2">
               {t('sidebar.paramsNote2')}
             </p>
           )}

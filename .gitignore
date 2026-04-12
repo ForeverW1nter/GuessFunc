@@ -7,25 +7,73 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
-# Editor directories and files
+# Build Output
+dist/
+dist-ssr/
+build/
+out/
+.vercel/
+
+# Testing
+coverage/
+__tests__/coverage/
+__tests__/playwright-report/
+__tests__/test-results/
+playwright-report/
+test-results/
+.nyc_output/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and Editors
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# AI Configuration
-.ai/
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
 
-# Tools build output
-tools/dist
+# Project specific
+public/mods.json
+jscpd_report.txt
+.lighthouseci/
+
+# AI Configuration / Cache
+.ai/
+.trae/
+
+# Temporary / Cache
+.eslintcache
+.stylelintcache
+.npm
+.yarn
+.cache
 tools/.cache
+tools/dist
+
+# Vercel / Netlify / Hosting
+.vercel
+.netlify
+

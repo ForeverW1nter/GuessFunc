@@ -1,0 +1,33 @@
+diff --git a/src/utils/constants.ts b/src/utils/constants.ts
+index eabd1f8..cc34ca6 100644
+--- a/src/utils/constants.ts
++++ b/src/utils/constants.ts
+@@ -36,5 +36,29 @@ export const GAME_CONSTANTS = {
+     AI_WELCOME: 'guessfunc_ai_welcome',
+     API_KEY: 'guessfunc_api_key',
+     USE_PROXY: 'guessfunc_use_proxy',
++    MOD_ORDER: 'guessfunc_mod_order',
++  },
++  MOD_STORE: {
++    // TODO: 淇敼涓轰綘鐨?Gitee 鐢ㄦ埛鍚嶅拰浠撳簱鍚?+    GITEE_OWNER: 'foreverw1nter',
++    GITEE_REPO: 'guess-func-mods',
++    DB_NAME: 'GuessFuncModsDB',
++    STORE_NAME: 'InstalledMods',
++    LABEL_APPROVED: 'Approved',
++    ITEMS_PER_PAGE: 10,
++  },
++  FONTS: {
++    STORY_OPTIONS: [
++      { id: 'system-ui, -apple-system, sans-serif', labelKey: 'settings.font.default' },
++      { id: 'serif', labelKey: 'settings.font.serif' },
++      { id: 'sans-serif', labelKey: 'settings.font.sansSerif' },
++      { id: 'monospace', labelKey: 'settings.font.monospace' },
++      { id: '"KaiTi", "妤蜂綋", serif', labelKey: 'settings.font.kaiti' },
++      { id: '"SimSun", "瀹嬩綋", serif', labelKey: 'settings.font.simsun' },
++      { id: '"SimHei", "榛戜綋", sans-serif', labelKey: 'settings.font.simhei' },
++      { id: '"Microsoft YaHei", "寰蒋闆呴粦", sans-serif', labelKey: 'settings.font.yahei' },
++    ],
++    DEFAULT_STORY_FONT: 'system-ui, -apple-system, sans-serif',
++    CUSTOM_FONT_NAME: 'CustomStoryFont'
+   }
+ };

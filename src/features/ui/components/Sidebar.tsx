@@ -13,7 +13,9 @@ import {
   Share2, 
   Settings, 
   Activity,
-  X
+  X,
+  Wrench,
+  Store
 } from 'lucide-react';
 
 interface NavItemProps {
@@ -37,9 +39,9 @@ const NavItem = ({ item, isSidebarCollapsed, isActive }: NavItemProps) => (
     disabled={item.disabled}
     title={isSidebarCollapsed ? item.label : undefined}
     className={cn(
-      "w-full flex items-center justify-between text-app-text rounded-[8px] transition-all duration-200 group border-none text-[0.95rem] font-medium",
+      "w-full flex items-center justify-between text-foreground rounded-[8px] transition-all duration-200 group border-none text-[0.95rem] font-medium",
       isSidebarCollapsed ? "md:justify-center md:p-[12px] px-[12px] py-[10px]" : "px-[12px] py-[10px]",
-      isActive ? "bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary font-semibold" : "bg-transparent hover:bg-[rgba(128,128,128,0.08)]",
+      isActive ? "bg-primary/10 text-primary font-semibold" : "bg-transparent hover:bg-muted",
       item.disabled && "opacity-50 cursor-not-allowed hover:bg-transparent"
     )}
   >
@@ -49,7 +51,7 @@ const NavItem = ({ item, isSidebarCollapsed, isActive }: NavItemProps) => (
         strokeWidth={2} 
         className={cn(
           "transition-all duration-200",
-          isActive ? "text-app-primary opacity-100" : "opacity-70 group-hover:opacity-100",
+          isActive ? "text-primary opacity-100" : "opacity-70 group-hover:opacity-100",
           isSidebarCollapsed && "md:m-0"
         )} 
       />
@@ -68,7 +70,7 @@ const NavItem = ({ item, isSidebarCollapsed, isActive }: NavItemProps) => (
 const NavGroupTitle = ({ title, isSidebarCollapsed }: { title: string, isSidebarCollapsed: boolean }) => {
   return (
     <div className={cn(
-      "px-[12px] text-[0.75rem] font-semibold text-app-text uppercase tracking-[1px] mb-[8px] opacity-50 whitespace-nowrap transition-opacity duration-200",
+      "px-[12px] text-[0.75rem] font-semibold text-foreground uppercase tracking-[1px] mb-[8px] opacity-50 whitespace-nowrap transition-opacity duration-200",
       isSidebarCollapsed && "md:hidden"
     )}>
       {title}
@@ -125,7 +127,7 @@ export const Sidebar: React.FC = () => {
       t: createPreview.latex,
       p: Object.keys(createPreview.params).length > 0 ? createPreview.params : undefined
     };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(levelData))));
+    const encoded = btoa(encodeURIComponent(JSON.stringify(levelData)));
     navigate(`/game/custom/1/${encoded}`);
     
     setIsCreateModalOpen(false);
@@ -155,7 +157,7 @@ export const Sidebar: React.FC = () => {
       t: shareTarget,
       p: Object.keys(playerParams).length > 0 ? playerParams : undefined
     };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(levelData))));
+    const encoded = btoa(encodeURIComponent(JSON.stringify(levelData)));
     const generatedUrl = `${window.location.origin}${window.location.pathname}#/game/share/1/${encoded}`;
     
     navigator.clipboard.writeText(generatedUrl).then(() => {
@@ -178,7 +180,15 @@ export const Sidebar: React.FC = () => {
       title: t('sidebar.createSection'),
       items: [
         { id: 'custom', icon: PenTool, label: t('sidebar.freeCreateMode'), onClick: handleCreateModeClick },
-        { id: 'share', icon: Share2, label: t('sidebar.shareLevelMode'), onClick: handleShareMode }
+        { id: 'share', icon: Share2, label: t('sidebar.shareLevelMode'), onClick: handleShareMode },
+        { id: 'workshop', icon: Wrench, label: t('sidebar.workshop', '创意工坊'), onClick: () => {
+          useUIStore.getState().setStoryEditorOpen(true);
+          setSidebarOpen(false);
+        }},
+        { id: 'modStore', icon: Store, label: t('sidebar.modStore', '模组商店'), onClick: () => {
+          useUIStore.getState().setModStoreOpen(true);
+          setSidebarOpen(false);
+        }}
       ]
     }
   ];
@@ -196,33 +206,33 @@ export const Sidebar: React.FC = () => {
       {/* 侧边栏主体 */}
       <aside 
         className={cn(
-          "fixed md:static top-0 left-0 h-full bg-card-bg border-r border-card-border z-50 transform transition-all duration-300 ease-sidebar flex flex-col shrink-0 overflow-hidden",
-          isSidebarOpen ? "translate-x-0 shadow-[4px_0_24px_rgba(0,0,0,0.1)] md:shadow-none" : "-translate-x-full md:translate-x-0",
+          "fixed md:static top-0 left-0 h-full bg-card border-r border-border z-50 transform transition-all duration-300 ease-sidebar flex flex-col shrink-0 overflow-hidden",
+          isSidebarOpen ? "translate-x-0 shadow-lg md:shadow-none" : "-translate-x-full md:translate-x-0",
           isSidebarCollapsed ? "md:w-[64px] w-[260px]" : "w-[260px]"
         )}
       >
         {/* Logo 区 */}
         <div className={cn(
-          "h-[64px] flex items-center shrink-0 border-b border-card-border px-[20px] transition-all duration-300",
+          "h-[64px] flex items-center shrink-0 border-b border-border px-[20px] transition-all duration-300",
           isSidebarCollapsed ? "md:justify-center md:px-0 justify-between" : "justify-between"
         )}>
           <div className={cn("flex items-center gap-[12px] pl-[4px]", isSidebarCollapsed && "md:hidden")}>
-            <div className="w-[32px] h-[32px] rounded-[8px] bg-app-primary flex items-center justify-center shadow-[0_4px_12px_rgba(var(--primary-color-rgb),0.3)]">
-              <Activity size={20} strokeWidth={2.5} className="text-white" />
+            <div className="w-[32px] h-[32px] rounded-[8px] bg-primary flex items-center justify-center shadow-music">
+              <Activity size={20} strokeWidth={2.5} className="text-primary-foreground" />
             </div>
-            <h1 className="m-0 text-[1.25rem] font-bold text-app-text tracking-[0.5px] whitespace-nowrap transition-opacity duration-200">
+            <h1 className="m-0 text-[1.25rem] font-bold text-foreground tracking-[0.5px] whitespace-nowrap transition-opacity duration-200">
               {t('sidebar.title')}
             </h1>
           </div>
           
-          <div className={cn("w-[32px] h-[32px] rounded-[8px] bg-app-primary items-center justify-center shadow-[0_4px_12px_rgba(var(--primary-color-rgb),0.3)] hidden", isSidebarCollapsed && "md:flex")}>
-            <Activity size={20} strokeWidth={2.5} className="text-white" />
+          <div className={cn("w-[32px] h-[32px] rounded-[8px] bg-primary items-center justify-center shadow-music hidden", isSidebarCollapsed && "md:flex")}>
+            <Activity size={20} strokeWidth={2.5} className="text-primary-foreground" />
           </div>
           
           {/* 移动端关闭按钮 */}
           <button 
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden p-[8px] text-app-text opacity-70 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] rounded-[8px] border-none bg-transparent cursor-pointer transition-all"
+            className="md:hidden p-[8px] text-foreground opacity-70 hover:opacity-100 hover:bg-muted rounded-[8px] border-none bg-transparent cursor-pointer transition-all"
           >
             <X size={20} strokeWidth={2} />
           </button>

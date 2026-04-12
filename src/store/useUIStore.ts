@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { GAME_CONSTANTS } from '../utils/constants';
+import { hexToRgb, getPrimaryForeground } from '../utils/colorUtils';
+
 export interface ToastMessage {
   id: string;
   message: string;
@@ -9,15 +12,16 @@ export interface ToastMessage {
 }
 
 export interface UIState {
+  isLevelSelectOpen: boolean;
   isSidebarOpen: boolean;
   isSidebarCollapsed: boolean;
   isSettingsOpen: boolean;
-  isLevelSelectOpen: boolean;
   isRandomChallengeOpen: boolean;
   isAiChatOpen: boolean;
+  isModStoreOpen: boolean;
+  isStoryEditorOpen: boolean;
   theme: 'light' | 'dark';
   customPrimaryColor: string | null;
-  isSpeedrunMode: boolean;
   isAssistMode: boolean;
   isDebugMode: boolean;
   toasts: ToastMessage[];
@@ -28,6 +32,8 @@ export interface UIState {
   storyFontUrl: string | null;
   
   // Actions
+  setLevelSelectOpen: (isOpen: boolean) => void;
+  setAiChatOpen: (isOpen: boolean) => void;
   toggleSidebar: () => void;
   setSidebarOpen: (isOpen: boolean) => void;
   
@@ -37,16 +43,13 @@ export interface UIState {
   toggleSettings: () => void;
   setSettingsOpen: (isOpen: boolean) => void;
   
-  setLevelSelectOpen: (isOpen: boolean) => void;
-  
   setRandomChallengeOpen: (isOpen: boolean) => void;
-
-  setAiChatOpen: (isOpen: boolean) => void;
+  setModStoreOpen: (isOpen: boolean) => void;
+  setStoryEditorOpen: (isOpen: boolean) => void;
 
   setTheme: (theme: 'light' | 'dark') => void;
   setCustomPrimaryColor: (color: string | null) => void;
   
-  toggleSpeedrunMode: () => void;
   toggleAssistMode: () => void;
   toggleDebugMode: () => void;
   
@@ -60,22 +63,25 @@ export interface UIState {
 export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
+      isLevelSelectOpen: false,
       isSidebarOpen: false,
       isSidebarCollapsed: false,
       isSettingsOpen: false,
-      isLevelSelectOpen: false,
       isRandomChallengeOpen: false,
       isAiChatOpen: false,
+      isModStoreOpen: false,
+      isStoryEditorOpen: false,
       theme: 'dark',
-      customPrimaryColor: '#00BCD4',
-      isSpeedrunMode: false,
+      customPrimaryColor: null,
       isAssistMode: false,
       isDebugMode: false,
       toasts: [],
       storyFontSize: 100,
-      storyFontFamily: 'system-ui, -apple-system, sans-serif',
+      storyFontFamily: GAME_CONSTANTS.FONTS.DEFAULT_STORY_FONT,
       storyFontUrl: null,
       
+      setLevelSelectOpen: (isOpen: boolean) => set({ isLevelSelectOpen: isOpen }),
+      setAiChatOpen: (isOpen: boolean) => set({ isAiChatOpen: isOpen }),
       toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
       setSidebarOpen: (isOpen: boolean) => set({ isSidebarOpen: isOpen }),
       
@@ -84,12 +90,10 @@ export const useUIStore = create<UIState>()(
       
       toggleSettings: () => set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
       setSettingsOpen: (isOpen: boolean) => set({ isSettingsOpen: isOpen }),
-      
-      setLevelSelectOpen: (isOpen: boolean) => set({ isLevelSelectOpen: isOpen }),
 
       setRandomChallengeOpen: (isOpen: boolean) => set({ isRandomChallengeOpen: isOpen }),
-
-      setAiChatOpen: (isOpen: boolean) => set({ isAiChatOpen: isOpen }),
+      setModStoreOpen: (isOpen: boolean) => set({ isModStoreOpen: isOpen }),
+      setStoryEditorOpen: (isOpen: boolean) => set({ isStoryEditorOpen: isOpen }),
 
       setTheme: (theme: 'light' | 'dark') => {
         set({ theme });
@@ -106,18 +110,32 @@ export const useUIStore = create<UIState>()(
         if (color) {
           // Convert hex to rgb
           const hex = color.replace('#', '');
-          const r = parseInt(hex.substring(0, 2), 16);
-          const g = parseInt(hex.substring(2, 4), 16);
-          const b = parseInt(hex.substring(4, 6), 16);
-          document.documentElement.style.setProperty('--primary-color', color);
-          document.documentElement.style.setProperty('--primary-color-rgb', `${r}, ${g}, ${b}`);
+          const { r, g, b } = hexToRgb(color);
+          document.documentElement.style.setProperty('--primary', `${r} ${g} ${b}`);
+          
+          const primaryForeground = getPrimaryForeground(r, g, b);
+          document.documentElement.style.setProperty('--primary-foreground', primaryForeground);
+          document.documentElement.style.setProperty('--chat-primary-foreground', primaryForeground);
+          
+          // Update favicon color dynamically
+          const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#${hex}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>`;
+          const encodedSvg = btoa(svgContent);
+          const favicon = document.getElementById('favicon') as HTMLLinkElement;
+          if (favicon) {
+            favicon.href = `data:image/svg+xml;base64,${encodedSvg}`;
+          }
         } else {
-          document.documentElement.style.removeProperty('--primary-color');
-          document.documentElement.style.removeProperty('--primary-color-rgb');
+          document.documentElement.style.removeProperty('--primary');
+          document.documentElement.style.removeProperty('--primary-foreground');
+          document.documentElement.style.removeProperty('--chat-primary-foreground');
+          const defaultSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00BCD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>`;
+          const favicon = document.getElementById('favicon') as HTMLLinkElement;
+          if (favicon) {
+            favicon.href = `data:image/svg+xml;base64,${btoa(defaultSvg)}`;
+          }
         }
       },
       
-      toggleSpeedrunMode: () => set((state) => ({ isSpeedrunMode: !state.isSpeedrunMode })),
       toggleAssistMode: () => set((state) => ({ isAssistMode: !state.isAssistMode })),
       toggleDebugMode: () => set((state) => ({ isDebugMode: !state.isDebugMode })),
       
@@ -152,13 +170,25 @@ export const useUIStore = create<UIState>()(
       },
 
       setStoryFontSize: (size) => set({ storyFontSize: size }),
-      setStoryFontFamily: (family, url = null) => set({ storyFontFamily: family, storyFontUrl: url }),
+      setStoryFontFamily: (family, url = null) => {
+        set({ storyFontFamily: family, storyFontUrl: url });
+        document.documentElement.style.setProperty('--story-font-family', family);
+      },
     }),
     {
       name: 'guess-func-ui-storage',
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as Partial<UIState>;
+        if (!state) return state;
+        if (version === 0) {
+          if (typeof state.theme !== 'string') state.theme = 'dark';
+          if (typeof state.storyFontSize !== 'number') state.storyFontSize = 100;
+        }
+        return state;
+      },
       partialize: (state) => ({ 
         theme: state.theme,
-        isSpeedrunMode: state.isSpeedrunMode, 
         isAssistMode: state.isAssistMode,
         isDebugMode: state.isDebugMode,
         isSidebarCollapsed: state.isSidebarCollapsed,
@@ -178,21 +208,32 @@ export const useUIStore = create<UIState>()(
           if (state.customPrimaryColor) {
             const color = state.customPrimaryColor;
             const hex = color.replace('#', '');
-            const r = parseInt(hex.substring(0, 2), 16);
-            const g = parseInt(hex.substring(2, 4), 16);
-            const b = parseInt(hex.substring(4, 6), 16);
-            document.documentElement.style.setProperty('--primary-color', color);
-            document.documentElement.style.setProperty('--primary-color-rgb', `${r}, ${g}, ${b}`);
+            const { r, g, b } = hexToRgb(color);
+            document.documentElement.style.setProperty('--primary', `${r} ${g} ${b}`);
+            
+            const primaryForeground = getPrimaryForeground(r, g, b);
+            document.documentElement.style.setProperty('--primary-foreground', primaryForeground);
+            document.documentElement.style.setProperty('--chat-primary-foreground', primaryForeground);
+            
+            const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#${hex}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>`;
+            const encodedSvg = btoa(svgContent);
+            const favicon = document.getElementById('favicon') as HTMLLinkElement;
+            if (favicon) {
+              favicon.href = `data:image/svg+xml;base64,${encodedSvg}`;
+            }
           }
           if (state.storyFontUrl) {
              const style = document.createElement('style');
              style.innerHTML = `
                @font-face {
-                 font-family: 'CustomStoryFont';
+                 font-family: '${GAME_CONSTANTS.FONTS.CUSTOM_FONT_NAME}';
                  src: url('${state.storyFontUrl}');
                }
              `;
              document.head.appendChild(style);
+          }
+          if (state.storyFontFamily) {
+            document.documentElement.style.setProperty('--story-font-family', state.storyFontFamily);
           }
         }
       }

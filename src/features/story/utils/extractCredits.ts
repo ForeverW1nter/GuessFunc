@@ -1,4 +1,5 @@
 import creditsRaw from '../../../../docs/credits.md?raw';
+import { SYSTEM_LOGS } from '../../../utils/systemLogs';
 
 // Extract JSON from the markdown block
 export const extractCredits = () => {
@@ -8,7 +9,7 @@ export const extractCredits = () => {
       return JSON.parse(match[1]);
     }
   } catch (e) {
-    console.error('Failed to parse credits data:', e);
+    console.error(SYSTEM_LOGS.STORY_PARSE_CREDITS_ERROR, e);
   }
   // Fallback
   return {

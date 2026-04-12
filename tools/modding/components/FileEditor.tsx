@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowLeft, FileText, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { FileData } from '../../../src/types/story';
+import type { FileData } from '../../../src/types/story';
 import { MarkdownPanel } from '../../../src/features/ui/components/settings/MarkdownPanel';
 
 interface FileEditorProps {
@@ -30,7 +30,7 @@ export const FileEditor: React.FC<FileEditorProps> = ({
             className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors shrink-0 bg-transparent border-none cursor-pointer px-2 py-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
           >
             <ArrowLeft size={18} />
-            <span className="text-sm font-medium">{t('tools.storyEditor.back', 'Back')}</span>
+            <span className="text-sm font-medium">{t('tools.storyEditor.back')}</span>
           </button>
           <div className="w-px h-5 bg-zinc-200 dark:bg-zinc-800"></div>
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-app-primary/10 dark:bg-app-primary/20 text-app-primary dark:text-app-primary shrink-0">
@@ -43,7 +43,7 @@ export const FileEditor: React.FC<FileEditorProps> = ({
         <button 
           onClick={() => onDelete(fileIndex)}
           className="text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 bg-transparent border-none cursor-pointer p-2 rounded-md transition-colors"
-          title={t('tools.storyEditor.deleteFile', 'Delete File')}
+          title={t('tools.storyEditor.deleteFile')}
         >
           <Trash2 size={18} />
         </button>
@@ -52,7 +52,7 @@ export const FileEditor: React.FC<FileEditorProps> = ({
       <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 space-y-6 flex flex-col max-w-5xl mx-auto w-full">
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
           <div className="flex flex-col gap-2 flex-1 w-full">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.fileNamePlaceholder', 'File Name')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.fileNamePlaceholder')}</label>
             <input 
               type="text" 
               value={file.title}
@@ -61,7 +61,7 @@ export const FileEditor: React.FC<FileEditorProps> = ({
             />
           </div>
           <div className="flex flex-col gap-2 w-full md:w-32">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 md:text-center">{t('tools.storyEditor.extensionPlaceholder', 'Extension')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 md:text-center">{t('tools.storyEditor.extensionPlaceholder')}</label>
             <input 
               type="text" 
               value={file.extension}
@@ -70,7 +70,7 @@ export const FileEditor: React.FC<FileEditorProps> = ({
             />
           </div>
           <div className="flex flex-col gap-2 flex-1 w-full">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.unlockPlaceholder', 'Unlock Condition (Level IDs)')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.unlockPlaceholder')}</label>
             <input 
               type="text" 
               value={file.unlockConditions?.join(',') || ''}
@@ -84,7 +84,7 @@ export const FileEditor: React.FC<FileEditorProps> = ({
         <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-[400px]">
           {/* 代码编辑区 */}
           <div className="flex flex-col gap-2 flex-1 h-full">
-            <label className="text-sm font-medium text-app-primary dark:text-app-primary">{t('tools.storyEditor.contentPlaceholder', 'Content (Markdown)')}</label>
+            <label className="text-sm font-medium text-app-primary dark:text-app-primary">{t('tools.storyEditor.contentPlaceholder')}</label>
             <textarea 
               value={file.content}
               onChange={(e) => onUpdate('content', e.target.value)}
@@ -93,7 +93,7 @@ export const FileEditor: React.FC<FileEditorProps> = ({
           </div>
           {/* Markdown 渲染预览区 */}
           <div className="flex flex-col gap-2 flex-1 h-full min-w-0">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.preview', 'Preview')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.preview')}</label>
             <div className="w-full h-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border border-zinc-300 dark:border-zinc-700 rounded-lg p-0 overflow-y-auto custom-scrollbar markdown-body-dark relative shadow-sm">
               <div className="absolute inset-0">
                 <MarkdownPanel mdText={file.content} />

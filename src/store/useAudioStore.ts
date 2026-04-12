@@ -40,7 +40,17 @@ export const useAudioStore = create<AudioState>()(
         isMuted: state.isMuted,
         currentBgmId: state.currentBgmId,
         unlockedBgms: state.unlockedBgms,
-      })
+      }),
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as Partial<AudioState>;
+        if (!state) return state;
+        if (version === 0) {
+          if (typeof state.isMuted !== 'boolean') state.isMuted = false;
+          if (typeof state.volume !== 'number') state.volume = 0.5;
+        }
+        return state;
+      },
     }
   )
 );

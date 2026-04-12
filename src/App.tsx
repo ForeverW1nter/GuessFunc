@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { createHashRouter, RouterProvider, Navigate, Outlet, useParams, useNavigate } from 'react-router-dom';
+import { createHashRouter, RouterProvider, Navigate, Outlet, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { GameFeature } from './features/game/GameFeature';
 import { Sidebar } from './features/ui/components/Sidebar';
 import { Topbar } from './features/ui/components/Topbar';
@@ -9,26 +9,38 @@ import { LevelSelectModal } from './features/story/components/LevelSelectModal';
 import { AiChatButton } from './features/ui/components/AiChatButton';
 import { AiChatModal } from './features/ui/components/AiChatModal';
 import { RandomChallengeModal } from './features/ui/components/RandomChallengeModal';
+import { ModStoreModal } from './features/mods/components/ModStoreModal';
 import { useGameStore } from './store/useGameStore';
 import { useStoryStore } from './store/useStoryStore';
 import { useUIStore } from './store/useUIStore';
-import { CreateModePage } from './features/creation/components/CreateModePage';
 import { GAME_CONSTANTS } from './utils/constants';
 import i18n from './i18n';
+import { SYSTEM_LOGS } from './utils/systemLogs';
+
+const CreateModePage = React.lazy(() => import('./features/creation/components/CreateModePage').then(module => ({ default: module.CreateModePage })));
+const StoryEditorView = React.lazy(() => import('./features/tools/StoryEditorModal').then(module => ({ default: module.StoryEditorView })));
 
 const Layout = () => (
-  <div className="absolute inset-0 flex flex-row w-full overflow-hidden bg-app-bg text-app-text">
+  <div className="absolute inset-0 flex flex-row w-full overflow-hidden bg-background text-foreground">
     <Sidebar />
     <main className="flex-1 relative flex flex-col overflow-hidden">
       <Topbar />
       <div className="flex-1 relative w-full h-full">
         <GameFeature />
-        <Outlet />
+        <React.Suspense fallback={
+          <div className="absolute inset-0 flex items-center justify-center bg-background z-50">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }>
+          <Outlet />
+        </React.Suspense>
       </div>
     </main>
     <SettingsModal />
     <LevelSelectModal />
     <RandomChallengeModal />
+    <ModStoreModal />
+    <StoryEditorView />
     <AiChatButton />
     <AiChatModal />
     <ToastContainer />
@@ -38,15 +50,18 @@ const Layout = () => (
 const LevelRoute = () => {
   const { routeId, chapterId, levelId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (routeId === 'random' || routeId === 'share' || routeId === 'custom') {
       const gameStore = useGameStore.getState();
+      const searchParams = new URLSearchParams(location.search);
+      const levelTitle = searchParams.get('title');
       
       // Attempt to decode levelId if it contains base64 encoded target function
       if (levelId && levelId !== '1') {
         try {
-          const decoded = decodeURIComponent(escape(atob(levelId)));
+          const decoded = decodeURIComponent(atob(levelId));
           let levelData;
           try {
             levelData = JSON.parse(decoded);
@@ -60,15 +75,15 @@ const LevelRoute = () => {
           const wp = levelData.wp !== undefined ? Boolean(levelData.wp) : false;
 
           if (target && (gameStore.gameMode !== routeId || gameStore.targetFunction !== target)) {
-            gameStore.setTargetFunction(target, levelParams, routeId as 'random' | 'share' | 'custom');
+            gameStore.setTargetFunction(target, levelParams, routeId as 'random' | 'share' | 'custom', levelTitle);
             if (routeId === 'random') {
               gameStore.setRandomConfig(diff, wp);
             }
             return;
-          }
-        } catch (e) {
-          console.error(`解析${routeId === 'random' ? '随机' : routeId === 'share' ? '分享' : '自定义'}关卡参数失败:`, e);
-          if (routeId === 'share') {
+            }
+          } catch (e) {
+            console.error(SYSTEM_LOGS.APP_ROUTE_PARSE_ERROR(routeId), e);
+            if (routeId === 'share') {
             useUIStore.getState().addToast(i18n.t('sidebar.shareParseError'), 'error');
             navigate('/', { replace: true });
             return;
@@ -84,7 +99,7 @@ const LevelRoute = () => {
         }
       } else if (routeId === 'share' || routeId === 'custom') {
         // For share/custom, if no valid target, redirect to home
-        if (!gameStore.targetFunction || gameStore.targetFunction === 'x^2') {
+        if (!gameStore.targetFunction) {
           navigate('/', { replace: true });
         }
       }
@@ -132,10 +147,13 @@ const LevelRoute = () => {
             }
           }
           gameStore.loadLevel(routeId, chapterId, levelId);
+        } else {
+          // Invalid route or chapter, redirect to fallback
+          navigate('/game/random/1/1', { replace: true });
         }
       }
     }
-  }, [routeId, chapterId, levelId, navigate]);
+  }, [routeId, chapterId, levelId, navigate, location.search]);
 
   return null;
 };
@@ -159,6 +177,11 @@ const router = createHashRouter([
   {
     path: "/",
     element: <Layout />,
+    HydrateFallback: () => (
+      <div className="absolute inset-0 flex items-center justify-center bg-background z-50">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    ),
     children: [
       {
         index: true,

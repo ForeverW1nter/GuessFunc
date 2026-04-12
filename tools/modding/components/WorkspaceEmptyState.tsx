@@ -10,7 +10,7 @@ export const WorkspaceEmptyState: React.FC = () => {
       <div className="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center mb-2">
         <Terminal size={32} className="opacity-50" />
       </div>
-      <div className="text-sm font-medium tracking-wide">{t('tools.storyEditor.emptySelect', 'Please select a directory to view its contents')}</div>
+      <div className="text-sm font-medium tracking-wide">{t('tools.storyEditor.emptySelect')}</div>
     </div>
   );
 };

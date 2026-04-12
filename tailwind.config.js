@@ -10,47 +10,65 @@ export default {
   theme: {
     extend: {
       colors: {
-        app: {
-          bg: 'var(--bg-color)',
-          text: 'var(--text-color)',
-          primary: 'var(--primary-color)',
-          success: 'var(--success-color)',
-          danger: 'var(--danger-color)',
+        border: "oklch(var(--border) / <alpha-value>)",
+        input: "oklch(var(--input) / <alpha-value>)",
+        ring: "rgb(var(--primary) / <alpha-value>)",
+        background: "oklch(var(--background) / <alpha-value>)",
+        foreground: "oklch(var(--foreground) / <alpha-value>)",
+        primary: {
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
+          chat: "rgb(var(--chat-primary-foreground) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "oklch(var(--secondary) / <alpha-value>)",
+          foreground: "oklch(var(--secondary-foreground) / <alpha-value>)",
+        },
+        destructive: {
+          DEFAULT: "oklch(var(--destructive) / <alpha-value>)",
+          foreground: "oklch(var(--destructive-foreground) / <alpha-value>)",
+        },
+        muted: {
+          DEFAULT: "oklch(var(--muted) / <alpha-value>)",
+          foreground: "oklch(var(--muted-foreground) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "oklch(var(--accent) / <alpha-value>)",
+          foreground: "oklch(var(--accent-foreground) / <alpha-value>)",
+        },
+        popover: {
+          DEFAULT: "oklch(var(--popover) / <alpha-value>)",
+          foreground: "oklch(var(--popover-foreground) / <alpha-value>)",
         },
         card: {
-          bg: 'var(--card-bg)',
-          border: 'var(--card-border)',
-          hover: 'var(--card-hover)',
+          DEFAULT: "oklch(var(--card) / <alpha-value>)",
+          foreground: "oklch(var(--card-foreground) / <alpha-value>)",
         },
-        header: {
-          bg: 'var(--header-bg)',
-          text: 'var(--header-text)',
-        },
-        btn: {
-          bg: 'var(--btn-bg)',
-          text: 'var(--btn-text)',
-        },
-        modal: {
-          bg: 'var(--modal-bg)',
-          text: 'var(--modal-text)',
-        },
-        option: {
-          bg: 'var(--option-bg)',
-          text: 'var(--option-text)',
-        },
-        msg: {
-          bg: 'var(--msg-bg)',
-          text: 'var(--msg-text)',
+        success: {
+          DEFAULT: "oklch(var(--success) / <alpha-value>)",
+          foreground: "oklch(0.985 0 0)",
         }
       },
       boxShadow: {
-        'modal': '0 24px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.08)',
-        'toast': '0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)',
+        'modal': '0 24px 48px rgba(0,0,0,var(--shadow-strong)), 0 8px 16px rgba(0,0,0,var(--shadow-medium))',
+        'toast': '0 8px 24px rgba(0,0,0,var(--shadow-strong)), 0 2px 8px rgba(0,0,0,var(--shadow-medium))',
         'toast-dark': '0 8px 24px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)',
-        'btn': '0 2px 4px rgba(var(--primary-color-rgb), 0.2)',
-        'btn-hover': '0 4px 12px rgba(var(--primary-color-rgb), 0.3)',
-        'card': '0 2px 12px rgba(0,0,0,0.05)',
+        'btn': 'inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 4px rgba(0, 0, 0, var(--shadow-light))',
+        'btn-hover': 'inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(0, 0, 0, var(--shadow-strong))',
+        'card': '0 2px 12px rgba(0,0,0,var(--shadow-light))',
         'glass': 'inset 0 0 0 1px rgba(255, 255, 255, 0.1)',
+        'music': '0 0 12px rgb(var(--primary) / 0.4)',
+      },
+      borderWidth: {
+        'medium': '2px',
+        'thick': '4px',
+      },
+      transitionDuration: {
+        'fast': '150ms',
+        'normal': '300ms',
+        'slow': '2000ms',
+        'slower': '3000ms',
+        'slowest': '5000ms',
       },
       transitionTimingFunction: {
         'modal': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
@@ -79,8 +97,8 @@ export default {
           '50%': { transform: 'translateY(-5px)' },
         },
         'pulse-glow': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(var(--primary-color-rgb), 0.4)' },
-          '50%': { boxShadow: '0 0 40px rgba(var(--primary-color-rgb), 0.8)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(0, 0, 0, var(--shadow-strong))' },
+          '50%': { boxShadow: '0 0 40px rgba(0, 0, 0, calc(var(--shadow-strong) * 2))' },
         },
         'twinkle': {
           '0%, 100%': { opacity: '0.2' },
@@ -139,11 +157,16 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        sans: ['var(--font-dynamic)', 'var(--font-zh)'],
+        en: ['var(--font-en)', 'var(--font-zh)'],
+        zh: ['var(--font-zh)'],
+        mono: ['var(--font-dynamic-code)', 'var(--font-zh)'],
+        story: ['var(--story-font-family)', 'var(--font-zh)'],
       }
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
   ],
 }

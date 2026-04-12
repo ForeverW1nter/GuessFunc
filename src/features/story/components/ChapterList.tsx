@@ -50,12 +50,12 @@ export const ChapterList: React.FC<ChapterListProps> = ({
                 onClick={() => onSelectChapter(chapter.id)}
                 className={`
                 group relative flex items-center justify-between px-[16px] py-[10px] cursor-pointer transition-colors
-                ${isSelected ? 'bg-[rgba(var(--primary-color-rgb),0.1)] text-app-primary' : 'text-[#A0A0A5] hover:bg-[#1A1A1D] hover:text-white'}
+                ${isSelected ? 'bg-[rgba(var(--primary-color-rgb),0.1)] text-primary' : 'text-[#A0A0A5] hover:bg-[#1A1A1D] hover:text-white'}
               `}
             >
               <div className="flex items-center gap-[12px] overflow-hidden">
                 {isSelected ? (
-                  <FolderOpen size={16} className="shrink-0 text-app-primary" />
+                  <FolderOpen size={16} className="shrink-0 text-primary" />
                 ) : (
                   <Folder size={16} className="shrink-0 text-[#606065] group-hover:text-[#A0A0A5]" />
                 )}

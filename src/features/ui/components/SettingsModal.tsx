@@ -73,25 +73,25 @@ export const SettingsModal: React.FC = () => {
       />
 
       {/* Modal */}
-      <div className={`relative w-full ${['about', 'rules', 'changelog'].includes(activePanel) ? 'md:max-w-[1000px]' : 'md:max-w-[600px]'} h-full md:h-[85vh] bg-modal-bg text-modal-text md:rounded-[16px] shadow-modal border-none md:border md:border-card-border flex flex-col transition-all duration-300 transform scale-100 opacity-100 overflow-hidden`}>
+      <div className={`relative w-full ${['about', 'rules', 'changelog'].includes(activePanel) ? 'md:max-w-[1000px]' : 'md:max-w-[600px]'} h-full md:h-[85vh] bg-background text-foreground md:rounded-[16px] shadow-modal border-none md:border md:border-border flex flex-col transition-all duration-300 transform scale-100 opacity-100 overflow-hidden`}>
         {/* Header */}
-        <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
+        <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-border bg-background shrink-0">
           <div className="flex items-center gap-[15px]">
             {activePanel !== 'main' && (
               <button
                 onClick={() => handlePanelSwitch('main')}
-                className="w-[40px] h-[40px] flex items-center justify-center text-app-text opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] rounded-full transition-all"
+                className="w-[40px] h-[40px] flex items-center justify-center text-foreground opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] rounded-full transition-all"
               >
                 <ChevronLeft size={24} />
               </button>
             )}
-            <h2 className="m-0 text-[1.25rem] font-semibold text-app-text transition-opacity duration-200">
+            <h2 className="m-0 text-[1.25rem] font-semibold text-foreground transition-opacity duration-200">
               {getPanelTitle()}
             </h2>
           </div>
           <button 
             onClick={() => setSettingsOpen(false)}
-            className="w-[40px] h-[40px] flex items-center justify-center text-app-text opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] hover:rotate-90 rounded-full transition-all"
+            className="w-[40px] h-[40px] flex items-center justify-center text-foreground opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] hover:rotate-90 rounded-full transition-all"
           >
             <X size={24} strokeWidth={2} />
           </button>

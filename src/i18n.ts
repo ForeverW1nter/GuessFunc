@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { GAME_CONSTANTS } from './utils/constants';
 
 import zhTranslation from './locales/zh/translation.json';
 import enTranslation from './locales/en/translation.json';
@@ -14,7 +15,7 @@ const resources = {
 };
 
 // 尝试从 localStorage 获取语言，否则默认中文
-const savedLanguage = localStorage.getItem('i18nextLng') || 'zh';
+const savedLanguage = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.I18N_LANG) || 'zh';
 
 i18n
   .use(initReactI18next)
@@ -29,7 +30,7 @@ i18n
 
 // 监听语言变化并保存
 i18n.on('languageChanged', (lng) => {
-  localStorage.setItem('i18nextLng', lng);
+  localStorage.setItem(GAME_CONSTANTS.STORAGE_KEYS.I18N_LANG, lng);
 });
 
 export default i18n;

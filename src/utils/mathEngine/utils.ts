@@ -1,5 +1,6 @@
 import { ce } from './ce';
 import { logger } from '../debug/logger';
+import { SYSTEM_LOGS } from '../systemLogs';
 
 /**
  * 清理 Desmos 产出的特定 LaTeX 标记，使其符合标准 LaTeX 以便 CE 解析
@@ -77,7 +78,31 @@ export function extractUsedParams(latex: string, allParams: Record<string, numbe
 
     return usedParams;
   } catch (error) {
-    logger.error("解析参数失败:", error);
+    logger.error(SYSTEM_LOGS.MATH_PARSE_PARAM_ERROR, error);
     return {};
+  }
+}
+
+/**
+ * 自动从表达式中提取未知数，作为关卡的参数列表，如果不在 currentParams 中，则默认为 1。
+ */
+export function autoExtractParams(latex: string, currentParams: Record<string, number> | null): Record<string, number> | null {
+  if (!latex) return null;
+  try {
+    const cleanLatex = cleanDesmosLatex(latex);
+    const box = ce.parse(cleanLatex);
+    const simplifiedBox = box.simplify();
+    const unknowns = simplifiedBox.unknowns || [];
+    const extracted: Record<string, number> = {};
+    let hasParams = false;
+    for (const v of unknowns) {
+      if (v !== 'x' && v !== 'y') {
+        extracted[v] = currentParams?.[v] ?? 1;
+        hasParams = true;
+      }
+    }
+    return hasParams ? extracted : null;
+  } catch {
+    return currentParams;
   }
 }

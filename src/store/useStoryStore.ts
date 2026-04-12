@@ -34,6 +34,7 @@ interface StoryState {
   
   // Actions
   setRoute: (routeId: string) => void;
+  setModRoutes: (routes: RouteData[]) => void;
   getRoute: (routeId: string) => RouteData | undefined;
   getChapter: (routeId: string, chapterId: string) => ChapterData | undefined;
   getLevel: (routeId: string, chapterId: string, levelId: string) => LevelData | undefined;
@@ -44,6 +45,17 @@ export const useStoryStore = create<StoryState>((set, get) => ({
   currentRouteId: null,
 
   setRoute: (routeId: string) => set({ currentRouteId: routeId }),
+  
+  setModRoutes: (modRoutes: RouteData[]) => set((state) => {
+    // 过滤掉原有的 mod 路由，保留原生路由，然后再追加新的 mod 路由
+    const nativeRoutes = state.storyJSON.routes.filter(r => !r.modId);
+    return {
+      storyJSON: {
+        ...state.storyJSON,
+        routes: [...nativeRoutes, ...modRoutes]
+      }
+    };
+  }),
 
   getRoute: (routeId: string) => {
     return get().storyJSON.routes.find(r => r.id === routeId);

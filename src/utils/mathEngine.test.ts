@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateEquivalence, parseRelation } from './mathEngine';
+import { evaluateEquivalence } from './mathEngine/evaluate';
+import { parseRelation } from './mathEngine/utils';
 
 describe('mathEngine parseRelation', () => {
   it('parses relation correctly', () => {

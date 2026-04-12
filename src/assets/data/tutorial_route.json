@@ -1,0 +1,130 @@
+{
+  "routes": [
+    {
+      "id": "tutorial_route",
+      "title": "新手教程",
+      "description": "来自官方的新手教程！",
+      "showToBeContinued": true,
+      "showInPlayInterface": true,
+      "chapters": [
+        {
+          "id": "ch0",
+          "title": "第 1 章",
+          "levels": [
+            {
+              "id": "lv1",
+              "title": "第 1 关",
+              "targetFunction": "2x+3",
+              "params": null,
+              "type": "normal",
+              "unlockConditions": null,       
+              "tip": ""
+            },
+            {
+              "id": "lv2",
+              "title": "第 2 关",
+              "targetFunction": "x^{2}-2x+4",
+              "params": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            },
+            {
+              "id": "lv3",
+              "title": "第 3 关",
+              "targetFunction": "2x+\\frac{3}{x}",
+              "params": null,
+              "type": "normal",
+              "unlockConditions": null,
+              "tip": ""
+            }
+          ],
+          "files": [
+            {
+              "id": "f1",
+              "title": "新建文本文档 最终版不改了(1) - 副本",
+              "extension": "txt",
+              "content": "欢迎来到 **GuessFunc**！\n（也许是为数不多能在剧情里面写公式的游戏？）\n在开始前，建议你先阅读 `设置中心 - 游戏规则` 中的规则！\n如果你不是很想看，也可以跟着这个教程走（？）\n本游戏建议在拥有高中一年级或以上的数学水平后游玩。\n\\\n那么就让我们开启 `第 1 关` 吧：你可以在第一行输入你的猜测，觉得自己猜对了就按下右上角的 `验证` 按钮。",
+              "unlockConditions": [],
+              "uiType": "memo"
+            },
+            {
+              "id": "f2",
+              "title": "这是什么？",
+              "extension": "log",
+              "content": "恭喜你通过了第一关！\n诶？！这是什么？\n没想到吧，这个游戏的剧情系统支持各种各样的 UI！",
+              "unlockConditions": [
+                "1"
+              ],
+              "uiType": "log"
+            },
+            {
+              "id": "f3",
+              "title": "聊天记录 2026.4.11",
+              "extension": "md",
+              "content": {
+                "rightSpeakers": [
+                  "我"
+                ],
+                "messages": [
+                  {
+                    "speaker": "Forewall",
+                    "text": "你怎么做出来第三关的？"
+                  },
+                  {
+                    "speaker": "我",
+                    "text": "啊，我认出来了那是对勾函数，调节一下参数就好了"
+                  },
+                  {
+                    "speaker": "Forewall",
+                    "text": "那万一你没见过呢？"
+                  },
+                  {
+                    "speaker": "我",
+                    "text": "额……我似乎不是很能想象出没见过她的我……"
+                  },
+                  {
+                    "speaker": "MessinT",
+                    "text": "这个我知道！凭借着我 $\\mathrm{e}^{\\mathrm{i}\\pi}+1$ 年以来的 **GuessFunc** 经验，先去趋势！"
+                  },
+                  {
+                    "speaker": "我",
+                    "text": "具体怎么做？"
+                  },
+                  {
+                    "speaker": "MessinT",
+                    "text": "比如这里的趋势很像 $2x$，我们就尝试去掉或者剥开这个趋势来凸显函数其他部分的结构。"
+                  },
+                  {
+                    "speaker": "MessinT",
+                    "text": "这里正确的做法是选择减去 $2x$，但对于较为复杂的函数，我们很难一下看出趋势在函数里面的形式，所以我们可以减，或者除，或者套一层反函数，总之目前阶段，用这个技巧能对付大部分关卡了！"
+                  },
+                  {
+                    "speaker": "我",
+                    "text": "慢着，怎么减？难不成还得手画一遍？"
+                  },
+                  {
+                    "speaker": "MessinT",
+                    "text": "你可以输入 $f(x)-2x$。"
+                  },
+                  {
+                    "speaker": "Forewall",
+                    "text": "你可以输入 $f(x)-2x$。"
+                  },
+                  {
+                    "speaker": "我",
+                    "text": "你可以输入 $f(x)-2x$。"
+                  }
+                ]
+              },
+              "unlockConditions": [
+                "lv3"
+              ],
+              "uiType": "message"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

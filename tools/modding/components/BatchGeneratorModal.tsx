@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Trash2, Wand2, ArrowLeft, Download, Upload } from 'lucide-react';
-import { FunctionType, generateFunctionByDifficulty } from '../../../src/utils/mathEngine/generator';
-import { ChapterData, LevelData } from '../../../src/types/story';
+import { Plus, Trash2, Wand2, ArrowLeft, ArrowRight, Download, Upload } from 'lucide-react';
+import type { FunctionType } from '../../../src/utils/mathEngine/generator';
+import { generateFunctionByDifficulty } from '../../../src/utils/mathEngine/generator';
+import { SYSTEM_LOGS } from '../../../src/utils/systemLogs';
+import type { ChapterData, LevelData } from '../../../src/types/story';
 import { ToggleSwitch } from '../../../src/features/ui/components/ToggleSwitch';
 
 interface BatchGeneratorModalProps {
@@ -27,15 +29,15 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
   const { t } = useTranslation();
   
   const ALL_TYPES: { value: FunctionType; label: string }[] = [
-    { value: 'polynomial', label: t('tools.storyEditor.funcTypes.polynomial', 'Polynomial (x, x^2)') },
-    { value: 'absolute', label: t('tools.storyEditor.funcTypes.absolute', 'Absolute (|x|)') },
-    { value: 'rational', label: t('tools.storyEditor.funcTypes.rational', 'Rational (1/x)') },
-    { value: 'radical', label: t('tools.storyEditor.funcTypes.radical', 'Radical (sqrt)') },
-    { value: 'exponential', label: t('tools.storyEditor.funcTypes.exponential', 'Exponential (e^{x}, ln)') },
-    { value: 'trigonometric', label: t('tools.storyEditor.funcTypes.trigonometric', 'Trigonometric (sin, cos)') },
-    { value: 'inverse_trigonometric', label: t('tools.storyEditor.funcTypes.inverse_trigonometric', 'Inv Trig (arcsin, arctan)') },
-    { value: 'hyperbolic', label: t('tools.storyEditor.funcTypes.hyperbolic', 'Hyperbolic (sinh, cosh)') },
-    { value: 'inverse_hyperbolic', label: t('tools.storyEditor.funcTypes.inverse_hyperbolic', 'Inv Hyperbolic (arsinh)') }
+    { value: 'polynomial', label: t('tools.storyEditor.funcTypes.polynomial') },
+    { value: 'absolute', label: t('tools.storyEditor.funcTypes.absolute') },
+    { value: 'rational', label: t('tools.storyEditor.funcTypes.rational') },
+    { value: 'radical', label: t('tools.storyEditor.funcTypes.radical') },
+    { value: 'exponential', label: t('tools.storyEditor.funcTypes.exponential') },
+    { value: 'trigonometric', label: t('tools.storyEditor.funcTypes.trigonometric') },
+    { value: 'inverse_trigonometric', label: t('tools.storyEditor.funcTypes.inverse_trigonometric') },
+    { value: 'hyperbolic', label: t('tools.storyEditor.funcTypes.hyperbolic') },
+    { value: 'inverse_hyperbolic', label: t('tools.storyEditor.funcTypes.inverse_hyperbolic') }
   ];
   
   const [configs, setConfigs] = useState<ChapterConfig[]>([
@@ -97,10 +99,12 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
     });
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     let globalLevelCounter = 1;
     
-    const generatedChapters: ChapterData[] = configs.map(config => {
+    const generatedChapters: ChapterData[] = [];
+    
+    for (const config of configs) {
       const levels: LevelData[] = [];
       
       for (let i = 0; i < config.levelCount; i++) {
@@ -113,7 +117,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
         const fluctuation = (Math.random() * 0.6) - 0.3;
         const diff = Math.max(0, Math.min(7, baseDiff + fluctuation));
         
-        const generated = generateFunctionByDifficulty({
+        const generated = await generateFunctionByDifficulty({
           targetDifficulty: diff,
           withParams: config.withParams,
           allowedTypes: config.allowedTypes.length > 0 ? config.allowedTypes : undefined
@@ -133,13 +137,13 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
         globalLevelCounter++;
       }
 
-      return {
+      generatedChapters.push({
         id: config.id,
         title: config.name,
         levels,
         files: []
-      };
-    });
+      });
+    }
 
     onGenerate(generatedChapters);
     onClose();
@@ -165,11 +169,11 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
           if (Array.isArray(json)) {
             setConfigs(json);
           } else {
-            alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
+            alert(t('tools.storyEditor.parseError'));
           }
         } catch (err: unknown) {
-          alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
-          console.error(err);
+          alert(t('tools.storyEditor.parseError'));
+          console.error(SYSTEM_LOGS.ERROR_IMPORT_DATA, err);
         }
       };
       reader.readAsText(file);
@@ -187,14 +191,14 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
             className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors shrink-0 bg-transparent border-none cursor-pointer px-2 py-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
           >
             <ArrowLeft size={18} />
-            <span className="text-sm font-medium">{t('tools.storyEditor.back', 'Back')}</span>
+            <span className="text-sm font-medium">{t('tools.storyEditor.back')}</span>
           </button>
           <div className="w-px h-5 bg-zinc-200 dark:bg-zinc-800"></div>
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-app-primary/10 dark:bg-app-primary/20 text-app-primary dark:text-app-primary shrink-0">
             <Wand2 size={18} />
           </div>
           <h2 className="m-0 text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
-            {t('tools.storyEditor.batchGenerateTitle', 'Batch Generate Chapters')}
+            {t('tools.storyEditor.batchGenerateTitle')}
           </h2>
         </div>
       </div>
@@ -204,7 +208,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
         <div className="p-6 md:p-10 space-y-8 max-w-5xl mx-auto w-full">
           <div className="mb-6">
           <p className="text-sm text-zinc-500 dark:text-zinc-400 m-0">
-            {t('tools.storyEditor.batchGenerateDesc', 'Configure random generation parameters for multiple chapters')}
+            {t('tools.storyEditor.batchGenerateDesc')}
           </p>
         </div>
 
@@ -220,7 +224,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-2">
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  {t('tools.storyEditor.chapterId', 'Chapter ID')}
+                  {t('tools.storyEditor.chapterId')}
                 </label>
                 <input 
                   value={config.id} 
@@ -230,7 +234,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  {t('tools.storyEditor.chapterName', 'Chapter Name')}
+                  {t('tools.storyEditor.chapterName')}
                 </label>
                 <input 
                   value={config.name} 
@@ -240,7 +244,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  {t('tools.storyEditor.levelCount', 'Level Count')}
+                  {t('tools.storyEditor.levelCount')}
                 </label>
                 <input 
                   type="number" min="1" max="50"
@@ -255,19 +259,19 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
                     checked={config.withParams}
                     onChange={checked => updateConfig(index, 'withParams', checked)}
                   />
-                  {t('tools.storyEditor.includeParams', 'Include Parameters (a, b, c)')}
+                  {t('tools.storyEditor.includeParams')}
                 </div>
               </div>
             </div>
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
-                {t('tools.storyEditor.difficultyCurve', 'Difficulty Curve')}
+                {t('tools.storyEditor.difficultyCurve')}
               </label>
               <div className="flex items-center gap-6">
                 <div className="flex-1">
                   <div className="flex justify-between text-xs text-zinc-500 dark:text-zinc-400 mb-2 font-mono">
-                    <span>{t('tools.storyEditor.startDiff', 'Start')}: <span className="text-zinc-900 dark:text-zinc-100 ml-1 font-semibold">{config.startDifficulty.toFixed(1)}</span></span>
+                    <span>{t('tools.storyEditor.startDiff')}: <span className="text-zinc-900 dark:text-zinc-100 ml-1 font-semibold">{config.startDifficulty.toFixed(1)}</span></span>
                   </div>
                   <input 
                     type="range" min="0" max="7" step="0.1"
@@ -277,10 +281,10 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
                     style={{ background: `linear-gradient(to right, var(--primary-color) ${(config.startDifficulty / 7) * 100}%, var(--card-border) ${(config.startDifficulty / 7) * 100}%)` }}
                   />
                 </div>
-                <div className="text-zinc-400 mt-3">➔</div>
+                <div className="text-zinc-400 mt-3"><ArrowRight size={16} /></div>
                 <div className="flex-1">
                   <div className="flex justify-between text-xs text-zinc-500 dark:text-zinc-400 mb-2 font-mono">
-                    <span>{t('tools.storyEditor.endDiff', 'End')}: <span className="text-zinc-900 dark:text-zinc-100 ml-1 font-semibold">{config.endDifficulty.toFixed(1)}</span></span>
+                    <span>{t('tools.storyEditor.endDiff')}: <span className="text-zinc-900 dark:text-zinc-100 ml-1 font-semibold">{config.endDifficulty.toFixed(1)}</span></span>
                   </div>
                   <input 
                     type="range" min="0" max="7" step="0.1"
@@ -295,7 +299,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
-                {t('tools.storyEditor.allowedTypes', 'Allowed Function Types')}
+                {t('tools.storyEditor.allowedTypes')}
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
                 {ALL_TYPES.map(type => {
@@ -338,7 +342,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
           className="w-full py-4 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors flex items-center justify-center gap-2 font-medium text-sm cursor-pointer bg-transparent"
         >
           <Plus size={18} />
-          {t('tools.storyEditor.addChapterBatch', 'Add Chapter')}
+          {t('tools.storyEditor.addChapterBatch')}
         </button>
         </div>
       </div>
@@ -348,7 +352,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
         <div className="flex items-center gap-2">
           <label className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
             <Upload size={16} />
-            <span className="hidden sm:inline">{t('tools.storyEditor.importBatch', 'Import Config')}</span>
+            <span className="hidden sm:inline">{t('tools.storyEditor.importBatch')}</span>
             <input type="file" accept=".json" onChange={handleImport} className="hidden" />
           </label>
           <button 
@@ -356,7 +360,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
             className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
           >
             <Download size={16} />
-            <span className="hidden sm:inline">{t('tools.storyEditor.exportBatch', 'Export Config')}</span>
+            <span className="hidden sm:inline">{t('tools.storyEditor.exportBatch')}</span>
           </button>
         </div>
         <div className="flex gap-4">
@@ -364,7 +368,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
             onClick={onClose}
             className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors border-none cursor-pointer"
           >
-            {t('tools.storyEditor.cancel', 'Cancel')}
+            {t('tools.storyEditor.cancel')}
           </button>
           <button 
             onClick={handleGenerate}

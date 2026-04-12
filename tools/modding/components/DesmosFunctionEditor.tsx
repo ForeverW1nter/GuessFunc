@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { loadDesmos } from '../../../src/utils/desmosLoader';
+import { SYSTEM_LOGS } from '../../../src/utils/systemLogs';
 
 export const DesmosFunctionEditor = ({ 
   initialFunction, 
@@ -57,7 +58,7 @@ export const DesmosFunctionEditor = ({
           });
         }
       } catch (error) {
-        console.error("Failed to load Desmos", error);
+        console.error(SYSTEM_LOGS.DESMOS_LOAD_ERROR, error);
       }
     };
     initDesmos();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { RouteData, FileData, LevelData, ChapterData } from '../../src/types/story';
+import type { RouteData, FileData, LevelData, ChapterData } from '../../src/types/story';
 import { useTranslation } from 'react-i18next';
 import { LevelEditor } from './components/LevelEditor';
 import { FileEditor } from './components/FileEditor';
@@ -9,6 +9,9 @@ import { SystemBar } from './components/SystemBar';
 import { WorkspaceEmptyState } from './components/WorkspaceEmptyState';
 import { ToolsSettingsModal } from './components/ToolsSettingsModal';
 import { BatchGeneratorModal } from './components/BatchGeneratorModal';
+import { SYSTEM_LOGS } from '../../src/utils/systemLogs';
+import { GAME_CONSTANTS } from '../../src/utils/constants';
+
 
 interface GlobalViewState {
   routeIndex: number;
@@ -27,20 +30,20 @@ export const StoryEditorPage: React.FC = () => {
   const [activeApp, setActiveApp] = useState<'story-editor' | 'level-tester'>('story-editor');
   
   const [storyData, setStoryData] = useState<{ routes: RouteData[] }>(() => {
-    const cachedData = localStorage.getItem('storyEditorData');
+    const cachedData = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.STORY_EDITOR_DATA);
     if (cachedData) {
       try {
         return JSON.parse(cachedData);
       } catch (e) {
-        console.error("Failed to parse cached story data", e);
+        console.error(SYSTEM_LOGS.TOOLS_PARSE_CACHE_ERROR, e);
       }
     }
     return {
       routes: [
         {
           id: 'newRoute',
-          title: t('tools.storyEditor.newRoute', 'New Route'),
-          description: t('tools.storyEditor.newRouteDesc', 'Route description...'),
+          title: t('tools.storyEditor.newRoute'),
+          description: t('tools.storyEditor.newRouteDesc'),
           showToBeContinued: true,
           chapters: []
         }
@@ -61,7 +64,7 @@ export const StoryEditorPage: React.FC = () => {
   const [isBatchGeneratorOpen, setIsBatchGeneratorOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('storyEditorData', JSON.stringify(storyData));
+    localStorage.setItem(GAME_CONSTANTS.STORAGE_KEYS.STORY_EDITOR_DATA, JSON.stringify(storyData));
   }, [storyData]);
 
   useEffect(() => {
@@ -112,7 +115,7 @@ export const StoryEditorPage: React.FC = () => {
         try {
           const json = JSON.parse(event.target?.result as string);
           
-          if (window.confirm(t('tools.storyEditor.confirmMerge', 'Do you want to merge the imported data with the existing story? Cancel will overwrite it.'))) {
+          if (window.confirm(t('tools.storyEditor.confirmMerge'))) {
             const newRoutes = [...storyData.routes];
             json.routes.forEach((importedRoute: RouteData) => {
               const existingRouteIndex = newRoutes.findIndex(r => r.id === importedRoute.id);
@@ -142,8 +145,8 @@ export const StoryEditorPage: React.FC = () => {
             setViewState({ routeIndex: 0, chapterIndex: null });
           }
         } catch (err: unknown) {
-          alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
-          console.error(err);
+          alert(t('tools.storyEditor.parseError'));
+          console.error(SYSTEM_LOGS.ERROR_IMPORT_DATA, err);
         }
       };
       reader.readAsText(file);
@@ -156,8 +159,8 @@ export const StoryEditorPage: React.FC = () => {
     const newRouteId = `route_${newRoutes.length + 1}`;
     newRoutes.push({
       id: newRouteId,
-      title: t('tools.storyEditor.newRoute', 'New Route'),
-      description: t('tools.storyEditor.newRouteDesc', 'Route description...'),
+      title: t('tools.storyEditor.newRoute'),
+      description: t('tools.storyEditor.newRouteDesc'),
       showToBeContinued: true,
       chapters: []
     });
@@ -223,9 +226,9 @@ export const StoryEditorPage: React.FC = () => {
     
     chapter.files.push({
       id: newFileId,
-      title: t('tools.storyEditor.newFile', 'New File'),
+      title: t('tools.storyEditor.newFile'),
       extension: 'md',
-      content: t('tools.storyEditor.fileContent', 'File content...'),
+      content: t('tools.storyEditor.fileContent'),
       unlockConditions: []
     });
     setStoryData({ ...storyData, routes: newRoutes });
@@ -264,8 +267,8 @@ export const StoryEditorPage: React.FC = () => {
     if (newRoutes.length === 0) {
       newRoutes.push({
         id: 'newRoute',
-        title: t('tools.storyEditor.newRoute', 'New Route'),
-        description: t('tools.storyEditor.newRouteDesc', 'Route description...'),
+        title: t('tools.storyEditor.newRoute'),
+        description: t('tools.storyEditor.newRouteDesc'),
         showToBeContinued: true,
         chapters: []
       });

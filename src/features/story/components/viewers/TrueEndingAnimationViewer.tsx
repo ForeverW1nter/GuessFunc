@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useAudio } from '../../../audio/hooks/useAudio';
 import { useAudioStore } from '../../../../store/useAudioStore';
+import { SYSTEM_LOGS } from '../../../../utils/systemLogs';
 import { useUIStore } from '../../../../store/useUIStore';
 import epicCinematicAudio from '../../../../assets/audio/Epic_Cinematic.mp3';
 import creditsRaw from '../../../../../docs/credits.md?raw';
@@ -13,9 +14,9 @@ const extractCredits = () => {
     if (match && match[1]) {
       return JSON.parse(match[1]);
     }
-  } catch (e) {
-    console.error('Failed to parse credits data:', e);
-  }
+    } catch (e) {
+      console.error(SYSTEM_LOGS.STORY_PARSE_CREDITS_ERROR, e);
+    }
   return {
     title: "GUESS FUNC",
     roles: [],

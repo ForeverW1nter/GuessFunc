@@ -2,6 +2,7 @@ import { ce } from './ce';
 import { cleanDesmosLatex, parseRelation } from './utils';
 import { logger } from '../debug/logger';
 import { GAME_CONSTANTS } from '../constants';
+import { SYSTEM_LOGS } from '../systemLogs';
 import i18n from '../../i18n';
 import type { ValidationResult } from './types';
 
@@ -22,9 +23,9 @@ export function evaluateEquivalence(
   playerLatex: string, 
   params: Record<string, number> = {}
 ): ValidationResult {
-  logger.log("--- 开始等价性验证 ---");
-  logger.log("Target:", targetLatex);
-  logger.log("Player:", playerLatex);
+  logger.log(SYSTEM_LOGS.MATH_EVAL_START);
+  logger.log(SYSTEM_LOGS.MATH_EVAL_TARGET, targetLatex);
+  logger.log(SYSTEM_LOGS.MATH_EVAL_PLAYER, playerLatex);
 
   try {
     const cleanTarget = cleanDesmosLatex(targetLatex);
@@ -133,14 +134,14 @@ export function evaluateEquivalence(
 
       if (isTargetIneq) {
         if (matchCount / totalPoints > 0.95) {
-          logger.log(`不等式验证通过: 匹配率 ${(matchCount / totalPoints * 100).toFixed(1)}%`);
+          logger.log(SYSTEM_LOGS.MATH_INEQUALITY_PASSED((matchCount / totalPoints * 100).toFixed(1)));
           return { isMatch: true, method: 'sampling' };
         } else {
           return { isMatch: false, reason: i18n.t('game.mathEngine.ineqMismatch') || "不等式区域不匹配" };
         }
       } else {
         if (isRatioValid && matchCount > totalPoints * 0.5) {
-          logger.log(`方程验证通过: 比例恒定 ${constantRatio}`);
+          logger.log(SYSTEM_LOGS.MATH_EQUATION_PASSED(constantRatio as number));
           return { isMatch: true, method: 'sampling' };
         } else {
           return { isMatch: false, reason: i18n.t('game.mathEngine.eqMismatch') || "方程图形不匹配" };
@@ -157,7 +158,7 @@ export function evaluateEquivalence(
     // 1. AST 结构完全一致 (最快)
     // 强制先进行采样，防止 e^lnx 和 x 在纯符号层面上被 isSame 判定为相同
     // if (targetBox.isSame(playerBox)) {
-    //   logger.log("验证通过: AST 结构匹配");
+    //   logger.log(SYSTEM_LOGS.MATH_AST_MATCH);
     //   return { isMatch: true, method: 'ast' };
     // }
 
@@ -245,7 +246,7 @@ export function evaluateEquivalence(
           // 如果有效点已经足够多，且不匹配点比例不高，我们可以认为这是一个有效的匹配
           // （因为真正的大段定义域不匹配会在前期就触发这个 threshold）
           if (validPointsCount >= GAME_CONSTANTS.MATH_ENGINE.NUM_RANDOM_SAMPLES * 0.4) {
-             logger.log(`容忍了 ${domainMismatchCount} 个定义域不匹配点，因为已有 ${validPointsCount} 个有效点`);
+             logger.log(SYSTEM_LOGS.MATH_DOMAIN_TOLERATED(domainMismatchCount, validPointsCount));
              continue; // 容忍并继续
           }
 
@@ -307,7 +308,7 @@ export function evaluateEquivalence(
         if (!isClose) {
           // 同样，如果有效点已经积累得非常多，允许容错个别由于极端精度导致的失败点
           if (validPointsCount >= GAME_CONSTANTS.MATH_ENGINE.NUM_RANDOM_SAMPLES * 0.7) {
-             logger.log(`容忍了 1 个数值不匹配点，因为已有 ${validPointsCount} 个有效点`);
+             logger.log(SYSTEM_LOGS.MATH_VALUE_TOLERATED(validPointsCount));
              continue;
           }
           return { 
@@ -321,7 +322,7 @@ export function evaluateEquivalence(
 
     // 只要有足够的有效点（比如大于总测试点的 1/3），就认为通过
     if (validPointsCount >= testPoints.length * 0.3) {
-      logger.log(`验证通过: 采样点测试吻合 (共 ${validPointsCount}/${testPoints.length} 个有效点)`);
+      logger.log(SYSTEM_LOGS.MATH_SAMPLE_PASSED(validPointsCount, testPoints.length));
       return { isMatch: true, method: isSimplifyMatch ? 'simplify' : 'sampling' };
     } else {
       return { 
@@ -331,7 +332,7 @@ export function evaluateEquivalence(
     }
 
   } catch (error: unknown) {
-    logger.error("验证引擎异常:", error);
+    logger.error(SYSTEM_LOGS.MATH_ENGINE_ERROR, error);
     return {
       isMatch: false,
       reason: i18n.t('game.mathEngine.parseError')

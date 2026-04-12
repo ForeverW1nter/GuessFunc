@@ -1,3 +1,5 @@
+import { SYSTEM_LOGS } from '../systemLogs';
+
 /**
  * 简单的全局 Debug 状态管理器
  * 提供两种开启方式：
@@ -34,7 +36,7 @@ export const initDebugMode = () => {
       if (debugParam === '1') {
         // 开启所有模块
         Object.values(DEBUG_MODULES).forEach(m => enabledModules.add(m));
-        console.log('🔧 Debug Mode Enabled (ALL MODULES)');
+        console.log(SYSTEM_LOGS.DEBUG_MODE_ALL);
       } else {
         // 开启特定模块
         const modules = debugParam.toUpperCase().split(',');
@@ -43,7 +45,7 @@ export const initDebugMode = () => {
             enabledModules.add(m);
           }
         });
-        console.log(`🔧 Debug Mode Enabled (Modules: ${Array.from(enabledModules).join(', ')})`);
+        console.log(SYSTEM_LOGS.DEBUG_MODE_MODULES(Array.from(enabledModules).join(', ')));
       }
     }
   }

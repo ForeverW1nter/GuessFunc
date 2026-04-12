@@ -1,5 +1,7 @@
 import { logger } from './debug/logger';
 import i18n from '../i18n';
+import { SYSTEM_LOGS } from './systemLogs';
+import { GAME_CONSTANTS } from './constants';
 
 export const AI_CONFIG = {
   defaultApiUrl: 'https://vg.v1api.cc/v1/chat/completions', 
@@ -14,27 +16,27 @@ class AIManager {
   private currentAbortController: AbortController | null = null;
 
   getSystemPrompt(): string {
-    return localStorage.getItem('guessfunc_system_prompt') || i18n.t('ai.genPromptDefault');
+    return localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.SYSTEM_PROMPT) || i18n.t('ai.genPromptDefault');
   }
 
   getChatSystemPrompt(): string {
-    return localStorage.getItem('guessfunc_chat_prompt') || i18n.t('ai.chatPromptDefault');
+    return localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.CHAT_PROMPT) || i18n.t('ai.chatPromptDefault');
   }
 
   getAiWelcomeMessage(): string {
-    return localStorage.getItem('guessfunc_ai_welcome') || '';
+    return localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.AI_WELCOME) || '';
   }
 
   setAiWelcomeMessage(msg: string) {
-    localStorage.setItem('guessfunc_ai_welcome', msg);
+    localStorage.setItem(GAME_CONSTANTS.STORAGE_KEYS.AI_WELCOME, msg);
   }
 
   clearAiWelcomeMessage() {
-    localStorage.removeItem('guessfunc_ai_welcome');
+    localStorage.removeItem(GAME_CONSTANTS.STORAGE_KEYS.AI_WELCOME);
   }
 
   getApiKey(): string {
-    return localStorage.getItem('guessfunc_api_key') || '';
+    return localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.API_KEY) || '';
   }
 
   hasValidKey(): boolean {
@@ -63,7 +65,7 @@ class AIManager {
     this.currentAbortController = new AbortController();
 
     const apiKey = this.getApiKey();
-    const savedProxyPref = localStorage.getItem('guessfunc_use_proxy');
+    const savedProxyPref = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.USE_PROXY);
     const useProxy = savedProxyPref !== 'false';
     const targetUrl = (apiKey && !useProxy) ? AI_CONFIG.defaultApiUrl : AI_CONFIG.proxyApiUrl;
 
@@ -127,7 +129,7 @@ class AIManager {
 
   async fetchFunction(difficulty: number): Promise<string | null> {
     if (!this.hasValidKey()) {
-      logger.error('No valid API key or proxy found for AI Manager');
+      logger.error(SYSTEM_LOGS.AI_NO_API_KEY);
       return null;
     }
 
@@ -137,11 +139,11 @@ class AIManager {
     while (attempts < maxAttempts) {
       attempts++;
       try {
-        logger.log(`[AIManager] 尝试生成函数 (第 ${attempts}/${maxAttempts} 次)...`);
+        logger.log(SYSTEM_LOGS.AI_GENERATION_ATTEMPT(attempts, maxAttempts));
         const result = await this._doFetch(difficulty);
         if (result) return result;
       } catch (e) {
-        logger.error(`[AIManager] 第 ${attempts} 次尝试失败:`, e);
+        logger.error(SYSTEM_LOGS.AI_GENERATION_FAILED(attempts), e);
       }
 
       if (attempts < maxAttempts) {
@@ -154,7 +156,7 @@ class AIManager {
 
   private async _doFetch(difficulty: number): Promise<string | null> {
     const apiKey = this.getApiKey();
-    const savedProxyPref = localStorage.getItem('guessfunc_use_proxy');
+    const savedProxyPref = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.USE_PROXY);
     const useProxy = savedProxyPref !== 'false';
     const targetUrl = (apiKey && !useProxy) ? AI_CONFIG.defaultApiUrl : AI_CONFIG.proxyApiUrl;
 
@@ -186,14 +188,14 @@ class AIManager {
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
-      logger.error("[AIManager] API 响应错误:", response.status, errData);
+      logger.error(SYSTEM_LOGS.AI_API_ERROR, response.status, errData);
       return null;
     }
 
     const data = await response.json();
     const content = data.choices[0].message.content;
 
-    logger.log("[AIManager] AI 原始返回内容:", content);
+    logger.log(SYSTEM_LOGS.AI_RAW_RESPONSE, content);
 
     const parsed = this._parseJSON(content);
     if (parsed && parsed.expression) {
@@ -226,7 +228,7 @@ class AIManager {
           return JSON.parse(jsonPart);
         }
       } catch (e2: unknown) {
-        logger.error("Failed to parse JSON even with recovery", e2);
+        logger.error(SYSTEM_LOGS.AI_PARSE_RECOVERY_FAILED, e2);
       }
     }
     return null;

@@ -46,7 +46,7 @@ export const ChapterFiles: React.FC<ChapterFilesProps> = ({
       {/* Header */}
       <div className="px-[24px] md:px-[40px] py-[24px] md:py-[32px] border-b border-[#2A2A2E] bg-[#0A0A0B]">
         <h2 className="text-[1.2rem] md:text-[1.8rem] text-white tracking-widest uppercase mb-[8px] flex items-center gap-[12px]">
-          <FolderOpen className="text-app-primary w-[24px] h-[24px] md:w-[32px] md:h-[32px]" />
+          <FolderOpen className="text-primary w-[24px] h-[24px] md:w-[32px] md:h-[32px]" />
           {chapter.title}
         </h2>
         <div className="text-[0.8rem] text-[#606065] font-mono">
@@ -94,7 +94,7 @@ export const ChapterFiles: React.FC<ChapterFilesProps> = ({
                 ) : isCompleted ? (
                   <Check size={14} strokeWidth={3} className="text-app-success" />
                 ) : (
-                  <div className="w-[6px] h-[6px] rounded-full bg-app-primary shadow-[0_0_8px_rgba(var(--primary-color-rgb),0.8)] animate-pulse" />
+                  <div className="w-[6px] h-[6px] rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-color-rgb),0.8)] animate-pulse" />
                 )}
               </div>
 
@@ -143,7 +143,7 @@ export const ChapterFiles: React.FC<ChapterFilesProps> = ({
                 {isRead ? (
                   <FileCheck size={14} strokeWidth={2} className="text-[#A0A0A5]" />
                 ) : (
-                  <FileText size={14} strokeWidth={2} className="text-app-primary" />
+                  <FileText size={14} strokeWidth={2} className="text-primary" />
                 )}
               </div>
 

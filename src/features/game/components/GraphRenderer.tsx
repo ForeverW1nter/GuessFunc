@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../../../store/useGameStore';
 import { useUIStore } from '../../../store/useUIStore';
 import { loadDesmos } from '../../../utils/desmosLoader';
+import { SYSTEM_LOGS } from '../../../utils/systemLogs';
 import { GAME_CONSTANTS } from '../../../utils/constants';
 import { parseRelation } from '../../../utils/mathEngine';
 
@@ -153,7 +154,7 @@ export const GraphRenderer = () => {
           });
         }
       } catch (error) {
-        console.error("Failed to load Desmos", error);
+        console.error(SYSTEM_LOGS.DESMOS_LOAD_ERROR, error);
       }
     };
 
@@ -235,13 +236,13 @@ export const GraphRenderer = () => {
   }, [targetFunction, levelParams, isReady]);
 
   return (
-    <div className="absolute inset-0 w-full h-full touch-none bg-app-bg">
+    <div className="absolute inset-0 w-full h-full touch-none bg-background">
       <div 
         ref={containerRef} 
         className="absolute inset-0 w-full h-full"
       />
       {!isReady && (
-        <div className="absolute inset-0 flex items-center justify-center bg-app-bg text-app-text z-50">
+        <div className="absolute inset-0 flex items-center justify-center bg-background text-foreground z-50">
           {t('game.loadingEngine')}
         </div>
       )}

@@ -27,10 +27,10 @@ interface GameState {
   readFiles: string[]; // 记录已阅读的文件ID
   
   // Actions
-  setTargetFunction: (func: string, params?: Record<string, number>, mode?: GameMode) => void;
+  setTargetFunction: (func: string, params?: Record<string, number>, mode?: GameMode, levelName?: string | null) => void;
   setPlayerInput: (input: string, params?: Record<string, number>) => void;
   setDomain: (domain: [number, number]) => void;
-  evaluateInput: () => { isMatch: boolean; reason?: string };
+  evaluateInput: () => Promise<{ isMatch: boolean; reason?: string }>;
   loadLevel: (routeId: string, chapterId: string, levelId: string) => void;
   nextLevel: () => void;
   markChapterSeen: (routeId: string, chapterId: string) => void;
@@ -59,8 +59,8 @@ export const useGameStore = create<GameState>()(
       seenChapters: [],
       readFiles: [],
 
-      setTargetFunction: (func: string, params: Record<string, number> = {}, mode: GameMode = 'idle') => 
-        set({ targetFunction: func, levelParams: params, isLevelCleared: false, gameMode: mode, playerInput: 'x', playerParams: {} }),
+      setTargetFunction: (func: string, params: Record<string, number> = {}, mode: GameMode = 'idle', levelName: string | null = null) => 
+        set({ targetFunction: func, levelParams: params, isLevelCleared: false, gameMode: mode, playerInput: 'x', playerParams: {}, currentLevel: levelName }),
       
       setPlayerInput: (input: string, params: Record<string, number> = {}) => 
         set({ playerInput: input, playerParams: params }),
@@ -70,7 +70,7 @@ export const useGameStore = create<GameState>()(
       setRandomConfig: (difficulty: number, withParams: boolean) => 
         set({ randomDifficulty: difficulty, randomWithParams: withParams }),
 
-      evaluateInput: () => {
+      evaluateInput: async () => {
         const state = get();
         if (!state.targetFunction || !state.playerInput) {
           return { isMatch: false, reason: i18n.t('game.mathEngine.emptyInput') };
@@ -78,7 +78,7 @@ export const useGameStore = create<GameState>()(
 
         // 合并 levelParams 和 playerParams，确保目标函数和玩家函数的所有可能参数都被提取并随机化
         const allParams = { ...state.levelParams, ...state.playerParams };
-        const result = evaluateEquivalence(state.targetFunction, state.playerInput, allParams);
+        const result = await evaluateEquivalence(state.targetFunction, state.playerInput, allParams);
         
         if (result.isMatch) {
           // 如果是剧情模式通关，记录通关状态
@@ -146,6 +146,18 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-func-storage', // 对应旧版的 StorageManager.STORAGE_KEY
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as Partial<GameState>;
+        if (!state) return state;
+        if (version === 0) {
+          // If migrating from version 0 to 1, ensure arrays exist
+          state.completedLevels = state.completedLevels || [];
+          state.seenChapters = state.seenChapters || [];
+          state.readFiles = state.readFiles || [];
+        }
+        return state;
+      },
       // 只持久化通关进度和看过的剧情，不要持久化当前正在玩的关卡状态
       partialize: (state) => ({ 
         completedLevels: state.completedLevels,

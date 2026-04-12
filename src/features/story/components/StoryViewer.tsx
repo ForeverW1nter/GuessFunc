@@ -38,11 +38,11 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
   };
 
   return (
-    <div className="relative w-full md:max-w-[900px] h-full md:h-auto max-h-[100dvh] md:max-h-[85vh] bg-modal-bg text-modal-text md:rounded-[16px] shadow-modal overflow-hidden flex flex-col border-none md:border md:border-card-border animate-zoom-in">
+    <div className="relative w-full md:max-w-[900px] h-full md:h-auto max-h-[100dvh] md:max-h-[85vh] bg-background text-foreground md:rounded-[16px] shadow-modal overflow-hidden flex flex-col border-none md:border md:border-border animate-zoom-in">
       {/* Modal Header */}
-      <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
+      <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-border bg-background shrink-0">
         <div className="flex items-center gap-[10px]">
-          <h2 className="m-0 text-[1.25rem] font-semibold text-app-text transition-opacity duration-200">
+          <h2 className="m-0 text-[1.25rem] font-semibold text-foreground transition-opacity duration-200">
             {chapter.title}
           </h2>
         </div>
@@ -51,8 +51,8 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
             onClick={toggleMute}
             className={`inline-flex items-center justify-center p-[5px] rounded-full transition-all bg-transparent border-none cursor-pointer outline-none ${
               !isMuted 
-                ? 'text-app-text opacity-70 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]' 
-                : 'text-app-text opacity-30 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]'
+                ? 'text-foreground opacity-70 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]' 
+                : 'text-foreground opacity-30 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)]'
             }`}
             title={isMuted ? t('story.unmute') : t('story.mute')}
           >
@@ -60,7 +60,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
           </button>
           <button 
             onClick={() => navigate('/')}
-            className="w-[40px] h-[40px] flex items-center justify-center text-app-text opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] hover:rotate-90 rounded-full transition-all"
+            className="w-[40px] h-[40px] flex items-center justify-center text-foreground opacity-50 hover:opacity-100 hover:bg-[rgba(128,128,128,0.1)] hover:rotate-90 rounded-full transition-all"
           >
             <X size={24} strokeWidth={2} />
           </button>
@@ -89,7 +89,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
         <div className="mt-[20px] mx-auto text-right max-w-[800px] w-full">
           <button
             onClick={handleComplete}
-            className="inline-flex items-center justify-center gap-[8px] px-[20px] py-[10px] rounded-[8px] font-semibold text-[1rem] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
+            className="inline-flex items-center justify-center gap-[8px] px-[20px] py-[10px] rounded-[8px] font-semibold text-[1rem] transition-all bg-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
             {t('story.startChallenge')}
           </button>

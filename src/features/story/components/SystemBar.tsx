@@ -82,7 +82,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({
               } bg-[linear-gradient(45deg,transparent_40%,rgba(255,255,255,0.05)_50%,transparent_60%),repeating-radial-gradient(#222,#222_1px,#2a2a2a_2px,#2a2a2a_3px)]`} 
               style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
               <Music size={12} className={`z-10 transition-all duration-300 flex items-center justify-center ${
-                !isMuted ? 'opacity-100 text-app-primary animate-[spin_3s_linear_infinite]' : 'opacity-50 text-[#A0A0A5] animate-[spin_3s_linear_infinite]'
+                !isMuted ? 'opacity-100 text-primary animate-[spin_3s_linear_infinite]' : 'opacity-50 text-[#A0A0A5] animate-[spin_3s_linear_infinite]'
               }`} style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
             </div>
           </button>
@@ -107,7 +107,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({
                     }}
                     className={`w-full flex items-center justify-between px-[16px] py-[10px] text-left transition-colors ${
                       !isUnlocked ? 'opacity-40 cursor-not-allowed' : 
-                      isSelected ? 'text-app-primary bg-[rgba(var(--primary-color-rgb),0.1)]' : 
+                      isSelected ? 'text-primary bg-[rgba(var(--primary-color-rgb),0.1)]' : 
                       'text-[#A0A0A5] hover:text-white hover:bg-[#2A2A2E]'
                     }`}
                   >
@@ -143,7 +143,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({
                {storyJSON.routes.map((route) => (
                  <div 
                    key={route.id}
-                   className={`px-[16px] py-[10px] cursor-pointer transition-colors ${selectedRouteId === route.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] text-app-primary border-l-[2px] border-app-primary' : 'text-[#A0A0A5] hover:bg-[#2A2A2E] hover:text-white border-l-[2px] border-transparent'}`}
+                   className={`px-[16px] py-[10px] cursor-pointer transition-colors ${selectedRouteId === route.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] text-primary border-l-[2px] border-primary' : 'text-[#A0A0A5] hover:bg-[#2A2A2E] hover:text-white border-l-[2px] border-transparent'}`}
                    onClick={() => onSelectRoute(route.id)}
                  >
                    <div className="text-[0.8rem] uppercase tracking-widest mb-[2px]">{route.title}</div>

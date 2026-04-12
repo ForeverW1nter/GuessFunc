@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowLeft, FileCode, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { LevelData } from '../../../src/types/story';
+import type { LevelData } from '../../../src/types/story';
 import { DesmosFunctionEditor } from './DesmosFunctionEditor';
 
 interface LevelEditorProps {
@@ -30,7 +30,7 @@ export const LevelEditor: React.FC<LevelEditorProps> = ({
             className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors shrink-0 bg-transparent border-none cursor-pointer px-2 py-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
           >
             <ArrowLeft size={18} />
-            <span className="text-sm font-medium">{t('tools.storyEditor.back', 'Back')}</span>
+            <span className="text-sm font-medium">{t('tools.storyEditor.back')}</span>
           </button>
           <div className="w-px h-5 bg-zinc-200 dark:bg-zinc-800"></div>
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 shrink-0">
@@ -43,7 +43,7 @@ export const LevelEditor: React.FC<LevelEditorProps> = ({
         <button 
           onClick={() => onDelete(levelIndex)}
           className="text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 bg-transparent border-none cursor-pointer p-2 rounded-md transition-colors"
-          title={t('tools.storyEditor.deleteLevel', 'Delete Level')}
+          title={t('tools.storyEditor.deleteLevel')}
         >
           <Trash2 size={18} />
         </button>
@@ -53,7 +53,7 @@ export const LevelEditor: React.FC<LevelEditorProps> = ({
         {/* ID和名称放在一行 */}
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex flex-col gap-2 flex-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.levelIdPlaceholder', 'Level ID')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.levelIdPlaceholder')}</label>
             <input 
               type="text" 
               value={level.id}
@@ -62,7 +62,7 @@ export const LevelEditor: React.FC<LevelEditorProps> = ({
             />
           </div>
           <div className="flex flex-col gap-2 flex-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.levelNamePlaceholder', 'Level Name')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.levelNamePlaceholder')}</label>
             <input 
               type="text" 
               value={level.title}
@@ -75,7 +75,7 @@ export const LevelEditor: React.FC<LevelEditorProps> = ({
         {/* 过关提示和目标函数的 LaTeX 输入框放在同一行 */}
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex flex-col gap-2 flex-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.tipPlaceholder', 'Hint (Optional)')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.tipPlaceholder')}</label>
             <input 
               type="text"
               value={level.tip || ''}
@@ -84,7 +84,7 @@ export const LevelEditor: React.FC<LevelEditorProps> = ({
             />
           </div>
           <div className="flex flex-col gap-2 flex-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.targetFuncPlaceholder', 'Target Function')}</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.targetFuncPlaceholder')}</label>
             <input 
               type="text"
               value={level.targetFunction || ''}
@@ -96,7 +96,7 @@ export const LevelEditor: React.FC<LevelEditorProps> = ({
 
         {/* 目标函数 Desmos 预览 */}
         <div className="flex-1 flex flex-col gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-6">
-          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.preview', 'Function Preview')}</label>
+          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('tools.storyEditor.preview')}</label>
           <div className="flex-1 min-h-[400px] border border-zinc-300 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-900 relative overflow-hidden shadow-sm">
             <DesmosFunctionEditor 
               initialFunction={level.targetFunction || ''}

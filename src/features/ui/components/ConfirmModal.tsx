@@ -75,7 +75,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return createPortal(
     <div className="fixed top-0 left-0 w-full h-full z-[2000] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in px-4" onClick={onCancel}>
       <div 
-        className="bg-modal-bg text-modal-text w-full max-w-md rounded-2xl shadow-modal overflow-hidden animate-zoom-in"
+        className="bg-background text-foreground w-full max-w-md rounded-2xl shadow-modal overflow-hidden animate-zoom-in"
         onClick={handleClick}
       >
         <div className="p-6">
@@ -94,7 +94,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                   e.preventDefault();
                   e.stopPropagation();
                 }}
-                className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-app-text focus:outline-none focus:border-app-primary transition-colors"
+                className="w-full px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:border-primary transition-colors"
                 placeholder={t('common.confirmInputPlaceholder')}
               />
             </div>
@@ -103,7 +103,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           <div className="flex justify-end gap-3 mt-4">
             <button 
               onClick={handleCancel}
-              className="px-5 py-2.5 rounded-xl font-medium border border-card-border bg-card-bg hover:bg-card-hover transition-colors"
+              className="px-5 py-2.5 rounded-xl font-medium border border-border bg-card hover:bg-card-hover transition-colors"
             >
               {cancelText}
             </button>
@@ -112,10 +112,10 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               disabled={isConfirmDisabled}
               className={`px-5 py-2.5 rounded-xl font-medium transition-colors ${
                 isConfirmDisabled 
-                  ? 'bg-app-primary/50 text-white cursor-not-allowed' 
+                  ? 'bg-primary/50 text-white cursor-not-allowed' 
                   : requireInput 
                     ? 'bg-app-danger text-white hover:bg-app-danger/90'
-                    : 'bg-app-primary text-white hover:bg-app-primary/90'
+                    : 'bg-primary text-white hover:bg-primary/90'
               }`}
             >
               {confirmText}

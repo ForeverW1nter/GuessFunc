@@ -25,5 +25,27 @@ export const GAME_CONSTANTS = {
     MIN_VALID_POINTS: 10,
     // 图像 y 轴绝对值上限（用于判断是否发散）
     MAX_Y_VALUE: 100,
+  },
+  STORAGE_KEYS: {
+    CURRENT_SLOT: 'guessfunc_current_slot',
+    SLOT_PREFIX: 'guess-func-storage_slot',
+    I18N_LANG: 'i18nextLng',
+    STORY_EDITOR_DATA: 'storyEditorData',
+    SYSTEM_PROMPT: 'guessfunc_system_prompt',
+    CHAT_PROMPT: 'guessfunc_chat_prompt',
+    AI_WELCOME: 'guessfunc_ai_welcome',
+    API_KEY: 'guessfunc_api_key',
+    USE_PROXY: 'guessfunc_use_proxy',
+    MOD_ORDER: 'guessfunc_mod_order',
+  },
+  MOD_STORE: {
+    GITEE_OWNER: 'A-T-O-M',
+    GITEE_REPO: 'guess-func',
+    DB_NAME: 'guessfunc_mod_db',
+    STORE_NAME: 'guessfunc_mod_store',
+  },
+  FONTS: {
+    DEFAULT_STORY_FONT: 'JetBrains Mono',
+    CUSTOM_FONT_NAME: 'GuessFuncCustomFont',
   }
 };

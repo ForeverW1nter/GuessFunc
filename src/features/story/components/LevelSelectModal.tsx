@@ -164,7 +164,11 @@ export const LevelSelectModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] flex flex-col pointer-events-auto bg-[#0A0A0B] text-[#D4D4D6] animate-fade-in font-mono overflow-hidden">
+    <div 
+      className="fixed inset-0 z-[1000] flex flex-col pointer-events-auto bg-[#0A0A0B] text-[#D4D4D6] animate-fade-in font-mono overflow-hidden"
+      role="dialog"
+      aria-modal="true"
+    >
       
       {/* 极简系统栏 (System Bar) */}
       <SystemBar

@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useAudioStore } from '../../../store/useAudioStore';
 import { logger, DEBUG_MODULES } from '../../../utils/debug/logger';
+import { SYSTEM_LOGS } from '../../../utils/systemLogs';
 
 // 采用单例模式彻底解决闭包与生命周期导致的竞态问题
 class AudioManager {
@@ -94,7 +95,7 @@ export const useAudio = () => {
           }
         }, stepTime));
       }).catch((err) => {
-        logger.error(`Failed to play audio: ${path}`, err);
+        logger.error(SYSTEM_LOGS.AUDIO_PLAY_ERROR(path), err);
         // 自动播放策略限制或其他错误导致播放失败时，清理状态
         audio.pause();
         audio.currentTime = 0;

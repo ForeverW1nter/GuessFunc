@@ -20,7 +20,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onFileUpload, onExport, on
           <Terminal size={18} />
         </div>
         <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          {t('tools.storyEditor.name', 'Story Editor')}
+          {t('tools.storyEditor.name')}
         </span>
       </div>
       
@@ -30,7 +30,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onFileUpload, onExport, on
           className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-app-primary dark:hover:text-app-primary hover:bg-app-primary/10 dark:hover:bg-app-primary/20 rounded-md transition-colors"
         >
           <Wand2 size={16} />
-          <span className="hidden sm:inline">{t('tools.storyEditor.batchGenerate', 'Batch Generate')}</span>
+          <span className="hidden sm:inline">{t('tools.storyEditor.batchGenerate')}</span>
         </button>
 
         <div className="w-px h-5 bg-zinc-200 dark:bg-zinc-800 mx-1"></div>
@@ -38,7 +38,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onFileUpload, onExport, on
         <button 
           onClick={toggleSettings}
           className="flex items-center justify-center w-8 h-8 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-          title={t('settings.main.title', 'Settings')}
+          title={t('settings.main.title')}
         >
           <Settings size={18} />
         </button>
@@ -47,7 +47,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onFileUpload, onExport, on
 
         <label className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors cursor-pointer">
           <Upload size={16} />
-          <span className="hidden sm:inline">{t('tools.storyEditor.importBtn', 'Import JSON')}</span>
+          <span className="hidden sm:inline">{t('tools.storyEditor.importBtn')}</span>
           <input type="file" accept=".json" onChange={onFileUpload} className="hidden" />
         </label>
         
@@ -56,7 +56,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onFileUpload, onExport, on
           className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-app-primary hover:bg-app-primary/90 rounded-md transition-colors shadow-sm ml-1"
         >
           <Download size={16} />
-          <span className="hidden sm:inline">{t('tools.storyEditor.exportBtn', 'Export JSON')}</span>
+          <span className="hidden sm:inline">{t('tools.storyEditor.exportBtn')}</span>
         </button>
       </div>
     </div>

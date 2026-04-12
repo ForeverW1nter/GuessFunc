@@ -19,7 +19,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange, c
       className={cn(
         "relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0",
         onChange && "cursor-pointer",
-        checked ? "bg-app-primary" : "bg-card-border",
+        checked ? "bg-primary" : "bg-card-border",
         className
       )}
     >
