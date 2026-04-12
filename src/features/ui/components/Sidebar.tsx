@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUIStore } from '../../../store/useUIStore';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../../../store/useGameStore';
@@ -80,8 +80,15 @@ const NavGroupTitle = ({ title, isSidebarCollapsed }: { title: string, isSidebar
 
 export const Sidebar: React.FC = () => {
   const { t } = useTranslation();
-  const { isSidebarOpen, setSidebarOpen, isSidebarCollapsed, setSettingsOpen, setLevelSelectOpen, setRandomChallengeOpen } = useUIStore();
+  const { isSidebarOpen, setSidebarOpen, isSidebarCollapsed, setSettingsOpen, setLevelSelectOpen, setRandomChallengeOpen, isStoryEditorOpen, isModStoreOpen } = useUIStore();
   const navigate = useNavigate();
+
+  // 当创意工坊或模组商店打开时，强制隐藏侧边栏
+  useEffect(() => {
+    if (isStoryEditorOpen || isModStoreOpen) {
+      setSidebarOpen(false);
+    }
+  }, [isStoryEditorOpen, isModStoreOpen, setSidebarOpen]);
 
   const handleRandomChallenge = () => {
     setRandomChallengeOpen(true);
@@ -245,15 +252,17 @@ export const Sidebar: React.FC = () => {
               <NavGroupTitle title={group.title} isSidebarCollapsed={isSidebarCollapsed} />
               <div className="flex flex-col gap-[4px]">
                 {group.items.map(item => (
-                  <NavItem 
-                    key={item.id} 
-                    item={item} 
+                  <NavItem
+                    key={item.id}
+                    item={item}
                     isSidebarCollapsed={isSidebarCollapsed}
                     isActive={
                       (item.id === 'story' && useGameStore.getState().gameMode === 'story') ||
                       (item.id === 'random' && useGameStore.getState().gameMode === 'random') ||
                       (item.id === 'custom' && useGameStore.getState().gameMode === 'custom') ||
-                      (item.id === 'share' && window.location.hash.includes('share'))
+                      (item.id === 'share' && window.location.hash.includes('share')) ||
+                      (item.id === 'workshop' && isStoryEditorOpen) ||
+                      (item.id === 'modStore' && isModStoreOpen)
                     }
                   />
                 ))}
