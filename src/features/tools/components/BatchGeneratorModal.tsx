@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, Wand2, ArrowLeft, ArrowRight, Download, Upload } from 'lucide-react';
-import type { FunctionType } from '../../../utils/mathEngine/generator';
+type FunctionType = 'polynomial' | 'absolute' | 'rational' | 'radical' | 'exponential' | 'trigonometric' | 'inverse_trigonometric' | 'hyperbolic' | 'inverse_hyperbolic';
 import { generateFunctionByDifficulty } from '../../../utils/mathEngine/generator';
 import { SYSTEM_LOGS } from '../../../utils/systemLogs';
 import type { ChapterData, LevelData } from '../../../types/story';
@@ -147,7 +147,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
   };
 
   const handleExport = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(configs, null, 2));
+    const dataStr = `data:text/json;charset=utf-8,${  encodeURIComponent(JSON.stringify(configs, null, 2))}`;
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", "batch-config.json");

@@ -4,8 +4,7 @@ export * from './utils';
 // We now export async wrappers for evaluateEquivalence and generateFunctionByDifficulty
 // to ensure the heavy @cortex-js/compute-engine is loaded in a Web Worker.
 
-import type { ValidationResult } from './types';
-import type { GeneratedFunction, GeneratorOptions } from './generator';
+import type { ValidationResult, GeneratedFunction, GeneratorOptions } from './types';
 
 // Type-safe worker message types
 interface WorkerMessage {
@@ -56,7 +55,7 @@ function getWorker(): Worker {
   return worker;
 }
 
-export async function evaluateEquivalence(
+export function evaluateEquivalence(
   targetLatex: string,
   playerLatex: string,
   params: Record<string, number> = {}
@@ -65,7 +64,7 @@ export async function evaluateEquivalence(
   return dispatchToWorker('EVALUATE', payload) as Promise<ValidationResult>;
 }
 
-export async function generateFunctionByDifficulty(
+export function generateFunctionByDifficulty(
   optionsOrDifficulty: number | GeneratorOptions,
   legacyWithParams: boolean = false
 ): Promise<GeneratedFunction> {

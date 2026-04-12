@@ -15,7 +15,14 @@ const resources = {
 };
 
 // 尝试从 localStorage 获取语言，否则默认中文
-const savedLanguage = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.I18N_LANG) || 'zh';
+let savedLanguage = 'zh';
+if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+  try {
+    savedLanguage = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEYS.I18N_LANG) || 'zh';
+  } catch (e) {
+    console.warn('Failed to access localStorage for language:', e);
+  }
+}
 
 i18n
   .use(initReactI18next)
@@ -30,7 +37,13 @@ i18n
 
 // 监听语言变化并保存
 i18n.on('languageChanged', (lng) => {
-  localStorage.setItem(GAME_CONSTANTS.STORAGE_KEYS.I18N_LANG, lng);
+  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    try {
+      localStorage.setItem(GAME_CONSTANTS.STORAGE_KEYS.I18N_LANG, lng);
+    } catch (e) {
+      console.warn('Failed to access localStorage for language:', e);
+    }
+  }
 });
 
 export default i18n;
