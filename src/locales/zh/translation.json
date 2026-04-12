@@ -9,7 +9,10 @@
     "on": "开启",
     "off": "关闭",
     "confirmInputTip": "请输入以下文本以确认：",
-    "confirmInputPlaceholder": "在此输入确认文本..."
+    "confirmInputPlaceholder": "在此输入确认文本...",
+    "copyFallbackDesc": "请手动复制以上链接。",
+    "copyFallbackTitle": "复制链接",
+    "none": "无"
   },
   "game": {
     "title": "游玩模式",
@@ -39,7 +42,11 @@
       "valueMismatch": "数值不匹配: x ≈ {{x}} 时差异过大",
       "noValidPoints": "在此范围内无法找到有效的对比采样点",
       "parseError": "表达式解析失败: 格式可能不支持",
-      "emptyInput": "请输入函数表达式"
+      "emptyInput": "请输入函数表达式",
+      "eqMismatch": "方程不匹配",
+      "ineqMismatch": "不等式不匹配",
+      "needEquation": "需要输入方程",
+      "opMismatch": "操作符不匹配"
     },
     "verifyTrigger": "触发验证"
   },
@@ -65,7 +72,9 @@
     "validParams": "有效参数列表：",
     "paramsNote1": "（注：以上数值为参数默认数值，未在函数中使用的游离参数已被自动过滤。）",
     "paramsNote2": "注：未在函数中使用的游离参数已被自动过滤。",
-    "confirmCreateBtn": "生成并试玩"
+    "confirmCreateBtn": "生成并试玩",
+    "modStore": "模组商店",
+    "workshop": "创意工坊"
   },
   "ai": {
     "initError": "初始化失败",
@@ -81,7 +90,8 @@
     "apiError": "API 请求失败",
     "timeoutError": "请求超时，请重试",
     "noTips": "本关卡暂无提示。",
-    "levelTips": "关卡提示"
+    "levelTips": "关卡提示",
+    "currentTargetIs": "当前目标函数是"
   },
   "random": {
     "startSuccess": "随机挑战已开启！",
@@ -180,7 +190,7 @@
       "assistDesc": "开启后，将在剧情中高亮显示关键数学提示",
       "speedrun": "速通模式",
       "speedrunDesc": "立即解锁所有关卡以便预览",
-      "language": "语言"
+      "language": "语言设置"
     },
     "doc": {
       "changelog": "更新日志",
@@ -311,7 +321,7 @@
       "routeId": "线路 ID",
       "routeTitle": "线路标题",
       "chapterNamePlaceholder": "章节名称...",
-      "chapterId": "ID: {{id}}",
+      "chapterId": "章节 ID",
       "levelsTitle": "关卡",
       "addLevel": "添加关卡",
       "levelNamePlaceholder": "关卡名称",
@@ -349,7 +359,6 @@
       "batchGenerate": "批量生成",
       "batchGenerateTitle": "批量生成随机章节",
       "batchGenerateDesc": "为多个章节配置随机生成参数",
-      "chapterId": "章节 ID",
       "chapterName": "章节名称",
       "levelCount": "关卡数量",
       "includeParams": "包含参数 (a, b, c)",
@@ -375,7 +384,42 @@
         "inverse_trigonometric": "反三角函数 (arcsin, arctan)",
         "hyperbolic": "双曲函数 (sinh, cosh)",
         "inverse_hyperbolic": "反双曲函数 (arsinh)"
-      }
+      },
+      "batchChapterId": "批量章节ID",
+      "confirmDeleteFile": "确定删除该文件吗？",
+      "confirmDeleteLevel": "确定删除该关卡吗？",
+      "deleteRoute": "删除路线",
+      "editRoute": "编辑路线",
+      "mailAddHeader": "添加邮件头",
+      "mailBody": "邮件正文",
+      "mailBodyPlaceholder": "请输入邮件正文...",
+      "mailHeaders": "邮件头",
+      "mailKeyPlaceholder": "键",
+      "mailNoHeaders": "暂无邮件头",
+      "mailValuePlaceholder": "值",
+      "msgAddMessage": "添加消息",
+      "msgAddRightSpeaker": "添加右侧发言人",
+      "msgAddRightSpeakerPrompt": "请输入右侧发言人名称",
+      "msgChatMessages": "聊天记录",
+      "msgContent": "消息内容",
+      "msgContentPlaceholder": "请输入消息内容...",
+      "msgNoMessages": "暂无消息记录",
+      "msgNoRightSpeakers": "暂无右侧发言人",
+      "msgRightSpeakers": "右侧发言人",
+      "msgSpeakerName": "发言人名称",
+      "msgSpeakerPlaceholder": "请输入发言人名称...",
+      "redo": "重做",
+      "uiType": "界面类型",
+      "uiTypeAudio": "音频",
+      "uiTypeDefault": "默认",
+      "uiTypeDoc": "文档",
+      "uiTypeImage": "图片",
+      "uiTypeLog": "日志",
+      "uiTypeMail": "邮件",
+      "uiTypeMemo": "备忘录",
+      "uiTypeMessage": "消息",
+      "undo": "撤销",
+      "unlockCondition": "解锁条件"
     },
     "levelTester": {
       "name": "Level Sandbox",
@@ -387,5 +431,43 @@
       "dark": "切换至深色模式"
     }
   },
-  "\\n": "\\n"
+  "\\n": "\\n",
+  "mods": {
+    "cancel": "取消",
+    "discover": "发现",
+    "dragToReorder": "拖动排序",
+    "empty": "暂无模组",
+    "emptyInstalled": "暂未安装模组",
+    "install": "安装",
+    "installFailed": "安装失败",
+    "installSuccess": "安装成功",
+    "installed": "已安装",
+    "installedTab": "已安装模组",
+    "installing": "安装中...",
+    "loadFailed": "加载失败",
+    "noDescription": "暂无描述",
+    "noResults": "未找到结果",
+    "publishAction": "发布模组",
+    "publish": {
+      "authorLabel": "作者",
+      "descLabel": "描述",
+      "warning": "警告"
+    },
+    "publishConfirmDesc": "确定要发布该模组吗？",
+    "publishConfirmFallback": "请手动发布",
+    "publishConfirmTitle": "确认发布",
+    "rateLimitError": "请求过于频繁，请稍后再试",
+    "refresh": "刷新",
+    "searchPlaceholder": "搜索模组...",
+    "sortAsc": "升序",
+    "sortBy": "排序方式",
+    "sortDesc": "降序",
+    "sortName": "名称",
+    "sortNewest": "最新",
+    "uninstall": "卸载",
+    "uninstallConfirmTitle": "确认卸载",
+    "uninstallFailed": "卸载失败",
+    "uninstallSuccess": "卸载成功",
+    "unknownAuthor": "未知作者"
+  }
 }

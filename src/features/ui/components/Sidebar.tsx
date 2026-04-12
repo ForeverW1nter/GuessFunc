@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { useUIStore } from '../../../store/useUIStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useGameStore } from '../../../store/useGameStore';
 import { CreateLevelConfirmModal } from './CreateLevelConfirmModal';
 import { extractUsedParams } from '../../../utils/mathEngine';
@@ -82,6 +82,11 @@ export const Sidebar: React.FC = () => {
   const { t } = useTranslation();
   const { isSidebarOpen, setSidebarOpen, isSidebarCollapsed, setSettingsOpen, setLevelSelectOpen, setRandomChallengeOpen, isStoryEditorOpen, isModStoreOpen } = useUIStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const gameMode = useGameStore(state => state.gameMode);
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createPreview, setCreatePreview] = useState<{ latex: string, params: Record<string, number> }>({ latex: '', params: {} });
 
   // 当创意工坊或模组商店打开时，强制隐藏侧边栏
   useEffect(() => {
@@ -89,6 +94,10 @@ export const Sidebar: React.FC = () => {
       setSidebarOpen(false);
     }
   }, [isStoryEditorOpen, isModStoreOpen, setSidebarOpen]);
+
+  if (isStoryEditorOpen || isModStoreOpen) {
+    return null;
+  }
 
   const handleRandomChallenge = () => {
     setRandomChallengeOpen(true);
@@ -107,9 +116,6 @@ export const Sidebar: React.FC = () => {
     setLevelSelectOpen(true);
     setSidebarOpen(false);
   };
-
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [createPreview, setCreatePreview] = useState<{ latex: string, params: Record<string, number> }>({ latex: '', params: {} });
 
   const handleCreateModeClick = () => {
     const { playerInput, playerParams } = useGameStore.getState();
@@ -188,11 +194,11 @@ export const Sidebar: React.FC = () => {
       items: [
         { id: 'custom', icon: PenTool, label: t('sidebar.freeCreateMode'), onClick: handleCreateModeClick },
         { id: 'share', icon: Share2, label: t('sidebar.shareLevelMode'), onClick: handleShareMode },
-        { id: 'workshop', icon: Wrench, label: t('sidebar.workshop', '创意工坊'), onClick: () => {
+        { id: 'workshop', icon: Wrench, label: t('sidebar.workshop'), onClick: () => {
           useUIStore.getState().setStoryEditorOpen(true);
           setSidebarOpen(false);
         }},
-        { id: 'modStore', icon: Store, label: t('sidebar.modStore', '模组商店'), onClick: () => {
+        { id: 'modStore', icon: Store, label: t('sidebar.modStore'), onClick: () => {
           useUIStore.getState().setModStoreOpen(true);
           setSidebarOpen(false);
         }}
@@ -257,10 +263,10 @@ export const Sidebar: React.FC = () => {
                     item={item}
                     isSidebarCollapsed={isSidebarCollapsed}
                     isActive={
-                      (item.id === 'story' && useGameStore.getState().gameMode === 'story') ||
-                      (item.id === 'random' && useGameStore.getState().gameMode === 'random') ||
-                      (item.id === 'custom' && useGameStore.getState().gameMode === 'custom') ||
-                      (item.id === 'share' && window.location.hash.includes('share')) ||
+                      (item.id === 'story' && gameMode === 'story') ||
+                      (item.id === 'random' && gameMode === 'random') ||
+                      (item.id === 'custom' && gameMode === 'custom') ||
+                      (item.id === 'share' && location.pathname.includes('/share/')) ||
                       (item.id === 'workshop' && isStoryEditorOpen) ||
                       (item.id === 'modStore' && isModStoreOpen)
                     }

@@ -142,7 +142,7 @@ export const SystemBar: React.FC<SystemBarProps> = ({
               }}
             >
               <Globe size={14} />
-              <span className="text-[0.8rem] uppercase tracking-widest"><TextWithCodeFont text={t('mods.publish')} /></span>
+              <span className="text-[0.8rem] uppercase tracking-widest"><TextWithCodeFont text={t('mods.publishAction')} /></span>
             </div>
           </div>
         </div>
@@ -197,11 +197,11 @@ export const SystemBar: React.FC<SystemBarProps> = ({
 
           <button 
             onClick={onPublish}
-            className="flex items-center gap-2 p-2 rounded-md text-[0.85rem] uppercase tracking-wider transition-colors border-none cursor-pointer bg-transparent text-muted-foreground hover:text-foreground hover:bg-border"
-            title={t('mods.publish')}
+            className="flex items-center gap-2 p-2 rounded-md text-[0.85rem] uppercase tracking-wider transition-colors border-none cursor-pointer bg-transparent text-primary hover:bg-border"
+            title={t('mods.publishAction')}
           >
             <Globe size={16} />
-            <span><TextWithCodeFont text={t('mods.publish')} /></span>
+            <span><TextWithCodeFont text={t('mods.publishAction')} /></span>
           </button>
         </div>
 

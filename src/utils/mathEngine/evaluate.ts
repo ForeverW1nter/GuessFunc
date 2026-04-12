@@ -36,14 +36,14 @@ export function evaluateEquivalence(
     // ==========================================
     if (targetRel) {
       if (!playerRel) {
-        return { isMatch: false, reason: i18n.t('game.mathEngine.needEquation') || "需要输入方程或不等式" };
+        return { isMatch: false, reason: i18n.t('game.mathEngine.needEquation') };
       }
 
       const isTargetIneq = targetRel.op !== '=';
       const isPlayerIneq = playerRel.op !== '=';
 
       if (isTargetIneq !== isPlayerIneq) {
-        return { isMatch: false, reason: i18n.t('game.mathEngine.opMismatch') || "符号类型（等式/不等式）不匹配" };
+        return { isMatch: false, reason: i18n.t('game.mathEngine.opMismatch') };
       }
 
       // 为了 2D 采样，我们需要解析左右两边
@@ -133,17 +133,17 @@ export function evaluateEquivalence(
         if (matchCount / totalPoints > 0.95) {
           logger.log(SYSTEM_LOGS.MATH_INEQUALITY_PASSED((matchCount / totalPoints * 100).toFixed(1)));
           return { isMatch: true, method: 'sampling' };
-        } else {
-          return { isMatch: false, reason: i18n.t('game.mathEngine.ineqMismatch') || "不等式区域不匹配" };
-        }
-      } else {
+        } 
+          return { isMatch: false, reason: i18n.t('game.mathEngine.ineqMismatch') };
+        
+      } 
         if (isRatioValid && matchCount > totalPoints * 0.5) {
           logger.log(SYSTEM_LOGS.MATH_EQUATION_PASSED(constantRatio as number));
           return { isMatch: true, method: 'sampling' };
-        } else {
-          return { isMatch: false, reason: i18n.t('game.mathEngine.eqMismatch') || "方程图形不匹配" };
-        }
-      }
+        } 
+          return { isMatch: false, reason: i18n.t('game.mathEngine.eqMismatch') };
+        
+      
     }
 
     // ==========================================
@@ -322,12 +322,12 @@ export function evaluateEquivalence(
     if (validPointsCount >= testPoints.length * 0.3) {
       logger.log(SYSTEM_LOGS.MATH_SAMPLE_PASSED(validPointsCount, testPoints.length));
       return { isMatch: true, method: isSimplifyMatch ? 'simplify' : 'sampling' };
-    } else {
+    } 
       return { 
         isMatch: false, 
         reason: i18n.t('game.mathEngine.noValidPoints')
       };
-    }
+    
 
   } catch (error: unknown) {
     logger.error(SYSTEM_LOGS.MATH_ENGINE_ERROR, error);

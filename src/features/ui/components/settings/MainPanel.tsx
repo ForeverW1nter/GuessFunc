@@ -6,7 +6,7 @@ type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'save'
 
 const SettingsButton = ({ icon: Icon, label, panel, setActivePanel }: { icon: React.ElementType, label: string, panel: SettingsPanel, setActivePanel: (panel: SettingsPanel) => void }) => (
   <button 
-    className="flex items-center gap-[12px] px-[16px] py-[14px] border border-border bg-card text-foreground rounded-[12px] hover:border-primary hover:bg-card-hover transition-all transform hover:-translate-y-[1px]" 
+    className="flex items-center gap-[12px] px-[16px] py-[14px] border border-border bg-card text-foreground rounded-[12px] hover:border-primary hover:bg-primary/20 transition-all transform hover:-translate-y-[1px]" 
     onClick={() => setActivePanel(panel)}
   >
     <Icon size={18} className="opacity-70" />

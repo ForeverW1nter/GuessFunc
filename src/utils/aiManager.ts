@@ -80,7 +80,7 @@ class AIManager {
     }
 
     const messages = [
-      { role: "system", content: `${this.getChatSystemPrompt()}\n当前目标函数是: ${targetFunction}` },
+      { role: "system", content: `${this.getChatSystemPrompt()}\n${i18n.t('ai.currentTargetIs')}: ${targetFunction}` },
       ...this.chatHistory,
       { role: "user", content: userMessage }
     ];
@@ -91,10 +91,10 @@ class AIManager {
 
       const response = await fetch(targetUrl, {
         method: 'POST',
-        headers: headers,
+        headers,
         body: JSON.stringify({
           model: AI_CONFIG.model,
-          messages: messages,
+          messages,
           max_tokens: AI_CONFIG.maxTokens, // 增加 token 上限，避免欢迎语被截断
           temperature: AI_CONFIG.temperature // 稍微提高温度，让欢迎语更自然
         }),
@@ -111,7 +111,7 @@ class AIManager {
       const content = data.choices[0].message.content;
 
       this.chatHistory.push({ role: "user", content: userMessage });
-      this.chatHistory.push({ role: "assistant", content: content });
+      this.chatHistory.push({ role: "assistant", content });
       
       if (this.chatHistory.length > 10) {
         this.chatHistory = this.chatHistory.slice(-10);
@@ -180,10 +180,10 @@ class AIManager {
 
     const response = await fetch(targetUrl, {
       method: 'POST',
-      headers: headers,
+      headers,
       body: JSON.stringify({
         model: AI_CONFIG.model,
-        messages: messages,
+        messages,
         response_format: { type: "json_object" }
       })
     });
@@ -205,7 +205,7 @@ class AIManager {
     const parsed = this._parseJSON(content);
     if (parsed && parsed.expression) {
       this.history.push({ role: "user", content: userPrompt });
-      this.history.push({ role: "assistant", content: content });
+      this.history.push({ role: "assistant", content });
       
       if (this.history.length > 6) {
         this.history = this.history.slice(-6);

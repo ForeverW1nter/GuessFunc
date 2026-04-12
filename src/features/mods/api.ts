@@ -1,5 +1,6 @@
 import type { ModItem, ModPackage } from './types';
 import type { RouteData } from '../../types/story';
+import i18n from '../../i18n';
 import { ModPackageSchema } from './schema';
 import { GAME_CONSTANTS } from '../../utils/constants';
 
@@ -55,7 +56,7 @@ export const parseModPackage = (markdownBody: string): ModPackage => {
       const rawJson = JSON.parse(fallbackMatch[1]);
       return ModPackageSchema.parse(rawJson);
     } catch (e) {
-      throw new Error('Fallback JSON parse failed: ' + (e as Error).message);
+      throw new Error(`Fallback JSON parse failed: ${  (e as Error).message}`);
     }
   }
 
@@ -63,7 +64,7 @@ export const parseModPackage = (markdownBody: string): ModPackage => {
     const rawJson = JSON.parse(match[1]);
     return ModPackageSchema.parse(rawJson);
   } catch (e) {
-    throw new Error('JSON parse or validation failed: ' + (e as Error).message);
+    throw new Error(`JSON parse or validation failed: ${  (e as Error).message}`);
   }
 };
 
@@ -85,11 +86,11 @@ export const generatePublishUrl = (manifest: Omit<ModItem, 'id' | 'createdAt' | 
   };
 
   const bodyStr = `
-**模组描述**：${manifest.description}
+**${i18n.t('mods.publish.descLabel')}**：${manifest.description}
 
-**作者**：${manifest.author}
+**${i18n.t('mods.publish.authorLabel')}**：${manifest.author}
 
-> 请勿修改以下内容，否则审核可能被拒绝。
+> ${i18n.t('mods.publish.warning')}
 <!-- MOD_DATA_START -->
 \`\`\`json
 ${JSON.stringify(packageData, null, 2)}
