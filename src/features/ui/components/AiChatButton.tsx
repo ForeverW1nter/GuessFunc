@@ -117,6 +117,7 @@ export const AiChatButton: React.FC = () => {
     <>
       <button 
         ref={buttonRef}
+        aria-label="AI Chat and Tips"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

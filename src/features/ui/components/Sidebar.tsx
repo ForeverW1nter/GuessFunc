@@ -245,6 +245,7 @@ export const Sidebar: React.FC = () => {
           {/* 移动端关闭按钮 */}
           <button 
             onClick={() => setSidebarOpen(false)}
+            aria-label="Close sidebar"
             className="md:hidden p-[8px] text-foreground opacity-70 hover:opacity-100 hover:bg-muted rounded-[8px] border-none bg-transparent cursor-pointer transition-all"
           >
             <X size={20} strokeWidth={2} />

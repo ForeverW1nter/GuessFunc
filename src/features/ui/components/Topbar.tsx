@@ -112,6 +112,7 @@ export const Topbar: React.FC = () => {
       <div className="flex items-center gap-[16px]">
         <button 
           onClick={handleMenuClick}
+          aria-label="Toggle sidebar"
           className="bg-transparent border-none text-foreground cursor-pointer p-[8px] rounded-[8px] flex items-center justify-center opacity-70 hover:bg-muted hover:opacity-100 transition-all duration-200 md:flex"
         >
           <Menu size={24} strokeWidth={2} />

@@ -236,6 +236,8 @@ export const GraphRenderer = () => {
     <div className="absolute inset-0 w-full h-full touch-none bg-background">
       <div 
         ref={containerRef} 
+        aria-label="Desmos Math Graph Renderer"
+        role="application"
         className="absolute inset-0 w-full h-full"
       />
       {!isReady && (
