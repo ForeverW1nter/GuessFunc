@@ -47,8 +47,8 @@ export const GAME_CONSTANTS = {
     MOD_ORDER: 'guessfunc_mod_order',
   },
   MOD_STORE: {
-    GITEE_OWNER: import.meta.env.VITE_GITEE_OWNER || 'A-T-O-M',
-    GITEE_REPO: import.meta.env.VITE_GITEE_REPO || 'guess-func',
+    GITEE_OWNER: import.meta.env.VITE_GITEE_OWNER || 'foreverw1nter',
+    GITEE_REPO: import.meta.env.VITE_GITEE_REPO || 'guess-func-mods',
     DB_NAME: 'guessfunc_mod_db',
     STORE_NAME: 'guessfunc_mod_store',
   },
