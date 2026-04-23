@@ -69,3 +69,13 @@
 3. **静态资源打包 (Asset Public Path)**：在微前端或 Vite 插件化打包模式下，游戏模组内部的图片或音频等静态资源，**绝对禁止**使用绝对路径（如 `/assets/bg.png`），必须通过 JS 模块化 `import bg from './bg.png'` 引入，交由打包工具自动处理 Public Path。
 4. **全局快捷键隔离 (Keybinding Isolation)**：基建层必须提供统一的 `ShortcutManager`。**严禁任何模组私自向 `window` 或 `document` 挂载 `keydown` 事件。** 模组在注册快捷键（如 `Ctrl+Z` 撤销）时，必须声明其焦点作用域（Focus Scope），仅当用户在模组自身的 DOM 区域内操作时才生效，防止与其他模组发生快捷键“幽灵冲突”。
 5. **测试环境降级 (Test Environment Fallbacks)**：由于 Jest/Vitest 默认环境不支持完整的 Web Worker 机制，在编写 `submod-math-engine` 等核心逻辑时，必须将算法纯函数与 Worker 胶水层（`postMessage` 通信）分离。单元测试**只针对纯函数**进行，或者在测试环境通过全局 Mock（如 `global.Worker = class MockWorker {}`）拦截 Worker 实例化。
+
+## 10. 平台工程与商业化生态底线 (Platform Engineering & Ecosystem)
+
+为了支撑未来 100+ 社区 Mod 的接入以及潜在的大规模商业化部署，必须严守以下平台级工程红线：
+
+1. **依赖去重与包体积红线 (Dependency Duplication)**：**绝对禁止**任何增量模组将 `React`、`Zustand`、`Framer Motion` 等核心库打包进自身的代码中。基建层必须作为唯一的宿主提供这些单例依赖。模组在打包时必须将这些库声明为 `external`（或使用 Module Federation 的 Shared 机制），严防包体积爆炸和 React 多实例冲突。
+2. **跨标签页数据防撕裂 (Cross-Tab Sync)**：玩家可能多开网页（一个大厅，一个游戏）。负责管理全局存档的领域 Store（如 `useProgressionStore`）**必须**集成 `BroadcastChannel` 或 `storage` 监听机制。任何 Tab 的数据变更必须瞬间同步到所有 Tab，严防脏数据相互覆盖。
+3. **收口遥测与埋点监控 (Telemetry Sink)**：**严禁**任何增量模组私自引入第三方监控 SDK（如 Google Analytics、Sentry）。基建层必须提供统一的 `useTelemetry()` Hook。模组只能通过该接口上报标准化事件，由核心层统一附加环境标签（如 Mod ID、用户 ID）后集中发送，确保性能与隐私合规。
+4. **API 防腐层与版本契约 (Backward Compatibility)**：内核**绝对禁止**直接向 Mod 暴露底层的状态库实例。必须提供一层稳定的外观 API（Facade）。每个 Mod 必须通过 `manifest.json` 显式声明其依赖的 `core-api` 版本。内核若发生破坏性更新，必须提供旧版适配器（Adapter），或优雅拒绝不兼容的 Mod，严防全网旧 Mod 批量报废。
+5. **SSR 与客户端渲染的硬边界 (SSR Boundaries)**：为兼容未来的 SEO 需求（如 Next.js），基建层（大厅、社交）可支持服务端渲染。但所有的**游戏模组必须被强制隔离在客户端执行 (Client-Side Only)**。微内核在挂载游戏模组前，必须确保处于浏览器环境，严防 `window is not defined` 导致服务器宕机。
