@@ -4,7 +4,7 @@
 
 ## 1. 根节点：微内核与基础框架 (Core Framework)
 这是底层的基础设施，负责管理状态、依赖注入和组件装配。
-- **`ModuleRegistry`**: 负责动态加载、初始化各层级的模组，解决依赖树。
+- **`ModuleRegistry`**: 负责动态加载、初始化各层级的模组，解决依赖树。提供动态路由挂载和动态 I18n 词典注入的 API。
 - **`SlotManager`**: UI 插槽管理器，允许模组将自己的 React 节点注入到其他模组预留的占位符中。
 - **`DesignTokensContract`**: 定义系统必须具备的 CSS 变量契约。
 
@@ -34,8 +34,8 @@
 - `submod-math-engine`: 纯数学计算与等价性验证核心，**运行在 Web Worker 中**，保障 UI 帧率。
 - `submod-desmos-renderer`: 纯 UI 渲染器，接收函数字符串并绘制，使用全局 Token。
 - `submod-function-input`: 提供数学符号虚拟键盘与输入框。
-- `submod-parameter-slider`: 针对含参关卡的滑动条控制组件，通过 Zustand 直接与渲染器通信。
-- `submod-guess-evaluator`: 业务中枢，协调上述子模组，判断通关。
+- `submod-parameter-slider`: 针对含参关卡的滑动条控制组件。
+- `submod-guess-evaluator`: 业务中枢容器（Container），协调上述纯 UI 子模组，调用 `useProgressionStore()` 等全局 Hook 判断通关。
 
 ### 4.2 `mod-game-gatefunc` (逻辑门游戏)
 - `submod-circuit-engine`: 逻辑计算引擎（真值表、布尔运算），**运行在 Web Worker 中**。

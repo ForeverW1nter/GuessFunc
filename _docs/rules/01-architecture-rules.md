@@ -29,6 +29,13 @@
 主界面（Hub）只留下插槽：`<Slot name="GAME_LIST" />`。
 游戏模组在初始化时，将自己的入口卡片主动注入到该插槽中。
 
+## 5. 绝对 DRY 原则 (Don't Repeat Yourself)
+
+**核心底线：不要重复造轮子，消除一切冗余！**
+1. **拥抱开源生态**：如果有成熟的第三方库（如 Zustand 处理状态，React Router 处理路由，Shadcn UI 处理无头组件），**直接拿来用**，严禁自己手写一套残缺的实现。
+2. **合并相似逻辑**：如果两个模组有 80% 相似的逻辑（比如 GuessFunc 和 GateFunc 都需要“通关结算弹窗”），必须将这部分逻辑抽离到 `Shared Modules` 中，通过传入不同的配置参数来复用，**绝对禁止复制粘贴代码**。
+3. **清理冗余文件**：如果一个工具函数或组件已经半年没有被任何地方引用，或者它的功能完全可以被标准库替代，立刻删除它。
+
 ## 6. 性能与体验红线 (Performance & UX Redlines)
 
 为了确保极致的游戏体验，彻底消除“卡顿”与“渲染风暴”，必须严守以下性能底线：
@@ -46,9 +53,17 @@
 2. **向后兼容的存档水合 (Safe Hydration)**：任何持久化到本地的 Store，**必须**实现 `version` 和 `migrate` 函数。
 3. **禁止暴力清空用户数据**：在任何错误恢复机制中，**绝对禁止**无差别遍历并清空存储。
 4. **突破 5MB 存储限制 (IndexedDB First)**：基建层的 `useStorage()` **必须**底层使用 `IndexedDB`（而非 `localStorage`），以支持无限量的自制关卡、Mod 数据和庞大的 AI 对话记录。
+   - **强制降级策略 (Storage Fallback)**：如果浏览器在无痕模式/隐私模式下禁用了 IndexedDB，`useStorage()` 必须自动无缝降级到**内存存储 (In-Memory)**，并在 UI 层面提示用户“当前处于无痕模式，游戏进度在关闭网页后将丢失”，**绝对禁止**直接抛出报错导致白屏。
 
 ## 8. 异步并发与状态红线 (Async & State Redlines)
 
 1. **彻底消灭“幽灵回调” (Race Conditions)**：任何包含 `await`（如请求 Worker 验证函数）的操作，在 `await` 结束后修改状态前，**必须校验上下文是否已变更**（如：玩家是否已经切到了下一关）。如果上下文已过期，必须直接丢弃该异步结果，严禁出现“上一关的延迟返回导致这一关瞬间通关”的 Bug。
 2. **强制函数式状态更新 (Functional SetState)**：在 Zustand 的异步 Action 中，修改状态时**绝对禁止**使用 `await` 之前捕获的闭包变量覆盖新状态。必须使用 `set((curr) => ({ data: curr.data + 1 }))` 防止数据丢失。
 3. **禁止 Store 间级联更新 (No Cascading Stores)**：**绝对禁止**通过监听 `Store A` 的变化去 `set` 修改 `Store B` 的数据（反模式）。如果需要组合数据（如“官方关卡”+“Mod关卡”），必须在组件渲染时通过 `useMemo` 或 Zustand 的派生 Selector 即时计算。
+
+## 9. 插件生命周期与注入协议 (Plugin Lifecycle Protocols)
+
+1. **路由动态挂载 (Dynamic Routing)**：主程序 `mod-router` 仅配置静态壳（Shell）路由。增量游戏模组在初始化时，通过调用 `ModuleRegistry.registerRoute(path, Component)` 动态将自身的路由挂载到主路由树。
+2. **多语言动态合并 (Dynamic I18n)**：各游戏模组自带本地的 JSON 词典。为了防止翻译键名冲突，词典的顶层 Key 必须以**模组名称作命名空间前缀**（例如 `guessfunc.start`），并在模组加载时调用 `ModuleRegistry.registerI18n(namespace, dict)` 注入到全局的 `react-i18next` 实例中。
+3. **静态资源打包 (Asset Public Path)**：在微前端或 Vite 插件化打包模式下，游戏模组内部的图片或音频等静态资源，**绝对禁止**使用绝对路径（如 `/assets/bg.png`），必须通过 JS 模块化 `import bg from './bg.png'` 引入，交由打包工具自动处理 Public Path。
+4. **测试环境降级 (Test Environment Fallbacks)**：由于 Jest/Vitest 默认环境不支持完整的 Web Worker 机制，在编写 `submod-math-engine` 等核心逻辑时，必须将算法纯函数与 Worker 胶水层（`postMessage` 通信）分离。单元测试**只针对纯函数**进行，或者在测试环境通过全局 Mock（如 `global.Worker = class MockWorker {}`）拦截 Worker 实例化。
