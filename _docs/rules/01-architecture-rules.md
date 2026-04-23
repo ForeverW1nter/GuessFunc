@@ -42,6 +42,13 @@
 
 ## 7. 稳定性与数据安全底线 (Stability & Data Safety)
 
-1. **局部错误隔离 (Local Error Boundaries)**：禁止使用“核弹级”的全局刷新来掩盖错误。必须在每个模组、每个插槽的最外层包裹局部的 `ErrorBoundary`。某个模组崩溃，只能影响该模组本身的渲染，绝不能导致整个平台白屏或强制跳转回首页。
-2. **向后兼容的存档水合 (Safe Hydration)**：任何持久化到 LocalStorage 或云端的 Zustand Store，**必须**实现 `version` 和 `migrate` 函数。严禁直接使用旧版 JSON 暴力覆盖新版 Store，防止字段缺失导致的数据污染与级联崩溃。
-3. **禁止暴力清空用户数据**：在任何错误恢复机制中，**绝对禁止**无差别遍历并清空 `localStorage`。玩家的存档、自制关卡数据是神圣不可侵犯的。
+1. **局部错误隔离 (Local Error Boundaries)**：禁止使用“核弹级”的全局刷新来掩盖错误。必须在每个模组、每个插槽的最外层包裹局部的 `ErrorBoundary`。
+2. **向后兼容的存档水合 (Safe Hydration)**：任何持久化到本地的 Store，**必须**实现 `version` 和 `migrate` 函数。
+3. **禁止暴力清空用户数据**：在任何错误恢复机制中，**绝对禁止**无差别遍历并清空存储。
+4. **突破 5MB 存储限制 (IndexedDB First)**：基建层的 `useStorage()` **必须**底层使用 `IndexedDB`（而非 `localStorage`），以支持无限量的自制关卡、Mod 数据和庞大的 AI 对话记录。
+
+## 8. 异步并发与状态红线 (Async & State Redlines)
+
+1. **彻底消灭“幽灵回调” (Race Conditions)**：任何包含 `await`（如请求 Worker 验证函数）的操作，在 `await` 结束后修改状态前，**必须校验上下文是否已变更**（如：玩家是否已经切到了下一关）。如果上下文已过期，必须直接丢弃该异步结果，严禁出现“上一关的延迟返回导致这一关瞬间通关”的 Bug。
+2. **强制函数式状态更新 (Functional SetState)**：在 Zustand 的异步 Action 中，修改状态时**绝对禁止**使用 `await` 之前捕获的闭包变量覆盖新状态。必须使用 `set((curr) => ({ data: curr.data + 1 }))` 防止数据丢失。
+3. **禁止 Store 间级联更新 (No Cascading Stores)**：**绝对禁止**通过监听 `Store A` 的变化去 `set` 修改 `Store B` 的数据（反模式）。如果需要组合数据（如“官方关卡”+“Mod关卡”），必须在组件渲染时通过 `useMemo` 或 Zustand 的派生 Selector 即时计算。
