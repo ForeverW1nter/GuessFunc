@@ -2,22 +2,21 @@
 
 本项目采用**微内核/插件化架构 (Microkernel / Plugin Architecture)**。整个系统被划分为四个层级，从下到上依次为：内核、基建、共享服务、游戏模组。
 
-## 1. 根节点：微内核 (The Kernel)
-这是唯一不可替换的极简底座，纯 TypeScript 实现，无 UI。
+## 1. 根节点：微内核与基础框架 (Core Framework)
+这是底层的基础设施，负责管理状态、依赖注入和组件装配。
 - **`ModuleRegistry`**: 负责动态加载、初始化各层级的模组，解决依赖树。
-- **`EventBus`**: 全局事件总线，实现跨模组通信的唯一合法渠道。
 - **`SlotManager`**: UI 插槽管理器，允许模组将自己的 React 节点注入到其他模组预留的占位符中。
 - **`DesignTokensContract`**: 定义系统必须具备的 CSS 变量契约。
 
-## 2. 必须有的模组：基础建设 (Foundation Modules)
-这些是平台的“操作系统 UI”，可以被整体替换，但不能缺失。
-- **`mod-ui-manager` (UI 管理中心)**: 提供 `useUI()` Hook（按钮、弹窗等），注入并管理全局主题（CSS Variables）。
-- **`mod-router` (路由系统)**: 接管 URL 变化，分发页面渲染。
-- **`mod-storage` (存储系统)**: 提供持久化存储接口。
-- **`mod-hub` (主界面/启动器)**: 展示游戏列表，提供大厅展示（成就、用户信息），并暴露出 `<Slot name="GAME_LIST" />` 供游戏注册。
+## 2. 必须有的模组：领域 Store 与基建服务 (Domain Stores & Foundation)
+这些服务通过 React Context 提供强类型的 Hook，替代全局 EventBus。
+- **`UI System`**: 提供 `<ThemeProvider>`，暴露 `useUI()` Hook（按钮、弹窗等），注入全局主题。
+- **`Progression Store`**: 领域级的 Zustand Store，管理整体进度与解锁状态。
+- **`Storage Service`**: 暴露 `useStorage()` Hook 获取持久化存储接口。
+- **`Hub & Router`**: 主界面大厅与路由系统。接管 URL 变化，展示游戏列表，并暴露出 `<Slot name="GAME_LIST" />` 供游戏注册。
 
-## 3. 共享功能模组 (Shared Feature Modules)
-为所有游戏提供跨域支撑的独立模组。
+## 3. 共享功能模组 (Shared Feature Widgets)
+为所有游戏提供跨域支撑的独立模组（遵循 DRY 原则，避免重复开发）。
 - **`mod-level-generator` (随机关卡生成器)**: 
   - 提供平滑难度系数设置（如 2.15 滑动条）及对应的等级映射（初级、中级等）。
   - 提供 `<Slot name="LEVEL_OPTIONS" />`，允许特定游戏注入自己的选项（如 GuessFunc 的“是否包含参数”）。
