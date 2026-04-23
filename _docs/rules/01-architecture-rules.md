@@ -22,6 +22,7 @@
 为了保证“赛博朋克”、“极简风”等全局主题模组能够完美接管所有游戏的 UI：
 1. **禁止硬编码样式**：绝对不能在组件中写死颜色、字体大小等。必须使用内核定义的 CSS 变量（如 `var(--theme-text-error)`）。
 2. **React 依赖注入 (IoC)**：游戏模组如果需要标准组件（如按钮、弹窗），必须通过 `useUI()` 从基建模组的 Context 中获取，而不是直接 `import { Button } from '@/components'`。
+3. **沙盒化与作用域隔离 (CSS Scoping)**：增量模组如果自带额外的 CSS，基建层的插槽在注入该模组时，必须为其包裹一层唯一的命名空间（如 `div[data-mod="guessfunc"]`）。**绝对禁止 Mod 代码拥有修改全局 `:root` 的权限**，严防全局样式污染。
 
 ## 4. 插槽系统 (Slot System)
 
@@ -40,12 +41,12 @@
 
 为了确保极致的游戏体验，彻底消除“卡顿”与“渲染风暴”，必须严守以下性能底线：
 
-1. **Context 零重渲染原则**：`React Context` **只能**用于传递静态依赖（如 `UI 组件库引用`、`API Client 实例`）。**绝对禁止**将频繁变化的业务数据（如分数、当前输入值）放入 Context Provider 的 `value` 中，必须全部交给 `Zustand` 独立 Store 管理。
+1. **状态分离机制 (Render-Phase vs Game-Loop)**：60FPS 的高频渲染数据（如画布坐标、动画滑动条当前值）**绝对禁止**经过 React State 或 Zustand 的普通订阅。必须使用 `ref` 直接操作 DOM，或者通过 `zustand/vanilla` 在 React 渲染周期之外直接绑定（Transient Updates），防止 React 异步渲染导致的游戏画面撕裂（Tearing）。
 2. **主线程解放 (Web Worker First)**：所有 CPU 密集型计算（如 `GuessFunc` 的表达式解析、`GateFunc` 的逻辑门计算）**必须**运行在 Web Worker 中。
    - **高频节流**：涉及 Worker 的高频交互（如拖动滑动条）必须加入节流（Throttle）或防抖（Debounce），防止序列化开销阻塞主线程。
    - **超时熔断**：所有 Worker 调用必须设置 Timeout。若计算超时，必须强制重启 Worker，杜绝“幽灵挂起”导致主流程卡死。
-3. **严格的内存回收契约 (Teardown)**：任何集成第三方库（如 Desmos 图表、WebGL 画布）或启动 Worker 的模组，在模组卸载（Unmount / 路由切换）时，**必须**调用原生的销毁方法（如 `.destroy()`, `.terminate()`），严防内存泄漏。
-4. **意图驱动的预加载 (Intent-based Prefetching)**：利用 React 18 的 `startTransition` 结合鼠标悬停（Hover）预加载技术，实现游戏模组的“无缝切入”。
+3. **重型实例的池化 (Instance Pooling) 与销毁契约**：严防 WebGL Context 耗尽导致的浏览器黑屏。对于 Desmos 图表、3D 画布等重型资源，**必须**由基建层提供复用池。模组卸载时必须将实例清空并归还给池子，同时**必须**调用原生的销毁方法（如 `.destroy()`, `.terminate()`），严防内存泄漏。
+4. **带超时的健壮加载器 (Robust Loader)**：在弱网环境下，动态加载模组（`import()`）时**绝对禁止**裸写 `React.lazy`。必须包裹带 Timeout 的高阶组件，若 5 秒内加载失败，必须自动降级显示“网络不佳”的 UI 并提供返回/重试按钮，严防“白屏死锁”。
 
 ## 7. 稳定性与数据安全底线 (Stability & Data Safety)
 
@@ -66,4 +67,5 @@
 1. **路由动态挂载 (Dynamic Routing)**：主程序 `mod-router` 仅配置静态壳（Shell）路由。增量游戏模组在初始化时，通过调用 `ModuleRegistry.registerRoute(path, Component)` 动态将自身的路由挂载到主路由树。
 2. **多语言动态合并 (Dynamic I18n)**：各游戏模组自带本地的 JSON 词典。为了防止翻译键名冲突，词典的顶层 Key 必须以**模组名称作命名空间前缀**（例如 `guessfunc.start`），并在模组加载时调用 `ModuleRegistry.registerI18n(namespace, dict)` 注入到全局的 `react-i18next` 实例中。
 3. **静态资源打包 (Asset Public Path)**：在微前端或 Vite 插件化打包模式下，游戏模组内部的图片或音频等静态资源，**绝对禁止**使用绝对路径（如 `/assets/bg.png`），必须通过 JS 模块化 `import bg from './bg.png'` 引入，交由打包工具自动处理 Public Path。
-4. **测试环境降级 (Test Environment Fallbacks)**：由于 Jest/Vitest 默认环境不支持完整的 Web Worker 机制，在编写 `submod-math-engine` 等核心逻辑时，必须将算法纯函数与 Worker 胶水层（`postMessage` 通信）分离。单元测试**只针对纯函数**进行，或者在测试环境通过全局 Mock（如 `global.Worker = class MockWorker {}`）拦截 Worker 实例化。
+4. **全局快捷键隔离 (Keybinding Isolation)**：基建层必须提供统一的 `ShortcutManager`。**严禁任何模组私自向 `window` 或 `document` 挂载 `keydown` 事件。** 模组在注册快捷键（如 `Ctrl+Z` 撤销）时，必须声明其焦点作用域（Focus Scope），仅当用户在模组自身的 DOM 区域内操作时才生效，防止与其他模组发生快捷键“幽灵冲突”。
+5. **测试环境降级 (Test Environment Fallbacks)**：由于 Jest/Vitest 默认环境不支持完整的 Web Worker 机制，在编写 `submod-math-engine` 等核心逻辑时，必须将算法纯函数与 Worker 胶水层（`postMessage` 通信）分离。单元测试**只针对纯函数**进行，或者在测试环境通过全局 Mock（如 `global.Worker = class MockWorker {}`）拦截 Worker 实例化。
