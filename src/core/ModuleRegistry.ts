@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom';
+import type { RouteObject } from 'react-router-dom';
 
 export interface GameModule {
   id: string;
@@ -14,25 +14,32 @@ export interface GameModule {
 
 class ModuleRegistryClass {
   private modules = new Map<string, GameModule>();
+  private registering = new Set<string>();
   private routeListeners: (() => void)[] = [];
 
   /**
    * Register a new game module. Ensures compatibility and updates dynamic routes.
    */
   async register(mod: GameModule) {
-    if (this.modules.has(mod.id)) {
-      console.warn(`[ModuleRegistry] Module ${mod.id} is already registered.`);
+    if (this.modules.has(mod.id) || this.registering.has(mod.id)) {
+      console.warn(`[ModuleRegistry] Module ${mod.id} is already registered or registering.`);
       return;
     }
 
-    // Call init lifecycle method if present
-    if (mod.init) {
-      await mod.init();
-    }
+    this.registering.add(mod.id);
 
-    this.modules.set(mod.id, mod);
-    this.notifyRouteListeners();
-    console.log(`[ModuleRegistry] Module ${mod.id} registered successfully.`);
+    try {
+      // Call init lifecycle method if present
+      if (mod.init) {
+        await mod.init();
+      }
+
+      this.modules.set(mod.id, mod);
+      this.notifyRouteListeners();
+      console.log(`[ModuleRegistry] Module ${mod.id} registered successfully.`);
+    } finally {
+      this.registering.delete(mod.id);
+    }
   }
 
   getModules() {

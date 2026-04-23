@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModuleRegistry, GameModule } from '../../core/ModuleRegistry';
+import { ModuleRegistry, type GameModule } from '../../core/ModuleRegistry';
 import { useSlotStore } from '../../core/SlotManager';
 import { Link } from 'react-router-dom';
 

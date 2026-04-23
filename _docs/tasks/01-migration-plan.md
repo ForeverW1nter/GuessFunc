@@ -4,11 +4,11 @@
 
 ## 阶段一：搭建微内核与基建层 (Phase 1: Core & Foundation)
 **目标**：构建极简的底层基建，确保后续模组能以“插件”的形式插入系统。
-- [ ] **T1.1**: 实现纯 TypeScript 的微内核核心（`ModuleRegistry`, `EventBus`, `SlotManager`）。
-- [ ] **T1.2**: 建立全局设计令牌体系（Design Tokens Contract），基于 CSS Variables 约束所有颜色、排版等视觉元素。
-- [ ] **T1.3**: 实现 `mod-ui-manager`，提供基础 Headless UI 和 `useUI()` 注入 Hook。
-- [ ] **T1.4**: 实现 `mod-router` 和 `mod-storage`，接管全局路由和持久化存档（替代旧版的臃肿 Store）。
-- [ ] **T1.5**: 构建主界面大厅 (`mod-hub`)，并暴露 `<Slot name="GAME_LIST" />` 供游戏注册。
+- [x] **T1.1**: 实现纯 TypeScript 的微内核核心（`ModuleRegistry`, `EventBus`, `SlotManager`）。
+- [x] **T1.2**: 建立全局设计令牌体系（Design Tokens Contract），基于 CSS Variables 约束所有颜色、排版等视觉元素。
+- [x] **T1.3**: 实现 `mod-ui-manager`，提供基础 Headless UI 和 `useUI()` 注入 Hook。
+- [x] **T1.4**: 实现 `mod-router` 和 `mod-storage`，接管全局路由和持久化存档（替代旧版的臃肿 Store）。
+- [x] **T1.5**: 构建主界面大厅 (`mod-hub`)，并暴露 `<Slot name="GAME_LIST" />` 供游戏注册。
 
 ## 阶段二：迁移与重构 GuessFunc 游戏模组 (Phase 2: GuessFunc)
 **目标**：将旧版核心玩法“猜函数”拆解为多个互不依赖的子模组，修复历史遗留问题。
