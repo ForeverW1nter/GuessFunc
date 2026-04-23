@@ -80,13 +80,14 @@
 4. **API 防腐层与版本契约 (Backward Compatibility)**：内核**绝对禁止**直接向 Mod 暴露底层的状态库实例。必须提供一层稳定的外观 API（Facade）。每个 Mod 必须通过 `manifest.json` 显式声明其依赖的 `core-api` 版本。内核若发生破坏性更新，必须提供旧版适配器（Adapter），或优雅拒绝不兼容的 Mod，严防全网旧 Mod 批量报废。
 5. **SSR 与客户端渲染的硬边界 (SSR Boundaries)**：为兼容未来的 SEO 需求（如 Next.js），基建层（大厅、社交）可支持服务端渲染。但所有的**游戏模组必须被强制隔离在客户端执行 (Client-Side Only)**。微内核在挂载游戏模组前，必须确保处于浏览器环境，严防 `window is not defined` 导致服务器宕机。
 
-## 11. 工程化、构建与 CI/CD 交付底线 (Engineering & DevOps)
+## 11. 工程化、构建与纯静态交付底线 (Engineering & Static DevOps)
 
-本架构的成功不仅依赖于运行时的解耦，更依赖于构建时（Build-time）的物理隔离与自动化防线。
+本架构的成功不仅依赖于运行时的解耦，更依赖于构建时（Build-time）的物理隔离与纯静态部署环境（如 GitHub Pages）的绝对兼容。
 
-1. **Shadcn UI 的集中收口与防腐 (Component Boundaries)**：**严禁**任何增量游戏模组（Mod）在自身工程内运行 Shadcn CLI 或复制 UI 组件源码。所有的 Shadcn 组件源码（如 `Button.tsx`, `Dialog.tsx`）**只能唯一存在**于基建层的 `mod-ui-manager` 中。模组只能通过 NPM 包或构建工具的 Alias 引用（如 `import { Button } from '@core/ui'`），彻底杜绝 UI 代码冗余和样式分裂。
-2. **Web Worker 跨域内联打包 (Worker CORS Bypass)**：由于动态加载远端 Mod 时直接 `new Worker('...')` 会触发浏览器的同源策略（CORS）封杀，所有游戏模组在构建时，**必须**将 Worker 脚本以内联形式（Inline Base64 或 Blob URL）打包进主 JS 文件中（如 Vite 的 `?worker&inline`），确保 Worker 在任何微前端宿主下都能被成功唤起。
-3. **监控上下文与独立 SourceMap (Telemetry & Sentry Scope)**：核心层在捕获到未处理异常时，**必须**通过 Sentry 的 `withScope` 动态注入当前执行的 Mod ID 与版本号。同时，每个独立打包的 Mod 在 CI/CD 阶段，必须将自身的 SourceMap 独立上传至 Sentry，确保微内核平台在运行时报错能精准映射回对应的 Mod 源码。
-4. **分布式的国际化扫描 (Distributed I18n Parsing)**：废除全局统一的 `i18next-parser` 扫描。多语言词典的生成必须下沉到**每个模组独立的构建流中**。各模组生成专属的 JSON 词典文件，随模组代码一同分发，由内核在运行时动态合并。
-5. **插件级性能门禁 (Lighthouse CI Guards)**：持续集成（CI）流水线必须实现解耦。除了核心基建的测试外，每个官方游戏模组在提交 PR 时，必须在独立的沙盒环境中运行 Lighthouse 性能审计。若 TTI（可交互时间）、CLS（布局偏移）等核心 Web 指标不达标，CI 必须强制拦截，防止劣质 Mod 拖垮平台整体性能。
-6. **两段式水合渲染 (Two-Pass Hydration)**：为防止 IndexedDB（异步）与内存降级（同步）带来的时序差异，以及未来 SSR 接入时的水合不匹配（Hydration Mismatch）。所有依赖持久化存储（Zustand Persist）的 UI 组件，在 `hasHydrated` 标志位变为 `true` 之前，**必须**强制渲染骨架屏或兜底 UI，绝对禁止直接渲染可能与服务端不一致的业务数据。
+1. **纯静态路由防 404 (Hash Router Mandatory)**：由于 GitHub Pages 等纯静态托管环境不支持 URL Rewrite 回退，基建层的 `mod-router` **绝对禁止**使用 `BrowserRouter` (History API)。**必须强制使用 `HashRouter`**（URL 中包含 `#`，如 `/#/game/1`），确保用户在任何深层子路由刷新时都不会遭遇 404 错误。
+2. **Web Worker 跨域内联打包 (Worker CORS Bypass)**：为确保动态加载的远端 Mod 以及部署在 CDN/子目录下的静态资源能成功拉起 Web Worker（规避浏览器的同源策略与路径错误），所有游戏模组在构建时，**必须**将 Worker 脚本以内联形式打包进主 JS 文件中（如 Vite 的 `import MyWorker from './worker?worker&inline'`），严防 Worker 实例化失败导致核心逻辑白屏挂起。
+3. **Shadcn UI 的集中收口与防腐 (Component Boundaries)**：**严禁**任何增量游戏模组（Mod）在自身工程内运行 Shadcn CLI 或复制 UI 组件源码。所有的 Shadcn 组件源码（如 `Button.tsx`, `Dialog.tsx`）**只能唯一存在**于基建层的 `mod-ui-manager` 中。模组只能通过 NPM 包或构建工具的 Alias 引用（如 `import { Button } from '@core/ui'`），彻底杜绝 UI 代码冗余和样式分裂。
+4. **监控上下文与独立 SourceMap (Telemetry & Sentry Scope)**：核心层在捕获到未处理异常时，**必须**通过 Sentry 的 `withScope` 动态注入当前执行的 Mod ID 与版本号。同时，每个独立打包的 Mod 在 CI/CD 阶段，必须将自身的 SourceMap 独立上传至 Sentry，确保微内核平台在运行时报错能精准映射回对应的 Mod 源码。
+5. **分布式的国际化扫描 (Distributed I18n Parsing)**：废除全局统一的 `i18next-parser` 扫描。多语言词典的生成必须下沉到**每个模组独立的构建流中**。各模组生成专属的 JSON 词典文件，随模组代码一同分发，由内核在运行时动态合并。
+6. **插件级性能门禁 (Lighthouse CI Guards)**：持续集成（CI）流水线必须实现解耦。除了核心基建的测试外，每个官方游戏模组在提交 PR 时，必须在独立的沙盒环境中运行 Lighthouse 性能审计。若 TTI（可交互时间）、CLS（布局偏移）等核心 Web 指标不达标，CI 必须强制拦截，防止劣质 Mod 拖垮平台整体性能。
+7. **两段式水合渲染 (Two-Pass Hydration)**：为防止 IndexedDB（异步）与内存降级（同步）带来的时序差异，以及未来 SSR 接入时的水合不匹配（Hydration Mismatch）。所有依赖持久化存储（Zustand Persist）的 UI 组件，在 `hasHydrated` 标志位变为 `true` 之前，**必须**强制渲染骨架屏或兜底 UI，绝对禁止直接渲染可能与服务端不一致的业务数据。
