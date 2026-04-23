@@ -31,14 +31,14 @@
 游戏本身作为插件挂载，其内部进一步拆分为高度解耦的子模组。
 
 ### 4.1 `mod-game-guessfunc` (猜函数游戏)
-- `submod-math-engine`: 纯数学计算与等价性验证核心。
+- `submod-math-engine`: 纯数学计算与等价性验证核心，**运行在 Web Worker 中**，保障 UI 帧率。
 - `submod-desmos-renderer`: 纯 UI 渲染器，接收函数字符串并绘制，使用全局 Token。
 - `submod-function-input`: 提供数学符号虚拟键盘与输入框。
-- `submod-parameter-slider`: 针对含参关卡的滑动条控制组件。
-- `submod-guess-evaluator`: 业务中枢，协调上述子模组，判断通关并通过 EventBus 广播。
+- `submod-parameter-slider`: 针对含参关卡的滑动条控制组件，通过 Zustand 直接与渲染器通信。
+- `submod-guess-evaluator`: 业务中枢，协调上述子模组，判断通关。
 
 ### 4.2 `mod-game-gatefunc` (逻辑门游戏)
-- `submod-circuit-engine`: 逻辑计算引擎（真值表、布尔运算）。
+- `submod-circuit-engine`: 逻辑计算引擎（真值表、布尔运算），**运行在 Web Worker 中**。
 - `submod-node-canvas`: 节点连线可视化编辑器（纯 UI 画布）。
 - `submod-gate-inventory`: 逻辑门背包与拖拽源管理器。
 - `submod-level-progression`: 关卡树/进度地图渲染。
