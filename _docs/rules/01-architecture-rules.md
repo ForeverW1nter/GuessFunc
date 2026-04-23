@@ -34,6 +34,14 @@
 为了确保极致的游戏体验，彻底消除“卡顿”与“渲染风暴”，必须严守以下性能底线：
 
 1. **Context 零重渲染原则**：`React Context` **只能**用于传递静态依赖（如 `UI 组件库引用`、`API Client 实例`）。**绝对禁止**将频繁变化的业务数据（如分数、当前输入值）放入 Context Provider 的 `value` 中，必须全部交给 `Zustand` 独立 Store 管理。
-2. **主线程解放 (Web Worker First)**：所有 CPU 密集型计算（如 `GuessFunc` 的表达式解析与等价验证、`GateFunc` 的复杂逻辑门真值表计算）**必须**运行在 Web Worker 中。严禁让数学计算阻塞 UI 渲染和动画（如滑动条拖拽）。
-3. **意图驱动的预加载 (Intent-based Prefetching)**：禁止在玩家点击游戏图标后才开始加载几兆的模组代码导致白屏。必须利用 React 18 的 `startTransition` 结合鼠标悬停（Hover）预加载技术，实现游戏模组的“无缝切入”。
-4. **组件级按需渲染**：在 `Shared Feature Widgets` 中（如通关弹窗、成就提示），必须利用懒加载（Lazy）和骨架屏（Skeleton），避免首次加载核心壳应用时体积过大。
+2. **主线程解放 (Web Worker First)**：所有 CPU 密集型计算（如 `GuessFunc` 的表达式解析、`GateFunc` 的逻辑门计算）**必须**运行在 Web Worker 中。
+   - **高频节流**：涉及 Worker 的高频交互（如拖动滑动条）必须加入节流（Throttle）或防抖（Debounce），防止序列化开销阻塞主线程。
+   - **超时熔断**：所有 Worker 调用必须设置 Timeout。若计算超时，必须强制重启 Worker，杜绝“幽灵挂起”导致主流程卡死。
+3. **严格的内存回收契约 (Teardown)**：任何集成第三方库（如 Desmos 图表、WebGL 画布）或启动 Worker 的模组，在模组卸载（Unmount / 路由切换）时，**必须**调用原生的销毁方法（如 `.destroy()`, `.terminate()`），严防内存泄漏。
+4. **意图驱动的预加载 (Intent-based Prefetching)**：利用 React 18 的 `startTransition` 结合鼠标悬停（Hover）预加载技术，实现游戏模组的“无缝切入”。
+
+## 7. 稳定性与数据安全底线 (Stability & Data Safety)
+
+1. **局部错误隔离 (Local Error Boundaries)**：禁止使用“核弹级”的全局刷新来掩盖错误。必须在每个模组、每个插槽的最外层包裹局部的 `ErrorBoundary`。某个模组崩溃，只能影响该模组本身的渲染，绝不能导致整个平台白屏或强制跳转回首页。
+2. **向后兼容的存档水合 (Safe Hydration)**：任何持久化到 LocalStorage 或云端的 Zustand Store，**必须**实现 `version` 和 `migrate` 函数。严禁直接使用旧版 JSON 暴力覆盖新版 Store，防止字段缺失导致的数据污染与级联崩溃。
+3. **禁止暴力清空用户数据**：在任何错误恢复机制中，**绝对禁止**无差别遍历并清空 `localStorage`。玩家的存档、自制关卡数据是神圣不可侵犯的。
