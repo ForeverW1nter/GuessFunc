@@ -39,8 +39,9 @@ export const HubPage = () => {
 
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-x-hidden">
-      <div className="absolute top-[-15%] left-[-15%] w-[42vw] h-[42vw] rounded-full bg-[var(--color-glow-1)] blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-18%] right-[-18%] w-[34vw] h-[34vw] rounded-full bg-[var(--color-glow-2)] blur-[140px] pointer-events-none" />
+      {/* Decorative background elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[var(--color-primary)] opacity-[0.03] blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[30vw] h-[30vw] rounded-full bg-[var(--accent-archive)] opacity-[0.03] blur-[100px] pointer-events-none" />
 
       <motion.header 
         initial={{ opacity: 0, y: -20 }}
