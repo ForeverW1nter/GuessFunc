@@ -7,20 +7,15 @@ export const PageTransition = () => {
   const outlet = useOutlet();
 
   return (
-    <AnimatePresence mode="popLayout" initial={false}>
+    <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={location.pathname}
-        initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        exit={{ opacity: 0, y: -15, filter: 'blur(4px)' }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full h-full"
+        initial={{ opacity: 0, filter: 'blur(8px)' }}
+        animate={{ opacity: 1, filter: 'blur(0px)' }}
+        exit={{ opacity: 0, filter: 'blur(8px)' }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="w-full h-full relative"
       >
-        {/* 
-          Using useOutlet() instead of <Outlet /> is CRITICAL for Framer Motion.
-          It freezes the old route's React tree so it can animate out gracefully 
-          instead of instantly updating to the new route's content and causing visual bugs.
-        */}
         {outlet}
       </motion.div>
     </AnimatePresence>

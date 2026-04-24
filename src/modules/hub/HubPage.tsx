@@ -39,7 +39,7 @@ export const HubPage = () => {
   const { theme, toggleTheme } = useUI();
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-hidden transition-colors duration-500">
       
       {/* Decorative background elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[var(--color-primary)] opacity-5 blur-[100px] pointer-events-none" />
@@ -65,14 +65,14 @@ export const HubPage = () => {
       </motion.header>
 
       {/* Main Content */}
-      <div className="w-full max-w-5xl flex flex-col gap-2 mt-20">
+      <div className="w-full max-w-5xl flex flex-col gap-2 mt-20 z-10">
         {MODES.map((mode, index) => (
           <Link key={mode.id} to={mode.path} className="group relative block w-full outline-none">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.1 * index, ease: [0.22, 1, 0.36, 1] }}
-              className="relative py-10 px-8 border-b border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-8 transition-colors duration-500 hover:bg-[var(--color-muted)] overflow-hidden"
+              className="relative py-10 px-8 border-b border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-8 transition-colors duration-500 hover:bg-[var(--color-muted)] overflow-hidden bg-[var(--color-background)]"
             >
               {/* Left Side: Index & Title */}
               <div className="flex items-center gap-8 z-10">

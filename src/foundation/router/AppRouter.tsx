@@ -8,8 +8,8 @@ import { CommandBar } from '../ui/CommandBar';
 
 const AppLayout = () => {
   return (
-    <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] overflow-hidden transition-colors duration-500 flex flex-col">
-      <div className="flex-1 relative">
+    <div className="fixed inset-0 bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors duration-700 z-0">
+      <div className="absolute inset-0 overflow-y-auto overflow-x-hidden">
         <PageTransition />
       </div>
       <CommandBar />
