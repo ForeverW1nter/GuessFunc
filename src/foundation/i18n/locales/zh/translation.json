@@ -12,7 +12,22 @@
     "confirmInputPlaceholder": "在此输入确认文本...",
     "copyFallbackDesc": "请手动复制以上链接。",
     "copyFallbackTitle": "复制链接",
-    "none": "无"
+    "none": "无",
+    "booting": "正在启动微内核...",
+    "systemPanic": "系统崩溃",
+    "reboot": "重启系统",
+    "statusOnline": "状态：在线",
+    "systemCore": "系统.核心_v2.0",
+    "standby": "待机",
+    "terminate": "终止",
+    "engineLive": "引擎运行中"
+  },
+  "nav": {
+    "hub": "主控枢纽",
+    "archive": "档案馆",
+    "network": "网络",
+    "studio": "工作室",
+    "settings": "设置"
   },
   "game": {
     "title": "游玩模式",
@@ -306,6 +321,12 @@
         "title": "创作者终端",
         "subtitle": "工作室 / 关卡构建器",
         "desc": "设计、测试并将您自己的逻辑挑战上传到网络。同时支持数学引擎和逻辑门引擎。"
+      },
+      "creator": {
+        "noEngine": "未选择引擎",
+        "initializing": "正在初始化工作区...",
+        "title": "创作者",
+        "subtitle": "系统.终端.已激活"
       }
     },
     "appRouter": {
@@ -543,5 +564,12 @@
     "uninstallFailed": "卸载失败",
     "uninstallSuccess": "卸载成功",
     "unknownAuthor": "未知作者"
+  },
+  "guessFunc": {
+    "title": "猜函数",
+    "subtitle": "系统.引擎.已激活",
+    "expressionLabel": "函数表达式 [ y = f(x) ]",
+    "expressionPlaceholder": "例如：sin(x) + a",
+    "variableLabel": "变量 [{{key}}]"
   }
 }

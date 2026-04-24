@@ -76,9 +76,9 @@ export const HubPage = () => {
       >
         <div>
           <h1 className="text-sm font-mono tracking-[0.3em] opacity-50 uppercase">
-            SYSTEM.CORE_v2.0
+            {t('common.systemCore', 'SYSTEM.CORE_v2.0')}
           </h1>
-          <p className="text-xs font-mono opacity-30 mt-1">STATUS: ONLINE</p>
+          <p className="text-xs font-mono opacity-30 mt-1 uppercase">{t('common.statusOnline', 'STATUS: ONLINE')}</p>
         </div>
       </motion.header>
 

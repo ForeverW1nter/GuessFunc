@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 
 export interface ModalProps {
@@ -25,12 +26,15 @@ export const Modal = ({
   icon,
   children,
   variant = 'default',
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  cancelLabel,
   onConfirm,
   hideFooter = false,
 }: ModalProps) => {
+  const { t } = useTranslation();
   const isDanger = variant === 'danger';
+  const finalConfirmLabel = confirmLabel || t('common.confirm', 'Confirm');
+  const finalCancelLabel = cancelLabel || t('common.cancel', 'Cancel');
 
   return (
     <AnimatePresence>
@@ -71,11 +75,11 @@ export const Modal = ({
             {!hideFooter && (
               <div className="flex justify-end gap-3 mt-4">
                 <Button variant="outline" onClick={onClose}>
-                  {cancelLabel}
+                  {finalCancelLabel}
                 </Button>
                 {onConfirm && (
                   <Button variant={isDanger ? 'danger' : 'primary'} onClick={onConfirm}>
-                    {confirmLabel}
+                    {finalConfirmLabel}
                   </Button>
                 )}
               </div>

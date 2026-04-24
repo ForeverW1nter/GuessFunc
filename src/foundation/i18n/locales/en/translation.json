@@ -12,7 +12,22 @@
     "confirmInputPlaceholder": "Input confirmation text here...",
     "copyFallbackDesc": "Please copy the link above manually.",
     "copyFallbackTitle": "Copy Link",
-    "none": "None"
+    "none": "None",
+    "booting": "Booting Microkernel...",
+    "systemPanic": "System Panic",
+    "reboot": "Reboot System",
+    "statusOnline": "STATUS: ONLINE",
+    "systemCore": "SYSTEM.CORE_v2.0",
+    "standby": "Standby",
+    "terminate": "Terminate",
+    "engineLive": "Engine Live"
+  },
+  "nav": {
+    "hub": "Hub",
+    "archive": "Archive",
+    "network": "Network",
+    "studio": "Studio",
+    "settings": "Settings"
   },
   "game": {
     "title": "Play Mode",
@@ -291,6 +306,12 @@
         "title": "CREATOR TERMINAL",
         "subtitle": "STUDIO / LEVEL BUILDER",
         "desc": "Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine."
+      },
+      "creator": {
+        "noEngine": "NO ENGINE SELECTED",
+        "initializing": "INITIALIZING WORKSPACE...",
+        "title": "CREATOR",
+        "subtitle": "System.Terminal.Active"
       }
     },
     "appRouter": {
@@ -530,5 +551,12 @@
     "uninstallFailed": "Uninstall failed",
     "uninstallSuccess": "Uninstall successful",
     "unknownAuthor": "Unknown author"
+  },
+  "guessFunc": {
+    "title": "GUESS FUNC",
+    "subtitle": "System.Engine.Active",
+    "expressionLabel": "Function Expression [ y = f(x) ]",
+    "expressionPlaceholder": "e.g. sin(x) + a",
+    "variableLabel": "Variable [{{key}}]"
   }
 }

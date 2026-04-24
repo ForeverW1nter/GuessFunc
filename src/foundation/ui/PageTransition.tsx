@@ -1,10 +1,12 @@
 import { Suspense } from 'react';
 import { useLocation, useOutlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export const PageTransition = () => {
   const location = useLocation();
   const outlet = useOutlet();
+  const { t } = useTranslation();
 
   return (
     <div className="relative w-full h-full">
@@ -22,8 +24,8 @@ export const PageTransition = () => {
           className="w-full h-full"
         >
           <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">
-              LOADING SYSTEM MODULE...
+            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] uppercase">
+              {t('common.loading', 'LOADING SYSTEM MODULE...')}
             </div>
           }>
             {outlet}

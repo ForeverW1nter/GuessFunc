@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useTranslation, UseTranslationResponse } from 'react-i18next';
 import { GameEngineRegistry } from '@/core/GameEngineRegistry';
 import type { IGameProtocol, IEngineEventBus } from '@/core/IGameProtocol';
 
@@ -23,7 +24,8 @@ class SimpleEventBus implements IEngineEventBus {
 
 const FAKE_LOADING_DELAY_MS = 300;
 
-const getEngineContent = (engine: IGameProtocol | null) => {
+// Use 'TFunction' from i18next or the return type of useTranslation()
+const getEngineContent = (engine: IGameProtocol | null, t: UseTranslationResponse<"translation", undefined>["t"]) => {
   if (engine) {
     return (
       <div className="flex-1 w-full h-full relative">
@@ -32,8 +34,8 @@ const getEngineContent = (engine: IGameProtocol | null) => {
     );
   }
   return (
-    <div className="flex-1 flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] border border-[var(--color-border)] rounded-3xl">
-      NO ENGINE SELECTED
+    <div className="flex-1 flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] border border-[var(--color-border)] rounded-3xl uppercase">
+      {t('hub.creator.noEngine', 'NO ENGINE SELECTED')}
     </div>
   );
 };
@@ -41,6 +43,7 @@ const getEngineContent = (engine: IGameProtocol | null) => {
 export const CreatorTerminalPage = () => {
   const [engine, setEngine] = useState<IGameProtocol | null>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // In a real scenario, the user would select which engine to use from a menu.
@@ -94,10 +97,10 @@ export const CreatorTerminalPage = () => {
         className="flex-1 p-4 md:p-8 h-[50vh] md:h-screen relative overflow-hidden flex flex-col"
       >
         {loading ? (
-          <div className="flex-1 flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] border border-[var(--color-border)] rounded-3xl">
-            INITIALIZING WORKSPACE...
+          <div className="flex-1 flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] border border-[var(--color-border)] rounded-3xl uppercase">
+            {t('hub.creator.initializing', 'INITIALIZING WORKSPACE...')}
           </div>
-        ) : getEngineContent(engine)}
+        ) : getEngineContent(engine, t)}
       </motion.div>
 
       {/* Right Panel: Universal Controls & Telemetry */}
@@ -112,10 +115,10 @@ export const CreatorTerminalPage = () => {
             layoutId="card-title-creator"
             className="text-4xl md:text-5xl font-bold tracking-tighter mb-2 text-[var(--accent-studio)] uppercase"
           >
-            {engine ? engine.name : 'CREATOR'}
+            {engine ? engine.name : t('hub.creator.title', 'CREATOR')}
           </motion.h1>
           <p className="text-sm font-mono text-[var(--color-muted-foreground)] tracking-widest uppercase mt-4">
-            System.Terminal.Active
+            {t('hub.creator.subtitle', 'System.Terminal.Active')}
           </p>
         </header>
 
@@ -128,14 +131,14 @@ export const CreatorTerminalPage = () => {
           <div className="flex items-center space-x-2 text-[var(--color-muted-foreground)]">
             <div className="w-2 h-2 rounded-full bg-[var(--accent-studio)] animate-pulse" />
             <span className="text-xs font-mono tracking-widest uppercase">
-              {engine ? `${engine.id}_v${engine.version}` : 'Standby'}
+              {engine ? `${engine.id}_v${engine.version}` : t('common.standby', 'Standby')}
             </span>
           </div>
           <Link
             to="/"
             className="text-xs font-mono tracking-widest uppercase border border-[var(--color-border)] px-4 py-2 rounded-full hover:bg-[var(--color-foreground)] hover:text-[var(--color-background)] transition-colors duration-300"
           >
-            Close
+            {t('common.close', 'Close')}
           </Link>
         </footer>
       </motion.div>

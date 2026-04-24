@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { GraphRenderer } from './components/GraphRenderer';
 import { Theme } from 'mafs';
 
@@ -8,6 +9,7 @@ import { motion } from 'framer-motion';
 export const GuessFuncPage = () => {
   const [expression, setExpression] = useState('a * sin(x) + b');
   const [params, setParams] = useState<Record<string, number>>({ a: 1, b: 0 });
+  const { t } = useTranslation();
 
   const handleParamChange = (key: string, value: number) => {
     setParams((prev) => ({ ...prev, [key]: value }));
@@ -51,24 +53,24 @@ export const GuessFuncPage = () => {
             layoutId="card-title-guessfunc"
             className="text-4xl md:text-5xl font-bold tracking-tighter mb-2 text-[var(--accent-guessfunc)]"
           >
-            GUESS FUNC
+            {t('guessFunc.title', 'GUESS FUNC')}
           </motion.h1>
           <p className="text-sm font-mono text-[var(--color-muted-foreground)] tracking-widest uppercase mt-4">
-            System.Engine.Active
+            {t('guessFunc.subtitle', 'System.Engine.Active')}
           </p>
         </header>
 
         {/* Input Block */}
         <section className="mb-10 space-y-4">
           <label className="text-xs font-mono uppercase tracking-widest text-[var(--color-muted-foreground)]">
-            Function Expression [ y = f(x) ]
+            {t('guessFunc.expressionLabel', 'Function Expression [ y = f(x) ]')}
           </label>
           <input
             type="text"
             value={expression}
             onChange={(e) => setExpression(e.target.value)}
-            className="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl px-4 py-3 font-mono text-lg focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
-            placeholder="e.g. sin(x) + a"
+            className="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl px-4 py-3 font-mono text-lg focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] transition-all touch-manipulation"
+            placeholder={t('guessFunc.expressionPlaceholder', 'e.g. sin(x) + a')}
             spellCheck={false}
           />
         </section>
@@ -79,7 +81,7 @@ export const GuessFuncPage = () => {
             <div key={key} className="space-y-4">
               <div className="flex justify-between items-end">
                 <label className="text-xs font-mono uppercase tracking-widest text-[var(--color-muted-foreground)]">
-                  Variable [{key}]
+                  {t('guessFunc.variableLabel', 'Variable [{{key}}]', { key })}
                 </label>
                 <span className="font-mono text-sm">{val.toFixed(2)}</span>
               </div>
@@ -98,15 +100,15 @@ export const GuessFuncPage = () => {
 
         {/* Terminal / Exit */}
         <footer className="mt-12 pt-8 border-t border-[var(--color-border)] flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-[var(--color-muted-foreground)]">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-mono tracking-widest uppercase">Engine Live</span>
+          <div className="flex items-center gap-3 opacity-50">
+            <div className="w-2 h-2 rounded-full bg-[var(--accent-guessfunc)] animate-pulse" />
+            <span className="text-xs font-mono tracking-widest uppercase">{t('common.engineLive', 'Engine Live')}</span>
           </div>
           <Link
-            to="/"
-            className="text-xs font-mono tracking-widest uppercase border border-[var(--color-border)] px-4 py-2 rounded-full hover:bg-[var(--color-foreground)] hover:text-[var(--color-background)] transition-colors duration-300"
+            to="/creator"
+            className="text-xs font-mono tracking-widest uppercase border border-[var(--color-border)] px-4 py-2 rounded-full hover:bg-[var(--color-foreground)] hover:text-[var(--color-background)] transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
           >
-            Terminate
+            {t('common.terminate', 'Terminate')}
           </Link>
         </footer>
       </motion.div>

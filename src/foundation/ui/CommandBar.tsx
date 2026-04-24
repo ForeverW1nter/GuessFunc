@@ -1,32 +1,37 @@
 import { motion } from "framer-motion";
 import { Home, Library, Globe, Settings, TerminalSquare } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/utils/cn";
 
 const navItems = [
-  { path: "/", icon: Home, label: "Hub", color: "var(--accent-hub)" },
+  { path: "/", icon: Home, translationKey: "nav.hub", fallback: "Hub", color: "var(--accent-hub)" },
   {
     path: "/archive",
     icon: Library,
-    label: "Archive",
+    translationKey: "nav.archive",
+    fallback: "Archive",
     color: "var(--accent-archive)",
   },
   {
     path: "/workshop",
     icon: Globe,
-    label: "Network",
+    translationKey: "nav.network",
+    fallback: "Network",
     color: "var(--accent-network)",
   },
   {
     path: "/creator",
     icon: TerminalSquare,
-    label: "Studio",
+    translationKey: "nav.studio",
+    fallback: "Studio",
     color: "var(--accent-studio)",
   },
   {
     path: "/settings",
     icon: Settings,
-    label: "Settings",
+    translationKey: "nav.settings",
+    fallback: "Settings",
     color: "var(--accent-settings)",
   },
 ];
@@ -36,6 +41,7 @@ const ICON_STROKE_WIDTH_INACTIVE = 1.5;
 
 export const CommandBar = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   // To keep the CommandBar decoupled from specific game IDs (guessfunc/gatefunc),
   // we consider any route that is NOT a core platform route as a "Game Route"
   // where the dock should shrink down.
@@ -96,8 +102,8 @@ export const CommandBar = () => {
             </div>
 
             {/* Hover Tooltip */}
-            <div className="absolute -top-14 left-1/2 -translate-x-1/2 scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-out bg-[var(--color-foreground)] text-[var(--color-background)] text-xs px-3 py-1.5 rounded-full shadow-lg whitespace-nowrap font-mono tracking-widest pointer-events-none origin-bottom">
-              {item.label}
+            <div className="absolute -top-14 left-1/2 -translate-x-1/2 scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-out bg-[var(--color-foreground)] text-[var(--color-background)] text-xs px-3 py-1.5 rounded-full shadow-lg whitespace-nowrap font-mono tracking-widest pointer-events-none origin-bottom uppercase">
+              {t(item.translationKey, item.fallback)}
               <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[var(--color-foreground)]" />
             </div>
           </Link>

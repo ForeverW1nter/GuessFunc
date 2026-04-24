@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { UIProvider } from "@/foundation/ui/UIManager";
 import { AppRouter } from "@/foundation/router/AppRouter";
 import { useSystemUIStore } from "@/foundation/ui/useSystemUIStore";
@@ -8,6 +9,7 @@ import { initHubModule } from "@/modules/hub";
 const BOOTSTRAP_DELAY = 600;
 
 const App = () => {
+  const { t } = useTranslation();
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   
@@ -58,7 +60,7 @@ const App = () => {
             <div className="absolute top-0 left-0 h-full w-1/3 bg-[var(--color-primary)] animate-[slide_1.5s_ease-in-out_infinite]" />
           </div>
           <p className="text-xs font-mono tracking-[0.3em] uppercase opacity-50">
-            Booting Microkernel...
+            {t("common.booting", "Booting Microkernel...")}
           </p>
         </div>
         <style>{`
