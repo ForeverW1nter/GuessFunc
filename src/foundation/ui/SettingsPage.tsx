@@ -219,12 +219,12 @@ export const SettingsPage = () => { // eslint-disable-line complexity
       <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row h-full z-10 pb-20 pt-6 md:pt-10 md:pb-24 px-4 md:px-6">
         
         {/* Sidebar Navigation */}
-        <aside className="w-full md:w-56 shrink-0 mb-6 md:mb-0 md:pr-6 border-b md:border-b-0 md:border-r border-[var(--color-border)]/50 pb-4 md:pb-0">
+        <aside className="w-full md:w-56 shrink-0 mb-6 md:mb-0 md:pe-6 border-b md:border-b-0 md:border-e border-[var(--color-border)]/50 pb-4 md:pb-0">
           <div className="flex items-center gap-3 mb-8 px-2">
             <div className="p-2 bg-[var(--color-foreground)] text-[var(--color-background)] rounded-xl">
               <Settings className="w-5 h-5" strokeWidth={1.5} />
             </div>
-            <h1 className="text-xl font-bold tracking-tighter uppercase font-display">
+            <h1 className="text-xl font-bold tracking-tighter uppercase font-display text-balance">
               {t('settings.title', 'Settings')}
             </h1>
           </div>
@@ -235,7 +235,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "relative flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-mono tracking-widest uppercase transition-all duration-300 text-left whitespace-nowrap",
+                  "relative flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-mono tracking-widest uppercase transition-all duration-300 text-left whitespace-nowrap touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)]",
                   activeTab === tab.id 
                     ? "bg-[var(--color-foreground)] text-[var(--color-background)]" 
                     : "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:bg-white/5"
@@ -264,21 +264,21 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full h-full md:pl-6"
+              className="w-full h-full md:ps-6 pb-[env(safe-area-inset-bottom)]"
             >
               
               {/* --- GENERAL / LANGUAGE --- */}
               {activeTab === 'general' && (
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.general.localization', 'Localization')}</h2>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1 text-balance">{t('settings.general.localization', 'Localization')}</h2>
                     <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.general.localizationDesc', 'Set your preferred interface language.')}</p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <button
                       onClick={() => setLanguage('en')}
                       className={cn(
-                        "relative flex flex-col items-start p-5 rounded-2xl border transition-all duration-300 min-w-0",
+                        "relative flex flex-col items-start p-5 rounded-2xl border transition-all duration-300 min-w-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         language === 'en' 
                           ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
                           : "bg-[var(--color-muted)]/50 border-[var(--color-border)] text-[var(--color-foreground)] hover:border-white/30"
@@ -286,12 +286,12 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                     >
                       <span className="font-mono tracking-widest text-sm uppercase mb-1 truncate w-full text-left">{t('settings.general.english', 'English')}</span>
                       <span className={cn("text-xs font-sans truncate w-full text-left", language === 'en' ? "text-[var(--color-background)]/70" : "text-[var(--color-muted-foreground)]")}>{t('settings.general.englishSub', 'System Default')}</span>
-                      {language === 'en' && <CheckCircle2 size={18} className="absolute top-5 right-5" />}
+                      {language === 'en' && <CheckCircle2 size={18} className="absolute top-5 end-5" />}
                     </button>
                     <button
                       onClick={() => setLanguage('zh')}
                       className={cn(
-                        "relative flex flex-col items-start p-5 rounded-2xl border transition-all duration-300 min-w-0",
+                        "relative flex flex-col items-start p-5 rounded-2xl border transition-all duration-300 min-w-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         language === 'zh' 
                           ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
                           : "bg-[var(--color-muted)]/50 border-[var(--color-border)] text-[var(--color-foreground)] hover:border-white/30"
@@ -299,7 +299,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                     >
                       <span className="font-sans font-medium tracking-widest text-sm mb-1 truncate w-full text-left">{t('settings.general.chinese', '中文 (简体)')}</span>
                       <span className={cn("text-xs font-sans truncate w-full text-left", language === 'zh' ? "text-[var(--color-background)]/70" : "text-[var(--color-muted-foreground)]")}>{t('settings.general.chineseSub', 'Translation Support')}</span>
-                      {language === 'zh' && <CheckCircle2 size={18} className="absolute top-5 right-5" />}
+                      {language === 'zh' && <CheckCircle2 size={18} className="absolute top-5 end-5" />}
                     </button>
                   </div>
                 </div>
@@ -309,7 +309,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               {activeTab === 'typography' && (
                 <div className="space-y-10">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.typography.title', 'Typography')}</h2>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1 text-balance">{t('settings.typography.title', 'Typography')}</h2>
                     <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.typography.desc', 'Customize readability and aesthetics.')}</p>
                   </div>
 
@@ -319,7 +319,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                       <span className="text-sm font-mono tracking-widest">{Math.round(localFontSize * 100)}%</span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="relative h-2 bg-[var(--color-border)] rounded-full flex-1 flex items-center">
+                      <div className="relative h-2 bg-[var(--color-border)] rounded-full flex-1 flex items-center focus-within:ring-2 focus-within:ring-[var(--color-foreground)] focus-within:ring-offset-2 focus-within:ring-offset-[var(--color-background)]">
                         <motion.div 
                           className="absolute top-0 left-0 h-full bg-[var(--color-foreground)] rounded-full"
                           style={{ width: `${((localFontSize - MIN_FONT_SCALE) / FONT_SCALE_RANGE) * 100}%` }}
@@ -334,7 +334,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                       <button 
                         onClick={handleApplyFontSize}
                         disabled={localFontSize === fontSizeMultiplier}
-                        className="px-4 py-2 bg-[var(--color-foreground)] text-[var(--color-background)] rounded-lg text-xs font-mono uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                        className="px-4 py-2 bg-[var(--color-foreground)] text-[var(--color-background)] rounded-lg text-xs font-mono uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed transition-all touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-muted-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
                       >
                         {t('settings.typography.apply', 'Apply')}
                       </button>
@@ -349,7 +349,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                           key={font.id}
                           onClick={() => setFontFamily(font.value)}
                           className={cn(
-                            "relative flex flex-row items-center justify-between p-4 rounded-2xl border transition-all duration-300 text-left min-w-0 group",
+                            "relative flex flex-row items-center justify-between p-4 rounded-2xl border transition-all duration-300 text-left min-w-0 group touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                             fontFamily === font.value 
                               ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
                               : "bg-[var(--color-muted)]/50 border-[var(--color-border)] hover:border-white/30 text-[var(--color-foreground)]"
@@ -365,7 +365,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                             >
                               Aa
                             </div>
-                            <div className="flex flex-col min-w-0 pr-8">
+                            <div className="flex flex-col min-w-0 pe-8">
                               <span className="text-sm md:text-base font-medium tracking-wide truncate">{font.label}</span>
                               <span className={cn("text-[10px] uppercase tracking-[0.1em] font-mono mt-1 truncate", fontFamily === font.value ? "text-[var(--color-background)]/60" : "text-[var(--color-muted-foreground)]/60")}>
                                 {font.id}
@@ -373,7 +373,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                             </div>
                           </div>
                           {fontFamily === font.value && (
-                            <CheckCircle2 size={20} className="absolute right-4 shrink-0" />
+                            <CheckCircle2 size={20} className="absolute end-4 shrink-0" />
                           )}
                         </button>
                       ))}
@@ -386,7 +386,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               {activeTab === 'audio' && (
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.audio.title', 'Audio')}</h2>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1 text-balance">{t('settings.audio.title', 'Audio')}</h2>
                     <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.audio.desc', 'System volume and sound effects.')}</p>
                   </div>
                   
@@ -394,7 +394,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                     <button 
                       onClick={toggleMute}
                       className={cn(
-                        "w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full transition-all duration-300 shrink-0",
+                        "w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full transition-all duration-300 shrink-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
                         isMuted 
                           ? "bg-red-500/10 text-red-500 border border-red-500/20" 
                           : "bg-[var(--color-foreground)] text-[var(--color-background)]"
@@ -408,7 +408,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                         <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">{t('settings.audio.master', 'Master Volume')}</span>
                         <span className="text-sm md:text-base font-mono tracking-widest">{isMuted ? 'MUTE' : `${Math.round(volume * 100)}%`}</span>
                       </div>
-                      <div className="relative h-3 bg-[var(--color-border)] rounded-full overflow-hidden flex items-center group/slider">
+                      <div className="relative h-3 bg-[var(--color-border)] rounded-full overflow-hidden flex items-center group/slider focus-within:ring-2 focus-within:ring-[var(--color-foreground)] focus-within:ring-offset-2 focus-within:ring-offset-[var(--color-background)]">
                         <motion.div 
                           className={cn("absolute top-0 left-0 h-full rounded-full transition-colors", isMuted ? "bg-red-500/50" : "bg-[var(--color-foreground)]")}
                           style={{ width: `${isMuted ? 0 : volume * 100}%` }}
@@ -430,7 +430,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               {activeTab === 'storage' && (
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.storage.title', 'Storage')}</h2>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1 text-balance">{t('settings.storage.title', 'Storage')}</h2>
                     <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.storage.desc', 'Manage your local saves and progress.')}</p>
                   </div>
 
