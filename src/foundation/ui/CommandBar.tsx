@@ -32,14 +32,17 @@ export const CommandBar = () => {
         const isActive = location.pathname === item.path;
         return (
           <Link key={item.path} to={item.path} className="relative group flex items-center justify-center outline-none">
-            {isActive && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute inset-0 rounded-full opacity-15"
-                style={{ backgroundColor: item.color, zIndex: 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              />
-            )}
+            {/* The Background Indicator Container */}
+            <div className="absolute inset-0 pointer-events-none">
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="w-full h-full rounded-full opacity-15"
+                  style={{ backgroundColor: item.color }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
+            </div>
             
             {/* The Icon Container */}
             <div

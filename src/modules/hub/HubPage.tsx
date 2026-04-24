@@ -12,7 +12,8 @@ const MODES = [
     desc: 'Access decrypted logs, emails, and story nodes. Solve integrated logic puzzles to unlock the truth.',
     path: '/archive',
     icon: Database,
-    color: 'hover:text-blue-400',
+    color: 'hover:text-[var(--accent-archive)]',
+    bgHover: 'var(--accent-archive)',
   },
   {
     id: 'network',
@@ -21,7 +22,8 @@ const MODES = [
     desc: 'Connect to the global network. Download and play raw logic gates and math puzzles created by other operators.',
     path: '/workshop',
     icon: Globe2,
-    color: 'hover:text-[var(--color-primary)]',
+    color: 'hover:text-[var(--accent-network)]',
+    bgHover: 'var(--accent-network)',
   },
   {
     id: 'creator',
@@ -30,7 +32,8 @@ const MODES = [
     desc: 'Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine.',
     path: '/creator',
     icon: Terminal,
-    color: 'hover:text-purple-400',
+    color: 'hover:text-[var(--accent-studio)]',
+    bgHover: 'var(--accent-studio)',
   }
 ];
 
@@ -40,7 +43,7 @@ export const HubPage = () => {
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-x-hidden">
       {/* Decorative background elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[var(--color-primary)] opacity-[0.03] blur-[100px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[var(--accent-hub)] opacity-[0.03] blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[30vw] h-[30vw] rounded-full bg-[var(--accent-archive)] opacity-[0.03] blur-[100px] pointer-events-none" />
 
       <motion.header 
@@ -90,7 +93,11 @@ export const HubPage = () => {
                 </p>
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent opacity-0 group-hover:opacity-[0.02] translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1000 ease-in-out" />
+              {/* Hover Effect Background / Parallax */}
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1000 ease-in-out" 
+                style={{ background: `linear-gradient(to right, transparent, ${mode.bgHover}, transparent)` }}
+              />
             </motion.div>
           </Link>
         ))}
