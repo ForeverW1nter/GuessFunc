@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { UIProvider } from "@/foundation/ui/UIManager";
 import { AppRouter } from "@/foundation/router/AppRouter";
+import { useSystemUIStore } from "@/foundation/ui/useSystemUIStore";
 import { initGuessFuncModule } from "@/modules/guessfunc";
 import { initHubModule } from "@/modules/hub";
 
@@ -9,6 +10,15 @@ const BOOTSTRAP_DELAY = 600;
 const App = () => {
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  
+  // Apply font family and size globally from the Zustand store
+  const { fontFamily, fontSizeMultiplier } = useSystemUIStore();
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--app-font-display', fontFamily);
+    document.documentElement.style.setProperty('--app-font-sans', fontFamily);
+    document.documentElement.style.fontSize = `${fontSizeMultiplier * 100}%`;
+  }, [fontFamily, fontSizeMultiplier]);
 
   if (error) {
     throw error;
