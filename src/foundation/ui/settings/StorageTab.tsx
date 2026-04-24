@@ -1,44 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Save, RotateCcw, Download, Upload, Trash2, MoreVertical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSystemUIStore } from '../useSystemUIStore';
 import { useAudioStore } from '@/foundation/audio/useAudioStore';
 import { useProgressStore } from '@/foundation/storage/useProgressStore';
+import { Storage } from '@/foundation/storage/StorageManager';
 import { useUI } from '../UIManager';
 import { Button } from '../components/Button';
 import { Modal } from '../components/Modal';
 
 const TOTAL_SAVE_SLOTS = 5;
 
-const getInitialSlots = () => {
-  const slots = [];
-  for (let i = 1; i <= TOTAL_SAVE_SLOTS; i++) {
-    const data = localStorage.getItem(`system-core-slot-${i}`);
-    slots.push({ id: i, timestamp: data ? JSON.parse(data).timestamp : null });
-  }
-  return slots;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const restorePayloadToStore = (payload: any, setLanguage: any, setFontFamily: any, setFontSizeMultiplier: any, setVolume: any, toggleMute: any) => {
-  if (payload.completedLevels) {
-    useProgressStore.setState({ 
-      completedLevels: payload.completedLevels || [],
-      seenChapters: payload.seenChapters || [],
-      readFiles: payload.readFiles || []
-    });
-  }
-  if (payload.uiSettings) {
-    setLanguage(payload.uiSettings.language || 'zh');
-    setFontFamily(payload.uiSettings.fontFamily || 'system-ui');
-    setFontSizeMultiplier(payload.uiSettings.fontSizeMultiplier || 1);
-  }
-  if (payload.audioSettings) {
-    setVolume(payload.audioSettings.volume ?? 0.5);
-    if (payload.audioSettings.isMuted) toggleMute();
-  }
-};
+interface SaveSlotData {
+  timestamp: string;
+  payload: {
+    completedLevels: string[];
+    seenChapters: string[];
+    readFiles: string[];
+    uiSettings: { language: string; fontFamily: string; fontSizeMultiplier: number };
+    audioSettings: { volume: number; isMuted: boolean };
+  };
+}
 
 export const StorageTab = () => {
   const { language, setLanguage, fontFamily, setFontFamily, fontSizeMultiplier, setFontSizeMultiplier } = useSystemUIStore();
@@ -47,13 +30,45 @@ export const StorageTab = () => {
   const { toast } = useUI();
   const { t } = useTranslation();
 
-  const [saveSlots, setSaveSlots] = useState<{ id: number; timestamp: string | null }[]>(getInitialSlots());
+  const [saveSlots, setSaveSlots] = useState<{ id: number; timestamp: string | null }[]>([]);
   
   // Menu and Confirm states per slot
   const [activeMenuSlot, setActiveMenuSlot] = useState<number | null>(null);
   const [confirmSlotId, setConfirmSlotId] = useState<number | null>(null);
 
   const currentLocale = language === 'zh' ? 'zh-CN' : 'en-US';
+
+  // Initialize slots asynchronously from IndexedDB
+  useEffect(() => {
+    const initSlots = async () => {
+      const slots = [];
+      for (let i = 1; i <= TOTAL_SAVE_SLOTS; i++) {
+        const data = await Storage.get<SaveSlotData>(`system-core-slot-${i}`);
+        slots.push({ id: i, timestamp: data ? data.timestamp : null });
+      }
+      setSaveSlots(slots);
+    };
+    initSlots();
+  }, []);
+
+  const restorePayloadToStore = (payload: SaveSlotData['payload']) => {
+    if (payload.completedLevels) {
+      useProgressStore.setState({ 
+        completedLevels: payload.completedLevels || [],
+        seenChapters: payload.seenChapters || [],
+        readFiles: payload.readFiles || []
+      });
+    }
+    if (payload.uiSettings) {
+      setLanguage(payload.uiSettings.language || 'zh');
+      setFontFamily(payload.uiSettings.fontFamily || 'system-ui');
+      setFontSizeMultiplier(payload.uiSettings.fontSizeMultiplier || 1);
+    }
+    if (payload.audioSettings) {
+      setVolume(payload.audioSettings.volume ?? 0.5);
+      if (payload.audioSettings.isMuted !== isMuted) toggleMute();
+    }
+  };
 
   const updateSlotTimestamp = (slotId: number, timestamp: string | null) => {
     setSaveSlots(prev => prev.map(s => {
@@ -62,10 +77,10 @@ export const StorageTab = () => {
     }));
   };
 
-  const handleSlotSave = (slotId: number) => {
+  const handleSlotSave = async (slotId: number) => {
     try {
       const timestamp = new Date().toISOString();
-      const data = {
+      const data: SaveSlotData = {
         timestamp,
         payload: {
           completedLevels, seenChapters, readFiles,
@@ -73,7 +88,7 @@ export const StorageTab = () => {
           audioSettings: { volume, isMuted }
         }
       };
-      localStorage.setItem(`system-core-slot-${slotId}`, JSON.stringify(data));
+      await Storage.set(`system-core-slot-${slotId}`, data);
       updateSlotTimestamp(slotId, timestamp);
       toast({ title: t('settings.storage.saved', { slotId }), type: 'success' });
     } catch (err) {
@@ -81,24 +96,23 @@ export const StorageTab = () => {
     }
   };
 
-  const handleSlotLoad = (slotId: number) => {
+  const handleSlotLoad = async (slotId: number) => {
     try {
-      const raw = localStorage.getItem(`system-core-slot-${slotId}`);
-      if (!raw) return;
-      const { payload } = JSON.parse(raw);
+      const data = await Storage.get<SaveSlotData>(`system-core-slot-${slotId}`);
+      if (!data) return;
       
-      restorePayloadToStore(payload, setLanguage, setFontFamily, setFontSizeMultiplier, setVolume, toggleMute);
+      restorePayloadToStore(data.payload);
       toast({ title: t('settings.storage.loaded', { slotId }), type: 'success' });
     } catch (err) {
       toast({ title: t('settings.storage.loadError', 'Failed to load slot'), description: String(err), type: 'error' });
     }
   };
 
-  const handleExportSlot = (slotId: number) => {
+  const handleExportSlot = async (slotId: number) => {
     try {
-      const raw = localStorage.getItem(`system-core-slot-${slotId}`);
-      if (!raw) return;
-      const blob = new Blob([raw], { type: 'application/json' });
+      const data = await Storage.get<SaveSlotData>(`system-core-slot-${slotId}`);
+      if (!data) return;
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -116,10 +130,10 @@ export const StorageTab = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const processFile = (content: string) => {
+    const processFile = async (content: string) => {
       try {
-        const parsed = JSON.parse(content);
-        localStorage.setItem(`system-core-slot-${slotId}`, content);
+        const parsed = JSON.parse(content) as SaveSlotData;
+        await Storage.set(`system-core-slot-${slotId}`, parsed);
         updateSlotTimestamp(slotId, parsed.timestamp);
         toast({ title: t('settings.storage.importSuccess', 'Data imported successfully'), type: 'success' });
       } catch (err) {
@@ -137,9 +151,9 @@ export const StorageTab = () => {
     setActiveMenuSlot(null);
   };
 
-  const handleConfirmClearSlot = () => {
+  const handleConfirmClearSlot = async () => {
     if (confirmSlotId === null) return;
-    localStorage.removeItem(`system-core-slot-${confirmSlotId}`);
+    await Storage.del(`system-core-slot-${confirmSlotId}`);
     updateSlotTimestamp(confirmSlotId, null);
     toast({ title: t('settings.storage.clearSuccess', 'Slot data cleared'), type: 'success' });
     setConfirmSlotId(null);

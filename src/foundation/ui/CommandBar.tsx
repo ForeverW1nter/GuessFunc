@@ -1,40 +1,9 @@
 import { motion } from "framer-motion";
-import { Home, Library, Globe, Settings, TerminalSquare } from "lucide-react";
+import { Home, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/utils/cn";
-
-const navItems = [
-  { path: "/", icon: Home, translationKey: "nav.hub", fallback: "Hub", color: "var(--accent-hub)" },
-  {
-    path: "/archive",
-    icon: Library,
-    translationKey: "nav.archive",
-    fallback: "Archive",
-    color: "var(--accent-archive)",
-  },
-  {
-    path: "/workshop",
-    icon: Globe,
-    translationKey: "nav.network",
-    fallback: "Network",
-    color: "var(--accent-network)",
-  },
-  {
-    path: "/creator",
-    icon: TerminalSquare,
-    translationKey: "nav.studio",
-    fallback: "Studio",
-    color: "var(--accent-studio)",
-  },
-  {
-    path: "/settings",
-    icon: Settings,
-    translationKey: "nav.settings",
-    fallback: "Settings",
-    color: "var(--accent-settings)",
-  },
-];
+import { ModuleRegistry } from "@/core/ModuleRegistry";
 
 const ICON_STROKE_WIDTH_ACTIVE = 2;
 const ICON_STROKE_WIDTH_INACTIVE = 1.5;
@@ -42,6 +11,29 @@ const ICON_STROKE_WIDTH_INACTIVE = 1.5;
 export const CommandBar = () => {
   const location = useLocation();
   const { t } = useTranslation();
+
+  // Dynamically generate nav items from ModuleRegistry
+  const modules = ModuleRegistry.getModules();
+  
+  const dynamicNavItems = modules.map(m => ({
+    path: m.entryRoute,
+    icon: m.icon || Home,
+    translationKey: m.titleKey || `nav.${m.id}`,
+    fallback: m.name,
+    color: m.color || "var(--color-foreground)"
+  }));
+
+  const navItems = [
+    ...dynamicNavItems,
+    {
+      path: "/settings",
+      icon: Settings,
+      translationKey: "nav.settings",
+      fallback: "Settings",
+      color: "var(--accent-settings)",
+    },
+  ];
+
   // To keep the CommandBar decoupled from specific game IDs (guessfunc/gatefunc),
   // we consider any route that is NOT a core platform route as a "Game Route"
   // where the dock should shrink down.

@@ -2,6 +2,7 @@ import { ModuleRegistry, type GameModule } from "@/core/ModuleRegistry";
 import { GameEngineRegistry } from "@/core/GameEngineRegistry";
 import { GuessFuncPage } from "@/modules/guessfunc/GuessFuncPage";
 import { GuessFuncEngine } from "./GuessFuncEngine";
+import { Terminal } from "lucide-react";
 
 export const initGuessFuncModule = async () => {
   const mod: GameModule = {
@@ -12,6 +13,11 @@ export const initGuessFuncModule = async () => {
     coreApiVersion: "^1.0.0",
     entryRoute: "/guessfunc",
     routes: [{ path: "guessfunc", element: <GuessFuncPage /> }],
+    icon: Terminal,
+    color: "var(--accent-guessfunc)",
+    titleKey: "hub.guessFunc.title",
+    subtitleKey: "hub.guessFunc.subtitle",
+    descKey: "hub.guessFunc.desc",
     init: () => {
       console.log("[GuessFunc] Engine initialized. Awaiting level payload...");
     },

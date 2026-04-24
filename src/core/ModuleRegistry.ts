@@ -1,4 +1,5 @@
 import type { RouteObject } from "react-router-dom";
+import type { LucideIcon } from "lucide-react";
 
 export interface GameModule {
   id: string;
@@ -11,6 +12,12 @@ export interface GameModule {
   init?: () => Promise<void> | void; // Lifecycle method on load
   i18n?: Record<string, Record<string, string>>; // Translations namespaced by id
   isRoot?: boolean; // Flag to indicate if this module should be the index route
+  // Hub Integration Metadata
+  icon?: LucideIcon;
+  color?: string; // e.g. "var(--accent-guessfunc)"
+  titleKey?: string; // i18n key for the title
+  subtitleKey?: string; // i18n key for the subtitle
+  descKey?: string; // i18n key for the description
 }
 
 class ModuleRegistryClass {

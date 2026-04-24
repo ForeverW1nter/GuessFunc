@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Database, Globe2, Terminal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/utils/cn";
+import { ModuleRegistry } from "@/core/ModuleRegistry";
 
 const HOVER_DELAY_MULTIPLIER = 0.1;
 const ANIMATION_DURATION_HEADER = 0.8;
@@ -13,48 +13,8 @@ const ANIMATION_OFFSET_Y = 20;
 export const HubPage = () => {
   const { t } = useTranslation();
 
-  const MODES = [
-    {
-      id: "guessfunc",
-      title: t('hub.guessFunc.title', 'GUESS FUNC'),
-      subtitle: t('hub.guessFunc.subtitle', 'Math Engine / Sandbox'),
-      desc: t('hub.guessFunc.desc', 'A fully featured mathematical sandbox. Analyze signal patterns and reconstruct unknown functions.'),
-      path: "/guessfunc",
-      icon: Terminal,
-      color: "group-hover:text-[var(--accent-guessfunc)]",
-      bgHover: "var(--accent-guessfunc)",
-    },
-    {
-      id: "archive",
-      title: t('hub.archive.title', 'THE ARCHIVE'),
-      subtitle: t('hub.archive.subtitle', 'Story Mode / Secure Files'),
-      desc: t('hub.archive.desc', 'Access decrypted logs, emails, and story nodes. Solve integrated logic puzzles to unlock the truth.'),
-      path: "/archive",
-      icon: Database,
-      color: "group-hover:text-[var(--accent-archive)]",
-      bgHover: "var(--accent-archive)",
-    },
-    {
-      id: "network",
-      title: t('hub.network.title', 'GLOBAL NETWORK'),
-      subtitle: t('hub.network.subtitle', 'Workshop / Community'),
-      desc: t('hub.network.desc', 'Connect to the global network. Download and play raw logic gates and math puzzles created by other operators.'),
-      path: "/workshop",
-      icon: Globe2,
-      color: "group-hover:text-[var(--accent-network)]",
-      bgHover: "var(--accent-network)",
-    },
-    {
-      id: "creator",
-      title: t('hub.studio.title', 'CREATOR TERMINAL'),
-      subtitle: t('hub.studio.subtitle', 'Studio / Level Builder'),
-      desc: t('hub.studio.desc', 'Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine.'),
-      path: "/creator",
-      icon: Terminal,
-      color: "group-hover:text-[var(--accent-studio)]",
-      bgHover: "var(--accent-studio)",
-    },
-  ];
+  // Dynamically fetch available game modules (excluding root/hub itself)
+  const modules = ModuleRegistry.getModules().filter(m => !m.isRoot);
 
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-x-hidden">
@@ -83,7 +43,7 @@ export const HubPage = () => {
       </motion.header>
 
       <div className="w-full max-w-5xl flex flex-col gap-2 mt-20">
-        {MODES.map((mode, index) => (
+        {modules.map((mode, index) => (
           <motion.div
             key={mode.id}
             initial={{ opacity: 0, y: ANIMATION_OFFSET_Y }}
@@ -95,7 +55,7 @@ export const HubPage = () => {
             }}
           >
             <Link
-              to={mode.path}
+              to={mode.entryRoute}
               className="group relative block w-full outline-none"
             >
               <motion.div
@@ -105,15 +65,15 @@ export const HubPage = () => {
               {/* Subtle background glow linked to accent color */}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-700 pointer-events-none"
-                style={{ backgroundColor: mode.bgHover }}
+                style={{ backgroundColor: mode.color || "var(--color-foreground)" }}
               />
               {/* Left Side: Index & Title */}
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 z-10 w-full md:w-auto">
                 <span
                   className={cn(
-                    "text-2xl font-mono opacity-20 group-hover:opacity-100 transition-all duration-500",
-                    mode.color
+                    "text-2xl font-mono opacity-20 group-hover:opacity-100 transition-all duration-500"
                   )}
+                  style={{ color: mode.color }}
                 >
                   0{index + 1}
                 </span>
@@ -121,14 +81,14 @@ export const HubPage = () => {
                   <motion.h2
                     layoutId={`card-title-${mode.id}`}
                     className={cn(
-                      "text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-500",
-                      mode.color
+                      "text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-500"
                     )}
+                    style={{ color: mode.color }}
                   >
-                    {mode.title}
+                    {mode.titleKey ? t(mode.titleKey, mode.name) : mode.name}
                   </motion.h2>
                   <p className="text-xs md:text-sm font-mono tracking-[0.2em] mt-2 md:mt-4 opacity-50 uppercase group-hover:opacity-80 transition-opacity duration-500">
-                    {mode.subtitle}
+                    {mode.subtitleKey ? t(mode.subtitleKey) : mode.description}
                   </p>
                 </div>
               </div>
@@ -136,7 +96,7 @@ export const HubPage = () => {
               {/* Right Side: Description & Icon (Responsive: visible on mobile, hover-revealed on desktop) */}
               <div className="w-full md:w-1/3 flex items-start md:items-end justify-start md:justify-end text-left md:text-right z-10 md:opacity-0 md:translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 mt-4 md:mt-0 overflow-hidden">
                 <p className="text-sm leading-relaxed text-[var(--color-muted-foreground)]">
-                  {mode.desc}
+                  {mode.descKey ? t(mode.descKey) : mode.description}
                 </p>
               </div>
 
@@ -144,7 +104,7 @@ export const HubPage = () => {
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none"
                 style={{
-                  background: `linear-gradient(to right, transparent, ${mode.bgHover}, transparent)`,
+                  background: `linear-gradient(to right, transparent, ${mode.color || "var(--color-foreground)"}, transparent)`,
                 }}
               />
             </motion.div>
