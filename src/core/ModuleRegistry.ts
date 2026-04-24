@@ -10,6 +10,7 @@ export interface GameModule {
   routes: RouteObject[]; // The routes to be dynamically appended
   init?: () => Promise<void> | void; // Lifecycle method on load
   i18n?: Record<string, Record<string, string>>; // Translations namespaced by id
+  isRoot?: boolean; // Flag to indicate if this module should be the index route
 }
 
 class ModuleRegistryClass {
@@ -50,21 +51,18 @@ class ModuleRegistryClass {
 
   getModuleRoutes(): RouteObject[] {
     const allRoutes: RouteObject[] = [];
-    let hubRoute: RouteObject | null = null;
+    const rootRoutes: RouteObject[] = [];
 
     this.modules.forEach((mod) => {
-      if (mod.id === 'hub') {
-        hubRoute = mod.routes[0]; // Special handling for the index route
+      if (mod.isRoot) {
+        rootRoutes.push(...mod.routes);
       } else {
         allRoutes.push(...mod.routes);
       }
     });
     
-    if (hubRoute) {
-       allRoutes.unshift(hubRoute);
-    }
-    
-    return allRoutes;
+    // Root routes should generally be placed at the top so that the index route matches properly
+    return [...rootRoutes, ...allRoutes];
   }
 
   subscribeToRoutes(listener: () => void) {

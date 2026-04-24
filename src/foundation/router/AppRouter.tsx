@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
 import { createHashRouter, RouterProvider } from "react-router-dom";
+import type { RouteObject } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ModuleRegistry } from "@/core/ModuleRegistry";
 import { PageTransition } from "@/foundation/ui/PageTransition";
 import { CommandBar } from "@/foundation/ui/CommandBar";
 import { SettingsPage } from "@/foundation/ui/SettingsPage";
@@ -17,19 +16,8 @@ const AppLayout = () => {
   );
 };
 
-export const AppRouter = () => {
-  const [routeUpdateKey, setRouteUpdateKey] = useState(0);
+export const AppRouter = ({ moduleRoutes }: { moduleRoutes: RouteObject[] }) => {
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const updateRoutes = () => {
-      setRouteUpdateKey((prev) => prev + 1);
-    };
-
-    return ModuleRegistry.subscribeToRoutes(updateRoutes);
-  }, []);
-
-  const modRoutes = ModuleRegistry.getModuleRoutes();
 
   const router = createHashRouter([
     {
@@ -65,10 +53,10 @@ export const AppRouter = () => {
           path: "settings",
           element: <SettingsPage />,
         },
-        ...modRoutes,
+        ...moduleRoutes,
       ],
     },
   ]);
 
-  return <RouterProvider key={routeUpdateKey} router={router} />;
+  return <RouterProvider router={router} />;
 };

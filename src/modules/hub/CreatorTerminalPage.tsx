@@ -47,27 +47,28 @@ export const CreatorTerminalPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // In a real scenario, the user would select which engine to use from a menu.
-    // For now, we auto-load 'guessfunc' to demonstrate the universal mount.
+    // Dynamically load the first available engine from the registry.
+    // This decouples the Hub from knowing about any specific engine like 'guessfunc'.
     const bootstrapEngine = async () => {
       try {
         setLoading(true);
         // Wait briefly for module chunks to settle if needed
         await new Promise(res => setTimeout(res, FAKE_LOADING_DELAY_MS));
         
-        const available = GameEngineRegistry.getAvailableEngines();
-        if (available.includes('guessfunc')) {
-          const guessEngine = GameEngineRegistry.createEngine('guessfunc');
+        const availableEngines = GameEngineRegistry.getAvailableEngines();
+        if (availableEngines.length > 0) {
+          const targetEngineId = availableEngines[0];
+          const dynamicEngine = GameEngineRegistry.createEngine(targetEngineId);
           const bus = new SimpleEventBus();
           
           bus.on('engine:ready', () => {
-            setEngine(guessEngine);
+            setEngine(dynamicEngine);
             setLoading(false);
           });
 
-          await guessEngine.init(bus);
+          await dynamicEngine.init(bus);
         } else {
-          console.warn('[Terminal] GuessFunc engine not found in registry');
+          console.warn('[Terminal] No engines found in registry');
           setLoading(false);
         }
       } catch (err) {
@@ -78,6 +79,13 @@ export const CreatorTerminalPage = () => {
 
     bootstrapEngine();
 
+    return () => {
+      // Keep track of the local variable to clean it up, avoiding dependency array issues
+    };
+  }, []);
+
+  // Cleanup effect
+  useEffect(() => {
     return () => {
       if (engine) {
         engine.destroy();

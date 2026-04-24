@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import type { RouteObject } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { UIProvider } from "@/foundation/ui/UIManager";
 import { AppRouter } from "@/foundation/router/AppRouter";
 import { useSystemUIStore } from "@/foundation/ui/useSystemUIStore";
 import { initGuessFuncModule } from "@/modules/guessfunc";
 import { initHubModule } from "@/modules/hub";
+import { ModuleRegistry } from "@/core/ModuleRegistry";
 
 const BOOTSTRAP_DELAY = 600;
 
@@ -12,6 +14,7 @@ const App = () => {
   const { t } = useTranslation();
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [moduleRoutes, setModuleRoutes] = useState<RouteObject[]>([]);
   
   // Apply font family and size globally from the Zustand store
   const { fontFamily, fontSizeMultiplier } = useSystemUIStore();
@@ -21,6 +24,12 @@ const App = () => {
     document.documentElement.style.setProperty('--app-font-sans', fontFamily);
     document.documentElement.style.fontSize = `${fontSizeMultiplier * 100}%`;
   }, [fontFamily, fontSizeMultiplier]);
+
+  useEffect(() => {
+    return ModuleRegistry.subscribeToRoutes(() => {
+      setModuleRoutes(ModuleRegistry.getModuleRoutes());
+    });
+  }, []);
 
   if (error) {
     throw error;
@@ -75,7 +84,7 @@ const App = () => {
 
   return (
     <UIProvider>
-      <AppRouter />
+      <AppRouter moduleRoutes={moduleRoutes} />
     </UIProvider>
   );
 };

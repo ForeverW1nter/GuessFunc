@@ -10,6 +10,7 @@ export const initHubModule = async () => {
     version: '2.0.0',
     coreApiVersion: '^1.0.0',
     entryRoute: '/',
+    isRoot: true,
     routes: [
       { index: true, element: <HubPage /> },
       { path: 'creator', element: <CreatorTerminalPage /> }
