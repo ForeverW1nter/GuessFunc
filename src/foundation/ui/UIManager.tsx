@@ -66,6 +66,11 @@ interface UIContextType {
 
 const UIContext = createContext<UIContextType | null>(null);
 
+const TOAST_ID_RADIX = 36;
+const TOAST_ID_START_INDEX = 2;
+const TOAST_ID_LENGTH = 9;
+const DEFAULT_TOAST_DURATION = 3000;
+
 export const UIProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
@@ -74,13 +79,21 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
     document.documentElement.classList.add('dark');
   }, []);
 
-  const toast = useCallback((options: Omit<ToastOptions, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => [...prev, { ...options, id }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, options.duration || 3000);
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
+
+  const toast = useCallback((options: Omit<ToastOptions, 'id'>) => {
+    const id = Math.random().toString(TOAST_ID_RADIX).substring(TOAST_ID_START_INDEX, TOAST_ID_START_INDEX + TOAST_ID_LENGTH);
+    setToasts((prev) => [...prev, { ...options, id }]);
+    setTimeout(() => removeToast(id), options.duration || DEFAULT_TOAST_DURATION);
+  }, [removeToast]);
+
+  const getToastColors = (type?: string) => {
+    if (type === 'error') return "bg-red-500/10 border-red-500/20 text-red-500";
+    if (type === 'success') return "bg-green-500/10 border-green-500/20 text-green-500";
+    return "bg-[var(--color-glass)] border-[var(--color-border)] text-[var(--color-foreground)]";
+  };
 
   return (
     <UIContext.Provider value={{ toast }}>
@@ -95,9 +108,7 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
               exit={{ opacity: 0, scale: 0.95 }}
               className={cn(
                 "px-6 py-4 rounded-xl border font-mono text-sm tracking-wide flex items-center justify-between shadow-2xl backdrop-blur-xl pointer-events-auto",
-                t.type === 'error' ? "bg-red-500/10 border-red-500/20 text-red-500" :
-                t.type === 'success' ? "bg-green-500/10 border-green-500/20 text-green-500" :
-                "bg-[var(--color-glass)] border-[var(--color-border)] text-[var(--color-foreground)]"
+                getToastColors(t.type)
               )}
             >
               <span>{t.title}</span>

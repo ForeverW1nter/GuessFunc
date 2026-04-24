@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import { ModuleRegistry } from "@/core/ModuleRegistry";
-import { HubPage } from "@/modules/hub/HubPage";
 import { PageTransition } from "@/foundation/ui/PageTransition";
 import { CommandBar } from "@/foundation/ui/CommandBar";
 
@@ -34,7 +33,6 @@ export const AppRouter = () => {
       path: "/",
       element: <AppLayout />,
       children: [
-        { index: true, element: <HubPage /> },
         // Placeholder routes for the other core pages
         {
           path: "archive",

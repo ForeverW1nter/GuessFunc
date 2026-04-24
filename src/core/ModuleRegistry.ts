@@ -50,9 +50,20 @@ class ModuleRegistryClass {
 
   getModuleRoutes(): RouteObject[] {
     const allRoutes: RouteObject[] = [];
+    let hubRoute: RouteObject | null = null;
+
     this.modules.forEach((mod) => {
-      allRoutes.push(...mod.routes);
+      if (mod.id === 'hub') {
+        hubRoute = mod.routes[0]; // Special handling for the index route
+      } else {
+        allRoutes.push(...mod.routes);
+      }
     });
+    
+    if (hubRoute) {
+       allRoutes.unshift(hubRoute);
+    }
+    
     return allRoutes;
   }
 

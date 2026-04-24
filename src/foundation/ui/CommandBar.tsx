@@ -31,6 +31,12 @@ const navItems = [
   },
 ];
 
+const BASE_LEFT_OFFSET = 8;
+const ITEM_WIDTH_WITH_GAP = 52;
+const INDICATOR_WIDTH = 44;
+const ICON_STROKE_WIDTH_ACTIVE = 2;
+const ICON_STROKE_WIDTH_INACTIVE = 1.5;
+
 export const CommandBar = () => {
   const location = useLocation();
 
@@ -47,7 +53,7 @@ export const CommandBar = () => {
 
   // 44px is width of item (p-3 = 12px*2 + 20px icon = 44px). Gap is 8px. Padding is 8px.
   // left = 8 + validIndex * (44 + 8) = 8 + validIndex * 52
-  const leftOffset = 8 + validIndex * 52;
+  const leftOffset = BASE_LEFT_OFFSET + validIndex * ITEM_WIDTH_WITH_GAP;
 
   return (
     <div
@@ -67,7 +73,7 @@ export const CommandBar = () => {
           initial={false}
           animate={{
             left: leftOffset,
-            width: 44,
+            width: INDICATOR_WIDTH,
             backgroundColor: navItems[validIndex].color,
             opacity: 0.15,
           }}
@@ -102,7 +108,7 @@ export const CommandBar = () => {
                 if (!isActive) e.currentTarget.style.color = "";
               }}
             >
-              <item.icon size={20} strokeWidth={isActive ? 2 : 1.5} />
+              <item.icon size={20} strokeWidth={isActive ? ICON_STROKE_WIDTH_ACTIVE : ICON_STROKE_WIDTH_INACTIVE} />
             </div>
 
             {/* Hover Tooltip */}

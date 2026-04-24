@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { UIProvider } from "@/foundation/ui/UIManager";
 import { AppRouter } from "@/foundation/router/AppRouter";
 import { initGuessFuncModule } from "@/modules/guessfunc";
+import { initHubModule } from "@/modules/hub";
+
+const BOOTSTRAP_DELAY = 600;
 
 const App = () => {
   const [initialized, setInitialized] = useState(false);
@@ -16,8 +19,9 @@ const App = () => {
 
     const bootstrap = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 600));
+        await new Promise((resolve) => setTimeout(resolve, BOOTSTRAP_DELAY));
 
+        await initHubModule();
         await initGuessFuncModule();
         if (isMounted) {
           setInitialized(true);

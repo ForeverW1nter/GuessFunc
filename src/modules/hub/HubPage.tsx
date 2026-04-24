@@ -36,6 +36,12 @@ const MODES = [
   },
 ];
 
+const HOVER_DELAY_MULTIPLIER = 0.1;
+const ANIMATION_DURATION_HEADER = 0.8;
+const ANIMATION_DURATION_CARD = 0.8;
+const ANIMATION_EASE_CARD = [0.22, 1, 0.36, 1] as const;
+const ANIMATION_OFFSET_Y = 20;
+
 export const HubPage = () => {
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-x-hidden">
@@ -50,9 +56,9 @@ export const HubPage = () => {
       />
 
       <motion.header
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -ANIMATION_OFFSET_Y }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: ANIMATION_DURATION_HEADER, ease: "easeOut" }}
         className="absolute top-8 w-full px-12 flex justify-between items-start z-10"
       >
         <div>
@@ -71,18 +77,18 @@ export const HubPage = () => {
             className="group relative block w-full outline-none"
           >
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: ANIMATION_OFFSET_Y }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.8,
-                delay: 0.1 * index,
-                ease: [0.22, 1, 0.36, 1],
+                duration: ANIMATION_DURATION_CARD,
+                delay: HOVER_DELAY_MULTIPLIER * index,
+                ease: ANIMATION_EASE_CARD,
               }}
               className="relative py-8 md:py-10 px-6 md:px-8 rounded-3xl border border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8 transition-all duration-500 hover:bg-[var(--card-hover-bg)] hover:border-[var(--card-hover-border)] hover:shadow-2xl hover:-translate-y-1 overflow-hidden"
             >
               {/* Subtle background glow linked to accent color */}
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-[0.05] transition-opacity duration-700 pointer-events-none"
+                className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-700 pointer-events-none"
                 style={{ backgroundColor: mode.bgHover }}
               />
               {/* Left Side: Index & Title */}
@@ -99,7 +105,7 @@ export const HubPage = () => {
                   <h2
                     className={cn(
                       "text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-500",
-                      mode.color,
+                      mode.color
                     )}
                   >
                     {mode.title}
@@ -119,7 +125,7 @@ export const HubPage = () => {
 
               {/* Dynamic Gradient Sweep */}
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none"
+                className="absolute inset-0 opacity-0 group-hover:opacity-5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none"
                 style={{
                   background: `linear-gradient(to right, transparent, ${mode.bgHover}, transparent)`,
                 }}
