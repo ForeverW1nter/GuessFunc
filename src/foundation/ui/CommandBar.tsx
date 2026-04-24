@@ -31,9 +31,6 @@ const navItems = [
   },
 ];
 
-const BASE_LEFT_OFFSET = 8;
-const ITEM_WIDTH_WITH_GAP = 52;
-const INDICATOR_WIDTH = 44;
 const ICON_STROKE_WIDTH_ACTIVE = 2;
 const ICON_STROKE_WIDTH_INACTIVE = 1.5;
 
@@ -48,11 +45,6 @@ export const CommandBar = () => {
   const activeIndex = navItems.findIndex(
     (item) => location.pathname === item.path,
   );
-  const validIndex = activeIndex >= 0 ? activeIndex : 0;
-
-  // 44px is width of item (p-3 = 12px*2 + 20px icon = 44px). Gap is 8px. Padding is 8px.
-  // left = 8 + validIndex * (44 + 8) = 8 + validIndex * 52
-  const leftOffset = BASE_LEFT_OFFSET + validIndex * ITEM_WIDTH_WITH_GAP;
 
   return (
     <div
@@ -65,21 +57,6 @@ export const CommandBar = () => {
           : "scale-100 opacity-100",
       )}
     >
-      {/* Sliding Indicator (Absolute positioned, NO layoutId) */}
-      {activeIndex >= 0 && (
-        <motion.div
-          className="absolute top-2 bottom-2 rounded-full pointer-events-none"
-          initial={false}
-          animate={{
-            left: leftOffset,
-            width: INDICATOR_WIDTH,
-            backgroundColor: navItems[validIndex].color,
-            opacity: 0.15,
-          }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        />
-      )}
-
       {navItems.map((item, idx) => {
         const isActive = activeIndex === idx;
         return (
@@ -88,12 +65,20 @@ export const CommandBar = () => {
             to={item.path}
             className="relative group outline-none"
           >
+            {/* Sliding Indicator using layoutId (Perfect Alignment) */}
+            {isActive && (
+              <motion.div
+                layoutId="commandbar-active-indicator"
+                className="absolute inset-0 rounded-full pointer-events-none"
+                style={{ backgroundColor: item.color, opacity: 0.15 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
+
             <div
               className={cn(
-                "relative w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300",
-                !isActive
-                  ? "text-[var(--color-muted-foreground)]"
-                  : "",
+                "relative z-10 w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300",
+                !isActive ? "text-[var(--color-muted-foreground)]" : ""
               )}
               style={
                 isActive
