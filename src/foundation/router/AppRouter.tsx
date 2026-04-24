@@ -8,7 +8,7 @@ import { SystemControlCenter } from "@/foundation/ui/SystemControlCenter";
 const AppLayout = () => {
   return (
     <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors duration-500 overflow-hidden flex flex-col">
-      <div className="flex-1 w-full h-full overflow-y-auto relative z-0">
+      <div className="flex-1 w-full h-full overflow-y-auto">
         <PageTransition />
       </div>
       <CommandBar />
