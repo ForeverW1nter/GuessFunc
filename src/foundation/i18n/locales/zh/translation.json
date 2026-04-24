@@ -300,9 +300,10 @@
       "importSuccess": "数据导入成功",
       "importError": "无效的存档文件格式",
       "clearSuccess": "槽位数据已清空"
-    },
-    "hub": {
-      "guessFunc": {
+    }
+  },
+  "hub": {
+    "guessFunc": {
         "title": "GUESS FUNC",
         "subtitle": "数学引擎 / 沙盒模式",
         "desc": "全功能的数学沙盒。分析信号模式并重建未知函数。"
@@ -333,7 +334,6 @@
       "archiveOffline": "档案系统离线",
       "networkOffline": "全局网络离线",
       "creatorMounted": "创作者终端已外部挂载"
-    }
   },
   "tips": {
   },

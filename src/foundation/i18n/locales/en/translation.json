@@ -285,9 +285,10 @@
       "importSuccess": "Data imported successfully",
       "importError": "Invalid save file format",
       "clearSuccess": "Slot data cleared"
-    },
-    "hub": {
-      "guessFunc": {
+    }
+  },
+  "hub": {
+    "guessFunc": {
         "title": "GUESS FUNC",
         "subtitle": "MATH ENGINE / SANDBOX",
         "desc": "A fully featured mathematical sandbox. Analyze signal patterns and reconstruct unknown functions."
@@ -318,7 +319,6 @@
       "archiveOffline": "ARCHIVE SYSTEM OFFLINE",
       "networkOffline": "GLOBAL NETWORK OFFLINE",
       "creatorMounted": "CREATOR TERMINAL MOUNTED EXTERNALLY"
-    }
   },
   "tips": {
     "title": "Get Hints",
