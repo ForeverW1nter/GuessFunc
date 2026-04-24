@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/noto-sans-sc": "^5.2.9",
+    "@fontsource/space-grotesk": "^5.2.10",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "idb-keyval": "^6.2.2",

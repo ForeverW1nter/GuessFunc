@@ -1,4 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap");
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/noto-sans-sc/chinese-simplified-400.css";
+@import "@fontsource/noto-sans-sc/chinese-simplified-500.css";
+@import "@fontsource/noto-sans-sc/chinese-simplified-700.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
 @import "tailwindcss";
 
 @layer theme, base, components, utilities;
@@ -23,10 +31,8 @@
     --accent-studio: #8b5cf6; /* Purple */
     --accent-settings: #f59e0b; /* Amber/Orange */
 
-    --font-display:
-      "Space Grotesk", "Noto Sans SC", "Clash Display", "Playfair Display",
-      ui-serif, Georgia, serif;
-    --font-sans: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    --font-display: "Space Grotesk", "Noto Sans SC";
+    --font-sans: "Inter", "Noto Sans SC";
   }
 
   .dark {
