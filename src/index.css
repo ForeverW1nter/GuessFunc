@@ -5,14 +5,15 @@
 
 @layer base {
   :root {
-    --color-background: #F2F0E9;
-    --color-foreground: #111111;
-    --color-muted: #E6E4DD;
-    --color-muted-foreground: #666666;
-    --color-border: #DCDAD2;
+    /* Enhanced Light Mode: Softer paper tone with more dimension */
+    --color-background: #F4F2EC; 
+    --color-foreground: #1A1A1A; 
+    --color-muted: #EAE7DE;
+    --color-muted-foreground: #737373;
+    --color-border: #E0DDD2;
     --color-primary: #FF3366;
     --color-primary-foreground: #FFFFFF;
-    --color-glass: rgba(242, 240, 233, 0.7);
+    --color-glass: rgba(244, 242, 236, 0.7);
     --glow-opacity: 0.15;
     
     /* Module Accent Colors - Light */
@@ -27,6 +28,7 @@
   }
 
   .dark {
+    /* Dark Mode: Deep Abyss */
     --color-background: #0A0A0A;
     --color-foreground: #EDEDED;
     --color-muted: #1A1A1A;
@@ -37,12 +39,12 @@
     --color-glass: rgba(10, 10, 10, 0.7);
     --glow-opacity: 0.03;
 
-    /* Module Accent Colors - Dark (Similar hues but tuned for dark mode) */
-    --accent-hub: #FF4D8A;     /* Brighter Pink */
-    --accent-archive: #60A5FA; /* Lighter Blue */
-    --accent-network: #34D399; /* Lighter Green */
-    --accent-studio: #A78BFA;  /* Lighter Purple */
-    --accent-settings: #FBBF24;/* Lighter Amber */
+    /* Module Accent Colors - Dark */
+    --accent-hub: #FF4D8A;
+    --accent-archive: #60A5FA;
+    --accent-network: #34D399;
+    --accent-studio: #A78BFA;
+    --accent-settings: #FBBF24;
   }
 }
 
@@ -54,7 +56,8 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    /* Subtle noise texture applied to body */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
   }
 
   h1, h2, h3, h4, h5, h6 {

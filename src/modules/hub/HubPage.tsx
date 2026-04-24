@@ -74,26 +74,31 @@ export const HubPage = () => {
         {MODES.map((mode, index) => (
           <Link key={mode.id} to={mode.path} className="group relative block w-full outline-none">
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 * index, ease: [0.22, 1, 0.36, 1] }}
-              className="relative py-10 px-8 rounded-3xl border border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-8 transition-colors duration-500 hover:bg-[var(--color-muted)] overflow-hidden"
+              className="relative py-8 md:py-10 px-6 md:px-8 rounded-3xl border border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8 transition-colors duration-500 hover:bg-[var(--color-muted)] overflow-hidden"
             >
-              <div className="flex items-center gap-8 z-10">
+              {/* Left Side: Index & Title */}
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 z-10 w-full md:w-auto">
                 <span className="text-2xl font-mono opacity-20 group-hover:opacity-100 transition-opacity duration-300">
                   0{index + 1}
                 </span>
-                <div>
-                  <h2 className={cn("text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-300", mode.color)}>
+                <div className="w-full">
+                  <h2 className={cn(
+                    "text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-300",
+                    mode.color
+                  )}>
                     {mode.title}
                   </h2>
-                  <p className="text-sm font-mono tracking-[0.2em] mt-4 opacity-50 uppercase">
+                  <p className="text-xs md:text-sm font-mono tracking-[0.2em] mt-2 md:mt-4 opacity-50 uppercase">
                     {mode.subtitle}
                   </p>
                 </div>
               </div>
 
-              <div className="md:w-1/3 flex items-end justify-end text-right z-10 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+              {/* Right Side: Description & Icon (Responsive: visible on mobile, hover-revealed on desktop) */}
+              <div className="w-full md:w-1/3 flex items-start md:items-end justify-start md:justify-end text-left md:text-right z-10 md:opacity-0 md:translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 mt-4 md:mt-0 overflow-hidden">
                 <p className="text-sm leading-relaxed text-[var(--color-muted-foreground)]">
                   {mode.desc}
                 </p>
