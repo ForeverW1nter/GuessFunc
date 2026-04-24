@@ -87,10 +87,20 @@ export const CommandBar = () => {
               className={cn(
                 "relative w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300",
                 !isActive
-                  ? "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
+                  ? "text-[var(--color-muted-foreground)]"
                   : "",
               )}
-              style={isActive ? { color: item.color } : {}}
+              style={
+                isActive
+                  ? { color: item.color }
+                  : { "--hover-color": item.color } as React.CSSProperties
+              }
+              onMouseEnter={(e) => {
+                if (!isActive) e.currentTarget.style.color = item.color;
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) e.currentTarget.style.color = "";
+              }}
             >
               <item.icon size={20} strokeWidth={isActive ? 2 : 1.5} />
             </div>
