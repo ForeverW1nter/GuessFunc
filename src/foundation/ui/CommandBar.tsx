@@ -60,7 +60,7 @@ export const CommandBar = () => {
   return (
     <div
       className={cn(
-        "fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]",
+        "fixed bottom-8 left-1/2 -translate-x-1/2 z-[102]",
         "px-2 py-2 rounded-full flex items-center gap-2",
         "bg-[var(--color-glass)] backdrop-blur-2xl border border-[var(--color-border)] shadow-2xl transition-all duration-500",
         isGameRoute
@@ -126,9 +126,14 @@ export const CommandBar = () => {
 
       {/* System Settings Toggle */}
       <button
-        onClick={toggleControlCenter}
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleControlCenter();
+        }}
         className={cn(
-          "relative w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300 text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] outline-none"
+          "relative w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300 text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] outline-none cursor-pointer pointer-events-auto"
         )}
       >
         <Settings size={20} strokeWidth={ICON_STROKE_WIDTH_INACTIVE} />
