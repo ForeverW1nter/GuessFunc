@@ -20,12 +20,16 @@ export interface GraphRendererProps {
  * A controlled UI component that renders a mathematical function
  * using Mafs and MathEngine. Completely decoupled from external logic.
  */
+const DEFAULT_HEIGHT = 500;
+const PARAM_MIN = -10;
+const PARAM_MAX = 10;
+
 export const GraphRenderer = ({
   expression,
   parameters = {},
   lineColor = Theme.indigo,
-  height = 500,
-  viewBox = { x: [-10, 10], y: [-10, 10] },
+  height = DEFAULT_HEIGHT,
+  viewBox = { x: [PARAM_MIN, PARAM_MAX], y: [PARAM_MIN, PARAM_MAX] },
 }: GraphRendererProps) => {
   // Compile the expression into a fast native JS function whenever it or params change
   const plottedFunction = useMemo(() => {

@@ -1,5 +1,6 @@
 import { ModuleRegistry, type GameModule } from '@/core/ModuleRegistry';
 import { HubPage } from './HubPage';
+import { CreatorTerminalPage } from './CreatorTerminalPage';
 
 export const initHubModule = async () => {
   const mod: GameModule = {
@@ -10,7 +11,8 @@ export const initHubModule = async () => {
     coreApiVersion: '^1.0.0',
     entryRoute: '/',
     routes: [
-      { index: true, element: <HubPage /> }
+      { index: true, element: <HubPage /> },
+      { path: 'creator', element: <CreatorTerminalPage /> }
     ]
   };
 

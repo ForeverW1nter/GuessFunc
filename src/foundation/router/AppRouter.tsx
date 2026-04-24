@@ -54,7 +54,7 @@ export const AppRouter = () => {
           path: "creator",
           element: (
             <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">
-              CREATOR TERMINAL OFFLINE
+              CREATOR TERMINAL MOUNTED EXTERNALLY
             </div>
           ),
         },

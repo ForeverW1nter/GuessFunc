@@ -1,5 +1,7 @@
 import { ModuleRegistry, type GameModule } from "@/core/ModuleRegistry";
+import { GameEngineRegistry } from "@/core/GameEngineRegistry";
 import { GuessFuncPage } from "@/modules/guessfunc/GuessFuncPage";
+import { GuessFuncEngine } from "./GuessFuncEngine";
 
 export const initGuessFuncModule = async () => {
   const mod: GameModule = {
@@ -15,5 +17,9 @@ export const initGuessFuncModule = async () => {
     },
   };
 
+  // Register the module routing
   await ModuleRegistry.register(mod);
+
+  // Register the engine protocol for Universal Terminal
+  GameEngineRegistry.registerEngine("guessfunc", () => new GuessFuncEngine());
 };

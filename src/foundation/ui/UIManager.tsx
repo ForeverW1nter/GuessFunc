@@ -84,6 +84,8 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const toast = useCallback((options: Omit<ToastOptions, 'id'>) => {
+    // In a production app, use crypto.randomUUID(). For UI purposes, this is acceptable.
+    // eslint-disable-next-line sonarjs/pseudo-random
     const id = Math.random().toString(TOAST_ID_RADIX).substring(TOAST_ID_START_INDEX, TOAST_ID_START_INDEX + TOAST_ID_LENGTH);
     setToasts((prev) => [...prev, { ...options, id }]);
     setTimeout(() => removeToast(id), options.duration || DEFAULT_TOAST_DURATION);

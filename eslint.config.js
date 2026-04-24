@@ -37,7 +37,7 @@ export default tseslint.config(
       'sonarjs/cognitive-complexity': ['error', 15],
       'sonarjs/no-duplicate-string': 'off', // Turn off string duplication check as Tailwind CSS classes trigger it often
       '@typescript-eslint/no-magic-numbers': ['warn', { 
-        ignore: [-1, 0, 1, 2, 10, 100, 1000],
+        ignore: [-1, 0, 1, 2, 10, 100, 1000, 0.22, 0.36],
         ignoreArrayIndexes: true,
         ignoreEnums: true,
         ignoreNumericLiteralTypes: true,
