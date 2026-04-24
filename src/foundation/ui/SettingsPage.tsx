@@ -10,7 +10,6 @@ import { cn } from '@/utils/cn';
 
 const SPRING_STIFFNESS = 250;
 const SPRING_DAMPING = 30;
-const EASE_OUT_EXPO = [0.22, 1, 0.36, 1]; // eslint-disable-line @typescript-eslint/no-magic-numbers
 const MIN_FONT_SCALE = 0.8;
 const FONT_SCALE_RANGE = 0.7;
 const TOTAL_SAVE_SLOTS = 5;
@@ -264,7 +263,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className="w-full h-full md:pl-6"
             >
               
