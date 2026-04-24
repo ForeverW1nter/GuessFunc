@@ -55,7 +55,6 @@ export interface ToastOptions {
 interface UIContextType {
   theme: 'light' | 'dark' | 'system';
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
-  toggleTheme: () => void;
   toast: (options: Omit<ToastOptions, 'id'>) => void;
   // Expose components
   Button: typeof Button;
@@ -79,16 +78,6 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
     root.classList.add(newTheme);
   };
 
-  const toggleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-    } else if (theme === 'dark') {
-      setTheme('system');
-    } else {
-      setTheme('light');
-    }
-  };
-
   const toast = (options: Omit<ToastOptions, 'id'>) => {
     const id = Math.random().toString(36).substring(2);
     setToasts(prev => [...prev, { ...options, id }]);
@@ -98,7 +87,7 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <UIContext.Provider value={{ theme, setTheme, toggleTheme, toast, Button }}>
+    <UIContext.Provider value={{ theme, setTheme, toast, Button }}>
       {children}
       {/* Toast Container */}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
