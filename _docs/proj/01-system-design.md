@@ -2,11 +2,13 @@
 
 本项目采用**微内核/插件化架构 (Microkernel / Plugin Architecture)**。整个系统被划分为四个层级，从下到上依次为：内核、基建、共享服务、游戏模组。
 
-## 1. 根节点：微内核与基础框架 (Core Framework)
-这是底层的基础设施，负责管理状态、依赖注入和组件装配。
-- **`ModuleRegistry`**: 负责动态加载、初始化各层级的模组，解决依赖树。提供动态路由挂载和动态 I18n 词典注入的 API。
+## 1. 纯 TypeScript 微内核层 (Microkernel Core)
+**只负责**依赖注入、状态同步和生命周期管理，没有任何业务代码。
+- **`ModuleRegistry`**: 模块注册表，处理模块挂载、版本检查与卸载。
+- **`EventBus`**: 用于跨模块通信（如：发送“关卡通关”事件）。
 - **`SlotManager`**: UI 插槽管理器，允许模组将自己的 React 节点注入到其他模组预留的占位符中。
 - **`DesignTokensContract`**: 定义系统必须具备的 CSS 变量契约。
+- **通用关卡协议 (Universal Level Protocol)**：平台级关卡数据标准 `{ id: string, gameId: string, author: string, payload: any }`。所有社区关卡、自建关卡均基于此协议跨游戏流转。
 
 ## 2. 必须有的模组：领域 Store 与基建服务 (Domain Stores & Foundation)
 这些服务通过 React Context 提供强类型的 Hook，替代全局 EventBus。
