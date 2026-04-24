@@ -23,6 +23,8 @@
     --color-primary-foreground: #ffffff;
     --color-glass: rgba(244, 242, 236, 0.7);
     --glow-opacity: 0.15;
+    --card-hover-bg: #ffffff;
+    --card-hover-border: rgba(0, 0, 0, 0.15);
 
     /* Module Accent Colors - Light */
     --accent-hub: #ff3366; /* Pink/Red */
@@ -46,6 +48,8 @@
     --color-primary-foreground: #000000;
     --color-glass: rgba(10, 10, 10, 0.7);
     --glow-opacity: 0.03;
+    --card-hover-bg: rgba(255, 255, 255, 0.02);
+    --card-hover-border: rgba(255, 255, 255, 0.15);
 
     /* Module Accent Colors - Dark */
     --accent-hub: #ff4d8a;

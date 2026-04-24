@@ -87,13 +87,18 @@ export const HubPage = () => {
                 delay: 0.1 * index,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="relative py-8 md:py-10 px-6 md:px-8 rounded-3xl border border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8 transition-colors duration-500 hover:bg-[var(--color-muted)] overflow-hidden"
+              className="relative py-8 md:py-10 px-6 md:px-8 rounded-3xl border border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8 transition-all duration-500 hover:bg-[var(--card-hover-bg)] hover:border-[var(--card-hover-border)] hover:shadow-2xl hover:-translate-y-1 overflow-hidden"
             >
+              {/* Subtle background glow linked to accent color */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-[0.05] transition-opacity duration-700 pointer-events-none"
+                style={{ backgroundColor: mode.bgHover }}
+              />
               {/* Left Side: Index & Title */}
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 z-10 w-full md:w-auto">
                 <span
                   className={cn(
-                    "text-2xl font-mono opacity-20 transition-colors duration-500",
+                    "text-2xl font-mono opacity-20 group-hover:opacity-100 transition-all duration-500",
                     mode.color
                   )}
                 >
@@ -121,9 +126,9 @@ export const HubPage = () => {
                 </p>
               </div>
 
-              {/* Hover Effect Background / Parallax */}
+              {/* Dynamic Gradient Sweep */}
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1000 ease-in-out"
+                className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none"
                 style={{
                   background: `linear-gradient(to right, transparent, ${mode.bgHover}, transparent)`,
                 }}
