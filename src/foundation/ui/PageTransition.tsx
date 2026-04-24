@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useOutlet } from 'react-router-dom';
 

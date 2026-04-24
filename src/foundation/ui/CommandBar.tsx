@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Home, Library, Globe, Settings, TerminalSquare } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -14,7 +13,12 @@ const navItems = [
 
 export const CommandBar = () => {
   const location = useLocation();
-  const isGameRoute = location.pathname.startsWith('/guessfunc') || location.pathname.startsWith('/gatefunc');
+  
+  // To keep the CommandBar decoupled from specific game IDs (guessfunc/gatefunc),
+  // we consider any route that is NOT a core platform route as a "Game Route" 
+  // where the dock should shrink down.
+  const isCoreRoute = navItems.some(item => location.pathname === item.path);
+  const isGameRoute = !isCoreRoute;
 
   const activeIndex = navItems.findIndex(item => location.pathname === item.path);
   const validIndex = activeIndex >= 0 ? activeIndex : 0;
