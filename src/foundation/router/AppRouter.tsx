@@ -24,11 +24,16 @@ export const AppRouter = ({ moduleRoutes }: { moduleRoutes: RouteObject[] }) => 
       path: "/",
       element: <AppLayout />,
       children: [
-        // Placeholder routes for the other core pages
+        ...moduleRoutes,
+        {
+          path: "settings",
+          element: <SettingsPage />,
+        },
+        // Fallback Placeholder routes if a module is offline/unregistered
         {
           path: "archive",
           element: (
-            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">
+            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] uppercase">
               {t('appRouter.archiveOffline', 'ARCHIVE SYSTEM OFFLINE')}
             </div>
           ),
@@ -36,7 +41,7 @@ export const AppRouter = ({ moduleRoutes }: { moduleRoutes: RouteObject[] }) => 
         {
           path: "workshop",
           element: (
-            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">
+            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] uppercase">
               {t('appRouter.networkOffline', 'GLOBAL NETWORK OFFLINE')}
             </div>
           ),
@@ -44,16 +49,11 @@ export const AppRouter = ({ moduleRoutes }: { moduleRoutes: RouteObject[] }) => 
         {
           path: "creator",
           element: (
-            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">
-              {t('appRouter.creatorMounted', 'CREATOR TERMINAL MOUNTED EXTERNALLY')}
+            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)] uppercase">
+              {t('appRouter.creatorMounted', 'CREATOR TERMINAL OFFLINE')}
             </div>
           ),
-        },
-        {
-          path: "settings",
-          element: <SettingsPage />,
-        },
-        ...moduleRoutes,
+        }
       ],
     },
   ]);
