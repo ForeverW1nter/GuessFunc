@@ -299,6 +299,7 @@
         "subtitle": "工作室 / 关卡构建器",
         "desc": "设计、测试并将您自己的逻辑挑战上传到网络。同时支持数学引擎和逻辑门引擎。"
       }
+    },
     "appRouter": {
       "archiveOffline": "档案系统离线",
       "networkOffline": "全局网络离线",

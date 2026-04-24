@@ -284,6 +284,7 @@
         "subtitle": "STUDIO / LEVEL BUILDER",
         "desc": "Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine."
       }
+    },
     "appRouter": {
       "archiveOffline": "ARCHIVE SYSTEM OFFLINE",
       "networkOffline": "GLOBAL NETWORK OFFLINE",
