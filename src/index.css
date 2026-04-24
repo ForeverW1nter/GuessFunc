@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap");
 @import "tailwindcss";
 
 @layer theme, base, components, utilities;
@@ -6,45 +6,47 @@
 @layer base {
   :root {
     /* Enhanced Light Mode: Softer paper tone with more dimension */
-    --color-background: #F4F2EC; 
-    --color-foreground: #1A1A1A; 
-    --color-muted: #EAE7DE;
+    --color-background: #f4f2ec;
+    --color-foreground: #1a1a1a;
+    --color-muted: #eae7de;
     --color-muted-foreground: #737373;
-    --color-border: #E0DDD2;
-    --color-primary: #FF3366;
-    --color-primary-foreground: #FFFFFF;
+    --color-border: #e0ddd2;
+    --color-primary: #ff3366;
+    --color-primary-foreground: #ffffff;
     --color-glass: rgba(244, 242, 236, 0.7);
     --glow-opacity: 0.15;
-    
-    /* Module Accent Colors - Light */
-    --accent-hub: #FF3366;     /* Pink/Red */
-    --accent-archive: #3B82F6; /* Blue */
-    --accent-network: #10B981; /* Green */
-    --accent-studio: #8B5CF6;  /* Purple */
-    --accent-settings: #F59E0B;/* Amber/Orange */
 
-    --font-display: 'Space Grotesk', 'Noto Sans SC', 'Clash Display', 'Playfair Display', ui-serif, Georgia, serif;
-    --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+    /* Module Accent Colors - Light */
+    --accent-hub: #ff3366; /* Pink/Red */
+    --accent-archive: #3b82f6; /* Blue */
+    --accent-network: #10b981; /* Green */
+    --accent-studio: #8b5cf6; /* Purple */
+    --accent-settings: #f59e0b; /* Amber/Orange */
+
+    --font-display:
+      "Space Grotesk", "Noto Sans SC", "Clash Display", "Playfair Display",
+      ui-serif, Georgia, serif;
+    --font-sans: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
   }
 
   .dark {
     /* Dark Mode: Deep Abyss */
-    --color-background: #0A0A0A;
-    --color-foreground: #EDEDED;
-    --color-muted: #1A1A1A;
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+    --color-muted: #1a1a1a;
     --color-muted-foreground: #888888;
     --color-border: #222222;
-    --color-primary: #FF4D8A;
+    --color-primary: #ff4d8a;
     --color-primary-foreground: #000000;
     --color-glass: rgba(10, 10, 10, 0.7);
     --glow-opacity: 0.03;
 
     /* Module Accent Colors - Dark */
-    --accent-hub: #FF4D8A;
-    --accent-archive: #60A5FA;
-    --accent-network: #34D399;
-    --accent-studio: #A78BFA;
-    --accent-settings: #FBBF24;
+    --accent-hub: #ff4d8a;
+    --accent-archive: #60a5fa;
+    --accent-network: #34d399;
+    --accent-studio: #a78bfa;
+    --accent-settings: #fbbf24;
   }
 }
 
@@ -60,7 +62,12 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.02em;

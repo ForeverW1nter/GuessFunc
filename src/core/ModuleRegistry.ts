@@ -1,4 +1,4 @@
-import type { RouteObject } from 'react-router-dom';
+import type { RouteObject } from "react-router-dom";
 
 export interface GameModule {
   id: string;
@@ -22,7 +22,9 @@ class ModuleRegistryClass {
    */
   async register(mod: GameModule) {
     if (this.modules.has(mod.id) || this.registering.has(mod.id)) {
-      console.warn(`[ModuleRegistry] Module ${mod.id} is already registered or registering.`);
+      console.warn(
+        `[ModuleRegistry] Module ${mod.id} is already registered or registering.`,
+      );
       return;
     }
 
@@ -48,7 +50,7 @@ class ModuleRegistryClass {
 
   getModuleRoutes(): RouteObject[] {
     const allRoutes: RouteObject[] = [];
-    this.modules.forEach(mod => {
+    this.modules.forEach((mod) => {
       allRoutes.push(...mod.routes);
     });
     return allRoutes;
@@ -57,12 +59,12 @@ class ModuleRegistryClass {
   subscribeToRoutes(listener: () => void) {
     this.routeListeners.push(listener);
     return () => {
-      this.routeListeners = this.routeListeners.filter(l => l !== listener);
+      this.routeListeners = this.routeListeners.filter((l) => l !== listener);
     };
   }
 
   private notifyRouteListeners() {
-    this.routeListeners.forEach(listener => listener());
+    this.routeListeners.forEach((listener) => listener());
   }
 }
 

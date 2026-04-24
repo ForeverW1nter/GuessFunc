@@ -1,26 +1,48 @@
-import { motion } from 'framer-motion';
-import { Home, Library, Globe, Settings, TerminalSquare } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { cn } from '../../utils/cn';
+import { motion } from "framer-motion";
+import { Home, Library, Globe, Settings, TerminalSquare } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/utils/cn";
 
 const navItems = [
-  { path: '/', icon: Home, label: 'Hub', color: 'var(--accent-hub)' },
-  { path: '/archive', icon: Library, label: 'Archive', color: 'var(--accent-archive)' },
-  { path: '/workshop', icon: Globe, label: 'Network', color: 'var(--accent-network)' },
-  { path: '/creator', icon: TerminalSquare, label: 'Studio', color: 'var(--accent-studio)' },
-  { path: '/settings', icon: Settings, label: 'Settings', color: 'var(--accent-settings)' },
+  { path: "/", icon: Home, label: "Hub", color: "var(--accent-hub)" },
+  {
+    path: "/archive",
+    icon: Library,
+    label: "Archive",
+    color: "var(--accent-archive)",
+  },
+  {
+    path: "/workshop",
+    icon: Globe,
+    label: "Network",
+    color: "var(--accent-network)",
+  },
+  {
+    path: "/creator",
+    icon: TerminalSquare,
+    label: "Studio",
+    color: "var(--accent-studio)",
+  },
+  {
+    path: "/settings",
+    icon: Settings,
+    label: "Settings",
+    color: "var(--accent-settings)",
+  },
 ];
 
 export const CommandBar = () => {
   const location = useLocation();
-  
+
   // To keep the CommandBar decoupled from specific game IDs (guessfunc/gatefunc),
-  // we consider any route that is NOT a core platform route as a "Game Route" 
+  // we consider any route that is NOT a core platform route as a "Game Route"
   // where the dock should shrink down.
-  const isCoreRoute = navItems.some(item => location.pathname === item.path);
+  const isCoreRoute = navItems.some((item) => location.pathname === item.path);
   const isGameRoute = !isCoreRoute;
 
-  const activeIndex = navItems.findIndex(item => location.pathname === item.path);
+  const activeIndex = navItems.findIndex(
+    (item) => location.pathname === item.path,
+  );
   const validIndex = activeIndex >= 0 ? activeIndex : 0;
 
   // 44px is width of item (p-3 = 12px*2 + 20px icon = 44px). Gap is 8px. Padding is 8px.
@@ -33,7 +55,9 @@ export const CommandBar = () => {
         "fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]",
         "px-2 py-2 rounded-full flex items-center gap-2",
         "bg-[var(--color-glass)] backdrop-blur-2xl border border-[var(--color-border)] shadow-2xl transition-all duration-500",
-        isGameRoute ? "scale-75 origin-bottom opacity-50 hover:opacity-100 hover:scale-100" : "scale-100 opacity-100"
+        isGameRoute
+          ? "scale-75 origin-bottom opacity-50 hover:opacity-100 hover:scale-100"
+          : "scale-100 opacity-100",
       )}
     >
       {/* Sliding Indicator (Absolute positioned, NO layoutId) */}
@@ -45,20 +69,26 @@ export const CommandBar = () => {
             left: leftOffset,
             width: 44,
             backgroundColor: navItems[validIndex].color,
-            opacity: 0.15
+            opacity: 0.15,
           }}
-          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
         />
       )}
 
       {navItems.map((item, idx) => {
         const isActive = activeIndex === idx;
         return (
-          <Link key={item.path} to={item.path} className="relative group outline-none">
+          <Link
+            key={item.path}
+            to={item.path}
+            className="relative group outline-none"
+          >
             <div
               className={cn(
                 "relative w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300",
-                !isActive ? "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]" : ""
+                !isActive
+                  ? "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
+                  : "",
               )}
               style={isActive ? { color: item.color } : {}}
             >

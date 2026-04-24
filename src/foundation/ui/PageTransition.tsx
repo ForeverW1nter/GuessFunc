@@ -1,6 +1,6 @@
-import { Suspense } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation, useOutlet } from 'react-router-dom';
+import { Suspense } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLocation, useOutlet } from "react-router-dom";
 
 export const PageTransition = () => {
   const location = useLocation();
@@ -17,9 +17,7 @@ export const PageTransition = () => {
           transition={{ duration: 0.3, ease: "linear" }}
           className="absolute inset-0 w-full h-full"
         >
-          <Suspense fallback={null}>
-            {outlet}
-          </Suspense>
+          <Suspense fallback={null}>{outlet}</Suspense>
         </motion.div>
       </AnimatePresence>
     </div>

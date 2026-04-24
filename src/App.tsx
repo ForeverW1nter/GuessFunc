@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { UIProvider } from './foundation/ui/UIManager';
-import { AppRouter } from './foundation/router/AppRouter';
-import { initGuessFuncModule } from './modules/guessfunc';
+import { useEffect, useState } from "react";
+import { UIProvider } from "@/foundation/ui/UIManager";
+import { AppRouter } from "@/foundation/router/AppRouter";
+import { initGuessFuncModule } from "@/modules/guessfunc";
 
 const App = () => {
   const [initialized, setInitialized] = useState(false);
@@ -16,8 +16,8 @@ const App = () => {
 
     const bootstrap = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 600));
-        
+        await new Promise((resolve) => setTimeout(resolve, 600));
+
         await initGuessFuncModule();
         if (isMounted) {
           setInitialized(true);
@@ -28,7 +28,7 @@ const App = () => {
         }
       }
     };
-    
+
     bootstrap();
 
     return () => {
@@ -43,7 +43,9 @@ const App = () => {
           <div className="w-48 h-[1px] bg-[var(--color-border)] relative overflow-hidden">
             <div className="absolute top-0 left-0 h-full w-1/3 bg-[var(--color-primary)] animate-[slide_1.5s_ease-in-out_infinite]" />
           </div>
-          <p className="text-xs font-mono tracking-[0.3em] uppercase opacity-50">Booting Microkernel...</p>
+          <p className="text-xs font-mono tracking-[0.3em] uppercase opacity-50">
+            Booting Microkernel...
+          </p>
         </div>
         <style>{`
           @keyframes slide {

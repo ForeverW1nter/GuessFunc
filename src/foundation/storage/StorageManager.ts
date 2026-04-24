@@ -1,4 +1,4 @@
-import * as idb from 'idb-keyval';
+import * as idb from "idb-keyval";
 
 /**
  * Foundation Storage Module
@@ -7,24 +7,34 @@ import * as idb from 'idb-keyval';
  */
 
 class MemoryStorage {
-  private store = new Map<string, any>();
-  async get<T>(key: string): Promise<T | undefined> { return this.store.get(key); }
-  async set(key: string, val: any): Promise<void> { this.store.set(key, val); }
-  async del(key: string): Promise<void> { this.store.delete(key); }
-  async clear(): Promise<void> { this.store.clear(); }
+  private store = new Map<string, unknown>();
+  async get<T>(key: string): Promise<T | undefined> {
+    return this.store.get(key) as T | undefined;
+  }
+  async set(key: string, val: unknown): Promise<void> {
+    this.store.set(key, val);
+  }
+  async del(key: string): Promise<void> {
+    this.store.delete(key);
+  }
+  async clear(): Promise<void> {
+    this.store.clear();
+  }
 }
 
 let useMemoryFallback = false;
 
 // Simple test to see if IDB is available
 try {
-  const req = window.indexedDB.open('test_idb', 1);
-  req.onerror = () => { useMemoryFallback = true; };
-  req.onsuccess = (e) => { 
-    const db = (e.target as IDBOpenDBRequest).result;
-    db.close(); 
+  const req = window.indexedDB.open("test_idb", 1);
+  req.onerror = () => {
+    useMemoryFallback = true;
   };
-} catch (e) {
+  req.onsuccess = (e) => {
+    const db = (e.target as IDBOpenDBRequest).result;
+    db.close();
+  };
+} catch {
   useMemoryFallback = true;
 }
 
@@ -32,14 +42,14 @@ const memoryStore = new MemoryStorage();
 
 export const Storage = {
   get: async <T>(key: string): Promise<T | undefined> => {
-    if (useMemoryFallback) return memoryStore.get(key);
+    if (useMemoryFallback) return memoryStore.get<T>(key);
     try {
-      return await idb.get(key);
+      return await idb.get<T>(key);
     } catch {
-      return memoryStore.get(key);
+      return memoryStore.get<T>(key);
     }
   },
-  set: async (key: string, val: any): Promise<void> => {
+  set: async (key: string, val: unknown): Promise<void> => {
     if (useMemoryFallback) return memoryStore.set(key, val);
     try {
       await idb.set(key, val);
