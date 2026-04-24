@@ -16,7 +16,22 @@ export class GuessFuncEngine implements IGameProtocol {
     // Reset store on init to ensure clean slate
     useGuessFuncStore.getState().reset();
     
-    // Simulate async resource loading or web worker setup if needed
+    // Listen for level payload from host
+    this.eventBus.on('engine:loadLevel', (payload: unknown) => {
+      console.log(`[GuessFuncEngine] Received level payload:`, payload);
+      if (payload && typeof payload === 'object') {
+        const p = payload as { targetExpression: string; initialExpression: string; params: Record<string, number>; passSimilarity: number };
+        useGuessFuncStore.getState().loadLevelData(p);
+      }
+    });
+
+    // Subscribe to success event
+    useGuessFuncStore.subscribe((state) => {
+      if (state.isSuccess) {
+        this.eventBus?.emit('engine:success', { similarity: state.similarity });
+      }
+    });
+    
     console.log(`[GuessFuncEngine] Initialized with EventBus`);
     this.eventBus.emit('engine:ready', { id: this.id });
   }

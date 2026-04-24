@@ -63,6 +63,15 @@ export const CreatorTerminalPage = () => {
           bus.on('engine:ready', () => {
             setEngine(dynamicEngine);
             setLoading(false);
+
+            // In Creator Terminal, we simulate sending a level to the engine
+            // In Archive/Network mode, this would come from a real level configuration.
+            bus.emit('engine:loadLevel', {
+              targetExpression: "sin(x) + a",
+              initialExpression: "x",
+              params: { a: 2 },
+              passSimilarity: 99
+            });
           });
 
           await dynamicEngine.init(bus);

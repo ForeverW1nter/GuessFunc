@@ -1,18 +1,18 @@
 import { create } from 'zustand';
-import { GUESS_FUNC_LEVELS, type GuessFuncLevel } from '../data/levels';
 import { MathEngine } from '../engine/MathEngine';
 
 interface GuessFuncState {
-  currentLevelIndex: number;
-  level: GuessFuncLevel | null;
+  level: {
+    targetExpression: string;
+    passSimilarity: number;
+  } | null;
   expression: string;
   params: Record<string, number>;
   similarity: number;
   isSuccess: boolean;
   
   // Actions
-  loadLevel: (index: number) => void;
-  nextLevel: () => void;
+  loadLevelData: (payload: { targetExpression: string; initialExpression: string; params: Record<string, number>; passSimilarity: number }) => void;
   setExpression: (expr: string) => void;
   setParam: (key: string, value: number) => void;
   calculateSimilarity: () => void;
@@ -27,32 +27,24 @@ const TEST_PARAM_1 = 5;
 const TEST_PARAM_2 = -5;
 
 export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
-  currentLevelIndex: 0,
   level: null,
   expression: '',
   params: {},
   similarity: 0,
   isSuccess: false,
 
-  loadLevel: (index) => {
-    if (index >= GUESS_FUNC_LEVELS.length || index < 0) return;
-    const level = GUESS_FUNC_LEVELS[index];
+  loadLevelData: (payload) => {
     set({
-      currentLevelIndex: index,
-      level,
-      expression: level.initialExpression,
-      params: { ...level.params },
+      level: {
+        targetExpression: payload.targetExpression,
+        passSimilarity: payload.passSimilarity
+      },
+      expression: payload.initialExpression,
+      params: { ...payload.params },
       similarity: 0,
       isSuccess: false,
     });
     get().calculateSimilarity();
-  },
-
-  nextLevel: () => {
-    const nextIdx = get().currentLevelIndex + 1;
-    if (nextIdx < GUESS_FUNC_LEVELS.length) {
-      get().loadLevel(nextIdx);
-    }
   },
 
   setExpression: (expr) => {
@@ -119,7 +111,6 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
   },
 
   reset: () => set({
-    currentLevelIndex: 0,
     level: null,
     expression: '',
     params: {},

@@ -5,7 +5,17 @@ import { useGuessFuncStore } from './store/guessFuncStore';
 const DEFAULT_HEIGHT = 800;
 
 export const GuessFuncCanvas = () => {
-  const { expression, params } = useGuessFuncStore();
+  const { expression, params, level, isSuccess } = useGuessFuncStore();
+
+  const currentThemeColor = isSuccess ? Theme.green : Theme.blue;
+
+  if (!level) {
+    return (
+      <div className="w-full h-full relative group rounded-3xl border border-[var(--color-border)] bg-[var(--color-muted)] shadow-2xl overflow-hidden flex items-center justify-center font-mono text-[var(--color-muted-foreground)] uppercase">
+        AWAITING SIGNAL DATA...
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full relative group rounded-3xl border border-[var(--color-border)] bg-[var(--color-muted)] shadow-2xl overflow-hidden">
@@ -14,7 +24,9 @@ export const GuessFuncCanvas = () => {
       <GraphRenderer
         expression={expression}
         parameters={params}
-        lineColor={Theme.blue}
+        targetExpression={level.targetExpression}
+        targetParameters={params} // Target curve ALSO uses current sliders!
+        lineColor={currentThemeColor}
         height={DEFAULT_HEIGHT} 
       />
     </div>
