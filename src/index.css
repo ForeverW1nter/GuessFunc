@@ -13,50 +13,30 @@
 
 @layer base {
   :root {
-    /* Enhanced Light Mode: Softer paper tone with more dimension */
-    --color-background: #f4f2ec;
-    --color-foreground: #1a1a1a;
-    --color-muted: #eae7de;
-    --color-muted-foreground: #737373;
-    --color-border: #e0ddd2;
-    --color-primary: #ff3366;
-    --color-primary-foreground: #ffffff;
-    --color-glass: rgba(244, 242, 236, 0.7);
-    --glow-opacity: 0.15;
-    --card-hover-bg: #ffffff;
-    --card-hover-border: rgba(0, 0, 0, 0.15);
-
-    /* Module Accent Colors - Light */
-    --accent-hub: #ff3366; /* Pink/Red */
-    --accent-archive: #3b82f6; /* Blue */
-    --accent-network: #10b981; /* Green */
-    --accent-studio: #8b5cf6; /* Purple */
-    --accent-settings: #f59e0b; /* Amber/Orange */
-
-    --font-display: "Space Grotesk", "Noto Sans SC";
-    --font-sans: "Inter", "Noto Sans SC";
-  }
-
-  .dark {
-    /* Dark Mode: Deep Abyss */
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-    --color-muted: #1a1a1a;
+    --color-background: #000000;
+    --color-foreground: #ffffff;
+    --color-muted: #0a0a0a;
     --color-muted-foreground: #888888;
     --color-border: #222222;
-    --color-primary: #ff4d8a;
+    --color-primary: #ffffff;
     --color-primary-foreground: #000000;
     --color-glass: rgba(10, 10, 10, 0.7);
-    --glow-opacity: 0.03;
+    
+    /* Module Accent Colors */
+    --accent-hub: #6b7280;
+    --accent-archive: #f97316;
+    --accent-network: #3b82f6;
+    --accent-studio: #8b5cf6;
+    --accent-guessfunc: #10b981;
+    --accent-gatefunc: #ec4899;
+
+    /* Hover Glow Opacity */
+    --glow-opacity: 0.15;
     --card-hover-bg: rgba(255, 255, 255, 0.02);
     --card-hover-border: rgba(255, 255, 255, 0.15);
 
-    /* Module Accent Colors - Dark */
-    --accent-hub: #ff4d8a;
-    --accent-archive: #60a5fa;
-    --accent-network: #34d399;
-    --accent-studio: #a78bfa;
-    --accent-settings: #fbbf24;
+    --font-display: "Space Grotesk", "Noto Sans SC";
+    --font-sans: "Inter", "Noto Sans SC";
   }
 }
 

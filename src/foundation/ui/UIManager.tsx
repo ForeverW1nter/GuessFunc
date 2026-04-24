@@ -4,8 +4,10 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils/cn";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -52,60 +54,59 @@ export interface ToastOptions {
 // ========================
 // UI CONTEXT & PROVIDER
 // ========================
-export type Theme = "light" | "dark";
 
 interface UIContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-  toast: (options: Omit<ToastOptions, "id">) => void;
+  toast: (options: Omit<ToastOptions, 'id'>) => void;
 }
 
 const UIContext = createContext<UIContextType | null>(null);
 
 export const UIProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setThemeState] = useState<Theme>("dark");
   const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
-  // Apply theme on mount and when it changes
+  // Apply dark mode class globally on mount
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(theme);
-  }, [theme]);
+    document.documentElement.classList.add('dark');
+  }, []);
 
-  // A simple toggle function for the Hub header
-  const toggleTheme = () => {
-    setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
-  const toast = (options: Omit<ToastOptions, "id">) => {
-    const id = Math.random().toString(36).substring(2);
+  const toast = useCallback((options: Omit<ToastOptions, 'id'>) => {
+    const id = Math.random().toString(36).substr(2, 9);
     setToasts((prev) => [...prev, { ...options, id }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
-  };
+    }, (options as any).duration || 3000);
+  }, []);
 
   return (
-    <UIContext.Provider value={{ theme, toggleTheme, toast }}>
+    <UIContext.Provider value={{ toast }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
-        {toasts.map((t) => (
-          <div
-            key={t.id}
-            className={cn(
-              "p-4 rounded-md shadow-lg border",
-              t.type === "error"
-                ? "bg-red-500 text-white border-red-600"
-                : "bg-[var(--color-background)] border-[var(--color-border)]",
-            )}
-          >
-            <h4 className="font-bold text-sm">{t.title}</h4>
-            {t.description && (
-              <p className="text-sm opacity-90">{t.description}</p>
-            )}
-          </div>
-        ))}
+      <div className="fixed bottom-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none">
+        <AnimatePresence>
+          {toasts.map((t) => (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className={cn(
+                "px-6 py-4 rounded-xl border font-mono text-sm tracking-wide flex items-center justify-between shadow-2xl backdrop-blur-xl pointer-events-auto",
+                t.type === 'error' ? "bg-red-500/10 border-red-500/20 text-red-500" :
+                t.type === 'success' ? "bg-green-500/10 border-green-500/20 text-green-500" :
+                "bg-[var(--color-glass)] border-[var(--color-border)] text-[var(--color-foreground)]"
+              )}
+            >
+              <span>{t.title}</span>
+              {(t as any).action && (
+                <button
+                  onClick={(t as any).action.onClick}
+                  className="ml-6 px-3 py-1 bg-white/10 rounded-md hover:bg-white/20 transition-colors uppercase text-xs tracking-widest"
+                >
+                  {(t as any).action.label}
+                </button>
+              )}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </UIContext.Provider>
   );

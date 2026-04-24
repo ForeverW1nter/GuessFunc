@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useUI } from "@/foundation/ui/UIManager";
 import { Database, Globe2, Terminal } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -38,8 +37,6 @@ const MODES = [
 ];
 
 export const HubPage = () => {
-  const { theme, toggleTheme } = useUI();
-
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-x-hidden">
       {/* Decorative background elements */}
@@ -64,12 +61,6 @@ export const HubPage = () => {
           </h1>
           <p className="text-xs font-mono opacity-30 mt-1">STATUS: ONLINE</p>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="text-xs font-mono tracking-widest uppercase border border-[var(--color-border)] px-4 py-2 rounded-full hover:bg-[var(--color-foreground)] hover:text-[var(--color-background)] transition-colors duration-300"
-        >
-          {theme === "dark" ? "INIT LIGHT" : "INIT DARK"}
-        </button>
       </motion.header>
 
       <div className="w-full max-w-5xl flex flex-col gap-2 mt-20">
