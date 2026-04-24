@@ -7,7 +7,7 @@ export const PageTransition = () => {
   const outlet = useOutlet();
 
   return (
-    <div className="relative w-full h-full min-h-screen">
+    <div className="relative w-full min-h-screen">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={location.pathname}
@@ -15,7 +15,7 @@ export const PageTransition = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "linear" }}
-          className="absolute inset-0 w-full h-full"
+          className="w-full h-full"
         >
           <Suspense fallback={null}>{outlet}</Suspense>
         </motion.div>

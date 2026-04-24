@@ -12,7 +12,7 @@ const MODES = [
     desc: "Access decrypted logs, emails, and story nodes. Solve integrated logic puzzles to unlock the truth.",
     path: "/archive",
     icon: Database,
-    color: "hover:text-[var(--accent-archive)]",
+    color: "group-hover:text-[var(--accent-archive)]",
     bgHover: "var(--accent-archive)",
   },
   {
@@ -22,7 +22,7 @@ const MODES = [
     desc: "Connect to the global network. Download and play raw logic gates and math puzzles created by other operators.",
     path: "/workshop",
     icon: Globe2,
-    color: "hover:text-[var(--accent-network)]",
+    color: "group-hover:text-[var(--accent-network)]",
     bgHover: "var(--accent-network)",
   },
   {
@@ -32,7 +32,7 @@ const MODES = [
     desc: "Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine.",
     path: "/creator",
     icon: Terminal,
-    color: "hover:text-[var(--accent-studio)]",
+    color: "group-hover:text-[var(--accent-studio)]",
     bgHover: "var(--accent-studio)",
   },
 ];
@@ -91,19 +91,24 @@ export const HubPage = () => {
             >
               {/* Left Side: Index & Title */}
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 z-10 w-full md:w-auto">
-                <span className="text-2xl font-mono opacity-20 group-hover:opacity-100 transition-opacity duration-300">
+                <span
+                  className={cn(
+                    "text-2xl font-mono opacity-20 group-hover:opacity-100 transition-colors duration-500",
+                    mode.color
+                  )}
+                >
                   0{index + 1}
                 </span>
                 <div className="w-full">
                   <h2
                     className={cn(
-                      "text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-300",
+                      "text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-500",
                       mode.color,
                     )}
                   >
                     {mode.title}
                   </h2>
-                  <p className="text-xs md:text-sm font-mono tracking-[0.2em] mt-2 md:mt-4 opacity-50 uppercase">
+                  <p className="text-xs md:text-sm font-mono tracking-[0.2em] mt-2 md:mt-4 opacity-50 uppercase group-hover:opacity-80 transition-opacity duration-500">
                     {mode.subtitle}
                   </p>
                 </div>
