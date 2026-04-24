@@ -1,12 +1,25 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Volume2, VolumeX, Database, Type, Globe, Download, Upload, Trash2 } from 'lucide-react';
+import { Settings, Volume2, VolumeX, Database, Type, Globe, Download, Upload, Trash2, CheckCircle2 } from 'lucide-react';
 import { useSystemUIStore } from './useSystemUIStore';
 import { useAudioStore } from '@/foundation/audio/useAudioStore';
 import { useProgressStore } from '@/foundation/storage/useProgressStore';
 import { useUI } from './UIManager';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/utils/cn';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export const SettingsPage = () => {
   const { language, setLanguage, fontFamily, setFontFamily, fontSizeMultiplier, setFontSizeMultiplier } = useSystemUIStore();
@@ -16,10 +29,10 @@ export const SettingsPage = () => {
   const { t } = useTranslation();
 
   const PRESET_FONTS = [
-    { label: t('settings.font.default', 'System Default'), value: '"Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif' },
-    { label: t('settings.font.serif', 'Serif'), value: 'ui-serif, Georgia, "Noto Serif CJK SC", "Songti SC", serif' },
-    { label: t('settings.font.mono', 'Monospace'), value: '"Space Grotesk", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "PingFang SC", "Microsoft YaHei", monospace' },
-    { label: t('settings.font.sans', 'Sans-Serif'), value: 'ui-sans-serif, "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif' },
+    { id: 'default', label: t('settings.font.default', 'System Default'), value: '"Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif' },
+    { id: 'serif', label: t('settings.font.serif', 'Serif'), value: 'ui-serif, Georgia, "Noto Serif CJK SC", "Songti SC", serif' },
+    { id: 'mono', label: t('settings.font.mono', 'Monospace'), value: '"Space Grotesk", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "PingFang SC", "Microsoft YaHei", monospace' },
+    { id: 'sans', label: t('settings.font.sans', 'Sans-Serif'), value: 'ui-sans-serif, "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif' },
   ];
 
   useEffect(() => {
@@ -31,9 +44,7 @@ export const SettingsPage = () => {
   const handleExportData = () => {
     try {
       const data = {
-        completedLevels,
-        seenChapters,
-        readFiles,
+        completedLevels, seenChapters, readFiles,
         uiSettings: { language, fontFamily, fontSizeMultiplier },
         audioSettings: { volume, isMuted }
       };
@@ -98,195 +109,252 @@ export const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col p-8 md:p-12 relative overflow-x-hidden">
-      <div className="w-full max-w-4xl mx-auto flex flex-col h-full z-10 pb-24">
-        {/* Header */}
-        <motion.div 
+    <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col p-8 md:p-12 relative overflow-x-hidden selection:bg-[var(--color-foreground)] selection:text-[var(--color-background)]">
+      
+      {/* Decorative Blur Backgrounds */}
+      <div className="absolute top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-[var(--accent-settings)] blur-[120px] pointer-events-none opacity-[0.03]" />
+      <div className="absolute bottom-0 left-0 w-[40vw] h-[40vw] rounded-full bg-blue-500 blur-[120px] pointer-events-none opacity-[0.03]" />
+
+      <div className="w-full max-w-5xl mx-auto flex flex-col h-full z-10 pb-32">
+        {/* Header Section */}
+        <motion.header 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="pb-6 border-b border-[var(--color-border)] flex justify-between items-center"
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16 flex items-center justify-between border-b border-[var(--color-border)] pb-8"
         >
           <div>
-            <h2 className="text-3xl font-bold tracking-tighter uppercase flex items-center gap-3">
-              <Settings className="text-[var(--color-muted-foreground)]" size={32} />
-              {t('settings.title', 'Settings')}
-            </h2>
-            <p className="text-sm font-mono text-[var(--color-muted-foreground)] tracking-widest mt-1">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="p-3 bg-[var(--color-foreground)] text-[var(--color-background)] rounded-2xl">
+                <Settings size={28} strokeWidth={1.5} />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tighter uppercase font-display">
+                {t('settings.title', 'Settings')}
+              </h1>
+            </div>
+            <p className="text-sm font-mono text-[var(--color-muted-foreground)] tracking-[0.2em] uppercase ml-16">
               {t('settings.subtitle', 'System Preferences')}
             </p>
           </div>
-        </motion.div>
+        </motion.header>
 
-        {/* Content */}
+        {/* Bento Grid Content */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex-1 mt-12 space-y-16"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-12 gap-6"
         >
           
-          {/* Audio Block */}
-          <section className="space-y-6">
-            <h3 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2">
-              <Volume2 size={16} /> {t('settings.audio.title', 'Audio Output')}
-            </h3>
-            <div className="bg-white/5 p-6 rounded-2xl border border-[var(--color-border)] flex flex-col gap-6">
-              <div className="flex items-center gap-4">
-                <button 
-                  onClick={toggleMute}
-                  className="p-3 rounded-full hover:bg-white/10 transition-colors"
-                >
-                  {isMuted ? <VolumeX size={20} className="text-red-500" /> : <Volume2 size={20} />}
-                </button>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={isMuted ? 0 : volume}
-                  onChange={(e) => setVolume(parseFloat(e.target.value))}
-                  disabled={isMuted}
-                  className="flex-1 accent-[var(--color-foreground)] bg-[var(--color-border)] h-1 rounded-full appearance-none outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-[var(--color-foreground)] [&::-webkit-slider-thumb]:rounded-full cursor-pointer disabled:opacity-50"
-                />
-                <span className="font-mono text-sm w-12 text-right">
-                  {isMuted ? 'MUTE' : `${Math.round(volume * 100)}%`}
-                </span>
-              </div>
+          {/* --- LANGUAGE BENTO --- */}
+          <motion.div variants={itemVariants} className="md:col-span-5 rounded-3xl bg-[var(--color-muted)]/40 border border-[var(--color-border)] backdrop-blur-xl overflow-hidden relative group p-8 flex flex-col justify-between hover:border-[var(--card-hover-border)] hover:bg-[var(--card-hover-bg)] transition-all duration-500">
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none">
+              <Globe size={120} strokeWidth={0.5} />
             </div>
-          </section>
-
-          {/* Typography Block */}
-          <section className="space-y-6">
-            <h3 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2">
-              <Type size={16} /> {t('settings.typography.title', 'Typography')}
-            </h3>
-            <div className="bg-white/5 p-6 rounded-2xl border border-[var(--color-border)] flex flex-col gap-8">
-              
-              {/* Font Size */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-end">
-                  <label className="text-xs font-mono uppercase tracking-widest text-[var(--color-muted-foreground)]">
-                    {t('settings.font.size', 'Scale')}
-                  </label>
-                  <span className="font-mono text-sm">{Math.round(fontSizeMultiplier * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0.8"
-                  max="1.5"
-                  step="0.05"
-                  value={fontSizeMultiplier}
-                  onChange={(e) => setFontSizeMultiplier(parseFloat(e.target.value))}
-                  className="w-full accent-[var(--color-foreground)] bg-[var(--color-border)] h-1 rounded-full appearance-none outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-[var(--color-foreground)] [&::-webkit-slider-thumb]:rounded-full cursor-pointer"
-                />
-              </div>
-
-              {/* Font Family Selection */}
-              <div className="space-y-4">
-                <label className="text-xs font-mono uppercase tracking-widest text-[var(--color-muted-foreground)]">
-                  {t('settings.font.family', 'Typeface')}
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {PRESET_FONTS.map((font) => (
-                    <button
-                      key={font.value}
-                      onClick={() => setFontFamily(font.value)}
-                      style={{ fontFamily: font.value }}
-                      className={cn(
-                        "py-3 px-4 rounded-xl border text-sm transition-all",
-                        fontFamily === font.value 
-                          ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
-                          : "border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:border-white/30"
-                      )}
-                    >
-                      {font.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          {/* Language Block */}
-          <section className="space-y-6">
-            <h3 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2">
-              <Globe size={16} /> {t('settings.localization.title', 'Localization')}
-            </h3>
-            <div className="bg-white/5 p-6 rounded-2xl border border-[var(--color-border)] flex flex-col gap-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={cn(
-                    "flex-1 py-3 px-4 rounded-xl border font-mono text-sm tracking-widest transition-all",
-                    language === 'en' 
-                      ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
-                      : "border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:border-white/30"
-                  )}
-                >
-                  ENGLISH
-                </button>
-                <button
-                  onClick={() => setLanguage('zh')}
-                  className={cn(
-                    "flex-1 py-3 px-4 rounded-xl border font-mono text-sm tracking-widest transition-all",
-                    language === 'zh' 
-                      ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
-                      : "border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:border-white/30"
-                  )}
-                >
-                  中文
-                </button>
-              </div>
-              <p className="text-xs font-mono text-[var(--color-muted-foreground)] opacity-50 mt-2">
+            <div className="z-10 mb-8">
+              <h2 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2 mb-2">
+                <Globe size={14} /> {t('settings.localization.title', 'Localization')}
+              </h2>
+              <p className="text-xs text-[var(--color-muted-foreground)] font-sans">
                 {t('settings.language.subtitle', 'Change system display language')}
               </p>
             </div>
-          </section>
 
-          {/* Storage Block */}
-          <section className="space-y-6">
-            <h3 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2">
-              <Database size={16} /> {t('settings.storage.title', 'Storage & Data')}
-            </h3>
-            <div className="bg-white/5 p-6 rounded-2xl border border-[var(--color-border)] flex flex-col gap-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Export */}
-                <button
-                  onClick={handleExportData}
-                  className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:border-white/30 transition-all"
-                >
-                  <Download size={20} />
-                  <span className="text-xs font-mono uppercase tracking-widest">{t('settings.save.export', 'Export Data')}</span>
-                </button>
-                
-                {/* Import */}
-                <label className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:border-white/30 transition-all cursor-pointer">
-                  <Upload size={20} />
-                  <span className="text-xs font-mono uppercase tracking-widest">{t('settings.save.import', 'Import Data')}</span>
-                  <input 
-                    type="file" 
-                    accept=".json" 
-                    className="hidden" 
-                    onChange={handleImportData}
+            <div className="flex flex-col gap-3 z-10">
+              <button
+                onClick={() => setLanguage('en')}
+                className={cn(
+                  "relative flex items-center justify-between w-full py-4 px-6 rounded-2xl border transition-all duration-300",
+                  language === 'en' 
+                    ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)] shadow-[0_0_20px_rgba(255,255,255,0.1)]" 
+                    : "bg-black/20 border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:border-white/30 hover:text-[var(--color-foreground)]"
+                )}
+              >
+                <span className="font-mono tracking-widest text-sm uppercase">English</span>
+                {language === 'en' && <CheckCircle2 size={18} />}
+              </button>
+              <button
+                onClick={() => setLanguage('zh')}
+                className={cn(
+                  "relative flex items-center justify-between w-full py-4 px-6 rounded-2xl border transition-all duration-300",
+                  language === 'zh' 
+                    ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)] shadow-[0_0_20px_rgba(255,255,255,0.1)]" 
+                    : "bg-black/20 border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:border-white/30 hover:text-[var(--color-foreground)]"
+                )}
+              >
+                <span className="font-sans text-sm font-medium tracking-widest">中文 (简体)</span>
+                {language === 'zh' && <CheckCircle2 size={18} />}
+              </button>
+            </div>
+          </motion.div>
+
+          {/* --- AUDIO BENTO --- */}
+          <motion.div variants={itemVariants} className="md:col-span-7 rounded-3xl bg-[var(--color-muted)]/40 border border-[var(--color-border)] backdrop-blur-xl overflow-hidden relative group p-8 flex flex-col justify-between hover:border-[var(--card-hover-border)] hover:bg-[var(--card-hover-bg)] transition-all duration-500">
+            <div className="z-10 mb-8">
+              <h2 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2 mb-2">
+                <Volume2 size={14} /> {t('settings.audio.title', 'Audio Output')}
+              </h2>
+              <p className="text-xs text-[var(--color-muted-foreground)] font-sans">
+                Master volume control and mute toggle
+              </p>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-center gap-6 z-10 bg-black/40 p-6 rounded-2xl border border-[var(--color-border)]">
+              <button 
+                onClick={toggleMute}
+                className={cn(
+                  "w-16 h-16 flex items-center justify-center rounded-full transition-all duration-300 shrink-0",
+                  isMuted 
+                    ? "bg-red-500/10 text-red-500 border border-red-500/20" 
+                    : "bg-[var(--color-foreground)] text-[var(--color-background)]"
+                )}
+              >
+                {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+              </button>
+              
+              <div className="flex-1 w-full space-y-4">
+                <div className="flex justify-between items-end">
+                  <span className="text-xs font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">Master Volume</span>
+                  <span className="text-sm font-mono tracking-widest">{isMuted ? 'MUTE' : `${Math.round(volume * 100)}%`}</span>
+                </div>
+                <div className="relative h-2 bg-[var(--color-border)] rounded-full overflow-hidden flex items-center group/slider">
+                  <motion.div 
+                    className={cn("absolute top-0 left-0 h-full rounded-full transition-colors", isMuted ? "bg-red-500/50" : "bg-[var(--color-foreground)]")}
+                    style={{ width: `${isMuted ? 0 : volume * 100}%` }}
                   />
-                </label>
-
-                {/* Clear */}
-                <button
-                  onClick={handleClearData}
-                  className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-red-500/20 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/50 transition-all"
-                >
-                  <Trash2 size={20} />
-                  <span className="text-xs font-mono uppercase tracking-widest">{t('settings.save.clear', 'Wipe Data')}</span>
-                </button>
+                  <input
+                    type="range" min="0" max="1" step="0.01"
+                    value={isMuted ? 0 : volume}
+                    onChange={(e) => setVolume(parseFloat(e.target.value))}
+                    disabled={isMuted}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  />
+                </div>
               </div>
-              <p className="text-xs font-mono text-[var(--color-muted-foreground)] opacity-50 mt-2 text-center">
+            </div>
+          </motion.div>
+
+          {/* --- TYPOGRAPHY BENTO --- */}
+          <motion.div variants={itemVariants} className="md:col-span-12 rounded-3xl bg-[var(--color-muted)]/40 border border-[var(--color-border)] backdrop-blur-xl overflow-hidden relative group p-8 hover:border-[var(--card-hover-border)] hover:bg-[var(--card-hover-bg)] transition-all duration-500">
+            <div className="flex flex-col md:flex-row gap-12">
+              <div className="w-full md:w-1/3 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2 mb-2">
+                    <Type size={14} /> {t('settings.typography.title', 'Typography')}
+                  </h2>
+                  <p className="text-xs text-[var(--color-muted-foreground)] font-sans leading-relaxed">
+                    Customize the visual reading experience. Scale affects global layout dimensions.
+                  </p>
+                </div>
+                
+                <div className="mt-8 space-y-4">
+                  <div className="flex justify-between items-end">
+                    <span className="text-xs font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">{t('settings.font.size', 'Scale')}</span>
+                    <span className="text-sm font-mono tracking-widest text-[var(--color-foreground)]">{Math.round(fontSizeMultiplier * 100)}%</span>
+                  </div>
+                  <div className="relative h-2 bg-[var(--color-border)] rounded-full flex items-center">
+                    <motion.div 
+                      className="absolute top-0 left-0 h-full bg-[var(--color-foreground)] rounded-full"
+                      style={{ width: `${((fontSizeMultiplier - 0.8) / 0.7) * 100}%` }}
+                    />
+                    <input
+                      type="range" min="0.8" max="1.5" step="0.05"
+                      value={fontSizeMultiplier}
+                      onChange={(e) => setFontSizeMultiplier(parseFloat(e.target.value))}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {PRESET_FONTS.map((font) => (
+                  <button
+                    key={font.id}
+                    onClick={() => setFontFamily(font.value)}
+                    className={cn(
+                      "group/font relative flex flex-col items-start p-6 rounded-2xl border transition-all duration-300 text-left overflow-hidden",
+                      fontFamily === font.value 
+                        ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
+                        : "bg-black/20 border-[var(--color-border)] hover:border-white/30 text-[var(--color-foreground)]"
+                    )}
+                  >
+                    <span className={cn("text-xs uppercase tracking-widest font-mono mb-4", fontFamily === font.value ? "text-[var(--color-background)]/70" : "text-[var(--color-muted-foreground)]")}>
+                      {font.id}
+                    </span>
+                    <span 
+                      style={{ fontFamily: font.value }} 
+                      className="text-2xl whitespace-nowrap overflow-hidden text-ellipsis w-full"
+                    >
+                      {font.label}
+                    </span>
+                    {fontFamily === font.value && (
+                      <div className="absolute top-6 right-6">
+                        <CheckCircle2 size={20} />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* --- STORAGE BENTO --- */}
+          <motion.div variants={itemVariants} className="md:col-span-12 rounded-3xl bg-[var(--color-muted)]/40 border border-[var(--color-border)] backdrop-blur-xl overflow-hidden relative group p-8 hover:border-[var(--card-hover-border)] hover:bg-[var(--card-hover-bg)] transition-all duration-500">
+            <div className="mb-8">
+              <h2 className="text-sm font-mono tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase flex items-center gap-2 mb-2">
+                <Database size={14} /> {t('settings.storage.title', 'Storage & Data')}
+              </h2>
+              <p className="text-xs text-[var(--color-muted-foreground)] font-sans">
                 {t('settings.save.subtitle', 'Manage local save files and configurations')}
               </p>
             </div>
-          </section>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {/* Export */}
+              <button
+                onClick={handleExportData}
+                className="group/btn flex flex-col items-start justify-between h-32 p-6 rounded-2xl border border-[var(--color-border)] bg-black/20 hover:bg-white/5 hover:border-white/30 transition-all text-left"
+              >
+                <div className="p-2 bg-[var(--color-border)] rounded-lg text-[var(--color-foreground)] group-hover/btn:scale-110 group-hover/btn:-translate-y-1 transition-transform">
+                  <Download size={20} />
+                </div>
+                <div>
+                  <span className="block text-sm font-display font-medium mb-1">{t('settings.save.export', 'Export Data')}</span>
+                  <span className="block text-xs font-sans text-[var(--color-muted-foreground)]">Backup to local disk</span>
+                </div>
+              </button>
+              
+              {/* Import */}
+              <label className="group/btn flex flex-col items-start justify-between h-32 p-6 rounded-2xl border border-[var(--color-border)] bg-black/20 hover:bg-white/5 hover:border-white/30 transition-all text-left cursor-pointer">
+                <div className="p-2 bg-[var(--color-border)] rounded-lg text-[var(--color-foreground)] group-hover/btn:scale-110 group-hover/btn:-translate-y-1 transition-transform">
+                  <Upload size={20} />
+                </div>
+                <div>
+                  <span className="block text-sm font-display font-medium mb-1">{t('settings.save.import', 'Import Data')}</span>
+                  <span className="block text-xs font-sans text-[var(--color-muted-foreground)]">Restore from JSON</span>
+                </div>
+                <input 
+                  type="file" accept=".json" className="hidden" 
+                  onChange={handleImportData}
+                />
+              </label>
+
+              {/* Clear */}
+              <button
+                onClick={handleClearData}
+                className="group/btn flex flex-col items-start justify-between h-32 p-6 rounded-2xl border border-red-900/30 bg-red-950/10 hover:bg-red-900/20 hover:border-red-500/50 transition-all text-left"
+              >
+                <div className="p-2 bg-red-950/50 border border-red-900/50 rounded-lg text-red-500 group-hover/btn:scale-110 group-hover/btn:-translate-y-1 transition-transform">
+                  <Trash2 size={20} />
+                </div>
+                <div>
+                  <span className="block text-sm font-display font-medium text-red-400 mb-1">{t('settings.save.clear', 'Wipe Data')}</span>
+                  <span className="block text-xs font-sans text-red-500/60">Irreversible action</span>
+                </div>
+              </button>
+            </div>
+          </motion.div>
 
         </motion.div>
       </div>

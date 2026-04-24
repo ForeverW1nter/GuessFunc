@@ -11,6 +11,10 @@
 
 @layer theme, base, components, utilities;
 
+@theme {
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", monospace;
+}
+
 @layer base {
   :root {
     --color-background: #000000;
@@ -27,6 +31,7 @@
     --accent-archive: #f97316;
     --accent-network: #3b82f6;
     --accent-studio: #8b5cf6;
+    --accent-settings: #94a3b8;
     --accent-guessfunc: #10b981;
     --accent-gatefunc: #ec4899;
 
