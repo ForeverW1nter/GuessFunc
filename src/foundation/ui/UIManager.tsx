@@ -45,10 +45,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 export interface ToastOptions {
-  id: string;
+  id?: string;
   title: string;
   description?: string;
-  type?: "success" | "error" | "info";
+  duration?: number;
+  type?: "default" | "success" | "error";
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 // ========================
@@ -74,7 +79,7 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
     setToasts((prev) => [...prev, { ...options, id }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, (options as any).duration || 3000);
+    }, options.duration || 3000);
   }, []);
 
   return (
@@ -96,12 +101,12 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
               )}
             >
               <span>{t.title}</span>
-              {(t as any).action && (
+              {t.action && (
                 <button
-                  onClick={(t as any).action.onClick}
+                  onClick={t.action.onClick}
                   className="ml-6 px-3 py-1 bg-white/10 rounded-md hover:bg-white/20 transition-colors uppercase text-xs tracking-widest"
                 >
-                  {(t as any).action.label}
+                  {t.action.label}
                 </button>
               )}
             </motion.div>
