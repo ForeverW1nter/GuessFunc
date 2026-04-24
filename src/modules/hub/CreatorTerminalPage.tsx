@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useTranslation, UseTranslationResponse } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { GameEngineRegistry } from '@/core/GameEngineRegistry';
 import type { IGameProtocol, IEngineEventBus } from '@/core/IGameProtocol';
 
@@ -24,8 +25,8 @@ class SimpleEventBus implements IEngineEventBus {
 
 const FAKE_LOADING_DELAY_MS = 300;
 
-// Use 'TFunction' from i18next or the return type of useTranslation()
-const getEngineContent = (engine: IGameProtocol | null, t: UseTranslationResponse<"translation", undefined>["t"]) => {
+// Use 'TFunction' from i18next
+const getEngineContent = (engine: IGameProtocol | null, t: TFunction) => {
   if (engine) {
     return (
       <div className="flex-1 w-full h-full relative">
