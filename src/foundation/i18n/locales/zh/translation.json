@@ -570,6 +570,23 @@
     "subtitle": "系统.引擎.已激活",
     "expressionLabel": "函数表达式 [ y = f(x) ]",
     "expressionPlaceholder": "例如：sin(x) + a",
-    "variableLabel": "变量 [{{key}}]"
+    "variableLabel": "变量 [{{key}}]",
+    "similarity": "相似度匹配",
+    "syncComplete": "信号同步完成",
+    "nextLevel": "进入下一层",
+    "levels": {
+      "1": {
+        "title": "Level 01: 基础正弦波",
+        "desc": "调整振幅参数以匹配目标信号频率。"
+      },
+      "2": {
+        "title": "Level 02: 抛物线偏移",
+        "desc": "寻找正确的二次曲线系数。"
+      },
+      "3": {
+        "title": "Level 03: 复合频率",
+        "desc": "同时校准信号的振幅与频段。"
+      }
+    }
   }
 }

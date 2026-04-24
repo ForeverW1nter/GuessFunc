@@ -4,6 +4,11 @@ import { compile, evaluate } from 'mathjs';
  * A safe and controlled wrapper around mathjs.
  * Encapsulated specifically for the GuessFunc module to avoid eval() risks.
  */
+const DEFAULT_DOMAIN_MIN = -10;
+const DEFAULT_DOMAIN_MAX = 10;
+const DEFAULT_STEPS = 100;
+const INVALID_POINT_PENALTY = 100;
+
 export class MathEngine {
   /**
    * Evaluates a mathematical expression safely with given parameters.
@@ -50,5 +55,39 @@ export class MathEngine {
       // Return a dummy function that always produces NaN if compilation fails
       return () => NaN;
     }
+  }
+
+  /**
+   * Calculates the Mean Squared Error (MSE) between two compiled functions over a domain.
+   */
+  static calculateMSE(
+    f1: (x: number) => number,
+    f2: (x: number) => number,
+    domainMin: number = DEFAULT_DOMAIN_MIN,
+    domainMax: number = DEFAULT_DOMAIN_MAX,
+    steps: number = DEFAULT_STEPS
+  ): number {
+    let sumSquaredError = 0;
+    let validPoints = 0;
+    const stepSize = (domainMax - domainMin) / steps;
+
+    for (let x = domainMin; x <= domainMax; x += stepSize) {
+      const y1 = f1(x);
+      const y2 = f2(x);
+      
+      // If both are valid numbers, calculate error
+      if (!isNaN(y1) && !isNaN(y2) && isFinite(y1) && isFinite(y2)) {
+        const diff = y1 - y2;
+        sumSquaredError += diff * diff;
+        validPoints++;
+      } else if (isNaN(y1) !== isNaN(y2)) {
+        // Penalty if one is undefined and the other is not
+        sumSquaredError += INVALID_POINT_PENALTY;
+        validPoints++;
+      }
+    }
+
+    if (validPoints === 0) return Infinity; // Cannot compare
+    return sumSquaredError / validPoints;
   }
 }

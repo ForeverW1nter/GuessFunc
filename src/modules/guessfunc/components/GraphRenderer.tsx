@@ -8,6 +8,10 @@ export interface GraphRendererProps {
   expression: string;
   /** Parameters to inject into the expression (e.g., { a: 1, b: 2 }) */
   parameters?: Record<string, number>;
+  /** The target mathematical expression to match */
+  targetExpression?: string;
+  /** The target parameters */
+  targetParameters?: Record<string, number>;
   /** The color of the plotted function line */
   lineColor?: string;
   /** Control width/height, default is taking full container */
@@ -27,6 +31,8 @@ const PARAM_MAX = 10;
 export const GraphRenderer = ({
   expression,
   parameters = {},
+  targetExpression,
+  targetParameters = {},
   lineColor = Theme.indigo,
   height = DEFAULT_HEIGHT,
   viewBox = { x: [PARAM_MIN, PARAM_MAX], y: [PARAM_MIN, PARAM_MAX] },
@@ -36,10 +42,21 @@ export const GraphRenderer = ({
     return MathEngine.compileFunction(expression, parameters);
   }, [expression, parameters]);
 
+  const targetFunction = useMemo(() => {
+    if (!targetExpression) return null;
+    return MathEngine.compileFunction(targetExpression, targetParameters);
+  }, [targetExpression, targetParameters]);
+
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-background)]">
       <Mafs height={height} viewBox={viewBox} pan={true} zoom={true}>
         <Coordinates.Cartesian />
+        
+        {/* Draw target function first so it's behind the player's line */}
+        {targetFunction && (
+          <Plot.OfX y={targetFunction} color={Theme.red} style="dashed" weight={2} opacity={0.5} />
+        )}
+        
         <Plot.OfX y={plottedFunction} color={lineColor} weight={3} />
       </Mafs>
     </div>
