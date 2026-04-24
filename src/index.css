@@ -12,6 +12,8 @@
 @layer theme, base, components, utilities;
 
 @theme {
+  --font-sans: var(--app-font-sans, "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif);
+  --font-display: var(--app-font-display, "Space Grotesk", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", monospace;
 }
 
