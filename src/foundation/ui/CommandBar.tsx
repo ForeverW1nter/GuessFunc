@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Home, Library, Globe, Settings, TerminalSquare } from "lucide-react";
-import { useSystemUIStore } from "./useSystemUIStore";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/utils/cn";
 
@@ -40,8 +39,6 @@ const ICON_STROKE_WIDTH_INACTIVE = 1.5;
 
 export const CommandBar = () => {
   const location = useLocation();
-  const { toggleControlCenter } = useSystemUIStore();
-
   // To keep the CommandBar decoupled from specific game IDs (guessfunc/gatefunc),
   // we consider any route that is NOT a core platform route as a "Game Route"
   // where the dock should shrink down.
@@ -121,18 +118,6 @@ export const CommandBar = () => {
           </Link>
         );
       })}
-      {/* Divider */}
-      <div className="w-[1px] h-[24px] bg-[var(--color-border)] mx-1" />
-
-      {/* System Settings Toggle */}
-      <button
-        onClick={toggleControlCenter}
-        className={cn(
-          "relative w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300 text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] outline-none"
-        )}
-      >
-        <Settings size={20} strokeWidth={ICON_STROKE_WIDTH_INACTIVE} />
-      </button>
     </div>
   );
 };

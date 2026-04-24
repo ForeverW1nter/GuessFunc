@@ -36,7 +36,11 @@ i18n
 useSystemUIStore.subscribe((state, prevState) => {
   if (state.language !== prevState.language) {
     i18n.changeLanguage(state.language);
+    document.documentElement.lang = state.language;
   }
 });
+
+// Set initial lang
+document.documentElement.lang = initialLang;
 
 export default i18n;

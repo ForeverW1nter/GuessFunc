@@ -3,7 +3,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { ModuleRegistry } from "@/core/ModuleRegistry";
 import { PageTransition } from "@/foundation/ui/PageTransition";
 import { CommandBar } from "@/foundation/ui/CommandBar";
-import { SystemControlCenter } from "@/foundation/ui/SystemControlCenter";
+import { SettingsPage } from "@/foundation/ui/SettingsPage";
 
 const AppLayout = () => {
   return (
@@ -12,7 +12,6 @@ const AppLayout = () => {
         <PageTransition />
       </div>
       <CommandBar />
-      <SystemControlCenter />
     </div>
   );
 };
@@ -62,11 +61,7 @@ export const AppRouter = () => {
         },
         {
           path: "settings",
-          element: (
-            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">
-              SETTINGS OFFLINE
-            </div>
-          ),
+          element: <SettingsPage />,
         },
         ...modRoutes,
       ],
