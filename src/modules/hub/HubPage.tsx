@@ -91,12 +91,7 @@ export const HubPage = () => {
             >
               {/* Left Side: Index & Title */}
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 z-10 w-full md:w-auto">
-                <span
-                  className={cn(
-                    "text-2xl font-mono opacity-20 group-hover:opacity-100 transition-colors duration-500",
-                    mode.color
-                  )}
-                >
+                <span className="text-2xl font-mono opacity-20 group-hover:opacity-100 transition-opacity duration-500">
                   0{index + 1}
                 </span>
                 <div className="w-full">
