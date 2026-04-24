@@ -60,7 +60,7 @@ export const HubPage = () => {
           onClick={toggleTheme}
           className="text-xs font-mono tracking-widest uppercase border border-[var(--color-border)] px-4 py-2 rounded-full hover:bg-[var(--color-foreground)] hover:text-[var(--color-background)] transition-colors duration-300"
         >
-          {theme === 'dark' ? 'INIT LIGHT' : 'INIT DARK'}
+          THEME: {theme}
         </button>
       </motion.header>
 

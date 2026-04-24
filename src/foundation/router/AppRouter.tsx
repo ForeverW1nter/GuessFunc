@@ -8,7 +8,7 @@ import { CommandBar } from '../ui/CommandBar';
 
 const AppLayout = () => {
   return (
-    <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] overflow-hidden">
+    <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors duration-500 overflow-hidden">
       <PageTransition />
       <CommandBar />
     </div>

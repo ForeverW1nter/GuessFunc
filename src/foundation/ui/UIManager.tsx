@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -52,30 +52,40 @@ export interface ToastOptions {
 // ========================
 // UI CONTEXT & PROVIDER
 // ========================
+export type Theme = 'light' | 'dark' | 'system';
+
 interface UIContextType {
-  theme: 'light' | 'dark' | 'system';
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  theme: Theme;
+  toggleTheme: () => void;
   toast: (options: Omit<ToastOptions, 'id'>) => void;
-  // Expose components
-  Button: typeof Button;
 }
 
 const UIContext = createContext<UIContextType | null>(null);
 
 export const UIProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>('light');
+  const [theme, setThemeState] = useState<Theme>('system');
   const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
-  const setTheme = (newTheme: 'light' | 'dark' | 'system') => {
-    setThemeState(newTheme);
+  // Apply theme on mount and when it changes
+  useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
-    if (newTheme === 'system') {
+
+    if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       root.classList.add(systemTheme);
-      return;
+    } else {
+      root.classList.add(theme);
     }
-    root.classList.add(newTheme);
+  }, [theme]);
+
+  // A simple toggle function for the Hub header
+  const toggleTheme = () => {
+    setThemeState(prev => {
+      if (prev === 'system') return 'dark';
+      if (prev === 'dark') return 'light';
+      return 'system';
+    });
   };
 
   const toast = (options: Omit<ToastOptions, 'id'>) => {
@@ -87,12 +97,12 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <UIContext.Provider value={{ theme, setTheme, toast, Button }}>
+    <UIContext.Provider value={{ theme, toggleTheme, toast }}>
       {children}
       {/* Toast Container */}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
         {toasts.map(t => (
-          <div key={t.id} className={cn("p-4 rounded-md shadow-lg border", 
+          <div key={t.id} className={cn("p-4 rounded-md shadow-lg border",
             t.type === 'error' ? "bg-red-500 text-white border-red-600" : "bg-[var(--color-background)] border-[var(--color-border)]"
           )}>
             <h4 className="font-bold text-sm">{t.title}</h4>
