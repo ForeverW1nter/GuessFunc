@@ -36,13 +36,13 @@ export const CommandBar = () => {
               <motion.div
                 layoutId="activeTab"
                 className="absolute inset-0 rounded-full opacity-15"
-                style={{ backgroundColor: item.color }}
+                style={{ backgroundColor: item.color, zIndex: 0 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               />
             )}
-            <div 
+            <div
               className={cn(
-                "p-2 rounded-full transition-colors duration-300",
+                "p-2 rounded-full transition-colors duration-300 z-10 relative",
                 !isActive && "text-[var(--color-muted-foreground)] group-hover:text-[var(--color-foreground)]"
               )}
               style={isActive ? { color: item.color } : {}}
