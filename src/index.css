@@ -13,7 +13,7 @@
     --color-primary: #FF3366;
     --color-primary-foreground: #FFFFFF;
     --color-glass: rgba(242, 240, 233, 0.7);
-    --color-glow: rgba(255, 51, 102, 0.05);
+    --glow-opacity: 0.15;
     
     /* Module Accent Colors - Light */
     --accent-hub: #FF3366;     /* Pink/Red */
@@ -35,7 +35,7 @@
     --color-primary: #FF4D8A;
     --color-primary-foreground: #000000;
     --color-glass: rgba(10, 10, 10, 0.7);
-    --color-glow: rgba(255, 77, 138, 0.05);
+    --glow-opacity: 0.03;
 
     /* Module Accent Colors - Dark (Similar hues but tuned for dark mode) */
     --accent-hub: #FF4D8A;     /* Brighter Pink */

@@ -43,8 +43,14 @@ export const HubPage = () => {
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-x-hidden">
       {/* Decorative background elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[var(--accent-hub)] opacity-[0.03] blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[30vw] h-[30vw] rounded-full bg-[var(--accent-archive)] opacity-[0.03] blur-[100px] pointer-events-none" />
+      <div 
+        className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[var(--accent-hub)] blur-[100px] pointer-events-none transition-opacity duration-500" 
+        style={{ opacity: 'var(--glow-opacity)' }}
+      />
+      <div 
+        className="absolute bottom-[-10%] right-[-10%] w-[30vw] h-[30vw] rounded-full bg-[var(--accent-archive)] blur-[100px] pointer-events-none transition-opacity duration-500" 
+        style={{ opacity: 'var(--glow-opacity)' }}
+      />
 
       <motion.header 
         initial={{ opacity: 0, y: -20 }}

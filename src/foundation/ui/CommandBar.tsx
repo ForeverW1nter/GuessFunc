@@ -16,35 +16,44 @@ export const CommandBar = () => {
   const location = useLocation();
   const isGameRoute = location.pathname.startsWith('/guessfunc') || location.pathname.startsWith('/gatefunc');
 
+  const activeIndex = navItems.findIndex(item => location.pathname === item.path);
+  const validIndex = activeIndex >= 0 ? activeIndex : 0;
+
+  // 44px is width of item (p-3 = 12px*2 + 20px icon = 44px). Gap is 8px. Padding is 8px.
+  // left = 8 + validIndex * (44 + 8) = 8 + validIndex * 52
+  const leftOffset = 8 + validIndex * 52;
+
   return (
     <div
       className={cn(
-        "fixed bottom-8 left-1/2 -translate-x-1/2 z-50",
+        "fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]",
         "px-2 py-2 rounded-full flex items-center gap-2",
-        "bg-[var(--color-glass)] backdrop-blur-xl border border-[var(--color-border)] shadow-2xl transition-all duration-500",
+        "bg-[var(--color-glass)] backdrop-blur-2xl border border-[var(--color-border)] shadow-2xl transition-all duration-500",
         isGameRoute ? "scale-75 origin-bottom opacity-50 hover:opacity-100 hover:scale-100" : "scale-100 opacity-100"
       )}
     >
-      {navItems.map((item) => {
-        const isActive = location.pathname === item.path;
+      {/* Sliding Indicator (Absolute positioned, NO layoutId) */}
+      {activeIndex >= 0 && (
+        <motion.div
+          className="absolute top-2 bottom-2 rounded-full pointer-events-none"
+          initial={false}
+          animate={{
+            left: leftOffset,
+            width: 44,
+            backgroundColor: navItems[validIndex].color,
+            opacity: 0.15
+          }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+        />
+      )}
+
+      {navItems.map((item, idx) => {
+        const isActive = activeIndex === idx;
         return (
           <Link key={item.path} to={item.path} className="relative group outline-none">
-            {/* The Background Indicator Container */}
-            <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-              {isActive && (
-                <motion.div
-                  layoutId="activeTabIndicator"
-                  className="w-full h-full rounded-full opacity-15"
-                  style={{ backgroundColor: item.color }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                />
-              )}
-            </div>
-            
-            {/* The Icon Container */}
             <div
               className={cn(
-                "relative p-3 rounded-full flex items-center justify-center transition-colors duration-300",
+                "relative w-[44px] h-[44px] rounded-full flex items-center justify-center transition-colors duration-300",
                 !isActive ? "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]" : ""
               )}
               style={isActive ? { color: item.color } : {}}

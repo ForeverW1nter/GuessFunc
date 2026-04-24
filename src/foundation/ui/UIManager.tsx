@@ -39,6 +39,9 @@ export interface ToastOptions {
   type?: 'success' | 'error' | 'info';
 }
 
+// ========================
+// UI CONTEXT & PROVIDER
+// ========================
 export type Theme = 'light' | 'dark';
 
 interface UIContextType {
@@ -50,17 +53,19 @@ interface UIContextType {
 const UIContext = createContext<UIContextType | null>(null);
 
 export const UIProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>('dark');
   const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
+  // Apply theme on mount and when it changes
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
   }, [theme]);
 
+  // A simple toggle function for the Hub header
   const toggleTheme = () => {
-    setThemeState(prev => (prev === 'dark' ? 'light' : 'dark'));
+    setThemeState(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   const toast = (options: Omit<ToastOptions, 'id'>) => {
