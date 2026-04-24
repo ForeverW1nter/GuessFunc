@@ -7,7 +7,7 @@ export const PageTransition = () => {
   const outlet = useOutlet();
 
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="relative w-full h-full">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={location.pathname}

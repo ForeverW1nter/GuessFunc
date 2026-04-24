@@ -7,8 +7,10 @@ import { CommandBar } from "@/foundation/ui/CommandBar";
 
 const AppLayout = () => {
   return (
-    <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors duration-500 overflow-x-hidden">
-      <PageTransition />
+    <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors duration-500 overflow-hidden flex flex-col">
+      <div className="flex-1 w-full h-full overflow-y-auto">
+        <PageTransition />
+      </div>
       <CommandBar />
     </div>
   );
