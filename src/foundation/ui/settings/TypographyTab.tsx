@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSystemUIStore } from '../useSystemUIStore';
 import { useUI } from '../UIManager';
-import { CheckCircle2 } from 'lucide-react';
-import { cn } from '@/utils/cn';
 import { Button } from '../components/Button';
+import { Slider } from '../components/Slider';
+import { RadioCard } from '../components/RadioCard';
 
 const MIN_FONT_SCALE = 0.8;
 const FONT_SCALE_RANGE = 0.7;
@@ -54,18 +53,13 @@ export const TypographyTab = () => {
           <span className="text-sm font-mono tracking-widest">{Math.round(localFontSize * 100)}%</span>
         </div>
         <div className="flex items-center gap-4">
-          <div className="relative h-2 bg-[var(--color-border)] rounded-full flex-1 flex items-center focus-within:ring-2 focus-within:ring-[var(--color-foreground)] focus-within:ring-offset-2 focus-within:ring-offset-[var(--color-background)]">
-            <motion.div 
-              className="absolute top-0 left-0 h-full bg-[var(--color-foreground)] rounded-full"
-              style={{ width: `${((localFontSize - MIN_FONT_SCALE) / FONT_SCALE_RANGE) * 100}%` }}
-            />
-            <input
-              type="range" min="0.8" max="1.5" step="0.05"
-              value={localFontSize}
-              onChange={(e) => setLocalFontSize(parseFloat(e.target.value))}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
-          </div>
+          <Slider 
+            value={localFontSize}
+            onChange={setLocalFontSize}
+            min={MIN_FONT_SCALE}
+            max={MIN_FONT_SCALE + FONT_SCALE_RANGE}
+            step={0.05}
+          />
           <Button
             size="sm"
             disabled={localFontSize === fontSizeMultiplier}
@@ -82,37 +76,20 @@ export const TypographyTab = () => {
         </span>
         <div className="grid grid-cols-1 gap-3">
           {PRESET_FONTS.map((font) => (
-            <button
+            <RadioCard
               key={font.id}
-              onClick={() => setFontFamily(font.value)}
-              className={cn(
-                "relative flex flex-row items-center justify-between p-4 rounded-2xl border transition-all duration-300 text-left min-w-0 group touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
-                fontFamily === font.value 
-                  ? "bg-[var(--color-foreground)] text-[var(--color-background)] border-[var(--color-foreground)]" 
-                  : "bg-[var(--color-muted)]/50 border-[var(--color-border)] hover:border-white/30 text-[var(--color-foreground)]"
-              )}
-            >
-              <div className="flex items-center gap-4 md:gap-6 min-w-0">
-                <div 
-                  className={cn(
-                    "text-2xl md:text-3xl w-12 md:w-16 text-center opacity-80 shrink-0",
-                    fontFamily === font.value ? "text-[var(--color-background)]" : "text-[var(--color-muted-foreground)] group-hover:text-[var(--color-foreground)]"
-                  )}
-                  style={{ fontFamily: font.value }}
-                >
+              title={font.label}
+              subtitle={font.id}
+              selected={fontFamily === font.value}
+              onSelect={() => setFontFamily(font.value)}
+              layout="horizontal"
+              titleClass="text-sm md:text-base font-medium tracking-wide"
+              icon={
+                <div className="text-2xl md:text-3xl w-12 md:w-16 text-center opacity-80" style={{ fontFamily: font.value }}>
                   Aa
                 </div>
-                <div className="flex flex-col min-w-0 pe-8">
-                  <span className="text-sm md:text-base font-medium tracking-wide truncate">{font.label}</span>
-                  <span className={cn("text-[10px] uppercase tracking-[0.1em] font-mono mt-1 truncate", fontFamily === font.value ? "text-[var(--color-background)]/60" : "text-[var(--color-muted-foreground)]/60")}>
-                    {font.id}
-                  </span>
-                </div>
-              </div>
-              {fontFamily === font.value && (
-                <CheckCircle2 size={20} className="absolute end-4 shrink-0" />
-              )}
-            </button>
+              }
+            />
           ))}
         </div>
       </div>

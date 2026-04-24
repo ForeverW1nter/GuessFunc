@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Save, RotateCcw, Download, Upload, Trash2, AlertTriangle, MoreVertical } from 'lucide-react';
+import { Save, RotateCcw, Download, Upload, Trash2, MoreVertical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSystemUIStore } from '../useSystemUIStore';
 import { useAudioStore } from '@/foundation/audio/useAudioStore';
 import { useProgressStore } from '@/foundation/storage/useProgressStore';
 import { useUI } from '../UIManager';
 import { Button } from '../components/Button';
+import { Modal } from '../components/Modal';
 
 const TOTAL_SAVE_SLOTS = 5;
 
@@ -149,40 +150,16 @@ export const StorageTab = () => {
     <div className="space-y-8 relative">
       
       {/* Slot Wipe Confirm Modal */}
-      <AnimatePresence>
-        {confirmSlotId !== null && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
-              onClick={() => setConfirmSlotId(null)} 
-            />
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 10 }} 
-              animate={{ scale: 1, opacity: 1, y: 0 }} 
-              exit={{ scale: 0.95, opacity: 0, y: 10 }} 
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              className="relative bg-[var(--color-muted)] border border-[var(--color-border)] p-6 md:p-8 rounded-3xl shadow-2xl max-w-md w-full"
-            >
-              <div className="flex items-center gap-3 mb-4 text-red-500">
-                <AlertTriangle size={24} />
-                <h3 className="text-xl font-display uppercase tracking-tight">{t('settings.storage.clearConfirmTitle', 'Wipe Slot Data?')}</h3>
-              </div>
-              <p className="text-sm text-[var(--color-muted-foreground)] mb-8 leading-relaxed">
-                {t('settings.storage.clearConfirm', 'Are you sure you want to completely erase data in this slot? This action cannot be undone.')}
-              </p>
-              <div className="flex justify-end gap-3">
-                <Button variant="outline" onClick={() => setConfirmSlotId(null)}>
-                  {t('common.cancel', 'Cancel')}
-                </Button>
-                <Button variant="danger" onClick={handleConfirmClearSlot}>
-                  {t('common.confirm', 'Confirm')}
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      <Modal
+        isOpen={confirmSlotId !== null}
+        onClose={() => setConfirmSlotId(null)}
+        title={t('settings.storage.clearConfirmTitle', 'Wipe Slot Data?')}
+        description={t('settings.storage.clearConfirm', 'Are you sure you want to completely erase data in this slot? This action cannot be undone.')}
+        variant="danger"
+        confirmLabel={t('common.confirm', 'Confirm')}
+        cancelLabel={t('common.cancel', 'Cancel')}
+        onConfirm={handleConfirmClearSlot}
+      />
 
       <div>
         <h2 className="text-lg font-display uppercase tracking-tight mb-1 text-balance">

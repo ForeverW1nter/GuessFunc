@@ -1,8 +1,7 @@
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useAudioStore } from '@/foundation/audio/useAudioStore';
-import { cn } from '@/utils/cn';
+import { Slider } from '../components/Slider';
 
 export const AudioTab = () => {
   const { volume, isMuted, setVolume, toggleMute } = useAudioStore();
@@ -22,12 +21,11 @@ export const AudioTab = () => {
       <div className="bg-[var(--color-muted)]/50 p-6 md:p-8 rounded-2xl border border-[var(--color-border)] flex flex-col md:flex-row items-center gap-6 md:gap-8">
         <button 
           onClick={toggleMute}
-          className={cn(
-            "w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full transition-all duration-300 shrink-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
+          className={`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full transition-all duration-300 shrink-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${
             isMuted 
               ? "bg-red-500/10 text-red-500 border border-red-500/20" 
               : "bg-[var(--color-foreground)] text-[var(--color-background)]"
-          )}
+          }`}
         >
           {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
         </button>
@@ -41,19 +39,15 @@ export const AudioTab = () => {
               {isMuted ? t('settings.audio.muted', 'MUTE') : `${Math.round(volume * 100)}%`}
             </span>
           </div>
-          <div className="relative h-3 bg-[var(--color-border)] rounded-full overflow-hidden flex items-center group/slider focus-within:ring-2 focus-within:ring-[var(--color-foreground)] focus-within:ring-offset-2 focus-within:ring-offset-[var(--color-background)]">
-            <motion.div 
-              className={cn("absolute top-0 left-0 h-full rounded-full transition-colors", isMuted ? "bg-red-500/50" : "bg-[var(--color-foreground)]")}
-              style={{ width: `${isMuted ? 0 : volume * 100}%` }}
-            />
-            <input
-              type="range" min="0" max="1" step="0.01"
-              value={isMuted ? 0 : volume}
-              onChange={(e) => setVolume(parseFloat(e.target.value))}
-              disabled={isMuted}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-            />
-          </div>
+          <Slider
+            value={isMuted ? 0 : volume}
+            onChange={setVolume}
+            min={0}
+            max={1}
+            step={0.01}
+            disabled={isMuted}
+            variant={isMuted ? 'danger' : 'default'}
+          />
         </div>
       </div>
     </div>
