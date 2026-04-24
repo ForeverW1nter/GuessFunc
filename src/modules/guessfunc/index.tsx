@@ -1,25 +1,18 @@
 import React from 'react';
 import { ModuleRegistry, type GameModule } from '../../core/ModuleRegistry';
-import { useSlotStore } from '../../core/SlotManager';
 import { Link } from 'react-router-dom';
-
-const GuessFuncCard = () => {
-  return (
-    <Link to="/guessfunc" className="group">
-      <div className="border-[var(--color-border)] bg-[var(--color-background)] hover:bg-[var(--color-muted)] p-6 rounded-lg shadow-sm transition-all h-full border">
-        <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-primary)]">GuessFunc</h3>
-        <p className="text-[var(--color-muted-foreground)]">A math guessing game powered by Desmos.</p>
-      </div>
-    </Link>
-  );
-};
 
 const GuessFuncPage = () => {
   return (
-    <div className="p-8 h-screen bg-[var(--color-background)]">
-      <h1 className="text-4xl font-bold">Welcome to GuessFunc</h1>
-      <p className="mt-4 text-[var(--color-muted-foreground)]">Game engine and Web Workers go here...</p>
-      <Link to="/" className="mt-8 text-[var(--color-primary)] hover:underline inline-block">← Back to Hub</Link>
+    <div className="p-8 min-h-screen bg-[var(--color-background)]">
+      <h1 className="text-4xl font-mono tracking-widest uppercase opacity-50 mb-8">System.Engine.GuessFunc</h1>
+      <div className="border border-[var(--color-border)] bg-[var(--color-muted)] p-12 rounded-2xl">
+        <h2 className="text-3xl font-bold mb-4">ENGINE OFFLINE</h2>
+        <p className="text-[var(--color-muted-foreground)] font-mono">Mathematical evaluator and graph renderer components are pending migration...</p>
+      </div>
+      <Link to="/" className="fixed top-8 right-8 text-xs font-mono tracking-widest uppercase border border-[var(--color-border)] px-4 py-2 rounded-full hover:bg-[var(--color-foreground)] hover:text-[var(--color-background)] transition-colors duration-300">
+        TERMINATE
+      </Link>
     </div>
   );
 };
@@ -33,11 +26,13 @@ export const initGuessFuncModule = async () => {
     coreApiVersion: '^1.0.0',
     entryRoute: '/guessfunc',
     routes: [
-      { path: '/guessfunc', element: <GuessFuncPage /> }
+      { path: 'guessfunc', element: <GuessFuncPage /> }
     ],
     init: () => {
-      // Inject the card into the GAME_LIST slot
-      useSlotStore.getState().inject('GAME_LIST', GuessFuncCard);
+      // In the new architecture, games do not inject themselves into the main Hub UI.
+      // The Hub is strictly for the platform's core modes (Story, Workshop, Creator).
+      // Games are only invoked via the Level Protocol when a level is played.
+      console.log('[GuessFunc] Engine initialized. Awaiting level payload...');
     }
   };
 

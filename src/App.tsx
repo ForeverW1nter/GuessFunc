@@ -16,6 +16,9 @@ const App = () => {
 
     const bootstrap = async () => {
       try {
+        // Simulate a slight boot delay for the "OS" feel
+        await new Promise(resolve => setTimeout(resolve, 600));
+        
         // In a real scenario, this would load remote modules based on a manifest.
         await initGuessFuncModule();
         if (isMounted) {
@@ -35,7 +38,24 @@ const App = () => {
     };
   }, []);
 
-  if (!initialized) return <div className="p-8 text-[var(--color-muted-foreground)]">Initializing Microkernel...</div>;
+  if (!initialized) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[var(--color-background)] text-[var(--color-foreground)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-48 h-[1px] bg-[var(--color-border)] relative overflow-hidden">
+            <div className="absolute top-0 left-0 h-full w-1/3 bg-[var(--color-primary)] animate-[slide_1.5s_ease-in-out_infinite]" />
+          </div>
+          <p className="text-xs font-mono tracking-[0.3em] uppercase opacity-50">Booting Microkernel...</p>
+        </div>
+        <style>{`
+          @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <UIProvider>

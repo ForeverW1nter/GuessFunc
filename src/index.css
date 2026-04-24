@@ -1,52 +1,48 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Inter", system-ui, sans-serif;
+@layer theme, base, components, utilities;
 
-  /* Global Theme Tokens Contract */
-  --color-background: var(--theme-bg-primary);
-  --color-foreground: var(--theme-text-primary);
-  --color-primary: var(--theme-accent-primary);
-  --color-primary-foreground: var(--theme-accent-text);
-  --color-muted: var(--theme-bg-muted);
-  --color-muted-foreground: var(--theme-text-muted);
-  --color-border: var(--theme-border-color);
-  
-  --radius-md: var(--theme-radius);
-  --radius-lg: calc(var(--theme-radius) + 2px);
-  --radius-sm: calc(var(--theme-radius) - 2px);
-}
+@layer base {
+  :root {
+    --color-background: #F2F0E9; /* Warm off-white / Paper */
+    --color-foreground: #111111; /* Soft Black */
+    --color-muted: #E6E4DD;
+    --color-muted-foreground: #666666;
+    --color-border: #DCDAD2;
+    --color-primary: #FF3366; /* Vibrant Orange/Pink Accent */
+    --color-primary-foreground: #FFFFFF;
+    --color-glass: rgba(242, 240, 233, 0.7);
+    --font-display: 'Clash Display', 'Playfair Display', ui-serif, Georgia, serif;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  }
 
-:root {
-  /* Default Light Theme Tokens */
-  --theme-bg-primary: #ffffff;
-  --theme-text-primary: #09090b;
-  --theme-accent-primary: #18181b;
-  --theme-accent-text: #fafafa;
-  --theme-bg-muted: #f4f4f5;
-  --theme-text-muted: #71717a;
-  --theme-border-color: #e4e4e7;
-  --theme-radius: 0.5rem;
-}
-
-.dark {
-  /* Default Dark Theme Tokens */
-  --theme-bg-primary: #09090b;
-  --theme-text-primary: #fafafa;
-  --theme-accent-primary: #fafafa;
-  --theme-accent-text: #18181b;
-  --theme-bg-muted: #27272a;
-  --theme-text-muted: #a1a1aa;
-  --theme-border-color: #27272a;
+  .dark {
+    --color-background: #0A0A0A; /* Deep Abyss */
+    --color-foreground: #EDEDED;
+    --color-muted: #1A1A1A;
+    --color-muted-foreground: #888888;
+    --color-border: #222222;
+    --color-primary: #00FFCC; /* Neon Cyan Accent */
+    --color-primary-foreground: #000000;
+    --color-glass: rgba(10, 10, 10, 0.7);
+  }
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* subtle noise texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }

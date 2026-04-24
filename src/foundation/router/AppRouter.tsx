@@ -1,7 +1,21 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { createHashRouter, RouterProvider, Outlet } from 'react-router-dom';
+import type { RouteObject } from 'react-router-dom';
 import { ModuleRegistry } from '../../core/ModuleRegistry';
-import { Hub } from '../../hub/Hub';
+import { HubPage } from '../../modules/hub/HubPage';
+import { PageTransition } from '../ui/PageTransition';
+import { CommandBar } from '../ui/CommandBar';
+
+const AppLayout = () => {
+  return (
+    <>
+      <PageTransition>
+        <Outlet />
+      </PageTransition>
+      <CommandBar />
+    </>
+  );
+};
 
 /**
  * Foundation Router Module
@@ -23,13 +37,25 @@ export const AppRouter = () => {
   // 使用 useMemo 并在依赖项中加入 routeUpdateKey，确保只在需要时重新创建 router
   const router = useMemo(() => {
     const modRoutes = ModuleRegistry.getModuleRoutes();
+    
+    // We wrap all routes with PageTransition to get smooth entry/exit animations
+    const wrappedModRoutes: RouteObject[] = modRoutes.map(route => ({
+      ...route,
+      element: route.element ? <PageTransition>{route.element}</PageTransition> : undefined
+    }));
+
     return createHashRouter([
       {
         path: '/',
-        element: <Outlet />, // Root shell
+        element: <AppLayout />, // Root shell
         children: [
-          { index: true, element: <Hub /> },
-          ...modRoutes,
+          { index: true, element: <HubPage /> },
+          // Placeholder routes for the other core pages
+          { path: 'archive', element: <div className="p-20 text-center font-mono">ARCHIVE SYSTEM OFFLINE</div> },
+          { path: 'workshop', element: <div className="p-20 text-center font-mono">GLOBAL NETWORK OFFLINE</div> },
+          { path: 'creator', element: <div className="p-20 text-center font-mono">CREATOR TERMINAL OFFLINE</div> },
+          { path: 'settings', element: <div className="p-20 text-center font-mono">SETTINGS OFFLINE</div> },
+          ...wrappedModRoutes,
         ],
       },
     ]);
