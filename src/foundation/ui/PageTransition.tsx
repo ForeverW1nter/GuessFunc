@@ -1,6 +1,6 @@
-import { Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, useOutlet } from "react-router-dom";
+import { Suspense } from 'react';
+import { useLocation, useOutlet } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export const PageTransition = () => {
   const location = useLocation();
@@ -21,7 +21,13 @@ export const PageTransition = () => {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="w-full h-full"
         >
-          <Suspense fallback={null}>{outlet}</Suspense>
+          <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">
+              LOADING SYSTEM MODULE...
+            </div>
+          }>
+            {outlet}
+          </Suspense>
         </motion.div>
       </AnimatePresence>
     </div>

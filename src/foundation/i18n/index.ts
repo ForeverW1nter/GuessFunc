@@ -17,6 +17,7 @@ const resources = {
 // Initialize i18n synchronously with the persisted language
 const initialLang = useSystemUIStore.getState().language || 'zh';
 
+// Disable Suspense to prevent silent white screens if resources aren't fully loaded
 i18n
   .use(initReactI18next)
   .init({
@@ -26,6 +27,9 @@ i18n
     interpolation: {
       escapeValue: false, // React already escapes values
     },
+    react: {
+      useSuspense: false // CRITICAL: Fixes the white screen issue
+    }
   });
 
 // Listen to Zustand store changes to update i18n instance automatically
