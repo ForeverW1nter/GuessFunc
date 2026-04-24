@@ -271,12 +271,20 @@
       "slotNoData": "暂无数据",
       "btnSave": "保存",
       "btnLoad": "读取",
-      "exportData": "导出数据",
-      "exportDesc": "备份 JSON 到本地",
-      "importData": "导入数据",
-      "importDesc": "从 JSON 恢复存档",
-      "wipeData": "清空数据",
-      "wipeDesc": "此操作不可逆转"
+      "exportData": "导出当前槽位",
+      "importData": "导入到槽位",
+      "wipeData": "清空此槽位",
+      "clearConfirmTitle": "清空槽位数据？",
+      "clearConfirm": "确定要完全清除此槽位中的数据吗？此操作无法撤销。",
+      "saved": "已保存至槽位 {{slotId}}",
+      "saveError": "保存槽位失败",
+      "loaded": "已读取槽位 {{slotId}}",
+      "loadError": "读取槽位失败",
+      "exportSuccess": "数据导出成功",
+      "exportError": "导出失败",
+      "importSuccess": "数据导入成功",
+      "importError": "无效的存档文件格式",
+      "clearSuccess": "槽位数据已清空"
     },
     "hub": {
       "guessFunc": {

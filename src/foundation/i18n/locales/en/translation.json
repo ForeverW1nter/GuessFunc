@@ -256,12 +256,20 @@
       "slotNoData": "No data recorded",
       "btnSave": "Save",
       "btnLoad": "Load",
-      "exportData": "Export Data",
-      "exportDesc": "Backup JSON to disk",
-      "importData": "Import Data",
-      "importDesc": "Restore from JSON",
-      "wipeData": "Wipe Data",
-      "wipeDesc": "Irreversible action"
+      "exportData": "Export Slot",
+      "importData": "Import Slot",
+      "wipeData": "Clear Slot",
+      "clearConfirmTitle": "Clear Slot Data?",
+      "clearConfirm": "Are you sure you want to completely erase data in this slot? This action cannot be undone.",
+      "saved": "Saved to Slot {{slotId}}",
+      "saveError": "Failed to save slot",
+      "loaded": "Loaded Slot {{slotId}}",
+      "loadError": "Failed to load slot",
+      "exportSuccess": "Data exported successfully",
+      "exportError": "Export failed",
+      "importSuccess": "Data imported successfully",
+      "importError": "Invalid save file format",
+      "clearSuccess": "Slot data cleared"
     },
     "hub": {
       "guessFunc": {
