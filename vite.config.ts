@@ -14,6 +14,7 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
+    entries: ['index.html', 'src/**/*.{js,ts,jsx,tsx}'],
     exclude: ['_old']
   }
 })
