@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap');
 @import "tailwindcss";
 
 @layer theme, base, components, utilities;
@@ -12,8 +13,8 @@
     --color-primary: #FF3366; /* Vibrant Orange/Pink Accent */
     --color-primary-foreground: #FFFFFF;
     --color-glass: rgba(242, 240, 233, 0.7);
-    --font-display: 'Clash Display', 'Playfair Display', ui-serif, Georgia, serif;
-    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-display: 'Space Grotesk', 'Noto Sans SC', 'Clash Display', 'Playfair Display', ui-serif, Georgia, serif;
+    --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
   }
 
   .dark {

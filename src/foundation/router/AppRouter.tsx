@@ -8,12 +8,10 @@ import { CommandBar } from '../ui/CommandBar';
 
 const AppLayout = () => {
   return (
-    <>
-      <PageTransition>
-        <Outlet />
-      </PageTransition>
+    <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] overflow-hidden">
+      <PageTransition />
       <CommandBar />
-    </>
+    </div>
   );
 };
 
@@ -38,12 +36,6 @@ export const AppRouter = () => {
   const router = useMemo(() => {
     const modRoutes = ModuleRegistry.getModuleRoutes();
     
-    // We wrap all routes with PageTransition to get smooth entry/exit animations
-    const wrappedModRoutes: RouteObject[] = modRoutes.map(route => ({
-      ...route,
-      element: route.element ? <PageTransition>{route.element}</PageTransition> : undefined
-    }));
-
     return createHashRouter([
       {
         path: '/',
@@ -51,11 +43,11 @@ export const AppRouter = () => {
         children: [
           { index: true, element: <HubPage /> },
           // Placeholder routes for the other core pages
-          { path: 'archive', element: <div className="p-20 text-center font-mono">ARCHIVE SYSTEM OFFLINE</div> },
-          { path: 'workshop', element: <div className="p-20 text-center font-mono">GLOBAL NETWORK OFFLINE</div> },
-          { path: 'creator', element: <div className="p-20 text-center font-mono">CREATOR TERMINAL OFFLINE</div> },
-          { path: 'settings', element: <div className="p-20 text-center font-mono">SETTINGS OFFLINE</div> },
-          ...wrappedModRoutes,
+          { path: 'archive', element: <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">ARCHIVE SYSTEM OFFLINE</div> },
+          { path: 'workshop', element: <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">GLOBAL NETWORK OFFLINE</div> },
+          { path: 'creator', element: <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">CREATOR TERMINAL OFFLINE</div> },
+          { path: 'settings', element: <div className="min-h-screen flex items-center justify-center font-mono tracking-widest text-[var(--color-muted-foreground)]">SETTINGS OFFLINE</div> },
+          ...modRoutes,
         ],
       },
     ]);
