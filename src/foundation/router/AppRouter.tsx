@@ -3,6 +3,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { ModuleRegistry } from "@/core/ModuleRegistry";
 import { PageTransition } from "@/foundation/ui/PageTransition";
 import { CommandBar } from "@/foundation/ui/CommandBar";
+import { SystemControlCenter } from "@/foundation/ui/SystemControlCenter";
 
 const AppLayout = () => {
   return (
@@ -11,6 +12,7 @@ const AppLayout = () => {
         <PageTransition />
       </div>
       <CommandBar />
+      <SystemControlCenter />
     </div>
   );
 };

@@ -22,7 +22,7 @@ export const useAudio = () => {
     audio.volume = 0;
     
     const playPromise = audio.play();
-    if (playPromise !== undefined) {
+    if (playPromise) {
       playPromise.then(() => {
         const steps = AUDIO_CONSTANTS.FADE_STEPS;
         const stepTime = fadeDuration / steps;
