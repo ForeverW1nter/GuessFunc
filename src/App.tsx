@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UIProvider } from './foundation/ui/UIManager';
 import { AppRouter } from './foundation/router/AppRouter';
 import { initGuessFuncModule } from './modules/guessfunc';
@@ -8,7 +8,7 @@ const App = () => {
   const [error, setError] = useState<Error | null>(null);
 
   if (error) {
-    throw error; // 强制将异步错误抛给 Error Boundary
+    throw error;
   }
 
   useEffect(() => {
@@ -16,10 +16,8 @@ const App = () => {
 
     const bootstrap = async () => {
       try {
-        // Simulate a slight boot delay for the "OS" feel
         await new Promise(resolve => setTimeout(resolve, 600));
         
-        // In a real scenario, this would load remote modules based on a manifest.
         await initGuessFuncModule();
         if (isMounted) {
           setInitialized(true);

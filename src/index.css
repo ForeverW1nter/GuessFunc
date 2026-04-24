@@ -5,27 +5,41 @@
 
 @layer base {
   :root {
-    --color-background: #F2F0E9; /* Warm off-white / Paper */
-    --color-foreground: #111111; /* Soft Black */
+    --color-background: #F2F0E9;
+    --color-foreground: #111111;
     --color-muted: #E6E4DD;
     --color-muted-foreground: #666666;
     --color-border: #DCDAD2;
-    --color-primary: #FF3366; /* Vibrant Orange/Pink Accent */
+    --color-primary: #FF3366;
     --color-primary-foreground: #FFFFFF;
     --color-glass: rgba(242, 240, 233, 0.7);
+    --color-glow-1: rgba(255, 51, 102, 0.14);
+    --color-glow-2: rgba(59, 130, 246, 0.10);
+    --accent-hub: #FF3366;
+    --accent-archive: #60A5FA;
+    --accent-network: #FF3366;
+    --accent-studio: #C084FC;
+    --accent-settings: #9CA3AF;
     --font-display: 'Space Grotesk', 'Noto Sans SC', 'Clash Display', 'Playfair Display', ui-serif, Georgia, serif;
     --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
   }
 
   .dark {
-    --color-background: #0A0A0A; /* Deep Abyss */
-    --color-foreground: #EDEDED;
-    --color-muted: #1A1A1A;
-    --color-muted-foreground: #888888;
-    --color-border: #222222;
-    --color-primary: #00FFCC; /* Neon Cyan Accent */
-    --color-primary-foreground: #000000;
-    --color-glass: rgba(10, 10, 10, 0.7);
+    --color-background: #0B0D10;
+    --color-foreground: #F1F1F1;
+    --color-muted: #141821;
+    --color-muted-foreground: #9CA3AF;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-primary: #FF4D8A;
+    --color-primary-foreground: #0B0D10;
+    --color-glass: rgba(11, 13, 16, 0.72);
+    --color-glow-1: rgba(255, 77, 138, 0.10);
+    --color-glow-2: rgba(96, 165, 250, 0.08);
+    --accent-hub: #FF4D8A;
+    --accent-archive: #7DD3FC;
+    --accent-network: #FF4D8A;
+    --accent-studio: #A78BFA;
+    --accent-settings: #D1D5DB;
   }
 }
 
@@ -37,7 +51,6 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    /* subtle noise texture */
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   }
 

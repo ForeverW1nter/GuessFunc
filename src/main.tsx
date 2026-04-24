@@ -1,12 +1,12 @@
-import React, { StrictMode, Component } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { Component, StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App';
 
-class GlobalErrorBoundary extends Component<any, { hasError: boolean, error: any }> {
+class GlobalErrorBoundary extends Component<any, { hasError: boolean; error: any }> {
   state = { hasError: false, error: null };
   static getDerivedStateFromError(error: any) { return { hasError: true, error }; }
-  componentDidCatch(error: any) { console.error("[Global Error Boundary Caught]:", error); }
+  componentDidCatch(error: any) { console.error('[Global Error Boundary Caught]:', error); }
   render() {
     if (this.state.hasError) {
       return (
@@ -26,4 +26,4 @@ createRoot(document.getElementById('root')!).render(
       <App />
     </GlobalErrorBoundary>
   </StrictMode>,
-)
+);

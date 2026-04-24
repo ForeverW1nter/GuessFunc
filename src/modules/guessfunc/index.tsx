@@ -1,4 +1,3 @@
-import React from 'react';
 import { ModuleRegistry, type GameModule } from '../../core/ModuleRegistry';
 import { Link } from 'react-router-dom';
 
@@ -29,9 +28,6 @@ export const initGuessFuncModule = async () => {
       { path: 'guessfunc', element: <GuessFuncPage /> }
     ],
     init: () => {
-      // In the new architecture, games do not inject themselves into the main Hub UI.
-      // The Hub is strictly for the platform's core modes (Story, Workshop, Creator).
-      // Games are only invoked via the Level Protocol when a level is played.
       console.log('[GuessFunc] Engine initialized. Awaiting level payload...');
     }
   };

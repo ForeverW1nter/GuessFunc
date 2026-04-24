@@ -1,15 +1,14 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Home, Library, Globe, Settings, TerminalSquare } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 
 const navItems = [
-  { path: '/', icon: Home, label: 'Hub', color: 'var(--color-primary)' },
-  { path: '/archive', icon: Library, label: 'Archive', color: '#60A5FA' }, // blue-400
-  { path: '/workshop', icon: Globe, label: 'Network', color: 'var(--color-primary)' },
-  { path: '/creator', icon: TerminalSquare, label: 'Studio', color: '#C084FC' }, // purple-400
-  { path: '/settings', icon: Settings, label: 'Settings', color: '#9CA3AF' }, // gray-400
+  { path: '/', icon: Home, label: 'Hub', color: 'var(--accent-hub)' },
+  { path: '/archive', icon: Library, label: 'Archive', color: 'var(--accent-archive)' },
+  { path: '/workshop', icon: Globe, label: 'Network', color: 'var(--accent-network)' },
+  { path: '/creator', icon: TerminalSquare, label: 'Studio', color: 'var(--accent-studio)' },
+  { path: '/settings', icon: Settings, label: 'Settings', color: 'var(--accent-settings)' },
 ];
 
 export const CommandBar = () => {
@@ -54,7 +53,6 @@ export const CommandBar = () => {
             {/* Tooltip */}
             <div className="absolute -top-12 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200 bg-[var(--color-foreground)] text-[var(--color-background)] text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap font-mono tracking-widest pointer-events-none">
               {item.label}
-              {/* Tooltip arrow */}
               <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[var(--color-foreground)]" />
             </div>
           </Link>
