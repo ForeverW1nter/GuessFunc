@@ -23,6 +23,8 @@ const SIMILARITY_MAX = 100;
 const DOMAIN_MIN = -10;
 const DOMAIN_MAX = 10;
 const DOMAIN_STEPS = 200;
+const TEST_PARAM_1 = 5;
+const TEST_PARAM_2 = -5;
 
 export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
   currentLevelIndex: 0,
@@ -39,7 +41,7 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
       currentLevelIndex: index,
       level,
       expression: level.initialExpression,
-      params: { ...level.initialParams },
+      params: { ...level.params },
       similarity: 0,
       isSuccess: false,
     });
@@ -67,19 +69,53 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
     const { expression, params, level } = get();
     if (!level) return;
 
+    // Calculate current similarity using current parameters
+    // This allows the player to use sliders to match the curves visually
     const currentFn = MathEngine.compileFunction(expression, params);
-    const targetFn = MathEngine.compileFunction(level.targetExpression, level.targetParams);
+    const targetFn = MathEngine.compileFunction(level.targetExpression, params);
 
-    const mse = MathEngine.calculateMSE(currentFn, targetFn, DOMAIN_MIN, DOMAIN_MAX, DOMAIN_STEPS);
+    const currentMse = MathEngine.calculateMSE(currentFn, targetFn, DOMAIN_MIN, DOMAIN_MAX, DOMAIN_STEPS);
+    const currentSimilarity = Math.max(0, Math.min(SIMILARITY_MAX, SIMILARITY_MAX / (1 + currentMse)));
     
-    // Map MSE to a percentage similarity (rough heuristic for UX)
-    // If mse is 0, it's 100%. If mse is large, it approaches 0%.
-    const similarity = Math.max(0, Math.min(SIMILARITY_MAX, SIMILARITY_MAX / (1 + mse)));
+    let isSuccess = false;
     
-    // Success if MSE is within tolerance
-    const isSuccess = mse <= level.tolerance;
+    // Only check global success if current similarity is very close to pass threshold
+    if (currentSimilarity >= level.passSimilarity - 1) {
+      const paramKeys = Object.keys(params);
+      
+      // We must verify that the user's expression is mathematically equivalent 
+      // regardless of what the parameter values are (testing generalization).
+      const testCases = [
+        params, // Current user state
+        Object.fromEntries(paramKeys.map(k => [k, 1])),
+        Object.fromEntries(paramKeys.map(k => [k, -1])),
+        Object.fromEntries(paramKeys.map(k => [k, TEST_PARAM_1])),
+        Object.fromEntries(paramKeys.map(k => [k, TEST_PARAM_2])),
+        Object.fromEntries(paramKeys.map(k => [k, Math.PI])),
+      ];
 
-    set({ similarity, isSuccess });
+      let allPass = true;
+      let totalSim = 0;
+
+      for (const tc of testCases) {
+        const testF1 = MathEngine.compileFunction(expression, tc);
+        const testF2 = MathEngine.compileFunction(level.targetExpression, tc);
+        const mse = MathEngine.calculateMSE(testF1, testF2, DOMAIN_MIN, DOMAIN_MAX, DOMAIN_STEPS);
+        const sim = Math.max(0, Math.min(SIMILARITY_MAX, SIMILARITY_MAX / (1 + mse)));
+        
+        totalSim += sim;
+        if (sim < level.passSimilarity) {
+          allPass = false;
+          break; // Fail fast
+        }
+      }
+
+      if (allPass && (totalSim / testCases.length) >= level.passSimilarity) {
+        isSuccess = true;
+      }
+    }
+
+    set({ similarity: currentSimilarity, isSuccess });
   },
 
   reset: () => set({

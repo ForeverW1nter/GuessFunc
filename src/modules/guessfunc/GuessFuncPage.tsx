@@ -37,7 +37,7 @@ export const GuessFuncPage = () => {
             expression={expression}
             parameters={params}
             targetExpression={level.targetExpression}
-            targetParameters={level.targetParams}
+            targetParameters={params} // Target curve ALSO uses current sliders!
             lineColor={currentThemeColor}
             height={800}
           />
