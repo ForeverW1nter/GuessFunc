@@ -68,10 +68,10 @@ export const SettingsPage = () => { // eslint-disable-line complexity
   ];
 
   const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
-    { id: 'general', label: 'General', icon: Globe },
-    { id: 'typography', label: 'Typography', icon: Type },
-    { id: 'audio', label: 'Audio', icon: Volume2 },
-    { id: 'storage', label: 'Storage', icon: Database },
+    { id: 'general', label: t('settings.general.tab', 'General'), icon: Globe },
+    { id: 'typography', label: t('settings.typography.tab', 'Typography'), icon: Type },
+    { id: 'audio', label: t('settings.audio.tab', 'Audio'), icon: Volume2 },
+    { id: 'storage', label: t('settings.storage.tab', 'Storage'), icon: Database },
   ];
 
   useEffect(() => {
@@ -271,8 +271,8 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               {activeTab === 'general' && (
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">Localization</h2>
-                    <p className="text-sm text-[var(--color-muted-foreground)]">Set your preferred interface language.</p>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.general.localization', 'Localization')}</h2>
+                    <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.general.localizationDesc', 'Set your preferred interface language.')}</p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <button
@@ -284,8 +284,8 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                           : "bg-[var(--color-muted)]/50 border-[var(--color-border)] text-[var(--color-foreground)] hover:border-white/30"
                       )}
                     >
-                      <span className="font-mono tracking-widest text-sm uppercase mb-1 truncate w-full text-left">English</span>
-                      <span className={cn("text-xs font-sans truncate w-full text-left", language === 'en' ? "text-[var(--color-background)]/70" : "text-[var(--color-muted-foreground)]")}>System Default</span>
+                      <span className="font-mono tracking-widest text-sm uppercase mb-1 truncate w-full text-left">{t('settings.general.english', 'English')}</span>
+                      <span className={cn("text-xs font-sans truncate w-full text-left", language === 'en' ? "text-[var(--color-background)]/70" : "text-[var(--color-muted-foreground)]")}>{t('settings.general.englishSub', 'System Default')}</span>
                       {language === 'en' && <CheckCircle2 size={18} className="absolute top-5 right-5" />}
                     </button>
                     <button
@@ -297,8 +297,8 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                           : "bg-[var(--color-muted)]/50 border-[var(--color-border)] text-[var(--color-foreground)] hover:border-white/30"
                       )}
                     >
-                      <span className="font-sans font-medium tracking-widest text-sm mb-1 truncate w-full text-left">中文 (简体)</span>
-                      <span className={cn("text-xs font-sans truncate w-full text-left", language === 'zh' ? "text-[var(--color-background)]/70" : "text-[var(--color-muted-foreground)]")}>翻译支持</span>
+                      <span className="font-sans font-medium tracking-widest text-sm mb-1 truncate w-full text-left">{t('settings.general.chinese', '中文 (简体)')}</span>
+                      <span className={cn("text-xs font-sans truncate w-full text-left", language === 'zh' ? "text-[var(--color-background)]/70" : "text-[var(--color-muted-foreground)]")}>{t('settings.general.chineseSub', 'Translation Support')}</span>
                       {language === 'zh' && <CheckCircle2 size={18} className="absolute top-5 right-5" />}
                     </button>
                   </div>
@@ -309,13 +309,13 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               {activeTab === 'typography' && (
                 <div className="space-y-10">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">Typography</h2>
-                    <p className="text-sm text-[var(--color-muted-foreground)]">Customize readability and aesthetics.</p>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.typography.title', 'Typography')}</h2>
+                    <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.typography.desc', 'Customize readability and aesthetics.')}</p>
                   </div>
 
                   <div className="space-y-5">
                     <div className="flex justify-between items-end">
-                      <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">Interface Scale</span>
+                      <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">{t('settings.typography.scale', 'Interface Scale')}</span>
                       <span className="text-sm font-mono tracking-widest">{Math.round(localFontSize * 100)}%</span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -336,13 +336,13 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                         disabled={localFontSize === fontSizeMultiplier}
                         className="px-4 py-2 bg-[var(--color-foreground)] text-[var(--color-background)] rounded-lg text-xs font-mono uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                       >
-                        Apply
+                        {t('settings.typography.apply', 'Apply')}
                       </button>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">Typeface</span>
+                    <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">{t('settings.typography.typeface', 'Typeface')}</span>
                     <div className="grid grid-cols-1 gap-3">
                       {PRESET_FONTS.map((font) => (
                         <button
@@ -386,8 +386,8 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               {activeTab === 'audio' && (
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">Audio</h2>
-                    <p className="text-sm text-[var(--color-muted-foreground)]">System volume and sound effects.</p>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.audio.title', 'Audio')}</h2>
+                    <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.audio.desc', 'System volume and sound effects.')}</p>
                   </div>
                   
                   <div className="bg-[var(--color-muted)]/50 p-6 md:p-8 rounded-2xl border border-[var(--color-border)] flex flex-col md:flex-row items-center gap-6 md:gap-8">
@@ -405,7 +405,7 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                     
                     <div className="flex-1 w-full space-y-4">
                       <div className="flex justify-between items-end">
-                        <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">Master Volume</span>
+                        <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">{t('settings.audio.master', 'Master Volume')}</span>
                         <span className="text-sm md:text-base font-mono tracking-widest">{isMuted ? 'MUTE' : `${Math.round(volume * 100)}%`}</span>
                       </div>
                       <div className="relative h-3 bg-[var(--color-border)] rounded-full overflow-hidden flex items-center group/slider">
@@ -430,12 +430,12 @@ export const SettingsPage = () => { // eslint-disable-line complexity
               {activeTab === 'storage' && (
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">Storage</h2>
-                    <p className="text-sm text-[var(--color-muted-foreground)]">Manage your local saves and progress.</p>
+                    <h2 className="text-lg font-display uppercase tracking-tight mb-1">{t('settings.storage.title', 'Storage')}</h2>
+                    <p className="text-sm text-[var(--color-muted-foreground)]">{t('settings.storage.desc', 'Manage your local saves and progress.')}</p>
                   </div>
 
                   <div className="space-y-4">
-                    <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">Save Slots</span>
+                    <span className="text-sm font-mono text-[var(--color-muted-foreground)] uppercase tracking-widest">{t('settings.storage.slots', 'Save Slots')}</span>
                     <div className="grid grid-cols-1 gap-3">
                       {saveSlots.map((slot) => (
                         <div key={slot.id} className="group relative flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)]/30 hover:bg-[var(--color-muted)] transition-all gap-4 sm:gap-0">
@@ -445,13 +445,13 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                             </div>
                             <div className="min-w-0">
                               <div className="font-medium tracking-wide truncate">
-                                {slot.timestamp ? 'System Save Data' : 'Empty Slot'}
+                                {slot.timestamp ? t('settings.storage.slotData', 'System Save Data') : t('settings.storage.slotEmpty', 'Empty Slot')}
                               </div>
                               <div className="text-xs font-mono text-[var(--color-muted-foreground)] mt-1 truncate">
                                 {slot.timestamp ? new Date(slot.timestamp).toLocaleString(undefined, {
                                   year: 'numeric', month: 'short', day: 'numeric',
                                   hour: '2-digit', minute: '2-digit'
-                                }) : 'No data recorded'}
+                                }) : t('settings.storage.slotNoData', 'No data recorded')}
                               </div>
                             </div>
                           </div>
@@ -461,14 +461,14 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                               onClick={() => handleSlotSave(slot.id)}
                               className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-2 bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 rounded-lg text-xs font-mono uppercase tracking-widest transition-all"
                             >
-                              <Save size={14} /> Save
+                              <Save size={14} /> {t('settings.storage.btnSave', 'Save')}
                             </button>
                             {slot.timestamp && (
                               <button
                                 onClick={() => handleSlotLoad(slot.id)}
                                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-2 bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-lg text-xs font-mono uppercase tracking-widest transition-all"
                               >
-                                <RotateCcw size={14} /> Load
+                                <RotateCcw size={14} /> {t('settings.storage.btnLoad', 'Load')}
                               </button>
                             )}
                           </div>
@@ -486,16 +486,16 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                     >
                       <Download size={18} className="text-[var(--color-muted-foreground)] group-hover/btn:text-[var(--color-foreground)]" />
                       <div>
-                        <span className="block text-sm font-medium">Export Data</span>
-                        <span className="block text-xs font-sans text-[var(--color-muted-foreground)] mt-1">Backup JSON to disk</span>
+                        <span className="block text-sm font-medium">{t('settings.storage.exportData', 'Export Data')}</span>
+                        <span className="block text-xs font-sans text-[var(--color-muted-foreground)] mt-1">{t('settings.storage.exportDesc', 'Backup JSON to disk')}</span>
                       </div>
                     </button>
                     
                     <label className="group/btn flex flex-col justify-between h-24 p-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)]/30 hover:bg-white/5 transition-all text-left cursor-pointer">
                       <Upload size={18} className="text-[var(--color-muted-foreground)] group-hover/btn:text-[var(--color-foreground)]" />
                       <div>
-                        <span className="block text-sm font-medium">Import Data</span>
-                        <span className="block text-xs font-sans text-[var(--color-muted-foreground)] mt-1">Restore from JSON</span>
+                        <span className="block text-sm font-medium">{t('settings.storage.importData', 'Import Data')}</span>
+                        <span className="block text-xs font-sans text-[var(--color-muted-foreground)] mt-1">{t('settings.storage.importDesc', 'Restore from JSON')}</span>
                       </div>
                       <input type="file" accept=".json" className="hidden" onChange={handleImportData} />
                     </label>
@@ -506,8 +506,8 @@ export const SettingsPage = () => { // eslint-disable-line complexity
                     >
                       <Trash2 size={18} className="text-red-500/70 group-hover/btn:text-red-500" />
                       <div>
-                        <span className="block text-sm font-medium text-red-400">Wipe Data</span>
-                        <span className="block text-xs font-sans text-red-500/60 mt-1">Irreversible action</span>
+                        <span className="block text-sm font-medium text-red-400">{t('settings.storage.wipeData', 'Wipe Data')}</span>
+                        <span className="block text-xs font-sans text-red-500/60 mt-1">{t('settings.storage.wipeDesc', 'Irreversible action')}</span>
                       </div>
                     </button>
                   </div>

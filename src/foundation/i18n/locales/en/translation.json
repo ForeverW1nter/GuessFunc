@@ -222,20 +222,72 @@
       "primaryColor": "Primary Color",
       "hexCode": "HEX Color Code"
     },
-    "main": {
-      "title": "Game Settings",
-      "sfx": "Sound Effects",
-      "sfxDesc": "Toggle sound effects in the game",
-      "assistMode": "Story Assist Mode",
-      "assistDesc": "When enabled, key mathematical hints will be highlighted in the story",
-      "speedrun": "Speedrun Mode",
-      "speedrunDesc": "Unlock all levels instantly for easy preview",
-      "language": "Language"
+    "general": {
+      "tab": "General",
+      "localization": "Localization",
+      "localizationDesc": "Set your preferred interface language.",
+      "english": "English",
+      "englishSub": "System Default",
+      "chinese": "中文 (简体)",
+      "chineseSub": "Translation Support"
     },
-    "doc": {
-      "changelog": "Changelog",
-      "about": "About",
-      "rules": "Rules"
+    "typography": {
+      "tab": "Typography",
+      "title": "Typography",
+      "desc": "Customize readability and aesthetics.",
+      "scale": "Interface Scale",
+      "apply": "Apply",
+      "applied": "Font scale applied",
+      "typeface": "Typeface"
+    },
+    "audio": {
+      "tab": "Audio",
+      "title": "Audio",
+      "desc": "System volume and sound effects.",
+      "master": "Master Volume"
+    },
+    "storage": {
+      "tab": "Storage",
+      "title": "Storage",
+      "desc": "Manage your local saves and progress.",
+      "slots": "Save Slots",
+      "slotEmpty": "Empty Slot",
+      "slotData": "System Save Data",
+      "slotNoData": "No data recorded",
+      "btnSave": "Save",
+      "btnLoad": "Load",
+      "exportData": "Export Data",
+      "exportDesc": "Backup JSON to disk",
+      "importData": "Import Data",
+      "importDesc": "Restore from JSON",
+      "wipeData": "Wipe Data",
+      "wipeDesc": "Irreversible action"
+    },
+    "hub": {
+      "guessFunc": {
+        "title": "GUESS FUNC",
+        "subtitle": "MATH ENGINE / SANDBOX",
+        "desc": "A fully featured mathematical sandbox. Analyze signal patterns and reconstruct unknown functions."
+      },
+      "archive": {
+        "title": "THE ARCHIVE",
+        "subtitle": "STORY MODE / SECURE FILES",
+        "desc": "Access decrypted logs, emails, and story nodes. Solve integrated logic puzzles to unlock the truth."
+      },
+      "network": {
+        "title": "GLOBAL NETWORK",
+        "subtitle": "WORKSHOP / COMMUNITY",
+        "desc": "Connect to the global network. Download and play raw logic gates and math puzzles created by other operators."
+      },
+      "studio": {
+        "title": "CREATOR TERMINAL",
+        "subtitle": "STUDIO / LEVEL BUILDER",
+        "desc": "Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine."
+      }
+    "appRouter": {
+      "archiveOffline": "ARCHIVE SYSTEM OFFLINE",
+      "networkOffline": "GLOBAL NETWORK OFFLINE",
+      "creatorMounted": "CREATOR TERMINAL MOUNTED EXTERNALLY"
     }
   },
   "tips": {

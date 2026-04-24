@@ -236,11 +236,76 @@
       "darkMode": "深色模式",
       "primaryColor": "主题色",
       "hexCode": "HEX 颜色码"
+    },
+    "general": {
+      "tab": "通用",
+      "localization": "语言",
+      "localizationDesc": "设置您的首选界面语言。",
+      "english": "English",
+      "englishSub": "系统默认",
+      "chinese": "中文 (简体)",
+      "chineseSub": "翻译支持"
+    },
+    "typography": {
+      "tab": "排版",
+      "title": "排版",
+      "desc": "自定义阅读体验和美学风格。",
+      "scale": "界面缩放",
+      "apply": "应用",
+      "applied": "字体缩放已应用",
+      "typeface": "字体样式"
+    },
+    "audio": {
+      "tab": "音频",
+      "title": "音频",
+      "desc": "系统音量和音效控制。",
+      "master": "主音量"
+    },
+    "storage": {
+      "tab": "存储",
+      "title": "存储",
+      "desc": "管理您的本地存档和游戏进度。",
+      "slots": "存档槽位",
+      "slotEmpty": "空槽位",
+      "slotData": "系统存档数据",
+      "slotNoData": "暂无数据",
+      "btnSave": "保存",
+      "btnLoad": "读取",
+      "exportData": "导出数据",
+      "exportDesc": "备份 JSON 到本地",
+      "importData": "导入数据",
+      "importDesc": "从 JSON 恢复存档",
+      "wipeData": "清空数据",
+      "wipeDesc": "此操作不可逆转"
+    },
+    "hub": {
+      "guessFunc": {
+        "title": "GUESS FUNC",
+        "subtitle": "数学引擎 / 沙盒模式",
+        "desc": "全功能的数学沙盒。分析信号模式并重建未知函数。"
+      },
+      "archive": {
+        "title": "档案馆",
+        "subtitle": "故事模式 / 安全文件",
+        "desc": "访问解密的日志、电子邮件和故事节点。解决集成的逻辑谜题以解开真相。"
+      },
+      "network": {
+        "title": "全局网络",
+        "subtitle": "创意工坊 / 社区",
+        "desc": "连接到全局网络。下载并游玩由其他操作员创建的原始逻辑门和数学谜题。"
+      },
+      "studio": {
+        "title": "创作者终端",
+        "subtitle": "工作室 / 关卡构建器",
+        "desc": "设计、测试并将您自己的逻辑挑战上传到网络。同时支持数学引擎和逻辑门引擎。"
+      }
+    "appRouter": {
+      "archiveOffline": "档案系统离线",
+      "networkOffline": "全局网络离线",
+      "creatorMounted": "创作者终端已外部挂载"
     }
   },
   "tips": {
-    "title": "获得提示",
-    "empty": "本关卡暂无提示。"
   },
   "story": {
     "nextChapterBtn": "进入下一章",

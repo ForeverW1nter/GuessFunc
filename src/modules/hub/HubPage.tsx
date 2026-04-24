@@ -1,50 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Database, Globe2, Terminal } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/utils/cn";
-
-const MODES = [
-  {
-    id: "guessfunc",
-    title: "GUESS FUNC",
-    subtitle: "Math Engine / Sandbox",
-    desc: "A fully featured mathematical sandbox. Analyze signal patterns and reconstruct unknown functions.",
-    path: "/guessfunc",
-    icon: Terminal,
-    color: "group-hover:text-[var(--accent-guessfunc)]",
-    bgHover: "var(--accent-guessfunc)",
-  },
-  {
-    id: "archive",
-    title: "THE ARCHIVE",
-    subtitle: "Story Mode / Secure Files",
-    desc: "Access decrypted logs, emails, and story nodes. Solve integrated logic puzzles to unlock the truth.",
-    path: "/archive",
-    icon: Database,
-    color: "group-hover:text-[var(--accent-archive)]",
-    bgHover: "var(--accent-archive)",
-  },
-  {
-    id: "network",
-    title: "GLOBAL NETWORK",
-    subtitle: "Workshop / Community",
-    desc: "Connect to the global network. Download and play raw logic gates and math puzzles created by other operators.",
-    path: "/workshop",
-    icon: Globe2,
-    color: "group-hover:text-[var(--accent-network)]",
-    bgHover: "var(--accent-network)",
-  },
-  {
-    id: "creator",
-    title: "CREATOR TERMINAL",
-    subtitle: "Studio / Level Builder",
-    desc: "Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine.",
-    path: "/creator",
-    icon: Terminal,
-    color: "group-hover:text-[var(--accent-studio)]",
-    bgHover: "var(--accent-studio)",
-  },
-];
 
 const HOVER_DELAY_MULTIPLIER = 0.1;
 const ANIMATION_DURATION_HEADER = 0.8;
@@ -53,6 +11,51 @@ const ANIMATION_EASE_CARD = [0.22, 1, 0.36, 1] as const;
 const ANIMATION_OFFSET_Y = 20;
 
 export const HubPage = () => {
+  const { t } = useTranslation();
+
+  const MODES = [
+    {
+      id: "guessfunc",
+      title: t('hub.guessFunc.title', 'GUESS FUNC'),
+      subtitle: t('hub.guessFunc.subtitle', 'Math Engine / Sandbox'),
+      desc: t('hub.guessFunc.desc', 'A fully featured mathematical sandbox. Analyze signal patterns and reconstruct unknown functions.'),
+      path: "/guessfunc",
+      icon: Terminal,
+      color: "group-hover:text-[var(--accent-guessfunc)]",
+      bgHover: "var(--accent-guessfunc)",
+    },
+    {
+      id: "archive",
+      title: t('hub.archive.title', 'THE ARCHIVE'),
+      subtitle: t('hub.archive.subtitle', 'Story Mode / Secure Files'),
+      desc: t('hub.archive.desc', 'Access decrypted logs, emails, and story nodes. Solve integrated logic puzzles to unlock the truth.'),
+      path: "/archive",
+      icon: Database,
+      color: "group-hover:text-[var(--accent-archive)]",
+      bgHover: "var(--accent-archive)",
+    },
+    {
+      id: "network",
+      title: t('hub.network.title', 'GLOBAL NETWORK'),
+      subtitle: t('hub.network.subtitle', 'Workshop / Community'),
+      desc: t('hub.network.desc', 'Connect to the global network. Download and play raw logic gates and math puzzles created by other operators.'),
+      path: "/workshop",
+      icon: Globe2,
+      color: "group-hover:text-[var(--accent-network)]",
+      bgHover: "var(--accent-network)",
+    },
+    {
+      id: "creator",
+      title: t('hub.studio.title', 'CREATOR TERMINAL'),
+      subtitle: t('hub.studio.subtitle', 'Studio / Level Builder'),
+      desc: t('hub.studio.desc', 'Design, test, and upload your own logic challenges to the network. Support for both Math Engine and Gate Engine.'),
+      path: "/creator",
+      icon: Terminal,
+      color: "group-hover:text-[var(--accent-studio)]",
+      bgHover: "var(--accent-studio)",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] flex flex-col items-center justify-center p-8 relative overflow-x-hidden">
       {/* Decorative background elements */}
