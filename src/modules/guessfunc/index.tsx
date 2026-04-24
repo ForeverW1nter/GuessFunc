@@ -4,7 +4,7 @@ import { GuessFuncPage } from "@/modules/guessfunc/GuessFuncPage";
 export const initGuessFuncModule = async () => {
   const mod: GameModule = {
     id: "guessfunc",
-    name: "GuessFunc",
+    name: "GUESS FUNC",
     description: "A math guessing game",
     version: "1.0.0",
     coreApiVersion: "^1.0.0",

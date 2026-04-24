@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { GraphRenderer } from './components/GraphRenderer';
 import { Theme } from 'mafs';
 
+import { motion } from 'framer-motion';
+
 export const GuessFuncPage = () => {
   const [expression, setExpression] = useState('a * sin(x) + b');
   const [params, setParams] = useState<Record<string, number>>({ a: 1, b: 0 });
@@ -14,12 +16,20 @@ export const GuessFuncPage = () => {
   const currentThemeColor = Theme.blue; // Matches modern blue accent
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] flex flex-col md:flex-row">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-[var(--color-background)] flex flex-col md:flex-row"
+    >
       {/* Left Panel: Math Canvas */}
-      <div className="flex-1 p-4 md:p-8 h-[50vh] md:h-screen">
-        <div className="w-full h-full relative group">
+      <motion.div
+        layoutId="card-container-guessfunc"
+        className="flex-1 p-4 md:p-8 h-[50vh] md:h-screen relative overflow-hidden"
+      >
+        <div className="w-full h-full relative group rounded-3xl border border-[var(--color-border)] bg-[var(--color-muted)] shadow-2xl overflow-hidden">
           {/* A subtle glowing backdrop behind the graph */}
-          <div className="absolute inset-0 bg-[var(--color-primary)] opacity-5 blur-2xl rounded-3xl group-hover:opacity-10 transition-opacity duration-700 pointer-events-none" />
+          <div className="absolute inset-0 bg-[var(--accent-guessfunc)] opacity-5 blur-2xl group-hover:opacity-10 transition-opacity duration-700 pointer-events-none" />
           <GraphRenderer
             expression={expression}
             parameters={params}
@@ -27,13 +37,23 @@ export const GuessFuncPage = () => {
             height={800} // Will naturally be constrained by flex layout via Mafs container scaling
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* Right Panel: Controls & Telemetry */}
-      <div className="w-full md:w-[400px] lg:w-[480px] p-6 md:p-12 border-t md:border-t-0 md:border-l border-[var(--color-border)] bg-[var(--color-muted)] flex flex-col relative z-10 overflow-y-auto">
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
+        className="w-full md:w-[400px] lg:w-[480px] p-6 md:p-12 border-t md:border-t-0 md:border-l border-[var(--color-border)] bg-[var(--color-muted)] flex flex-col relative z-10 overflow-y-auto"
+      >
         <header className="mb-12">
-          <h1 className="text-2xl font-bold tracking-tight mb-2">GuessFunc</h1>
-          <p className="text-sm font-mono text-[var(--color-muted-foreground)] tracking-widest uppercase">
+          <motion.h1
+            layoutId="card-title-guessfunc"
+            className="text-4xl md:text-5xl font-bold tracking-tighter mb-2 text-[var(--accent-guessfunc)]"
+          >
+            GUESS FUNC
+          </motion.h1>
+          <p className="text-sm font-mono text-[var(--color-muted-foreground)] tracking-widest uppercase mt-4">
             System.Engine.Active
           </p>
         </header>
@@ -89,7 +109,7 @@ export const GuessFuncPage = () => {
             Terminate
           </Link>
         </footer>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

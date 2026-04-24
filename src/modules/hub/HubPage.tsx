@@ -5,6 +5,16 @@ import { cn } from "@/utils/cn";
 
 const MODES = [
   {
+    id: "guessfunc",
+    title: "GUESS FUNC",
+    subtitle: "Math Engine / Sandbox",
+    desc: "A fully featured mathematical sandbox. Analyze signal patterns and reconstruct unknown functions.",
+    path: "/guessfunc",
+    icon: Terminal,
+    color: "group-hover:text-[var(--accent-guessfunc)]",
+    bgHover: "var(--accent-guessfunc)",
+  },
+  {
     id: "archive",
     title: "THE ARCHIVE",
     subtitle: "Story Mode / Secure Files",
@@ -71,21 +81,24 @@ export const HubPage = () => {
 
       <div className="w-full max-w-5xl flex flex-col gap-2 mt-20">
         {MODES.map((mode, index) => (
-          <Link
+          <motion.div
             key={mode.id}
-            to={mode.path}
-            className="group relative block w-full outline-none"
+            initial={{ opacity: 0, y: ANIMATION_OFFSET_Y }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: ANIMATION_DURATION_CARD,
+              delay: HOVER_DELAY_MULTIPLIER * index,
+              ease: ANIMATION_EASE_CARD,
+            }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: ANIMATION_OFFSET_Y }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: ANIMATION_DURATION_CARD,
-                delay: HOVER_DELAY_MULTIPLIER * index,
-                ease: ANIMATION_EASE_CARD,
-              }}
-              className="relative py-8 md:py-10 px-6 md:px-8 rounded-3xl border border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8 transition-all duration-500 hover:bg-[var(--card-hover-bg)] hover:border-[var(--card-hover-border)] hover:shadow-2xl hover:-translate-y-1 overflow-hidden"
+            <Link
+              to={mode.path}
+              className="group relative block w-full outline-none"
             >
+              <motion.div
+                layoutId={`card-container-${mode.id}`}
+                className="relative py-8 md:py-10 px-6 md:px-8 rounded-3xl border border-[var(--color-border)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8 transition-all duration-500 hover:bg-[var(--card-hover-bg)] hover:border-[var(--card-hover-border)] hover:shadow-2xl hover:-translate-y-1 overflow-hidden"
+              >
               {/* Subtle background glow linked to accent color */}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-700 pointer-events-none"
@@ -102,14 +115,15 @@ export const HubPage = () => {
                   0{index + 1}
                 </span>
                 <div className="w-full">
-                  <h2
+                  <motion.h2
+                    layoutId={`card-title-${mode.id}`}
                     className={cn(
                       "text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter transition-colors duration-500",
                       mode.color
                     )}
                   >
                     {mode.title}
-                  </h2>
+                  </motion.h2>
                   <p className="text-xs md:text-sm font-mono tracking-[0.2em] mt-2 md:mt-4 opacity-50 uppercase group-hover:opacity-80 transition-opacity duration-500">
                     {mode.subtitle}
                   </p>
@@ -131,7 +145,8 @@ export const HubPage = () => {
                 }}
               />
             </motion.div>
-          </Link>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </div>
