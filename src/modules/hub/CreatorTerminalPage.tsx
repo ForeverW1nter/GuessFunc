@@ -116,18 +116,18 @@ export const CreatorTerminalPage = () => {
         ) : getEngineContent(engine, t)
       }
       rightPanelContent={
-        <div className="flex-1 w-full flex flex-col">
+        <div className="flex-1 w-full flex flex-col relative h-full">
           {!loading && engine ? engine.getControlPanel() : null}
           
           {/* Creator Terminal specific Success Overlay */}
           {isSuccess && (
-            <div className="mt-8 p-6 rounded-2xl bg-green-500/10 border border-green-500/20 text-center animate-in fade-in slide-in-from-bottom-4">
-              <h3 className="text-green-500 font-bold tracking-widest mb-4 uppercase">
+            <div className="absolute bottom-4 left-0 right-0 p-6 rounded-xl bg-[#0a150f] border border-green-500/30 text-center animate-in fade-in slide-in-from-bottom-4 shadow-[0_0_30px_rgba(34,197,94,0.15)] backdrop-blur-md z-50 mx-4">
+              <h3 className="text-green-500 font-mono font-bold tracking-[0.2em] mb-4 uppercase text-sm">
                 {t('hub.creator.syncComplete', 'TEST SYNC COMPLETE')}
               </h3>
               <button 
                 onClick={handleResetLevel}
-                className="w-full text-xs font-mono tracking-widest uppercase bg-green-500 text-black px-4 py-3 rounded-xl hover:bg-green-400 transition-colors duration-300"
+                className="w-full font-mono tracking-widest uppercase bg-green-500/10 text-green-500 border border-green-500/50 px-4 py-3 rounded-md hover:bg-green-500 hover:text-black transition-all duration-300"
               >
                 {t('hub.creator.resetEngine', 'RESET ENGINE')}
               </button>

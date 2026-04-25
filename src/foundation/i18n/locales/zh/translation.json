@@ -571,7 +571,7 @@
     "expressionLabel": "函数表达式 [ y = f(x) ]",
     "expressionPlaceholder": "例如：sin(x) + a",
     "variableLabel": "Variable [{{key}}]",
-    "verify": "验证等价性",
+    "verify": "执行等价验证",
     "verifying": "交叉验证中...",
     "errors": {
       "mismatch": "验证失败：公式结构不匹配",

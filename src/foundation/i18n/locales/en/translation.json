@@ -558,7 +558,7 @@
     "expressionLabel": "Function Expression [ y = f(x) ]",
     "expressionPlaceholder": "e.g. sin(x) + a",
     "variableLabel": "Variable [{{key}}]",
-    "verify": "VERIFY EQUIVALENCE",
+    "verify": "EXECUTE VERIFICATION",
     "verifying": "VERIFYING...",
     "errors": {
       "mismatch": "Equivalence Check Failed: Structure mismatch across parameters.",
