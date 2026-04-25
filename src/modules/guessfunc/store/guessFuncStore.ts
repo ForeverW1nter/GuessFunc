@@ -1,11 +1,17 @@
 import { create } from 'zustand';
 import { MathEngine } from '../engine/MathEngine';
 
+export interface PlayerFunction {
+  id: string; // e.g. "f", "g", "h"
+  expression: string;
+}
+
 interface GuessFuncState {
   level: {
     targetExpression: string;
   } | null;
-  expression: string;
+  // Support multiple reference functions
+  functions: PlayerFunction[];
   params: Record<string, number>;
   isVerifying: boolean;
   isSuccess: boolean;
@@ -13,7 +19,9 @@ interface GuessFuncState {
   
   // Actions
   loadLevelData: (payload: { targetExpression: string; initialExpression: string; params: Record<string, number> }) => void;
-  setExpression: (expr: string) => void;
+  setExpression: (id: string, expr: string) => void;
+  addFunction: () => void;
+  removeFunction: (id: string) => void;
   setParam: (key: string, value: number) => void;
   verify: () => void;
   reset: () => void;
@@ -21,9 +29,15 @@ interface GuessFuncState {
 
 const SIMULATED_VERIFY_DELAY_MS = 400;
 
+const getNextFunctionId = (existingFuncs: PlayerFunction[]) => {
+  const ids = ['f', 'g', 'h', 'p', 'q', 'u', 'v', 'w'];
+  const used = new Set(existingFuncs.map(f => f.id));
+  return ids.find(id => !used.has(id)) || `f${existingFuncs.length}`;
+};
+
 export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
   level: null,
-  expression: '',
+  functions: [],
   params: {},
   isVerifying: false,
   isSuccess: false,
@@ -34,7 +48,9 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
       level: {
         targetExpression: payload.targetExpression
       },
-      expression: payload.initialExpression,
+      functions: [
+        { id: 'f', expression: payload.initialExpression }
+      ],
       params: { ...payload.params },
       isVerifying: false,
       isSuccess: false,
@@ -42,8 +58,35 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
     });
   },
 
-  setExpression: (expr) => {
-    set({ expression: expr, verifyError: null, isSuccess: false });
+  setExpression: (id, expr) => {
+    set((state) => ({
+      functions: state.functions.map(f => f.id === id ? { ...f, expression: expr } : f),
+      verifyError: null,
+      isSuccess: false
+    }));
+  },
+
+  addFunction: () => {
+    set((state) => {
+      const nextId = getNextFunctionId(state.functions);
+      return {
+        functions: [...state.functions, { id: nextId, expression: '' }],
+        verifyError: null,
+        isSuccess: false
+      };
+    });
+  },
+
+  removeFunction: (id) => {
+    set((state) => {
+      // Don't remove the last function, or specifically 'f' if it's the only one
+      if (state.functions.length <= 1) return state;
+      return {
+        functions: state.functions.filter(f => f.id !== id),
+        verifyError: null,
+        isSuccess: false
+      };
+    });
   },
 
   setParam: (key, value) => {
@@ -51,17 +94,26 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
   },
 
   verify: () => {
-    const { expression, params, level } = get();
-    if (!level) return;
+    const { functions, params, level } = get();
+    if (!level || functions.length === 0) return;
 
     set({ isVerifying: true, verifyError: null });
 
-    // In a real app, this might be a worker. Here we just simulate a tiny delay for UX.
     setTimeout(() => {
       const paramKeys = Object.keys(params);
       
       try {
-        const isMatch = MathEngine.verifyEquivalence(expression, level.targetExpression, paramKeys);
+        // The main expression is always the first one, or 'f'
+        // Others are reference functions
+        const mainFunc = functions.find(f => f.id === 'f') || functions[0];
+        const refFuncs = functions.filter(f => f.id !== mainFunc.id);
+
+        const isMatch = MathEngine.verifyEquivalenceWithRefs(
+          mainFunc.expression, 
+          level.targetExpression, 
+          refFuncs,
+          paramKeys
+        );
         
         if (isMatch) {
           set({ isSuccess: true, isVerifying: false });
@@ -77,7 +129,7 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
 
   reset: () => set({
     level: null,
-    expression: '',
+    functions: [],
     params: {},
     isVerifying: false,
     isSuccess: false,

@@ -51,7 +51,7 @@ export const CreatorTerminalPage = () => {
     setIsSuccess(false);
     eventBus.emit('engine:loadLevel', {
       targetExpression: "a * sin(x)",
-      initialExpression: "sin(x)",
+      initialExpression: "f(x)", // We start with f(x) by default
       params: { a: 2 }
     });
   }, [eventBus]);

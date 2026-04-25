@@ -184,23 +184,57 @@ export class MathEngine {
     return true; // continue processing
   }
 
+  static substituteReferencesForRender(expression: string, refFuncs: { id: string, expression: string }[]): string {
+    return this.substituteReferences(expression, refFuncs);
+  }
+
+  /**
+   * Helper to perform algebraic substitution on MathLive's output.
+   * Finds occurrences of reference functions (like g(x), h(x-1)) and replaces them
+   * with their actual expressions before compilation.
+   * Uses simple regex replacement which works for most basic cases in our game.
+   */
+  private static substituteReferences(expression: string, refFuncs: { id: string, expression: string }[]): string {
+    let result = expression;
+    for (const ref of refFuncs) {
+      if (!ref.expression) continue;
+      
+      // Regex to match refFunc(argument)
+      // e.g., matches "g(x)", "g(x-1)", "g(2*x)"
+      const regex = new RegExp(`\\b${ref.id}\\(([^)]+)\\)`, 'g');
+      
+      result = result.replace(regex, (match, arg) => {
+        // Replace 'x' in the reference expression with the argument provided
+        // e.g., if ref.expression is "x^2", and we found "g(x-1)", arg is "x-1"
+        // we replace 'x' with '(x-1)' -> "(x-1)^2"
+        const substituted = ref.expression.replace(/\bx\b/g, `(${arg})`);
+        return `(${substituted})`;
+      });
+    }
+    return result;
+  }
+
   /**
    * Mathematically verifies if two expressions are equivalent across arbitrary parameters.
-   * Uses Monte Carlo numerical sampling similar to the old evaluate.ts rules.
+   * Supports evaluating with reference functions (e.g., f(x) calling g(x)).
    */
-  static verifyEquivalence(
+  static verifyEquivalenceWithRefs(
     expression: string,
     targetExpression: string,
+    refFuncs: { id: string, expression: string }[] = [],
     paramKeys: string[] = []
   ): boolean {
     if (!expression || !targetExpression) return false;
 
+    // Substitute reference functions into the main expression before compiling
+    const substitutedExpression = this.substituteReferences(expression, refFuncs);
+
     let compiledExp, compiledTarget;
     try {
-      compiledExp = compile(expression);
+      compiledExp = compile(substitutedExpression);
       compiledTarget = compile(targetExpression);
     } catch {
-      return false; // Syntax error in player expression
+      return false; // Syntax error in player expression after substitution
     }
 
     const randomParams = this.generateRandomParams(paramKeys);
