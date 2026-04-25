@@ -50,10 +50,9 @@ export const CreatorTerminalPage = () => {
   const handleResetLevel = useCallback(() => {
     setIsSuccess(false);
     eventBus.emit('engine:loadLevel', {
-      targetExpression: "sin(x) + a",
-      initialExpression: "x",
-      params: { a: 2 },
-      passSimilarity: 99
+      targetExpression: "a * sin(x)",
+      initialExpression: "sin(x)",
+      params: { a: 2 }
     });
   }, [eventBus]);
 

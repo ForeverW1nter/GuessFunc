@@ -570,8 +570,13 @@
     "subtitle": "系统.引擎.已激活",
     "expressionLabel": "函数表达式 [ y = f(x) ]",
     "expressionPlaceholder": "例如：sin(x) + a",
-    "variableLabel": "变量 [{{key}}]",
-    "similarity": "相似度匹配",
+    "variableLabel": "Variable [{{key}}]",
+    "verify": "验证等价性",
+    "verifying": "交叉验证中...",
+    "errors": {
+      "mismatch": "验证失败：公式结构不匹配",
+      "syntax": "验证失败：表达式存在语法错误"
+    },
     "syncComplete": "信号同步完成",
     "awaitingSignal": "等待信号数据注入...",
     "nextLevel": "进入下一层",

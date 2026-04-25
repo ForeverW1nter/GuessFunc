@@ -20,7 +20,7 @@ export class GuessFuncEngine implements IGameProtocol {
     this.eventBus.on('engine:loadLevel', (payload: unknown) => {
       console.log(`[GuessFuncEngine] Received level payload:`, payload);
       if (payload && typeof payload === 'object') {
-        const p = payload as { targetExpression: string; initialExpression: string; params: Record<string, number>; passSimilarity: number };
+        const p = payload as { targetExpression: string; initialExpression: string; params: Record<string, number> };
         useGuessFuncStore.getState().loadLevelData(p);
       }
     });
@@ -28,7 +28,7 @@ export class GuessFuncEngine implements IGameProtocol {
     // Subscribe to success event
     useGuessFuncStore.subscribe((state) => {
       if (state.isSuccess) {
-        this.eventBus?.emit('engine:success', { similarity: state.similarity });
+        this.eventBus?.emit('engine:success', { isMatch: true });
       }
     });
     

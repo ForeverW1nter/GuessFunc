@@ -558,7 +558,12 @@
     "expressionLabel": "Function Expression [ y = f(x) ]",
     "expressionPlaceholder": "e.g. sin(x) + a",
     "variableLabel": "Variable [{{key}}]",
-    "similarity": "SIMILARITY",
+    "verify": "VERIFY EQUIVALENCE",
+    "verifying": "VERIFYING...",
+    "errors": {
+      "mismatch": "Equivalence Check Failed: Structure mismatch across parameters.",
+      "syntax": "Syntax Error: Invalid expression."
+    },
     "syncComplete": "SYNC COMPLETE",
     "awaitingSignal": "AWAITING SIGNAL DATA...",
     "nextLevel": "Next Level",
