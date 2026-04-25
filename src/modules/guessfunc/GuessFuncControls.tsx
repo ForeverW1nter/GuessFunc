@@ -1,7 +1,10 @@
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGuessFuncStore } from './store/guessFuncStore';
 import { Button } from '@/foundation/ui/components/Button';
 import { Loader2 } from 'lucide-react';
+import { TerminalKeypad } from './components/TerminalKeypad';
+import { TerminalSlider } from './components/TerminalSlider';
 
 const PARAM_MIN = -10;
 const PARAM_MAX = 10;
@@ -10,70 +13,138 @@ const PARAM_STEP = 0.1;
 export const GuessFuncControls = () => {
   const { expression, params, isVerifying, isSuccess, verifyError, setExpression, setParam, verify } = useGuessFuncStore();
   const { t } = useTranslation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleInsert = (text: string, offset = 0) => {
+    const input = inputRef.current;
+    if (!input) {
+      setExpression(expression + text);
+      return;
+    }
+    const start = input.selectionStart || expression.length;
+    const end = input.selectionEnd || expression.length;
+    const newExpr = expression.substring(0, start) + text + expression.substring(end);
+    setExpression(newExpr);
+    
+    setTimeout(() => {
+      input.focus();
+      const newPos = start + text.length + offset;
+      input.setSelectionRange(newPos, newPos);
+    }, 0);
+  };
+
+  const handleDelete = () => {
+    const input = inputRef.current;
+    if (!input) return;
+    const start = input.selectionStart || expression.length;
+    const end = input.selectionEnd || expression.length;
+    
+    if (start === end && start > 0) {
+      const newExpr = expression.substring(0, start - 1) + expression.substring(end);
+      setExpression(newExpr);
+      setTimeout(() => {
+        input.focus();
+        input.setSelectionRange(start - 1, start - 1);
+      }, 0);
+    } else if (start !== end) {
+      const newExpr = expression.substring(0, start) + expression.substring(end);
+      setExpression(newExpr);
+      setTimeout(() => {
+        input.focus();
+        input.setSelectionRange(start, start);
+      }, 0);
+    }
+  };
+
+  const handleClear = () => {
+    setExpression('');
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
+  };
 
   return (
-    <div className="flex flex-col h-full space-y-10">
+    <div className="flex flex-col h-full space-y-6 overflow-y-auto pr-2 pb-4 scrollbar-hide">
       {/* Input Block */}
-      <section className="space-y-4">
-        <label className="text-xs font-mono uppercase tracking-widest text-[var(--color-muted-foreground)]">
-          {t('guessFunc.expressionLabel', 'Function Expression [ y = f(x) ]')}
-        </label>
-        <input
-          type="text"
-          value={expression}
-          onChange={(e) => setExpression(e.target.value)}
-          disabled={isSuccess || isVerifying}
-          className="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl px-4 py-3 font-mono text-lg focus:outline-none focus:ring-1 focus:ring-[var(--accent-guessfunc)] transition-all touch-manipulation disabled:opacity-50"
-          placeholder={t('guessFunc.expressionPlaceholder', 'e.g. sin(x) + a')}
-          spellCheck={false}
-        />
+      <section className="space-y-3">
+        <div className="flex justify-between items-center">
+          <label className="text-xs font-mono uppercase tracking-widest text-[var(--color-muted-foreground)]">
+            {t('guessFunc.expressionLabel', 'Function Expression [ y = f(x) ]')}
+          </label>
+        </div>
+        <div className="relative group/input">
+          <div className="absolute inset-0 bg-[var(--accent-guessfunc)]/5 blur-xl group-focus-within/input:opacity-100 opacity-0 transition-opacity pointer-events-none" />
+          <div className="relative flex items-center bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl overflow-hidden focus-within:border-[var(--accent-guessfunc)] focus-within:ring-1 focus-within:ring-[var(--accent-guessfunc)] transition-all">
+            <span className="pl-4 pr-2 font-mono text-[var(--accent-guessfunc)] opacity-70 select-none">f(x)=</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={expression}
+              onChange={(e) => setExpression(e.target.value)}
+              disabled={isSuccess || isVerifying}
+              className="w-full bg-transparent py-4 font-mono text-lg outline-none touch-manipulation disabled:opacity-50"
+              placeholder={t('guessFunc.expressionPlaceholder', 'e.g. sin(x) + a')}
+              spellCheck={false}
+            />
+          </div>
+        </div>
         {verifyError && (
-          <p className="text-xs font-mono text-red-500 uppercase tracking-widest">
+          <p className="text-xs font-mono text-red-500 uppercase tracking-widest animate-in slide-in-from-top-1">
             {t(verifyError, 'Equivalence Check Failed')}
           </p>
         )}
       </section>
 
+      {/* Terminal Keypad */}
+      <section className="bg-[var(--color-muted)]/30 p-3 md:p-4 rounded-2xl border border-[var(--color-border)] shadow-inner">
+        <TerminalKeypad 
+          onInsert={handleInsert} 
+          onDelete={handleDelete} 
+          onClear={handleClear} 
+          disabled={isSuccess || isVerifying} 
+        />
+      </section>
+
       {/* Sliders Block */}
-      <section className="space-y-8 flex-1">
+      <section className="space-y-6 flex-1 pt-2">
         {Object.entries(params).map(([key, val]) => (
-          <div key={key} className="space-y-4">
-            <div className="flex justify-between items-end">
-              <label className="text-xs font-mono uppercase tracking-widest text-[var(--color-muted-foreground)]">
-                {t('guessFunc.variableLabel', 'Variable [{{key}}]', { key })}
-              </label>
-              <span className="font-mono text-sm">{val.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min={PARAM_MIN}
-              max={PARAM_MAX}
-              step={PARAM_STEP}
-              value={val}
-              onChange={(e) => setParam(key, parseFloat(e.target.value))}
-              disabled={isSuccess || isVerifying}
-              className="w-full accent-[var(--accent-guessfunc)] bg-[var(--color-border)] h-1 rounded-full appearance-none outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-[var(--accent-guessfunc)] [&::-webkit-slider-thumb]:rounded-full cursor-pointer disabled:opacity-50"
-            />
-          </div>
+          <TerminalSlider
+            key={key}
+            label={t('guessFunc.variableLabel', 'Variable [{{key}}]', { key })}
+            value={val}
+            min={PARAM_MIN}
+            max={PARAM_MAX}
+            step={PARAM_STEP}
+            onChange={(newVal) => setParam(key, newVal)}
+            disabled={isSuccess || isVerifying}
+          />
         ))}
       </section>
 
       {/* Action Block */}
-      <section className="pt-6 border-t border-[var(--color-border)]">
+      <section className="pt-2 mt-auto pb-4">
         <Button 
           onClick={verify} 
           disabled={isSuccess || isVerifying || !expression}
-          className="w-full h-12 text-sm font-mono tracking-widest uppercase relative overflow-hidden group"
+          className="w-full h-14 text-sm font-mono tracking-widest uppercase relative overflow-hidden group/btn rounded-xl"
           style={{ backgroundColor: isSuccess ? 'var(--color-muted)' : 'var(--accent-guessfunc)', color: 'var(--color-background)' }}
         >
+          {/* Button Glare */}
+          <div className="absolute top-0 left-0 w-full h-[2px] bg-white/20" />
+          <div className="absolute inset-0 bg-white/0 group-hover/btn:bg-white/10 transition-colors" />
+          
           {isVerifying && (
-            <span className="flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />
+            <span className="flex items-center gap-3 relative z-10">
+              <Loader2 className="w-5 h-5 animate-spin" />
               {t('guessFunc.verifying', 'VERIFYING...')}
             </span>
           )}
-          {!isVerifying && isSuccess && t('guessFunc.syncComplete', 'SYNC COMPLETE')}
-          {!isVerifying && !isSuccess && t('guessFunc.verify', 'VERIFY EQUIVALENCE')}
+          {!isVerifying && isSuccess && (
+            <span className="relative z-10 font-bold">{t('guessFunc.syncComplete', 'SYNC COMPLETE')}</span>
+          )}
+          {!isVerifying && !isSuccess && (
+            <span className="relative z-10 font-bold">{t('guessFunc.verify', 'VERIFY EQUIVALENCE')}</span>
+          )}
         </Button>
       </section>
     </div>
