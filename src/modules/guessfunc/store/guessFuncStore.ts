@@ -49,11 +49,14 @@ export const useGuessFuncStore = create<GuessFuncState>((set, get) => ({
 
   setExpression: (expr) => {
     set({ expression: expr });
-    get().calculateSimilarity();
+    // We do NOT call calculateSimilarity immediately here to avoid UI blocking.
+    // Let the component debounce the input and call calculateSimilarity explicitly.
   },
 
   setParam: (key, value) => {
     set((state) => ({ params: { ...state.params, [key]: value } }));
+    // For sliders, we do calculate immediately as users expect real-time feedback,
+    // but the heavy check is gated behind currentSimilarity threshold.
     get().calculateSimilarity();
   },
 

@@ -573,6 +573,7 @@
     "variableLabel": "变量 [{{key}}]",
     "similarity": "相似度匹配",
     "syncComplete": "信号同步完成",
+    "awaitingSignal": "等待信号数据注入...",
     "nextLevel": "进入下一层",
     "levels": {
       "1": {

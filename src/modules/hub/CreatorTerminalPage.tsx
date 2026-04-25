@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { GameEngineRegistry } from '@/core/GameEngineRegistry';
@@ -43,38 +43,42 @@ const getEngineContent = (engine: IGameProtocol | null, t: TFunction) => {
 export const CreatorTerminalPage = () => {
   const [engine, setEngine] = useState<IGameProtocol | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [eventBus] = useState(() => new SimpleEventBus());
   const { t } = useTranslation();
 
+  const handleResetLevel = useCallback(() => {
+    setIsSuccess(false);
+    eventBus.emit('engine:loadLevel', {
+      targetExpression: "sin(x) + a",
+      initialExpression: "x",
+      params: { a: 2 },
+      passSimilarity: 99
+    });
+  }, [eventBus]);
+
   useEffect(() => {
-    // Dynamically load the first available engine from the registry.
-    // This decouples the Hub from knowing about any specific engine like 'guessfunc'.
     const bootstrapEngine = async () => {
       try {
         setLoading(true);
-        // Wait briefly for module chunks to settle if needed
         await new Promise(res => setTimeout(res, FAKE_LOADING_DELAY_MS));
         
         const availableEngines = GameEngineRegistry.getAvailableEngines();
         if (availableEngines.length > 0) {
           const targetEngineId = availableEngines[0];
           const dynamicEngine = GameEngineRegistry.createEngine(targetEngineId);
-          const bus = new SimpleEventBus();
           
-          bus.on('engine:ready', () => {
+          eventBus.on('engine:ready', () => {
             setEngine(dynamicEngine);
             setLoading(false);
-
-            // In Creator Terminal, we simulate sending a level to the engine
-            // In Archive/Network mode, this would come from a real level configuration.
-            bus.emit('engine:loadLevel', {
-              targetExpression: "sin(x) + a",
-              initialExpression: "x",
-              params: { a: 2 },
-              passSimilarity: 99
-            });
+            handleResetLevel();
           });
 
-          await dynamicEngine.init(bus);
+          eventBus.on('engine:success', () => {
+            setIsSuccess(true);
+          });
+
+          await dynamicEngine.init(eventBus);
         } else {
           console.warn('[Terminal] No engines found in registry');
           setLoading(false);
@@ -86,11 +90,7 @@ export const CreatorTerminalPage = () => {
     };
 
     bootstrapEngine();
-
-    return () => {
-      // Keep track of the local variable to clean it up, avoiding dependency array issues
-    };
-  }, []);
+  }, [eventBus, handleResetLevel]);
 
   // Cleanup effect
   useEffect(() => {
@@ -117,8 +117,23 @@ export const CreatorTerminalPage = () => {
         ) : getEngineContent(engine, t)
       }
       rightPanelContent={
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full flex flex-col">
           {!loading && engine ? engine.getControlPanel() : null}
+          
+          {/* Creator Terminal specific Success Overlay */}
+          {isSuccess && (
+            <div className="mt-8 p-6 rounded-2xl bg-green-500/10 border border-green-500/20 text-center animate-in fade-in slide-in-from-bottom-4">
+              <h3 className="text-green-500 font-bold tracking-widest mb-4 uppercase">
+                {t('hub.creator.syncComplete', 'TEST SYNC COMPLETE')}
+              </h3>
+              <button 
+                onClick={handleResetLevel}
+                className="w-full text-xs font-mono tracking-widest uppercase bg-green-500 text-black px-4 py-3 rounded-xl hover:bg-green-400 transition-colors duration-300"
+              >
+                {t('hub.creator.resetEngine', 'RESET ENGINE')}
+              </button>
+            </div>
+          )}
         </div>
       }
     />

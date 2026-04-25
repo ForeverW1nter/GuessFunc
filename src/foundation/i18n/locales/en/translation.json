@@ -560,6 +560,7 @@
     "variableLabel": "Variable [{{key}}]",
     "similarity": "SIMILARITY",
     "syncComplete": "SYNC COMPLETE",
+    "awaitingSignal": "AWAITING SIGNAL DATA...",
     "nextLevel": "Next Level",
     "levels": {
       "1": {

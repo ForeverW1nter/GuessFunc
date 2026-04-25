@@ -1,13 +1,26 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGuessFuncStore } from './store/guessFuncStore';
 
 const PARAM_MIN = -10;
 const PARAM_MAX = 10;
 const PARAM_STEP = 0.1;
+const DEBOUNCE_MS = 300;
 
 export const GuessFuncControls = () => {
-  const { expression, params, similarity, isSuccess, setExpression, setParam } = useGuessFuncStore();
+  const { expression, params, similarity, isSuccess, setExpression, setParam, calculateSimilarity } = useGuessFuncStore();
   const { t } = useTranslation();
+
+  // Debounce the heavy math compilation when user is typing the expression
+  useEffect(() => {
+    if (isSuccess) return;
+    
+    const handler = setTimeout(() => {
+      calculateSimilarity();
+    }, DEBOUNCE_MS);
+
+    return () => clearTimeout(handler);
+  }, [expression, calculateSimilarity, isSuccess]);
 
   return (
     <div className="flex flex-col h-full space-y-10">
@@ -68,14 +81,6 @@ export const GuessFuncControls = () => {
           </div>
         ))}
       </section>
-
-      {isSuccess && (
-        <div className="p-6 rounded-2xl bg-green-500/10 border border-green-500/20 text-center animate-in fade-in slide-in-from-bottom-4">
-          <h3 className="text-green-500 font-bold tracking-widest mb-2 uppercase">
-            {t('guessFunc.syncComplete', 'SYNC COMPLETE')}
-          </h3>
-        </div>
-      )}
     </div>
   );
 };
