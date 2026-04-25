@@ -11,40 +11,45 @@ export interface MathFieldProps {
 }
 
 export const MathField = forwardRef<MathfieldElement, MathFieldProps>(
-  ({ value, onChange, disabled = false, className = '', placeholder = '' }, ref) => {
+  ({ value, onChange, disabled = false, className = '' }, ref) => {
     const mfRef = useRef<MathfieldElement>(null);
 
-    // Expose the MathfieldElement to parent components if needed
     useImperativeHandle(ref, () => mfRef.current as MathfieldElement);
 
     useEffect(() => {
       const mathField = mfRef.current;
       if (!mathField) return;
 
-      // Handle changes
       const handleInput = () => {
         onChange(mathField.value);
       };
 
-      // Configuration
-      mathField.mathVirtualKeyboardPolicy = "auto";
+      // MathLive configuration for virtual keyboard
+      mathField.mathVirtualKeyboardPolicy = "manual";
       mathField.readOnly = disabled;
       
-      // Update value only if it differs from current internal state to avoid cursor jumping
       if (mathField.value !== value) {
         mathField.value = value;
       }
 
+      // Show keyboard on focus
+      const handleFocus = () => {
+        if (!disabled) {
+          window.mathVirtualKeyboard.show();
+        }
+      };
+
       mathField.addEventListener('input', handleInput);
+      mathField.addEventListener('focusin', handleFocus);
 
       return () => {
         mathField.removeEventListener('input', handleInput);
+        mathField.removeEventListener('focusin', handleFocus);
       };
     }, [value, onChange, disabled]);
 
     return (
-      <div className={`relative ${className}`}>
-        {/* We use a React createElement wrapper for Web Components to avoid TS errors */}
+      <div className={`relative flex items-center ${className}`}>
         {React.createElement('math-field', {
           ref: mfRef,
           style: { 
@@ -53,8 +58,15 @@ export const MathField = forwardRef<MathfieldElement, MathFieldProps>(
             border: 'none',
             background: 'transparent',
             color: 'inherit',
-            fontFamily: 'inherit',
-            fontSize: 'inherit'
+            // Removed fontFamily: 'inherit' to let MathLive use its elegant KaTeX fonts
+            fontSize: 'inherit',
+            '--keyboard-background': 'var(--color-muted)',
+            '--keyboard-toolbar-background': 'var(--color-background)',
+            '--keycap-background': 'var(--color-background)',
+            '--keycap-secondary-background': 'var(--color-muted)',
+            '--keycap-text': 'var(--color-foreground)',
+            '--keycap-text-active': 'var(--accent-guessfunc)',
+            '--keyboard-accent-color': 'var(--accent-guessfunc)',
           }
         })}
       </div>

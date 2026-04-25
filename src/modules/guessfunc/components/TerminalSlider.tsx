@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import * as RadixSlider from '@radix-ui/react-slider';
 
 export interface TerminalSliderProps {
   value: number;
@@ -11,8 +11,6 @@ export interface TerminalSliderProps {
 }
 
 export const TerminalSlider = ({ value, min, max, step, onChange, label, disabled }: TerminalSliderProps) => {
-  const percentage = ((value - min) / (max - min)) * 100;
-  
   return (
     <div className={`space-y-3 group/tslider ${disabled ? 'opacity-50' : ''}`}>
       <div className="flex justify-between items-end">
@@ -23,30 +21,32 @@ export const TerminalSlider = ({ value, min, max, step, onChange, label, disable
           {value.toFixed(2)}
         </span>
       </div>
-      <div className="relative h-6 bg-[var(--color-background)] border border-[var(--color-border)] rounded-md flex items-center overflow-hidden">
-        {/* Track Glow */}
-        <motion.div 
-          className="absolute top-0 left-0 h-full bg-[var(--accent-guessfunc)]/20 border-r border-[var(--accent-guessfunc)]"
-          style={{ width: `${Math.max(0, Math.min(100, percentage))}%` }}
-        />
+      
+      <RadixSlider.Root
+        className="relative flex w-full touch-none select-none items-center h-6 group/radix"
+        value={[value]}
+        onValueChange={(vals) => onChange(vals[0])}
+        max={max}
+        min={min}
+        step={step}
+        disabled={disabled}
+      >
+        <RadixSlider.Track className="relative h-full w-full grow overflow-hidden rounded-md bg-[var(--color-background)] border border-[var(--color-border)]">
+          
+          <RadixSlider.Range className="absolute h-full bg-[var(--accent-guessfunc)]/20 border-r border-[var(--accent-guessfunc)] transition-colors group-hover/radix:bg-[var(--accent-guessfunc)]/30" />
+          
+          {/* Striped Grid inside track for mechanical look */}
+          <div 
+            className="absolute inset-0 opacity-20 pointer-events-none" 
+            style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.2) 2px, rgba(255,255,255,0.2) 4px)' }}
+          />
+        </RadixSlider.Track>
         
-        {/* Striped Grid inside track for mechanical look */}
-        <div 
-          className="absolute inset-0 opacity-20 pointer-events-none" 
-          style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.2) 2px, rgba(255,255,255,0.2) 4px)' }}
+        {/* Invisible thumb just to make the slider interactive and accessible without breaking the custom track visual */}
+        <RadixSlider.Thumb 
+          className="block w-2 h-8 rounded-[1px] bg-[var(--accent-guessfunc)] shadow-[0_0_10px_var(--accent-guessfunc)] border border-white/50 transition-transform hover:scale-110 focus-visible:outline-none disabled:pointer-events-none"
         />
-        
-        <input
-          type="range"
-          min={min} 
-          max={max} 
-          step={step}
-          value={value}
-          onChange={(e) => onChange(parseFloat(e.target.value))}
-          disabled={disabled}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
-        />
-      </div>
+      </RadixSlider.Root>
     </div>
   );
 };

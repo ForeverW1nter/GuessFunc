@@ -1,8 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import * as RadixSlider from '@radix-ui/react-slider';
 import { cn } from '@/utils/cn';
 
-export interface SliderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface SliderProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'onChange' | 'value' | 'defaultValue'> {
   value: number;
   onChange: (value: number) => void;
   min: number;
@@ -23,34 +23,37 @@ export const Slider = ({
   className,
   ...props
 }: SliderProps) => {
-  const percentage = ((value - min) / (max - min)) * 100;
   const isDanger = variant === 'danger';
 
   return (
-    <div className={cn(
-      "relative h-2 bg-[var(--color-border)] rounded-full flex-1 flex items-center group/slider",
-      "focus-within:ring-2 focus-within:ring-[var(--color-foreground)] focus-within:ring-offset-2 focus-within:ring-offset-[var(--color-background)]",
-      disabled && "opacity-50",
-      className
-    )}>
-      <motion.div 
+    <RadixSlider.Root
+      className={cn(
+        "relative flex w-full touch-none select-none items-center flex-1 h-5 group/slider",
+        disabled && "opacity-50",
+        className
+      )}
+      value={[value]}
+      onValueChange={(vals) => onChange(vals[0])}
+      max={max}
+      min={min}
+      step={step}
+      disabled={disabled}
+      {...props}
+    >
+      <RadixSlider.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-[var(--color-border)]">
+        <RadixSlider.Range 
+          className={cn(
+            "absolute h-full transition-colors",
+            isDanger ? "bg-red-500/50" : "bg-[var(--color-foreground)]"
+          )} 
+        />
+      </RadixSlider.Track>
+      <RadixSlider.Thumb 
         className={cn(
-          "absolute top-0 left-0 h-full rounded-full transition-colors",
-          isDanger ? "bg-red-500/50" : "bg-[var(--color-foreground)]"
+          "block h-4 w-4 rounded-full border border-[var(--color-border)] bg-[var(--color-background)] shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-foreground)] disabled:pointer-events-none disabled:opacity-50",
+          isDanger ? "focus-visible:ring-red-500" : ""
         )}
-        style={{ width: `${Math.max(0, Math.min(100, percentage))}%` }}
       />
-      <input
-        type="range" 
-        min={min} 
-        max={max} 
-        step={step}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        disabled={disabled}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-        {...props}
-      />
-    </div>
+    </RadixSlider.Root>
   );
 };
