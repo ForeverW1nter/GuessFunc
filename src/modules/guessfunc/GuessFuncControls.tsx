@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useGuessFuncStore } from './store/guessFuncStore';
 import { Button } from '@/foundation/ui/components/Button';
 import { Loader2 } from 'lucide-react';
-import { TerminalKeypad } from './components/TerminalKeypad';
+import { MathField } from './components/MathField';
 import { TerminalSlider } from './components/TerminalSlider';
+import type { MathfieldElement } from 'mathlive';
 
 const PARAM_MIN = -10;
 const PARAM_MAX = 10;
@@ -13,55 +14,7 @@ const PARAM_STEP = 0.1;
 export const GuessFuncControls = () => {
   const { expression, params, isVerifying, isSuccess, verifyError, setExpression, setParam, verify } = useGuessFuncStore();
   const { t } = useTranslation();
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleInsert = (text: string, offset = 0) => {
-    const input = inputRef.current;
-    if (!input) {
-      setExpression(expression + text);
-      return;
-    }
-    const start = input.selectionStart || expression.length;
-    const end = input.selectionEnd || expression.length;
-    const newExpr = expression.substring(0, start) + text + expression.substring(end);
-    setExpression(newExpr);
-    
-    setTimeout(() => {
-      input.focus();
-      const newPos = start + text.length + offset;
-      input.setSelectionRange(newPos, newPos);
-    }, 0);
-  };
-
-  const handleDelete = () => {
-    const input = inputRef.current;
-    if (!input) return;
-    const start = input.selectionStart || expression.length;
-    const end = input.selectionEnd || expression.length;
-    
-    if (start === end && start > 0) {
-      const newExpr = expression.substring(0, start - 1) + expression.substring(end);
-      setExpression(newExpr);
-      setTimeout(() => {
-        input.focus();
-        input.setSelectionRange(start - 1, start - 1);
-      }, 0);
-    } else if (start !== end) {
-      const newExpr = expression.substring(0, start) + expression.substring(end);
-      setExpression(newExpr);
-      setTimeout(() => {
-        input.focus();
-        input.setSelectionRange(start, start);
-      }, 0);
-    }
-  };
-
-  const handleClear = () => {
-    setExpression('');
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 0);
-  };
+  const mfRef = useRef<MathfieldElement>(null);
 
   return (
     <div className="flex flex-col h-full space-y-6 overflow-y-auto pr-2 pb-4 scrollbar-hide">
@@ -74,17 +27,14 @@ export const GuessFuncControls = () => {
         </div>
         <div className="relative group/input">
           <div className="absolute inset-0 bg-[var(--accent-guessfunc)]/5 blur-xl group-focus-within/input:opacity-100 opacity-0 transition-opacity pointer-events-none" />
-          <div className="relative flex items-center bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl overflow-hidden focus-within:border-[var(--accent-guessfunc)] focus-within:ring-1 focus-within:ring-[var(--accent-guessfunc)] transition-all">
-            <span className="pl-4 pr-2 font-mono text-[var(--accent-guessfunc)] opacity-70 select-none">f(x)=</span>
-            <input
-              ref={inputRef}
-              type="text"
+          <div className="relative flex items-center bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl overflow-hidden focus-within:border-[var(--accent-guessfunc)] focus-within:ring-1 focus-within:ring-[var(--accent-guessfunc)] transition-all p-2">
+            <span className="pl-2 pr-2 font-mono text-[var(--accent-guessfunc)] opacity-70 select-none">f(x)=</span>
+            <MathField
+              ref={mfRef}
               value={expression}
-              onChange={(e) => setExpression(e.target.value)}
+              onChange={(latex) => setExpression(latex)}
               disabled={isSuccess || isVerifying}
-              className="w-full bg-transparent py-4 font-mono text-lg outline-none touch-manipulation disabled:opacity-50"
-              placeholder={t('guessFunc.expressionPlaceholder', 'e.g. sin(x) + a')}
-              spellCheck={false}
+              className="w-full bg-transparent py-2 font-mono text-xl outline-none touch-manipulation disabled:opacity-50"
             />
           </div>
         </div>
@@ -93,16 +43,6 @@ export const GuessFuncControls = () => {
             {t(verifyError, 'Equivalence Check Failed')}
           </p>
         )}
-      </section>
-
-      {/* Terminal Keypad */}
-      <section className="bg-[var(--color-muted)]/30 p-3 md:p-4 rounded-2xl border border-[var(--color-border)] shadow-inner">
-        <TerminalKeypad 
-          onInsert={handleInsert} 
-          onDelete={handleDelete} 
-          onClear={handleClear} 
-          disabled={isSuccess || isVerifying} 
-        />
       </section>
 
       {/* Sliders Block */}
