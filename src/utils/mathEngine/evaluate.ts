@@ -1,4 +1,4 @@
-import { ce } from './ce';
+import { ce, declaredParams } from './ce';
 import { cleanDesmosLatex, parseRelation } from './utils';
 import { logger } from '../debug/logger';
 import { GAME_CONSTANTS } from '../constants';
@@ -49,31 +49,36 @@ export function evaluateEquivalence(
       }
 
       // 为了 2D 采样，我们需要解析左右两边
-      try { ce.declare('x', 'number'); } catch { /* ignore */ }
-      try { ce.declare('y', 'number'); } catch { /* ignore */ }
       const paramKeys = Object.keys(params);
       paramKeys.forEach(p => {
-        try { ce.declare(p, 'number'); } catch { /* ignore */ }
+        if (!declaredParams.has(p)) {
+          try { 
+            ce.declare(p, 'number'); 
+            declaredParams.add(p);
+          } catch { /* ignore */ }
+        }
       });
 
-      const tLBox = ce.parse(targetRel.lhs);
-      const tRBox = ce.parse(targetRel.rhs);
-      const pLBox = ce.parse(playerRel.lhs);
-      const pRBox = ce.parse(playerRel.rhs);
+      const tLBox = targetRel.lhsBox;
+      const tRBox = targetRel.rhsBox;
+      const pLBox = playerRel.lhsBox;
+      const pRBox = playerRel.rhsBox;
 
       let matchCount = 0;
-      const totalPoints = 300; // 2D 采样点数更多
+      const totalPoints = GAME_CONSTANTS.MATH_ENGINE.NUM_2D_SAMPLES;
+      const range2D = GAME_CONSTANTS.MATH_ENGINE.SAMPLING_RANGE_2D;
+      const rangeParam = GAME_CONSTANTS.MATH_ENGINE.SAMPLING_RANGE_PARAM;
       
       let constantRatio: number | null = null;
       let isRatioValid = true;
 
       for (let i = 0; i < totalPoints; i++) {
-        const xVal = (Math.random() * 20) - 10;
-        const yVal = (Math.random() * 20) - 10;
+        const xVal = (Math.random() * (range2D * 2)) - range2D;
+        const yVal = (Math.random() * (range2D * 2)) - range2D;
         const testContext: Record<string, number> = { x: xVal, y: yVal };
         
         for (const p of paramKeys) {
-          let pVal = (Math.random() * 10) - 5;
+          let pVal = (Math.random() * (rangeParam * 2)) - rangeParam;
           if (Math.abs(pVal) < 0.05) pVal = 0.5;
           testContext[p] = pVal;
         }
@@ -110,9 +115,11 @@ export function evaluateEquivalence(
           // 方程：判断比例 (L_t - R_t) / (L_p - R_p) 是否为常数
           const tDiff = tL - tR;
           const pDiff = pL - pR;
+          const eqTolerance = GAME_CONSTANTS.MATH_ENGINE.EQUATION_TOLERANCE;
+          const tolerance = GAME_CONSTANTS.MATH_ENGINE.TOLERANCE;
           
-          if (Math.abs(pDiff) < 1e-8) {
-            if (Math.abs(tDiff) < 1e-8) matchCount++;
+          if (Math.abs(pDiff) < eqTolerance) {
+            if (Math.abs(tDiff) < eqTolerance) matchCount++;
             continue;
           }
           
@@ -122,7 +129,7 @@ export function evaluateEquivalence(
             matchCount++;
           } else {
             // 允许一定的浮点误差
-            if (Math.abs(constantRatio - currentRatio) < 1e-5 || Math.abs(constantRatio - currentRatio) / Math.abs(constantRatio) < 1e-5) {
+            if (Math.abs(constantRatio - currentRatio) < tolerance || Math.abs(constantRatio - currentRatio) / Math.abs(constantRatio) < tolerance) {
               matchCount++;
             } else {
               isRatioValid = false;
@@ -171,20 +178,23 @@ export function evaluateEquivalence(
     // 动态注册滑块参数变量
     const variables = ['x', ...Object.keys(params)];
     variables.forEach(v => {
-      try {
-        // 在较新的 Compute Engine 中，直接 declare 即可，如果有重复会自动处理或可通过选项覆盖
-        ce.declare(v, 'number');
-      } catch {
-        // 忽略重复声明错误
+      if (!declaredParams.has(v)) {
+        try {
+          ce.declare(v, 'number');
+          declaredParams.add(v);
+        } catch {
+          // 忽略重复声明错误
+        }
       }
     });
 
     const baseTestPoints = GAME_CONSTANTS.MATH_ENGINE.BASE_TEST_POINTS;
     const NUM_RANDOM_SAMPLES = GAME_CONSTANTS.MATH_ENGINE.NUM_RANDOM_SAMPLES;
+    const range1D = GAME_CONSTANTS.MATH_ENGINE.SAMPLING_RANGE_1D;
     const testPoints = [...baseTestPoints];
     
     for (let i = 0; i < NUM_RANDOM_SAMPLES; i++) {
-      let xVal = (Math.random() * 10) - 5;
+      let xVal = (Math.random() * (range1D * 2)) - range1D;
       if (Math.abs(xVal) < 0.05) xVal = 0.5; // 避免正好为 0
       testPoints.push(xVal);
     }
@@ -200,9 +210,10 @@ export function evaluateEquivalence(
 
       // 核心修改：针对带有参数的函数，使用随机采样的参数值进行验证
       // 保证玩家的解析式必须在任意参数下都与目标解析式等效，而不是依赖于某个特定的滑块值
+      const rangeParam = GAME_CONSTANTS.MATH_ENGINE.SAMPLING_RANGE_PARAM;
       for (const p of paramKeys) {
         // 生成与 x 类似的随机范围 [-5, 5]
-        let pVal = (Math.random() * 10) - 5;
+        let pVal = (Math.random() * (rangeParam * 2)) - rangeParam;
         if (Math.abs(pVal) < 0.05) pVal = 0.5;
         testContext[p] = pVal;
       }

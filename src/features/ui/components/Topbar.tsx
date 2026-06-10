@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { logger } from '../../../utils/debug/logger';
 import confetti from 'canvas-confetti';
 import { Menu, SkipForward, Check, Terminal } from 'lucide-react';
+import { generateFunctionByDifficulty } from '../../../utils/mathEngine/generator';
 
 export const Topbar: React.FC = () => {
   const { t } = useTranslation();
@@ -19,7 +20,12 @@ export const Topbar: React.FC = () => {
   const currentLevelData = (currentRoute && currentChapter && currentLevel) 
     ? getLevel(currentRoute, currentChapter, currentLevel) 
     : null;
-  const levelDisplayTitle = currentLevelData ? `${currentLevelData.title}.exe` : (currentLevel ? `${currentLevel}.exe` : '');
+    
+  // 只有在故事模式下才显示关卡名
+  const { gameMode } = useGameStore();
+  const levelDisplayTitle = gameMode === 'story' 
+    ? (currentLevelData ? `${currentLevelData.title}.exe` : (currentLevel ? `${currentLevel}.exe` : ''))
+    : '';
 
   const handleMenuClick = () => {
     if (window.innerWidth <= 768) {
@@ -68,19 +74,17 @@ export const Topbar: React.FC = () => {
     const { gameMode, randomDifficulty, randomWithParams, setTargetFunction, setRandomConfig } = useGameStore.getState();
 
     if (gameMode === 'random') {
-      import('../../../utils/mathEngine/generator').then(({ generateFunctionByDifficulty }) => {
-        const result = generateFunctionByDifficulty({ targetDifficulty: randomDifficulty, withParams: randomWithParams });
-        setTargetFunction(result.target, result.params, 'random');
-        setRandomConfig(randomDifficulty, randomWithParams);
-        
-        const encodedLevel = btoa(unescape(encodeURIComponent(JSON.stringify({ 
-          t: result.target, 
-          p: result.params, 
-          d: randomDifficulty, 
-          wp: randomWithParams
-        }))));
-        navigate(`/game/random/1/${encodedLevel}`);
-      });
+      const result = generateFunctionByDifficulty({ targetDifficulty: randomDifficulty, withParams: randomWithParams });
+      setTargetFunction(result.target, result.params, 'random');
+      setRandomConfig(randomDifficulty, randomWithParams);
+      
+      const encodedLevel = btoa(unescape(encodeURIComponent(JSON.stringify({ 
+        t: result.target, 
+        p: result.params, 
+        d: randomDifficulty, 
+        wp: randomWithParams
+      }))));
+      navigate(`/game/random/1/${encodedLevel}`);
       return;
     }
 
@@ -121,6 +125,24 @@ export const Topbar: React.FC = () => {
     }
   };
 
+  // 判断是否是故事模式的最后一关
+  const isLastStoryLevel = () => {
+    if (gameMode !== 'story' || !currentRoute || !currentChapter || !currentLevel) return false;
+    const route = useStoryStore.getState().getRoute(currentRoute);
+    if (!route) return false;
+    const chapterIndex = route.chapters.findIndex(c => c.id === currentChapter);
+    if (chapterIndex === -1) return false;
+    
+    const isLastChapter = chapterIndex === route.chapters.length - 1;
+    const chapter = route.chapters[chapterIndex];
+    const levelIndex = chapter.levels.findIndex(l => l.id === currentLevel);
+    const isLastLevelInChapter = levelIndex === chapter.levels.length - 1;
+    
+    return isLastChapter && isLastLevelInChapter;
+  };
+
+  const isFinalLevel = isLastStoryLevel();
+
   return (
     <header className="h-[64px] bg-app-bg border-b border-card-border flex justify-between items-center px-[12px] md:px-[24px] shrink-0 z-10 transition-all">
       <div className="flex items-center gap-[16px]">
@@ -147,7 +169,7 @@ export const Topbar: React.FC = () => {
             onClick={handleNextLevel}
             className="inline-flex items-center justify-center gap-[6px] sm:gap-[8px] px-[16px] sm:px-[20px] py-[8px] sm:py-[10px] rounded-[12px] font-semibold text-[0.9rem] sm:text-[0.95rem] tracking-[0.5px] transition-all bg-app-primary text-white border-none shadow-btn hover:brightness-110 hover:-translate-y-[2px] hover:shadow-btn-hover outline-none"
           >
-            <span className="hidden sm:inline">{t('game.nextLevelBtn')}</span>
+            <span className="hidden sm:inline">{isFinalLevel ? t('game.finishStory', 'Finish') : t('game.nextLevelBtn')}</span>
             <SkipForward size={16} strokeWidth={2} />
           </button>
         ) : (

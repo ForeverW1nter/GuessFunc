@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { ConfirmModal } from '../ConfirmModal';
 import { ToggleSwitch } from '../ToggleSwitch';
 import { Download, Upload, Trash2, Unlock, Zap } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 const SettingsOption = ({ icon: Icon, label, onClick, isDanger, isFile, rightContent }: { icon: React.ElementType, label: string, onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.ChangeEvent<HTMLInputElement>) => void, isDanger?: boolean, isFile?: boolean, rightContent?: React.ReactNode }) => {
   const baseClasses = `group relative overflow-hidden flex items-center justify-between px-[20px] py-[16px] text-[1.05rem] font-medium bg-option-bg text-option-text border border-card-border rounded-[10px] transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-[2px] w-full cursor-pointer`;
@@ -177,14 +178,12 @@ export const SavePanel: React.FC = () => {
     setForceRender(prev => prev + 1);
     
     // 从触发位置发射红色的删除特效
-    import('canvas-confetti').then((confetti) => {
-      confetti.default({
-        particleCount: 50,
-        spread: 70,
-        origin: { x, y },
-        colors: ['#ef5350', '#d32f2f', '#c62828'], // 红色系
-        disableForReducedMotion: true
-      });
+    confetti({
+      particleCount: 50,
+      spread: 70,
+      origin: { x, y },
+      colors: ['#ef5350', '#d32f2f', '#c62828'], // 红色系
+      disableForReducedMotion: true
     });
 
     useUIStore.getState().addToast(t('settings.save.clearSuccess'), 'success');

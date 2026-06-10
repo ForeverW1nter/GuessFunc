@@ -21,7 +21,7 @@ export const LogViewer: React.FC<{ content: string, title: string, extension: st
         </div>
         <div className={`p-4 ${bgColor} overflow-x-auto flex-1`}>
           {isCpp ? (
-            <MarkdownPanel mdText={`\`\`\`cpp\n${cleanContent}\n\`\`\``} />
+            <MarkdownPanel mdText={`\`\`\`cpp\n${cleanContent}\n\`\`\``} useStoryFont={true} />
           ) : (
             <pre className={`${textColor} text-[0.9rem] leading-relaxed whitespace-pre-wrap break-words`}>
               {cleanContent}

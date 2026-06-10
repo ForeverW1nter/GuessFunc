@@ -2,7 +2,7 @@ import React from 'react';
 import { Info, FileText, Palette, Type, Save, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'save' | 'api' | 'font' | 'language';
+type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'save' | 'font' | 'language';
 
 const SettingsButton = ({ icon: Icon, label, panel, setActivePanel }: { icon: React.ElementType, label: string, panel: SettingsPanel, setActivePanel: (panel: SettingsPanel) => void }) => (
   <button 
@@ -27,10 +27,6 @@ export const MainPanel: React.FC<{ setActivePanel: (panel: SettingsPanel) => voi
       {/* Toggle Items */}
       <SettingsButton icon={Languages} label={t('settings.main.language')} panel="language" setActivePanel={setActivePanel} />
       <SettingsButton icon={Type} label={t('settings.font.menuTitle')} panel="font" setActivePanel={setActivePanel} />
-
-      {/* AI Settings temporarily hidden
-      <SettingsButton icon={Cpu} label={t('settings.api.title')} panel="api" setActivePanel={setActivePanel} />
-      */}
 
       <SettingsButton icon={Save} label={t('settings.save.title')} panel="save" setActivePanel={setActivePanel} />
     </div>

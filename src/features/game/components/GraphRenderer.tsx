@@ -37,7 +37,7 @@ export const GraphRenderer = () => {
         if (window.Desmos && containerRef.current && !calculatorRef.current) {
           // 完全复刻原版的初始化配置
           calculatorRef.current = window.Desmos.GraphingCalculator(containerRef.current, {
-            language: i18n.language === 'zh' ? 'zh-CN' : 'en',
+            language: i18n.language.startsWith('zh') ? 'zh-CN' : 'en',
             keypad: true,            // 必须开启：原生 Desmos 键盘
             expressions: true,       // 必须开启：左侧表达式列表
             settingsMenu: true,      // 必须开启以显示设置菜单 (齿轮图标)，玩家需要它来切换图表配置
@@ -177,6 +177,15 @@ export const GraphRenderer = () => {
     resizeObserver.observe(containerRef.current);
     return () => resizeObserver.disconnect();
   }, [isReady]);
+
+  // 监听语言变化，实时更新 Desmos 界面语言
+  useEffect(() => {
+    if (calculatorRef.current && isReady) {
+      calculatorRef.current.updateSettings({
+        language: i18n.language.startsWith('zh') ? 'zh-CN' : 'en'
+      });
+    }
+  }, [i18n.language, isReady]);
 
   // 监听 targetFunction 和 levelParams 的变化，单独更新表达式
   useEffect(() => {

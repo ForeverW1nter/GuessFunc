@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { loadDesmos } from '../../../src/utils/desmosLoader';
+import { loadDesmos } from '../../../utils/desmosLoader';
 
 export const DesmosFunctionEditor = ({ 
   initialFunction, 

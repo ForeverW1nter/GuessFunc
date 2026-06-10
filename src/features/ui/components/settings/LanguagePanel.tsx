@@ -13,14 +13,6 @@ export const LanguagePanel: React.FC = () => {
 
   const handleLanguageChange = (code: string) => {
     i18n.changeLanguage(code);
-    
-    // 如果用户没有自定义过AI提示词，且切换了语言，强制触发一下本地状态的清空，让 AIManager 重新获取新的默认提示词
-    // 因为翻译已经在 i18n 实例里了，切换语言后 getSystemPrompt() 会直接返回新语言的文本
-    // 这里只需清除可能存在的一些特定语言下的临时缓存
-    localStorage.removeItem('guessfunc_ai_welcome');
-
-    // 触发全局事件，让 ApiPanel 重新加载默认提示词
-    window.dispatchEvent(new Event('languageChanged'));
   };
 
   return (

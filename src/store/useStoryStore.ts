@@ -7,17 +7,7 @@ const dataFiles = import.meta.glob('../assets/data/*.json', { eager: true });
 // Combine all route arrays from multiple JSON files into one StoryJSON object
 const combinedRoutes: RouteData[] = [];
 
-// Ensure charmYouTomorrow.json is placed first so it becomes the default route
-const defaultRoutePath = Object.keys(dataFiles).find(p => p.includes('charmYouTomorrow.json'));
-if (defaultRoutePath) {
-  const module = dataFiles[defaultRoutePath] as { routes?: RouteData[] };
-  if (module.routes && Array.isArray(module.routes)) {
-    combinedRoutes.push(...module.routes);
-  }
-}
-
 for (const path in dataFiles) {
-  if (path === defaultRoutePath) continue;
   const module = dataFiles[path] as { routes?: RouteData[] };
   if (module.routes && Array.isArray(module.routes)) {
     combinedRoutes.push(...module.routes);
@@ -25,7 +15,7 @@ for (const path in dataFiles) {
 }
 
 const combinedStoryData: StoryJSON = {
-  routes: combinedRoutes.filter(route => route.id !== 'charmYouTomorrow' && route.id !== 'poemOfTheBorder')
+  routes: combinedRoutes
 };
 
 interface StoryState {

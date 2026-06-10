@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import gymnopedieAudio from '../assets/audio/Gymnopedie_1_Erik_Satie.mp3';
-import epicCinematicAudio from '../assets/audio/Epic_Cinematic.mp3';
+
+import bgmGymnopedie from '../assets/audio/Gymnopedie_1_Erik_Satie.mp3';
+import bgmEpic from '../assets/audio/Epic_Cinematic.mp3';
 
 export const AVAILABLE_BGMS = [
-  { id: 'gymnopedie', name: 'Gymnopedie No.1', path: gymnopedieAudio },
-  { id: 'epic', name: 'Epic Cinematic', path: epicCinematicAudio },
+  { id: 'gymnopedie', name: 'Gymnopedie No.1', path: bgmGymnopedie },
+  { id: 'epic', name: 'Epic Cinematic', path: bgmEpic },
 ];
 
 interface AudioState {

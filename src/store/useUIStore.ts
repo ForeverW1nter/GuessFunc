@@ -8,19 +8,31 @@ export interface ToastMessage {
   isExiting?: boolean;
 }
 
+export interface DialogOptions {
+  type: 'alert' | 'confirm' | 'prompt';
+  title?: string;
+  message: string;
+  defaultValue?: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm?: (value?: string) => void;
+  onCancel?: () => void;
+}
+
 export interface UIState {
   isSidebarOpen: boolean;
   isSidebarCollapsed: boolean;
   isSettingsOpen: boolean;
   isLevelSelectOpen: boolean;
   isRandomChallengeOpen: boolean;
-  isAiChatOpen: boolean;
+  isWorkshopOpen: boolean;
   theme: 'light' | 'dark';
   customPrimaryColor: string | null;
   isSpeedrunMode: boolean;
   isAssistMode: boolean;
   isDebugMode: boolean;
   toasts: ToastMessage[];
+  dialog: (DialogOptions & { isOpen: boolean }) | null;
   
   // Font settings
   storyFontSize: number;
@@ -41,7 +53,7 @@ export interface UIState {
   
   setRandomChallengeOpen: (isOpen: boolean) => void;
 
-  setAiChatOpen: (isOpen: boolean) => void;
+  setWorkshopOpen: (isOpen: boolean) => void;
 
   setTheme: (theme: 'light' | 'dark') => void;
   setCustomPrimaryColor: (color: string | null) => void;
@@ -52,6 +64,9 @@ export interface UIState {
   
   addToast: (message: string, type?: ToastMessage['type']) => void;
   removeToast: (id: string) => void;
+
+  openDialog: (options: DialogOptions) => void;
+  closeDialog: () => void;
 
   setStoryFontSize: (size: number) => void;
   setStoryFontFamily: (family: string, url?: string | null) => void;
@@ -65,13 +80,14 @@ export const useUIStore = create<UIState>()(
       isSettingsOpen: false,
       isLevelSelectOpen: false,
       isRandomChallengeOpen: false,
-      isAiChatOpen: false,
+      isWorkshopOpen: false,
       theme: 'dark',
       customPrimaryColor: '#00BCD4',
       isSpeedrunMode: false,
       isAssistMode: false,
       isDebugMode: false,
       toasts: [],
+      dialog: null,
       storyFontSize: 100,
       storyFontFamily: 'system-ui, -apple-system, sans-serif',
       storyFontUrl: null,
@@ -89,7 +105,7 @@ export const useUIStore = create<UIState>()(
 
       setRandomChallengeOpen: (isOpen: boolean) => set({ isRandomChallengeOpen: isOpen }),
 
-      setAiChatOpen: (isOpen: boolean) => set({ isAiChatOpen: isOpen }),
+      setWorkshopOpen: (isOpen: boolean) => set({ isWorkshopOpen: isOpen }),
 
       setTheme: (theme: 'light' | 'dark') => {
         set({ theme });
@@ -150,6 +166,9 @@ export const useUIStore = create<UIState>()(
           }));
         }, 300);
       },
+
+      openDialog: (options) => set({ dialog: { ...options, isOpen: true } }),
+      closeDialog: () => set((state) => ({ dialog: state.dialog ? { ...state.dialog, isOpen: false } : null })),
 
       setStoryFontSize: (size) => set({ storyFontSize: size }),
       setStoryFontFamily: (family, url = null) => set({ storyFontFamily: family, storyFontUrl: url }),

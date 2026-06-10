@@ -1,39 +1,40 @@
 import React, { useEffect } from 'react';
-import { createHashRouter, RouterProvider, Navigate, Outlet, useParams, useNavigate } from 'react-router-dom';
+import { createHashRouter, RouterProvider, Navigate, Outlet, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { ErrorBoundary } from './features/ui/components/ErrorBoundary';
 import { GameFeature } from './features/game/GameFeature';
 import { Sidebar } from './features/ui/components/Sidebar';
 import { Topbar } from './features/ui/components/Topbar';
 import { SettingsModal } from './features/ui/components/SettingsModal';
 import { ToastContainer } from './features/ui/components/ToastContainer';
 import { LevelSelectModal } from './features/story/components/LevelSelectModal';
-import { AiChatButton } from './features/ui/components/AiChatButton';
-import { AiChatModal } from './features/ui/components/AiChatModal';
 import { RandomChallengeModal } from './features/ui/components/RandomChallengeModal';
+import { GlobalDialog } from './features/ui/components/GlobalDialog';
 import { useGameStore } from './store/useGameStore';
 import { useStoryStore } from './store/useStoryStore';
 import { useUIStore } from './store/useUIStore';
-import { CreateModePage } from './features/creation/components/CreateModePage';
+
 import { GAME_CONSTANTS } from './utils/constants';
 import i18n from './i18n';
 
-const Layout = () => (
-  <div className="absolute inset-0 flex flex-row w-full overflow-hidden bg-app-bg text-app-text">
-    <Sidebar />
-    <main className="flex-1 relative flex flex-col overflow-hidden">
-      <Topbar />
-      <div className="flex-1 relative w-full h-full">
-        <GameFeature />
-        <Outlet />
-      </div>
-    </main>
-    <SettingsModal />
-    <LevelSelectModal />
-    <RandomChallengeModal />
-    <AiChatButton />
-    <AiChatModal />
-    <ToastContainer />
-  </div>
-);
+const Layout = () => {
+  return (
+    <div className="absolute inset-0 flex flex-row w-full overflow-hidden bg-app-bg text-app-text">
+      <Sidebar />
+      <main className="flex-1 relative flex flex-col overflow-hidden">
+        <Topbar />
+        <div className="flex-1 relative w-full h-full">
+          <GameFeature />
+          <Outlet />
+        </div>
+      </main>
+      <SettingsModal />
+      <LevelSelectModal />
+      <RandomChallengeModal />
+      <ToastContainer />
+      <GlobalDialog />
+    </div>
+  );
+};
 
 const LevelRoute = () => {
   const { routeId, chapterId, levelId } = useParams();
@@ -67,7 +68,7 @@ const LevelRoute = () => {
             return;
           }
         } catch (e) {
-          console.error(`解析${routeId === 'random' ? '随机' : routeId === 'share' ? '分享' : '自定义'}关卡参数失败:`, e);
+          console.error(`Parse ${routeId === 'random' ? 'random' : routeId === 'share' ? 'share' : 'custom'} level params failed:`, e);
           if (routeId === 'share') {
             useUIStore.getState().addToast(i18n.t('sidebar.shareParseError'), 'error');
             navigate('/', { replace: true });
@@ -164,10 +165,7 @@ const router = createHashRouter([
         index: true,
         element: <Navigate to="/game/random/1/1" replace />
       },
-      {
-        path: "create",
-        element: <CreateModePage />
-      },
+      
       {
         path: "game/:routeId/:chapterId/:levelId",
         element: <LevelRoute />
@@ -185,7 +183,11 @@ const router = createHashRouter([
 ]);
 
 const App: React.FC = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  );
 };
 
 export default App;

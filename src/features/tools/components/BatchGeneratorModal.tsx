@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, Wand2, ArrowLeft, Download, Upload } from 'lucide-react';
-import { FunctionType, generateFunctionByDifficulty } from '../../../src/utils/mathEngine/generator';
-import { ChapterData, LevelData } from '../../../src/types/story';
-import { ToggleSwitch } from '../../../src/features/ui/components/ToggleSwitch';
+import { generateFunctionByDifficulty } from '../../../utils/mathEngine/generator';
+import type { FunctionType } from '../../../utils/mathEngine/generator';
+import type { ChapterData, LevelData } from '../../../types/story';
+import { ToggleSwitch } from '../../ui/components/ToggleSwitch';
+
+import { useUIStore } from '../../../store/useUIStore';
 
 interface BatchGeneratorModalProps {
   onClose: () => void;
@@ -165,10 +168,10 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
           if (Array.isArray(json)) {
             setConfigs(json);
           } else {
-            alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
+            useUIStore.getState().openDialog({ type: 'alert', message: t('tools.storyEditor.parseError', 'Failed to parse JSON file') });
           }
         } catch (err: unknown) {
-          alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
+          useUIStore.getState().openDialog({ type: 'alert', message: t('tools.storyEditor.parseError', 'Failed to parse JSON file') });
           console.error(err);
         }
       };
@@ -178,9 +181,17 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between h-14 px-6 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 shrink-0">
+    <div className="fixed inset-0 z-[1000] flex justify-center items-center pointer-events-auto">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-md animate-fade-in"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="relative w-full h-full flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 shadow-modal overflow-hidden animate-zoom-in">
+        {/* Header */}
+      <div className="flex items-center justify-between h-[64px] px-6 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 shrink-0">
         <div className="flex items-center gap-4 min-w-0">
           <button
             onClick={onClose}
@@ -220,7 +231,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-2">
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  {t('tools.storyEditor.chapterId', 'Chapter ID')}
+                  {t('tools.storyEditor.batchChapterId', 'Chapter ID')}
                 </label>
                 <input 
                   value={config.id} 
@@ -230,7 +241,7 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  {t('tools.storyEditor.chapterName', 'Chapter Name')}
+                  {t('tools.storyEditor.batchChapterName', 'Chapter Name')}
                 </label>
                 <input 
                   value={config.name} 
@@ -372,10 +383,11 @@ export const BatchGeneratorModal: React.FC<BatchGeneratorModalProps> = ({
             className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-app-primary hover:bg-app-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 border-none cursor-pointer shadow-sm"
           >
             <Wand2 size={16} />
-            {t('tools.storyEditor.generateLevels', { count: configs.reduce((acc, c) => acc + c.levelCount, 0), defaultValue: `Generate ${configs.reduce((acc, c) => acc + c.levelCount, 0)} Levels` })}
+            {t('tools.storyEditor.generateLevels', { count: configs.reduce((acc, c) => acc + c.levelCount, 0), defaultValue: 'Generate {{count}} Levels' })}
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

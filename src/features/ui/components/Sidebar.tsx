@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 import { useUIStore } from '../../../store/useUIStore';
-import { useNavigate } from 'react-router-dom';
+import { useStoryStore } from '../../../store/useStoryStore';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useGameStore } from '../../../store/useGameStore';
 import { CreateLevelConfirmModal } from './CreateLevelConfirmModal';
 import { extractUsedParams } from '../../../utils/mathEngine';
@@ -68,7 +69,7 @@ const NavItem = ({ item, isSidebarCollapsed, isActive }: NavItemProps) => (
 const NavGroupTitle = ({ title, isSidebarCollapsed }: { title: string, isSidebarCollapsed: boolean }) => {
   return (
     <div className={cn(
-      "px-[12px] text-[0.75rem] font-semibold text-app-text uppercase tracking-[1px] mb-[8px] opacity-50 whitespace-nowrap transition-opacity duration-200",
+      "px-[12px] text-[0.75rem] font-bold text-app-text uppercase tracking-[1px] mb-[8px] opacity-50 whitespace-nowrap transition-opacity duration-200",
       isSidebarCollapsed && "md:hidden"
     )}>
       {title}
@@ -80,6 +81,7 @@ export const Sidebar: React.FC = () => {
   const { t } = useTranslation();
   const { isSidebarOpen, setSidebarOpen, isSidebarCollapsed, setSettingsOpen, setLevelSelectOpen, setRandomChallengeOpen } = useUIStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleRandomChallenge = () => {
     setRandomChallengeOpen(true);
@@ -90,7 +92,14 @@ export const Sidebar: React.FC = () => {
     // 强制每次点击都检查状态机，并主动同步一次路由，避免灰屏
     const { gameMode, currentRoute, currentChapter, currentLevel } = useGameStore.getState();
     if (gameMode !== 'story' || !currentRoute || !currentChapter || !currentLevel) {
-      navigate('/game/charmYouTomorrow/ch0/1', { replace: true });
+      const { storyJSON } = useStoryStore.getState();
+      const firstRoute = storyJSON.routes[0];
+      if (firstRoute && firstRoute.chapters.length > 0 && firstRoute.chapters[0].levels.length > 0) {
+        navigate(`/game/${firstRoute.id}/${firstRoute.chapters[0].id}/${firstRoute.chapters[0].levels[0].id}`, { replace: true });
+      } else {
+        // 如果没有故事数据，至少不让它崩溃，或者提示用户
+        useUIStore.getState().addToast(t('story.notFound'), 'error');
+      }
     } else {
       // 即使在故事模式，也要确保路由和状态机一致
       navigate(`/game/${currentRoute}/${currentChapter}/${currentLevel}`, { replace: true });
@@ -183,6 +192,15 @@ export const Sidebar: React.FC = () => {
     }
   ];
 
+  const getIsActive = (id: string) => {
+    const path = location.pathname;
+    if (id === 'share') return path.includes('/share');
+    if (id === 'custom') return path.includes('/custom');
+    if (id === 'random') return path.includes('/random');
+    if (id === 'story') return path.includes('/game/') && !path.includes('/random') && !path.includes('/custom') && !path.includes('/share');
+    return false;
+  };
+
   return (
     <>
       {/* 移动端遮罩 */}
@@ -239,12 +257,7 @@ export const Sidebar: React.FC = () => {
                     key={item.id} 
                     item={item} 
                     isSidebarCollapsed={isSidebarCollapsed}
-                    isActive={
-                      (item.id === 'story' && useGameStore.getState().gameMode === 'story') ||
-                      (item.id === 'random' && useGameStore.getState().gameMode === 'random') ||
-                      (item.id === 'custom' && useGameStore.getState().gameMode === 'custom') ||
-                      (item.id === 'share' && window.location.hash.includes('share'))
-                    }
+                    isActive={getIsActive(item.id)}
                   />
                 ))}
               </div>

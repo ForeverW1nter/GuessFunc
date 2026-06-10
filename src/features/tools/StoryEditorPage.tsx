@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { RouteData, FileData, LevelData, ChapterData } from '../../src/types/story';
+import type { RouteData, FileData, LevelData, ChapterData } from '../../types/story';
 import { useTranslation } from 'react-i18next';
 import { LevelEditor } from './components/LevelEditor';
 import { FileEditor } from './components/FileEditor';
 import { Sidebar } from './components/Sidebar';
 import { ChapterEditorView } from './components/ChapterEditorView';
-import { SystemBar } from './components/SystemBar';
-import { WorkspaceEmptyState } from './components/WorkspaceEmptyState';
-import { ToolsSettingsModal } from './components/ToolsSettingsModal';
 import { BatchGeneratorModal } from './components/BatchGeneratorModal';
+import { useUIStore } from '../../store/useUIStore';
+import { exportStoryJSON, mergeStoryData } from '../../utils/story/editor';
 
 interface GlobalViewState {
   routeIndex: number;
@@ -95,13 +94,7 @@ export const StoryEditorPage: React.FC = () => {
     ? activeChapter.files?.[currentChapterState.fileIndex] : null;
 
   const handleExport = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storyData, null, 2));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href",     dataStr);
-    downloadAnchorNode.setAttribute("download", "story.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    exportStoryJSON(storyData);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,37 +105,23 @@ export const StoryEditorPage: React.FC = () => {
         try {
           const json = JSON.parse(event.target?.result as string);
           
-          if (window.confirm(t('tools.storyEditor.confirmMerge', 'Do you want to merge the imported data with the existing story? Cancel will overwrite it.'))) {
-            const newRoutes = [...storyData.routes];
-            json.routes.forEach((importedRoute: RouteData) => {
-              const existingRouteIndex = newRoutes.findIndex(r => r.id === importedRoute.id);
-              if (existingRouteIndex !== -1) {
-                const existingRoute = newRoutes[existingRouteIndex];
-                importedRoute.chapters.forEach(importedChapter => {
-                  const existingChapterIndex = existingRoute.chapters.findIndex(
-                    c => c.id === importedChapter.id && c.title === importedChapter.title
-                  );
-                  if (existingChapterIndex !== -1) {
-                    const existingChapter = existingRoute.chapters[existingChapterIndex];
-                    existingChapter.levels = [...existingChapter.levels, ...importedChapter.levels];
-                    if (importedChapter.files) {
-                      existingChapter.files = [...(existingChapter.files || []), ...importedChapter.files];
-                    }
-                  } else {
-                    existingRoute.chapters.push(importedChapter);
-                  }
-                });
-              } else {
-                newRoutes.push(importedRoute);
-              }
-            });
-            setStoryData({ ...storyData, routes: newRoutes });
-          } else {
-            setStoryData(json);
-            setViewState({ routeIndex: 0, chapterIndex: null });
-          }
+          useUIStore.getState().openDialog({
+            type: 'confirm',
+            message: t('tools.storyEditor.confirmMerge', 'Do you want to merge the imported data with the existing story? Cancel will overwrite it.'),
+            onConfirm: () => {
+              const newRoutes = mergeStoryData(storyData.routes, json.routes);
+              setStoryData({ ...storyData, routes: newRoutes });
+            },
+            onCancel: () => {
+              setStoryData(json);
+              setViewState({ routeIndex: 0, chapterIndex: null });
+            }
+          });
         } catch (err: unknown) {
-          alert(t('tools.storyEditor.parseError', 'Failed to parse JSON file'));
+          useUIStore.getState().openDialog({ 
+            type: 'alert', 
+            message: t('tools.storyEditor.parseError', 'Failed to parse JSON file') 
+          });
           console.error(err);
         }
       };
@@ -181,9 +160,9 @@ export const StoryEditorPage: React.FC = () => {
     const newRoutes = [...storyData.routes];
     const targetRoute = newRoutes[viewState.routeIndex];
     
-    generatedChapters.forEach(generatedChapter => {
+    generatedChapters.forEach((generatedChapter: ChapterData) => {
       const existingChapterIndex = targetRoute.chapters.findIndex(
-        c => c.id === generatedChapter.id && c.title === generatedChapter.title
+        (c: ChapterData) => c.id === generatedChapter.id && c.title === generatedChapter.title
       );
       if (existingChapterIndex !== -1) {
         targetRoute.chapters[existingChapterIndex].levels.push(...generatedChapter.levels);
@@ -311,11 +290,15 @@ export const StoryEditorPage: React.FC = () => {
     // Mode, levelIndex, fileIndex is handled per-chapter now. Sidebar only switches chapter/route.
   };
 
-  return (
-    <div className="w-full h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 overflow-hidden font-sans">
-      {/* System Bar */}
-      <SystemBar onFileUpload={handleFileUpload} onExport={handleExport} onOpenBatchGenerator={() => setIsBatchGeneratorOpen(true)} />
+  const { storyFontFamily } = useUIStore();
 
+  return (
+    <div 
+      className="w-full h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 overflow-hidden"
+      style={{
+        '--story-font-family': storyFontFamily === 'CustomStoryFont' ? 'CustomStoryFont, serif' : storyFontFamily,
+      } as React.CSSProperties}
+    >
       {/* Main Workspace */}
       <div className="flex-1 relative flex overflow-hidden">
         <Sidebar 
@@ -331,6 +314,9 @@ export const StoryEditorPage: React.FC = () => {
           addChapter={addChapter}
           deleteChapter={deleteChapter}
           routes={storyData.routes}
+          onFileUpload={handleFileUpload}
+          onExport={handleExport}
+          onOpenBatchGenerator={() => setIsBatchGeneratorOpen(true)}
         />
 
         <div className={`
@@ -379,11 +365,17 @@ export const StoryEditorPage: React.FC = () => {
               }}
             />
           ) : (
-            <WorkspaceEmptyState />
+            <div className="flex-1 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 gap-4 p-8 text-center bg-zinc-50/50 dark:bg-zinc-950/50">
+              <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center">
+                <svg className="w-8 h-8 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <p className="text-sm font-medium">{t('tools.storyEditor.emptyState', 'Select a chapter to start editing')}</p>
+            </div>
           )}
         </div>
       </div>
-      <ToolsSettingsModal />
     </div>
   );
 };

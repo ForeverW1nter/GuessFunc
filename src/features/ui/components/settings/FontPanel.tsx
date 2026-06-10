@@ -10,10 +10,6 @@ export const FontPanel: React.FC = () => {
     { id: 'serif', label: t('settings.font.serif') },
     { id: 'sans-serif', label: t('settings.font.sansSerif') },
     { id: 'monospace', label: t('settings.font.monospace') },
-    { id: '"KaiTi", "楷体", serif', label: t('settings.font.kaiti') },
-    { id: '"SimSun", "宋体", serif', label: t('settings.font.simsun') },
-    { id: '"SimHei", "黑体", sans-serif', label: t('settings.font.simhei') },
-    { id: '"Microsoft YaHei", "微软雅黑", sans-serif', label: t('settings.font.yahei') },
   ];
 
   const { storyFontSize, storyFontFamily, setStoryFontSize, setStoryFontFamily, addToast } = useUIStore();
@@ -81,6 +77,7 @@ export const FontPanel: React.FC = () => {
           <div 
             className={`bg-card-bg text-app-text border-2 px-[20px] py-[12px] pr-[40px] text-[1.05rem] font-semibold rounded-[10px] cursor-pointer transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)] relative select-none ${isDropdownOpen ? 'border-app-primary' : 'border-card-border hover:border-app-primary'}`}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            style={{ fontFamily: storyFontFamily }}
           >
             {currentFontLabel}
             <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={`absolute right-[15px] top-1/2 -translate-y-1/2 text-app-primary transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -118,7 +115,7 @@ export const FontPanel: React.FC = () => {
       <div className="space-y-3">
         <h3 className="m-0 font-bold text-lg text-app-text">{t('settings.font.preview')}</h3>
         <div 
-          className="p-4 bg-card-bg border border-card-border rounded-xl leading-relaxed text-app-text"
+          className="p-4 bg-card-bg border border-card-border rounded-xl leading-relaxed text-app-text font-story"
           style={{ 
             fontSize: `${storyFontSize}%`,
             fontFamily: storyFontFamily

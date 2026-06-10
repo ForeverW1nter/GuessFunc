@@ -138,10 +138,13 @@ export const useAudio = () => {
     }
   }, []);
 
-  const stopAll = useCallback(() => {
+  const stopAll = useCallback((excludePath?: string) => {
     const audioManager = AudioManager.getInstance();
     audioManager.getAllAudioPaths().forEach((path) => {
-      stopAudio(path);
+      // Don't stop if it's the currently requested one
+      if (path !== excludePath) {
+        stopAudio(path);
+      }
     });
   }, [stopAudio]);
 

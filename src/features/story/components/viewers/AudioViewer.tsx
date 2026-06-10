@@ -14,7 +14,7 @@ export const AudioViewer: React.FC<{ content: string, title: string, extension: 
               <Mic size={24} />
             </div>
             <div>
-              <div className="text-white font-medium text-lg uppercase">{title}.{extension}</div>
+              <div className="text-white font-mono font-medium text-lg uppercase">{title}.{extension}</div>
               <div className="flex items-center gap-2 mt-1">
                 <div className="flex gap-1 h-2">
                   {heights.map((height, i) => (

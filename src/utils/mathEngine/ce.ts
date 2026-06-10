@@ -8,5 +8,9 @@ import { ComputeEngine } from '@cortex-js/compute-engine';
 
 // 单例模式复用 Compute Engine 实例，提升性能
 export const ce = new ComputeEngine();
-// 声明 x 为实数，这是函数的基本自变量
+// 声明 x, y 为实数，这是函数的基本自变量
 ce.declare('x', 'number');
+ce.declare('y', 'number');
+
+// 记录已声明的参数，避免重复声明引发异常
+export const declaredParams = new Set<string>(['x', 'y']);

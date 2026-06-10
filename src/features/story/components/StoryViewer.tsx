@@ -24,7 +24,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
   const chapter = getChapter(routeId, chapterId);
   const navigate = useNavigate();
   const { isMuted, toggleMute } = useAudioStore();
-  const { storyFontSize, storyFontFamily } = useUIStore();
+  const { storyFontSize } = useUIStore();
   const { t } = useTranslation();
 
   if (!chapter) {
@@ -69,15 +69,12 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ routeId, chapterId, on
 
       {/* Modal Body */}
       <div 
-        className="flex-1 overflow-y-auto overflow-x-hidden p-[24px] text-[1rem] leading-[1.6]"
+        className="flex-1 overflow-y-auto overflow-x-hidden p-[24px] text-[1rem] leading-[1.6] font-story"
         style={{ 
-          fontSize: `${storyFontSize}%`,
-          fontFamily: storyFontFamily === 'system-ui, -apple-system, sans-serif' 
-            ? '"PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif' // 默认强制使用中文字体
-            : storyFontFamily
+          fontSize: `${storyFontSize}%`
         }}
       >
-        <div className="mb-4 prose dark:prose-invert max-w-none text-left prose-p:leading-relaxed prose-pre:bg-[#1E1E1E] prose-pre:text-[#D4D4D4] prose-code:text-[#D4D4D4] prose-code:bg-[#1E1E1E] prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:font-mono break-words">
+        <div className="mb-4 prose dark:prose-invert max-w-none text-left prose-p:leading-relaxed prose-pre:bg-[#1E1E1E] prose-pre:text-[#D4D4D4] prose-code:text-[#D4D4D4] prose-code:bg-[#1E1E1E] prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:font-mono break-words font-story">
           <ReactMarkdown
             remarkPlugins={[remarkMath, remarkGfm]}
             rehypePlugins={[rehypeKatex, rehypeHighlight]}

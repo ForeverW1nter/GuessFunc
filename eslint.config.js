@@ -20,4 +20,20 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    files: ['src/features/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../../features/*/**', '@features/*/**', '../../../features/*/**'],
+              message: 'FSD 架构约束：严禁跨 feature 深度引用！如果需要复用，请将模块下沉到共享层 (如 utils/ 或 store/ 或 ui/ )。',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ])

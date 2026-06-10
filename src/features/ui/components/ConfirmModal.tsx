@@ -73,12 +73,12 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   };
 
   return createPortal(
-    <div className="fixed top-0 left-0 w-full h-full z-[2000] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in px-4" onClick={onCancel}>
+    <div className="fixed top-0 left-0 w-full h-full z-[2000] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in sm:px-4" onClick={onCancel}>
       <div 
-        className="bg-modal-bg text-modal-text w-full max-w-md rounded-2xl shadow-modal overflow-hidden animate-zoom-in"
+        className="bg-modal-bg text-modal-text w-full h-full sm:h-auto sm:max-w-md sm:rounded-2xl shadow-modal overflow-hidden animate-zoom-in flex flex-col"
         onClick={handleClick}
       >
-        <div className="p-6">
+        <div className="p-6 flex-1 overflow-y-auto">
           <h2 className="text-xl font-bold mb-3">{title}</h2>
           <div className="text-base opacity-80 mb-6 whitespace-pre-wrap">{message}</div>
           

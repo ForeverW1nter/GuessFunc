@@ -15,7 +15,7 @@ export const TipsModal: React.FC<TipsModalProps> = ({ isOpen, onClose, tipConten
 
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-[20px] bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-[500px] bg-modal-bg text-modal-text rounded-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-card-border overflow-hidden flex flex-col max-h-[80vh] animate-scale-in">
+      <div className="w-full h-full sm:h-auto sm:max-w-[500px] bg-modal-bg text-modal-text sm:rounded-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.4)] border-none sm:border sm:border-card-border overflow-hidden flex flex-col sm:max-h-[80vh] animate-scale-in">
         
         {/* Header */}
         <div className="flex items-center justify-between px-[24px] py-[16px] border-b border-card-border bg-app-bg shrink-0">
@@ -34,7 +34,7 @@ export const TipsModal: React.FC<TipsModalProps> = ({ isOpen, onClose, tipConten
         {/* Content */}
         <div className="p-[24px] overflow-y-auto custom-scrollbar">
           {tipContent ? (
-            <MarkdownPanel mdText={tipContent} />
+            <MarkdownPanel mdText={tipContent} useStoryFont={true} />
           ) : (
             <div className="text-center text-[#606065] py-[40px]">
               {t('tips.empty')}

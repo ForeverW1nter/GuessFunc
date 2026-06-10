@@ -139,7 +139,27 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        story: [
+          'var(--story-font-family)',
+          'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont',
+          '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif',
+          '"PingFang SC"', '"Microsoft YaHei"', '"WenQuanYi Micro Hei"'
+        ],
+        sans: [
+          'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont',
+          '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif',
+          '"PingFang SC"', '"Microsoft YaHei"', '"WenQuanYi Micro Hei"'
+        ],
+        mono: [
+          'ui-monospace', 
+          'SFMono-Regular', 
+          'Menlo', 
+          'Monaco', 
+          'Consolas', 
+          '"Liberation Mono"', 
+          '"Courier New"', 
+          'monospace'
+        ]
       }
     },
   },

@@ -6,12 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { ThemePanel } from './settings/ThemePanel';
 import { FontPanel } from './settings/FontPanel';
 import { SavePanel } from './settings/SavePanel';
-import { ApiPanel } from './settings/ApiPanel';
 import { MarkdownPanel } from './settings/MarkdownPanel';
 import { LanguagePanel } from './settings/LanguagePanel';
 import { MainPanel } from './settings/MainPanel';
 
-export type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'save' | 'api' | 'font' | 'language';
+export type SettingsPanel = 'main' | 'about' | 'rules' | 'changelog' | 'theme' | 'save' | 'font' | 'language';
 
 import aboutMd from '../../../../docs/about.md?raw';
 import rulesMd from '../../../../docs/rules.md?raw';
@@ -59,7 +58,6 @@ export const SettingsModal: React.FC = () => {
       case 'font': return t('settings.font.title');
       case 'language': return t('settings.language.title');
       case 'save': return t('settings.save.title');
-      case 'api': return t('settings.api.title');
       default: return t('settings.title');
     }
   };
@@ -73,7 +71,7 @@ export const SettingsModal: React.FC = () => {
       />
 
       {/* Modal */}
-      <div className={`relative w-full ${['about', 'rules', 'changelog'].includes(activePanel) ? 'md:max-w-[1000px]' : 'md:max-w-[600px]'} h-full md:h-[85vh] bg-modal-bg text-modal-text md:rounded-[16px] shadow-modal border-none md:border md:border-card-border flex flex-col transition-all duration-300 transform scale-100 opacity-100 overflow-hidden`}>
+      <div className={`relative w-full ${['about', 'rules', 'changelog'].includes(activePanel) ? 'sm:max-w-[1000px]' : 'sm:max-w-[600px]'} h-full sm:h-[85vh] bg-modal-bg text-modal-text sm:rounded-[16px] shadow-modal border-none sm:border sm:border-card-border flex flex-col transition-all duration-300 transform scale-100 opacity-100 overflow-hidden sm:m-4`}>
         {/* Header */}
         <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
           <div className="flex items-center gap-[15px]">
@@ -100,14 +98,13 @@ export const SettingsModal: React.FC = () => {
         {/* Content Area */}
         <div className={`flex-1 overflow-y-auto overflow-x-hidden p-[24px] text-[1rem] leading-[1.6] transition-all duration-150 ease-in-out ${isFadingOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
           {displayPanel === 'main' && <MainPanel setActivePanel={(p: string) => handlePanelSwitch(p as SettingsPanel)} />}
-          {displayPanel === 'about' && <MarkdownPanel mdText={ABOUT_TEXT} />}
-          {displayPanel === 'rules' && <MarkdownPanel mdText={RULES_TEXT} />}
-          {displayPanel === 'changelog' && <MarkdownPanel mdText={CHANGELOG_TEXT} />}
+          {displayPanel === 'about' && <MarkdownPanel mdText={ABOUT_TEXT} useStoryFont={true} />}
+          {displayPanel === 'rules' && <MarkdownPanel mdText={RULES_TEXT} useStoryFont={true} />}
+          {displayPanel === 'changelog' && <MarkdownPanel mdText={CHANGELOG_TEXT} useStoryFont={true} />}
           {displayPanel === 'theme' && <ThemePanel />}
           {displayPanel === 'font' && <FontPanel />}
           {displayPanel === 'language' && <LanguagePanel />}
           {displayPanel === 'save' && <SavePanel />}
-          {displayPanel === 'api' && <ApiPanel />}
         </div>
       </div>
     </div>

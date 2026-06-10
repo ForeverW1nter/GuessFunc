@@ -9,10 +9,10 @@ export default defineConfig({
   // 可以完美适配 GitHub Pages (无论仓库名是什么)
   base: './',
   build: {
+    chunkSizeWarningLimit: 3000,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        tools: resolve(__dirname, 'tools/index.html')
+        main: resolve(__dirname, 'index.html')
       }
     }
   },

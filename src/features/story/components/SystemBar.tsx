@@ -13,7 +13,6 @@ interface SystemBarProps {
   isMuted: boolean;
   showBgmMenu: boolean;
   currentBgmId: string;
-  unlockedBgms: string[];
   isDropdownOpen: boolean;
   dropdownRef: React.RefObject<HTMLDivElement | null>;
   bgmMenuRef: React.RefObject<HTMLDivElement | null>;
@@ -36,7 +35,6 @@ export const SystemBar: React.FC<SystemBarProps> = ({
   isMuted,
   showBgmMenu,
   currentBgmId,
-  unlockedBgms,
   isDropdownOpen,
   dropdownRef,
   bgmMenuRef,
@@ -65,48 +63,60 @@ export const SystemBar: React.FC<SystemBarProps> = ({
       <div className="flex items-center gap-[16px]">
         <div className="relative" ref={bgmMenuRef}>
           <button 
-            onClick={() => {
-              if (!showBgmMenu) onToggleMute();
+            onClick={(e) => {
+              e.preventDefault();
+              if (showBgmMenu) return;
+              onToggleMute();
             }}
-            onMouseDown={onBgmPressStart}
-            onMouseUp={onBgmPressEnd}
-            onMouseLeave={onBgmPressEnd}
-            onTouchStart={onBgmPressStart}
-            onTouchEnd={onBgmPressEnd}
-            className="bg-transparent border-none cursor-pointer flex items-center justify-center outline-none shrink-0 md:mr-[16px]"
+            onPointerDown={() => {
+              // 无论是鼠标还是触摸，只要按下就开始计时
+              // 对于移动端，如果只是点击，通常会触发 pointerdown -> pointerup -> click
+              onBgmPressStart();
+            }}
+            onPointerUp={() => {
+              // 无论是鼠标还是触摸，松开时停止计时
+              onBgmPressEnd();
+            }}
+            onPointerLeave={onBgmPressEnd}
+            onPointerCancel={onBgmPressEnd}
+            onContextMenu={(e) => {
+              // 防止移动端长按弹出系统菜单
+              e.preventDefault();
+            }}
+            className="bg-transparent border-none cursor-pointer flex items-center justify-center outline-none shrink-0 md:mr-[16px] touch-none select-none relative z-10"
             title={isMuted ? t('story.unmute') : t('story.mute')}
           >
             <div className="relative w-[28px] h-[28px] rounded-full flex items-center justify-center bg-[#1A1A1D] border border-[#2A2A2E] shadow-sm transition-all duration-300">
-              <div className={`absolute inset-0 rounded-full border-[2px] border-[#333] box-border transition-opacity duration-300 ${
-                !isMuted ? 'opacity-100 animate-[spin_3s_linear_infinite]' : 'opacity-20 animate-[spin_3s_linear_infinite]'
+              <div className={`absolute inset-0 rounded-full border-[2px] border-[#333] box-border transition-opacity duration-300 animate-[spin_3s_linear_infinite] ${
+                !isMuted ? 'opacity-100' : 'opacity-20'
               } bg-[linear-gradient(45deg,transparent_40%,rgba(255,255,255,0.05)_50%,transparent_60%),repeating-radial-gradient(#222,#222_1px,#2a2a2a_2px,#2a2a2a_3px)]`} 
-              style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
-              <Music size={12} className={`z-10 transition-all duration-300 flex items-center justify-center ${
-                !isMuted ? 'opacity-100 text-app-primary animate-[spin_3s_linear_infinite]' : 'opacity-50 text-[#A0A0A5] animate-[spin_3s_linear_infinite]'
-              }`} style={{ animationPlayState: !isMuted ? 'running' : 'paused' }} />
+                style={{ animationPlayState: isMuted ? 'paused' : 'running' }}
+              />
+              <Music size={12} className={`z-10 transition-all duration-300 flex items-center justify-center animate-[spin_3s_linear_infinite] ${
+                !isMuted ? 'opacity-100 text-app-primary' : 'opacity-50 text-[#A0A0A5]'
+              }`} 
+                style={{ animationPlayState: isMuted ? 'paused' : 'running' }}
+              />
             </div>
           </button>
           
-          {showBgmMenu && unlockedBgms.length > 1 && (
+          {showBgmMenu && (
             <div className="absolute top-[40px] right-0 md:right-[16px] w-[200px] bg-[#1A1A1D] border border-[#2A2A2E] rounded-[8px] shadow-lg py-[8px] z-50 animate-fade-in">
               <div className="px-[16px] py-[8px] text-[0.7rem] text-[#606065] tracking-[0.2em] uppercase border-b border-[#2A2A2E] mb-[4px]">
-                BGM SELECT
+                {t('story.bgmSelect', 'BGM SELECT')}
               </div>
               {AVAILABLE_BGMS.map(bgm => {
-                const isUnlocked = unlockedBgms.includes(bgm.id);
                 const isSelected = currentBgmId === bgm.id;
                 
                 return (
                   <button
                     key={bgm.id}
-                    disabled={!isUnlocked}
                     onClick={() => {
-                      if (isUnlocked && !isSelected) {
+                      if (!isSelected) {
                         onSelectBgm(bgm.id, bgm.path);
                       }
                     }}
                     className={`w-full flex items-center justify-between px-[16px] py-[10px] text-left transition-colors ${
-                      !isUnlocked ? 'opacity-40 cursor-not-allowed' : 
                       isSelected ? 'text-app-primary bg-[rgba(var(--primary-color-rgb),0.1)]' : 
                       'text-[#A0A0A5] hover:text-white hover:bg-[#2A2A2E]'
                     }`}

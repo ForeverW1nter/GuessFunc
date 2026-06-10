@@ -36,6 +36,7 @@ declare namespace Desmos {
     observeEvent(eventName: string, callback: () => void): void;
     unobserveEvent(eventName: string): void;
     resize(): void;
+    updateSettings(settings: CalculatorOptions): void;
   }
 
   const Colors: {

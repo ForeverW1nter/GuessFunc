@@ -1,3 +1,4 @@
+import type { BoxedExpression } from '@cortex-js/compute-engine';
 import { ce } from './ce';
 import { logger } from '../debug/logger';
 
@@ -45,10 +46,37 @@ export function cleanDesmosLatex(latex: string): string {
   * 解析关系式（包含等号或不等号的方程或不等式）
   */
 export function parseRelation(latex: string) {
-  // 匹配 LHS + Operator + RHS。使用负向先行断言防止 \le 匹配到 \left
-  const match = latex.match(/^(.*?)(<|>|\\le(?![a-zA-Z])|\\ge(?![a-zA-Z])|=)(.*)$/);
-  if (match) {
-    return { lhs: match[1].trim(), op: match[2], rhs: match[3].trim() };
+  if (!latex) return null;
+  try {
+    const cleanLatex = cleanDesmosLatex(latex);
+    const box = ce.parse(cleanLatex) as BoxedExpression;
+    const json = box.json as unknown;
+    
+    if (Array.isArray(json) && json.length >= 3) {
+      const head = json[0];
+      
+      let op = '';
+      if (head === 'Equal') op = '=';
+      else if (head === 'Less') op = '<';
+      else if (head === 'Greater') op = '>';
+      else if (head === 'LessEqual') op = '\\le';
+      else if (head === 'GreaterEqual') op = '\\ge';
+      
+      if (op) {
+        // 使用 ce.box 将子节点转回 BoxedExpression
+        const lhsBox = ce.box(json[1]);
+        const rhsBox = ce.box(json[2]);
+        return { 
+          lhs: lhsBox.latex, 
+          op, 
+          rhs: rhsBox.latex,
+          lhsBox,
+          rhsBox
+        };
+      }
+    }
+  } catch (e) {
+    logger.error("parseRelation failed:", e);
   }
   return null;
 }

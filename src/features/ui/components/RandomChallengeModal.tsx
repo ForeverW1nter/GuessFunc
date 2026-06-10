@@ -7,23 +7,23 @@ import { generateFunctionByDifficulty } from '../../../utils/mathEngine/generato
 import { X } from 'lucide-react';
 
 export const RandomChallengeModal: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isRandomChallengeOpen, setRandomChallengeOpen } = useUIStore();
   const { setTargetFunction } = useGameStore();
   const navigate = useNavigate();
 
-  const [difficulty, setDifficulty] = useState<number>(useGameStore.getState().randomDifficulty || 0);
+  const [difficulty, setDifficulty] = useState<number>(useGameStore.getState().randomDifficulty || 2.0);
   const [withParams, setWithParams] = useState<boolean>(useGameStore.getState().randomWithParams || false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   const getDifficultyLabel = (val: number) => {
-    if (val < 1) return { en: 'Beginner', zh: '初级' };
-    if (val < 2) return { en: 'Intermediate', zh: '中级' };
-    if (val < 3) return { en: 'Advance', zh: '高级' };
-    if (val < 4) return { en: 'Expert', zh: '专家' };
-    if (val < 5) return { en: 'Grandmaster', zh: '大师' };
-    if (val < 6) return { en: 'Astral', zh: '星辉' };
-    return { en: 'Celestial', zh: '天极' };
+    if (val < 1) return { en: 'Beginner', zh: t('random.diffBeginner', '初级') };
+    if (val < 2) return { en: 'Intermediate', zh: t('random.diffIntermediate', '中级') };
+    if (val < 3) return { en: 'Advance', zh: t('random.diffAdvance', '高级') };
+    if (val < 4) return { en: 'Expert', zh: t('random.diffExpert', '专家') };
+    if (val < 5) return { en: 'Grandmaster', zh: t('random.diffGrandmaster', '大师') };
+    if (val < 6) return { en: 'Astral', zh: t('random.diffAstral', '星辉') };
+    return { en: 'Celestial', zh: t('random.diffCelestial', '天极') };
   };
 
   if (!isRandomChallengeOpen) return null;
@@ -60,7 +60,7 @@ export const RandomChallengeModal: React.FC = () => {
       />
 
       {/* Modal */}
-      <div className="relative w-full h-full md:h-auto md:max-w-[450px] bg-modal-bg text-modal-text md:rounded-[16px] shadow-modal overflow-hidden border-none md:border md:border-card-border flex flex-col animate-zoom-in md:m-4">
+      <div className="relative w-full h-full sm:h-auto sm:max-w-[450px] bg-modal-bg text-modal-text sm:rounded-[16px] shadow-modal overflow-hidden border-none sm:border sm:border-card-border flex flex-col animate-zoom-in sm:m-4">
         {/* Header */}
         <div className="flex items-center justify-between h-[64px] px-[24px] border-b border-card-border bg-app-bg shrink-0">
           <h2 className="m-0 text-[1.25rem] font-semibold text-app-text">{t('random.title')}</h2>
@@ -81,9 +81,7 @@ export const RandomChallengeModal: React.FC = () => {
                   {t('random.difficulty')} <span className="text-app-primary text-[1.4rem] ml-1 font-mono">{difficulty.toFixed(2)}</span>
                 </label>
                 <div className="text-[0.9rem] font-bold text-app-primary/80 uppercase tracking-widest flex items-center gap-2">
-                  <span>{getDifficultyLabel(difficulty).en}</span>
-                  <span className="opacity-50">|</span>
-                  <span>{getDifficultyLabel(difficulty).zh}</span>
+                  <span>{i18n.language.startsWith('zh') ? getDifficultyLabel(difficulty).zh : getDifficultyLabel(difficulty).en}</span>
                 </div>
               </div>
               <div className="w-full px-2">

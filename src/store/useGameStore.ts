@@ -52,7 +52,7 @@ export const useGameStore = create<GameState>()(
       playerParams: {},
       isLevelCleared: false,
       domain: GAME_CONSTANTS.DEFAULT_DOMAIN,
-      randomDifficulty: 0,
+      randomDifficulty: 2.0,
       randomWithParams: false,
       
       completedLevels: [],

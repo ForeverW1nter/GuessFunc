@@ -19,7 +19,7 @@ export const LevelSelectModal: React.FC = () => {
   const { storyJSON } = useStoryStore();
   const { completedLevels, readFiles, markFileRead } = useGameStore();
   const { playAudio, stopAudio, stopAll } = useAudio();
-  const { isMuted, toggleMute, currentBgmId, unlockedBgms, setCurrentBgmId } = useAudioStore();
+  const { isMuted, toggleMute, currentBgmId, setCurrentBgmId } = useAudioStore();
   const navigate = useNavigate();
 
   const [selectedRouteId, setSelectedRouteId] = useState<string>(
@@ -48,7 +48,7 @@ export const LevelSelectModal: React.FC = () => {
   useEffect(() => {
     if (isLevelSelectOpen) {
       // 停止所有其他音乐，播放当前选中的 BGM
-      stopAll();
+      stopAll(currentBgm.path);
       playAudio(currentBgm.path, true);
     } else {
       stopAudio(currentBgm.path);
@@ -146,13 +146,13 @@ export const LevelSelectModal: React.FC = () => {
   const selectedChapterData = currentRoute?.chapters.find(c => c.id === selectedChapterId);
 
   const handleBgmPressStart = () => {
-    // 防止结局前调出菜单
-    // 判断条件：如果当前没有解锁除默认BGM外的任何BGM，且也没有看完真结局（用 readFiles 判断最后的门）
-    // 为了更严谨，我们可以直接用 unlockedBgms.length > 1 来判断，因为结局播放时一定会 unlockBgm
-    if (unlockedBgms.length <= 1) return;
-    
+    // 长按音符切换音乐的功能始终开启，不再受剧情进度限制
+    if (bgmMenuTimerRef.current) {
+      clearTimeout(bgmMenuTimerRef.current);
+    }
     bgmMenuTimerRef.current = window.setTimeout(() => {
       setShowBgmMenu(true);
+      bgmMenuTimerRef.current = null;
     }, 500); // 500ms长按
   };
 
@@ -177,8 +177,7 @@ export const LevelSelectModal: React.FC = () => {
         isMuted={isMuted}
         showBgmMenu={showBgmMenu}
         currentBgmId={currentBgmId}
-        unlockedBgms={unlockedBgms}
-        isDropdownOpen={isDropdownOpen}
+            isDropdownOpen={isDropdownOpen}
         dropdownRef={dropdownRef}
         bgmMenuRef={bgmMenuRef}
         onBack={() => {
@@ -192,7 +191,7 @@ export const LevelSelectModal: React.FC = () => {
         onBgmPressStart={handleBgmPressStart}
         onBgmPressEnd={handleBgmPressEnd}
         onSelectBgm={(id, path) => {
-          stopAll();
+          stopAll(path);
           setCurrentBgmId(id);
           playAudio(path, true);
           setShowBgmMenu(false);

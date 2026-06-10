@@ -2,7 +2,10 @@ import React from 'react';
 import { Mail, MessageSquare, User } from 'lucide-react';
 import { MarkdownPanel } from '../../../ui/components/settings/MarkdownPanel';
 
+import { useTranslation } from 'react-i18next';
+
 export const MessageViewer: React.FC<{ content: string, title: string }> = ({ content, title }) => {
+  const { t } = useTranslation();
   const lines = content.split('\n');
   const headers: { key: string, value: string }[] = [];
   let bodyStartIndex = 0;
@@ -35,7 +38,7 @@ export const MessageViewer: React.FC<{ content: string, title: string }> = ({ co
     const match = line.match(/^([^:]+):\s*(.*)$/);
     if (match && isParsingHeaders) {
         const keyLower = match[1].toLowerCase();
-        const isHeaderKey = keyLower.includes('发件人') || keyLower.includes('收件人') || keyLower.includes('主题') || keyLower.includes('时间') || keyLower.includes('日期') || keyLower.includes('状态') || keyLower.includes('运营商') || ['from', 'to', 'subject', 'date', 'time', 'status'].includes(keyLower);
+        const isHeaderKey = keyLower.includes(t('story.viewer.sender', '发件人')) || keyLower.includes(t('story.viewer.receiver', '收件人')) || keyLower.includes(t('story.viewer.subject', '主题')) || keyLower.includes(t('story.viewer.time', '时间')) || keyLower.includes(t('story.viewer.date', '日期')) || keyLower.includes(t('story.viewer.status', '状态')) || keyLower.includes(t('story.viewer.operator', '运营商')) || ['from', 'to', 'subject', 'date', 'time', 'status'].includes(keyLower);
         
         if (headers.length > 0 || isHeaderKey) {
             headers.push({ key: match[1], value: match[2] });
@@ -105,7 +108,7 @@ export const MessageViewer: React.FC<{ content: string, title: string }> = ({ co
                                   </span>
                                   {/* 气泡 */}
                                   <div 
-                                      className={`px-4 py-2.5 rounded-2xl text-[0.95rem] leading-relaxed whitespace-pre-wrap break-words shadow-sm
+                                      className={`px-4 py-2.5 rounded-2xl text-[0.95rem] leading-relaxed whitespace-pre-wrap break-words shadow-sm font-story
                                           ${isRight 
                                               ? 'bg-blue-500 text-white rounded-tr-sm' 
                                               : 'bg-white dark:bg-[#252526] text-gray-800 dark:text-gray-200 border border-gray-100 dark:border-[#333] rounded-tl-sm'
@@ -159,8 +162,8 @@ export const MessageViewer: React.FC<{ content: string, title: string }> = ({ co
         </div>
         
         <div className="p-6 md:p-8 bg-white dark:bg-[#1e1e1e]">
-          <div className="font-sans text-gray-800 dark:text-gray-300 leading-relaxed text-[1.05rem] whitespace-pre-wrap break-words prose-p:my-2">
-            <MarkdownPanel mdText={body || content} />
+          <div className="text-gray-800 dark:text-gray-300 leading-relaxed text-[1.05rem] whitespace-pre-wrap break-words prose-p:my-2">
+            <MarkdownPanel mdText={body || content} useStoryFont={true} />
           </div>
         </div>
       </div>
