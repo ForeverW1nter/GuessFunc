@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { createHashRouter, RouterProvider, Navigate, Outlet, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { createHashRouter, RouterProvider, Navigate, Outlet, useParams, useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from './features/ui/components/ErrorBoundary';
 import { GameFeature } from './features/game/GameFeature';
 import { Sidebar } from './features/ui/components/Sidebar';
